@@ -36,7 +36,8 @@ export default (props: any) => {
   const Component = useMemo(() => {
     if (currentStep < 4) {
       return ONBOARDING_STEPS[currentStep].component;
-    } else return Summary;
+    }
+    return Summary;
   }, [currentStep]);
 
   const [wizardData, setWizardData] = useState(ONBOARDING_STEPS);

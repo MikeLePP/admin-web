@@ -40,3 +40,9 @@ amplify-build-config.json
 amplify-gradle-config.json
 amplifytools.xcconfig
 .secret-*
+
+# CDK
+.cdk.staging
+cdk.out
+cdk.context.json
+output/

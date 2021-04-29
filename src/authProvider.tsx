@@ -4,8 +4,8 @@ import Amplify, { Hub } from '@aws-amplify/core';
 import { HubCapsule } from '@aws-amplify/core/lib-esm/Hub';
 import { CognitoUser } from 'amazon-cognito-identity-js';
 import { AuthClass } from '@aws-amplify/auth/lib-esm/Auth';
-import awsconfig from './aws-exports';
 import { UserIdentity } from 'react-admin';
+import awsconfig from './aws-exports';
 
 Amplify.configure(awsconfig);
 
@@ -92,7 +92,7 @@ export function useAuthProvider() {
         try {
           const userSession = await Auth.currentSession();
           const idToken = userSession.getIdToken();
-          const email = idToken.payload.email;
+          const { email } = idToken.payload;
           return resolve({ id: email, fullName: email, avatar: '' });
         } catch (error) {
           return reject(error);

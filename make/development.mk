@@ -1,4 +1,4 @@
-build: clean  ## Compile and package the code
+build: ## Compile and package the code
 	npm run build
 
 clean: ## Clean up the project artefacts

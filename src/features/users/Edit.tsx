@@ -11,10 +11,10 @@ import {
   useNotify,
   SelectInput,
 } from 'react-admin';
+import { Divider } from '@material-ui/core';
 import Toolbar from '../../components/SaveToolbar';
 import { notifyOnFailure } from '../../helpers/notify';
 import { futureDate, pastDate, phone } from '../../helpers/validation';
-import { Divider } from '@material-ui/core';
 import EditToolbar from '../../components/EditToolbar';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 

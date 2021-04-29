@@ -1,0 +1,59 @@
+version: 2.1
+
+orbs:
+  aws-cli: circleci/aws-cli@2.0.0
+  node: circleci/node@4.2.1
+
+jobs:
+  build:
+    executor:
+      name: node/default
+      tag: '14.15.5'
+    parameters:
+      env:
+        type: string
+        default: dev
+    steps:
+      - checkout
+      - node/install-packages
+      - run:
+          name: Build
+          command: make lint test build ENV=<< parameters.env >>
+      - store_artifacts:
+          path: ./build
+      - persist_to_workspace:
+          root: .
+          paths:
+            - './build/*'
+
+  deploy:
+    executor:
+      name: aws-cli/default
+    parameters:
+      env:
+        type: string
+        default: dev
+    steps:
+      - checkout
+      - node/install-packages
+      - attach_workspace:
+          at: '.'
+      - aws-cli/setup:
+          profile-name: << parameters.env >>
+      - run:
+          name: Deploy
+          command: make deploy ENV=<< parameters.env >>
+
+workflows:
+  build-deploy:
+    jobs:
+      - build
+      - deploy:
+          name: deploy-dev
+          context: aws-dev
+          env: dev
+          filters:
+            branches:
+              only: develop
+          requires:
+            - build

@@ -9,11 +9,11 @@ export default ({ summaries }: any) => {
   const getStatusIcon = (completed?: boolean) => {
     if (completed === true) {
       return <CheckCircleIcon color="secondary" />;
-    } else if (completed === false) {
-      return <CancelOutlinedIcon color="error" />;
-    } else {
-      return <CheckCircleOutlineIcon />;
     }
+    if (completed === false) {
+      return <CancelOutlinedIcon color="error" />;
+    }
+    return <CheckCircleOutlineIcon />;
   };
   return (
     <div className="pt-8">

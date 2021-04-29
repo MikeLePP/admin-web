@@ -68,7 +68,7 @@ export default ({
             <div className="flex items-center space-x-1">
               <Typography component="span">{toLocalDateString(userDetails.dob) || '-'}</Typography>
               {userDetails.dob && (
-                <Chip size="small" label={yearOldString(userDetails.dob) + ' yr old'} />
+                <Chip size="small" label={`${yearOldString(userDetails.dob)} yr old`} />
               )}
             </div>
           </Grid>

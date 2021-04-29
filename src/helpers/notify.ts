@@ -1,7 +1,7 @@
 import { HttpError } from 'react-admin';
 
 export const notifyOnFailure = (notify: any) => (error: HttpError) => {
-  const errors = error.body.errors;
+  const { errors } = error.body;
   if (errors && errors.length)
     notify(
       `Please check the following ${errors.map((e: { title: string }) => `* ${e.title},`)}`,

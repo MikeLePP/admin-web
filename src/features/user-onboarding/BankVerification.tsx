@@ -103,9 +103,7 @@ export default ({
   ]);
 
   const valueMatched = (name: string) =>
-    (formik.values as any)[name]
-      ? (formik.values as any)[name] == userDetails.bankAccount[name]
-      : true;
+    formik.values[name] ? formik.values[name] == userDetails.bankAccount[name] : true;
 
   const handleNotifyContinue = () => {
     setNotifyContinue(true);
@@ -129,7 +127,7 @@ export default ({
               required
               autoFocus
               name="accountBsb"
-              label={labels['accountBsb']}
+              label={labels.accountBsb}
               type="tel"
               formik={formik}
               helperText={
@@ -139,7 +137,7 @@ export default ({
                 className: cn({ 'text-black': !valueMatched('accountBsb') }),
               }}
               InputProps={{
-                ...(formik.values['accountBsb'] && {
+                ...(formik.values.accountBsb && {
                   endAdornment: (
                     <InputAdornment position="end">
                       {valueMatched('accountBsb') ? (
@@ -158,7 +156,7 @@ export default ({
             <InputField
               required
               name="accountNumber"
-              label={labels['accountNumber']}
+              label={labels.accountNumber}
               type="tel"
               formik={formik}
               helperText={
@@ -170,7 +168,7 @@ export default ({
                 className: cn({ 'text-black': !valueMatched('accountNumber') }),
               }}
               InputProps={{
-                ...(formik.values['accountNumber'] && {
+                ...(formik.values.accountNumber && {
                   endAdornment: (
                     <InputAdornment position="end">
                       {valueMatched('accountNumber') ? (

@@ -55,7 +55,7 @@ export default ({
 
   const formik = useFormik({
     initialValues: values,
-    validationSchema: validationSchema,
+    validationSchema,
     onSubmit: async (values) => {
       setLoading(true);
       try {
@@ -140,7 +140,7 @@ export default ({
                 autoFocus
                 select
                 name="incomeFrequency"
-                label={labels['incomeFrequency']}
+                label={labels.incomeFrequency}
                 formik={formik}
               >
                 {INCOME_FREQUENCIES.map(({ id, name }) => (
@@ -154,7 +154,7 @@ export default ({
               <InputField
                 required
                 name="incomeLastDate"
-                label={labels['incomeLastDate']}
+                label={labels.incomeLastDate}
                 type="date"
                 formik={formik}
                 InputLabelProps={{ shrink: true }}
@@ -164,7 +164,7 @@ export default ({
               <InputField
                 required
                 name="incomeAverage"
-                label={labels['incomeAverage']}
+                label={labels.incomeAverage}
                 type="number"
                 formik={formik}
                 InputProps={{
@@ -180,7 +180,7 @@ export default ({
                 required
                 select
                 name="incomeSupport"
-                label={labels['incomeSupport']}
+                label={labels.incomeSupport}
                 formik={formik}
               >
                 {GOVERNMENT_SUPPORT.map(({ id, name }) => (
@@ -193,7 +193,7 @@ export default ({
             <Grid item xs={6}>
               <InputField
                 name="incomeDay1Min"
-                label={labels['incomeDay1Min']}
+                label={labels.incomeDay1Min}
                 type="number"
                 formik={formik}
                 InputProps={{
@@ -207,7 +207,7 @@ export default ({
             <Grid item xs={6}>
               <InputField
                 name="incomeVariationMax"
-                label={labels['incomeVariationMax']}
+                label={labels.incomeVariationMax}
                 type="number"
                 formik={formik}
                 InputProps={{
@@ -223,7 +223,7 @@ export default ({
                 required
                 select
                 name="riskModelVersion"
-                label={labels['riskModelVersion']}
+                label={labels.riskModelVersion}
                 formik={formik}
               >
                 {RISK_MODELS.map((name) => (
@@ -247,13 +247,13 @@ export default ({
             <div className="mt-8 max-w-sm">
               <FormControl variant="outlined" className="w-full">
                 <InputLabel required htmlFor="rejectedReasons-checkbox-label">
-                  {labels['rejectedReasons']}
+                  {labels.rejectedReasons}
                 </InputLabel>
                 <Select
                   required
                   multiple
                   name="rejectedReasons-checkbox-label"
-                  label={labels['rejectedReasons']}
+                  label={labels.rejectedReasons}
                   value={formik.values.rejectedReasons}
                   onChange={handleChange}
                   renderValue={(selected) => (selected as string[]).join(', ')}

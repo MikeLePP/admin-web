@@ -53,7 +53,7 @@ export default ({ summaries, onPrevStep, userDetails, identity, notify }: any) =
 
             <div className="flex flex-col space-y-3">
               {map(labels, (label, key) => (
-                <TextLabel key={key} label={label + ':'} value={getValue(values[key])} horizontal />
+                <TextLabel key={key} label={`${label}:`} value={getValue(values[key])} horizontal />
               ))}
             </div>
           </div>
