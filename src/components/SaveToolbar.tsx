@@ -3,7 +3,11 @@ import { Button } from '@material-ui/core';
 import { SaveOutlined as SaveIcon, Add as CreateIcon } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 
-export default ({ saveButtonLabel = 'Save', pristine, ...rest }: any): JSX.Element => {
+export default ({
+  saveButtonLabel = 'Save',
+  pristine,
+  ...rest
+}: Record<string, unknown>): JSX.Element => {
   const history = useHistory();
   let icon;
   switch (saveButtonLabel) {
@@ -13,6 +17,7 @@ export default ({ saveButtonLabel = 'Save', pristine, ...rest }: any): JSX.Eleme
     case 'Create':
       icon = <CreateIcon />;
       break;
+    default:
   }
   const handleCancelClick = () => {
     history.goBack();

@@ -3,12 +3,16 @@ import simpleRestProvider from 'ra-data-simple-rest';
 import Auth from '@aws-amplify/auth';
 
 export const httpClient = async (url: string, options = {} as any): any => {
-  if (!options.headers) {
-    options.headers = new Headers({ Accept: 'application/json' });
+  const innerOptions = options;
+  if (!innerOptions.headers) {
+    innerOptions.headers = new Headers({ Accept: 'application/json' });
   }
   const { signInUserSession } = await Auth.currentAuthenticatedUser();
-  options.headers.set('Authorization', `Bearer ${signInUserSession.accessToken.jwtToken}`);
-  return fetchUtils.fetchJson(url, options);
+  innerOptions.headers.set(
+    'Authorization',
+    `Bearer ${String(signInUserSession.accessToken.jwtToken)}`,
+  );
+  return fetchUtils.fetchJson(url, innerOptions);
 };
 
 export default simpleRestProvider(process.env.REACT_APP_API_URL!, httpClient);

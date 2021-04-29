@@ -23,15 +23,16 @@ import { getFullname } from '../../helpers/string';
 import { getId } from '../../helpers/url';
 import { futureDate } from '../../helpers/validation';
 
-export default (props: any): JSX.Element => {
+export default (props: Record<string, unknown>): JSX.Element => {
   const userId = getId(props.location.search);
-  if (!userId) return props.history.push(props.basePath);
+  if (!userId) return props.history.push(props.basePath) as Record<string, unknown>;
 
   const { identity } = useGetIdentity();
   const notify = useNotify();
   const { record } = useEditController(props);
 
-  const transform = (data: any) => ({ ...data, userId, editedBy: identity?.id });
+  const transform = (data: any) =>
+    ({ ...data, userId, editedBy: identity?.id } as Record<string, unknown>);
 
   const disabled = record?.status !== 'pending_submission';
 

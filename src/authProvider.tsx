@@ -35,7 +35,9 @@ export const AmplifyAuthProvider: React.FC = ({ children }) => {
       } catch (error) {
         // trackBug(error)
       }
-    })();
+    })()
+      .then(() => null)
+      .catch((err) => new Error(err));
 
     // bind hub listener for auth changes
     const listener = async ({ payload }: HubCapsule) => {
@@ -50,11 +52,23 @@ export const AmplifyAuthProvider: React.FC = ({ children }) => {
         setUser(undefined);
       }
     };
-    Hub.listen('auth', listener);
+    Hub.listen('auth', (payload) => {
+      (async () => {
+        await listener(payload);
+      })()
+        .then(() => null)
+        .catch((err) => new Error(err));
+    });
 
     // clean up hub listener
     return () => {
-      Hub.remove('auth', listener);
+      Hub.remove('auth', (payload) => {
+        (async () => {
+          await listener(payload);
+        })()
+          .then(() => null)
+          .catch((err) => new Error(err));
+      });
     };
   }, []);
 

@@ -3,14 +3,14 @@ import { ArrowBack as BackIcon, Edit as EditIcon } from '@material-ui/icons';
 import { Button, DeleteButton, ListButton, TopToolbar } from 'react-admin';
 import { Link } from 'react-router-dom';
 
-export default (props: any): JSX.Element => {
+export default (props: Record<string, unknown>): JSX.Element => {
   if (!props.data) return null;
   const { basePath, data, resource } = props;
   let listBasePath = basePath;
-  let editBasePath = `${basePath}/${data.id}`;
+  let editBasePath = `${String(basePath)}/${String(data.id)}`;
   if (data && data.userId) {
-    listBasePath += `?userId=${data.userId}`;
-    editBasePath += `?userId=${data.userId}`;
+    listBasePath += `?userId=${String(data.userId)}`;
+    editBasePath += `?userId=${String(data.userId)}`;
   }
 
   return (
@@ -26,7 +26,7 @@ export default (props: any): JSX.Element => {
         record={data}
         resource={resource}
         mutationMode="pessimistic"
-        redirect={`${basePath}/${data.id}/show`}
+        redirect={`${String(basePath)}/${String(data.id)}/show`}
       />
     </TopToolbar>
   );

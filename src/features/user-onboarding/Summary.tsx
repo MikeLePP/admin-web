@@ -7,7 +7,13 @@ import TextLabel from '../../components/TextLabel';
 import { callApi } from '../../helpers/api';
 import { getFullname } from '../../helpers/string';
 
-export default ({ summaries, onPrevStep, userDetails, identity, notify }: any): JSX.Element => {
+export default ({
+  summaries,
+  onPrevStep,
+  userDetails,
+  identity,
+  notify,
+}: Record<string, unknown>): JSX.Element => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
 
@@ -25,12 +31,12 @@ export default ({ summaries, onPrevStep, userDetails, identity, notify }: any): 
   const handleCompleteClick = async (approved: boolean) => {
     try {
       setLoading(true);
-      await callApi(`/onboarding/${userDetails.id}`, 'post', {
+      await callApi(`/onboarding/${String(userDetails.id)}`, 'post', {
         step: 'complete',
         approved,
         updatedBy: identity?.id,
       });
-      void history.push('/users');
+      history.push('/users');
       notify(`${getFullname(userDetails)} has been ${approved ? 'Approved' : 'Rejected'}!`);
     } catch (error) {
       notify(error, 'error');
@@ -53,7 +59,12 @@ export default ({ summaries, onPrevStep, userDetails, identity, notify }: any): 
 
             <div className="flex flex-col space-y-3">
               {map(labels, (label, key) => (
-                <TextLabel key={key} label={`${label}:`} value={getValue(values[key])} horizontal />
+                <TextLabel
+                  key={key}
+                  label={`${String(label)}:`}
+                  value={getValue(values[key])}
+                  horizontal
+                />
               ))}
             </div>
           </div>

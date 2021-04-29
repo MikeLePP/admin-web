@@ -6,7 +6,7 @@ export interface TextLabelProps {
   horizontal?: boolean;
 }
 
-export default ({ label, value, horizontal = false }: TextLabelProps) => (
+export default ({ label, value, horizontal = false }: TextLabelProps): JSX.Element => (
   <Grid container>
     <Grid item xs={horizontal ? 3 : 12}>
       <Typography className="text-gray-500">{label}</Typography>

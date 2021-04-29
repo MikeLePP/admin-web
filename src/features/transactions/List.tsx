@@ -45,7 +45,7 @@ const Empty = ({ id = '' }): JSX.Element => {
   );
 };
 
-export default (props: any) => {
+export default (props: Record<string, unknown>): JSX.Element => {
   const userId = getId(props.location.search);
   return (
     <List
@@ -55,20 +55,26 @@ export default (props: any) => {
       pagination={false}
       empty={<Empty id={userId} />}
       sort={{ field: 'createdAt', order: 'DESC' }}
-      actions={<ListToolbar to={`${props.basePath}/create/${userId}`} {...props} />}
+      actions={<ListToolbar to={`${String(props.basePath)}/create/${String(userId)}`} {...props} />}
     >
       <Datagrid>
-        <FunctionField label="Created on" render={(v: any) => toLocalDateString(v.createdAt)} />
+        <FunctionField
+          label="Created on"
+          render={(v: any) => toLocalDateString(v.createdAt) as Record<string, unknown>}
+        />
         <FunctionField label="Status" render={(v: any) => upperFirst(lowerCase(v.status))} />
         <TextField label="Amount" source="amount" />
         <TextField label="Description" source="description" />
         <TextField label="Send to" source="destination" />
         <TextField label="Send from" source="source" />
-        <FunctionField label="Submit on" render={(v: any) => toLocalDateString(v.submitAt)} />
+        <FunctionField
+          label="Submit on"
+          render={(v: any) => toLocalDateString(v.submitAt) as Record<string, unknown>}
+        />
         <ShowButton />
         <RedirectButton
           buttonLabel="Edit"
-          to={(r: any) => `/transactions/${r.id}?userId=${userId}`}
+          to={(r: any) => `/transactions/${String(r.id)}?userId=${String(userId)}`}
           icon={<EditIcon />}
         />
       </Datagrid>

@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import { Divider } from '@material-ui/core';
 import {
   Create,
@@ -48,13 +49,13 @@ const formValidations = (data: any) => (values: any) => {
     ];
   }
 
-  return errors;
+  return errors as Record<string, unknown>;
 };
 
-export default (props: any) => {
+export default (props: Record<string, unknown>): JSX.Element => {
   const userId = getId(props.location.pathname);
   if (!userId) {
-    void props.history.push(props.basePath);
+    props.history.push(props.basePath);
     return null;
   }
 
@@ -66,8 +67,9 @@ export default (props: any) => {
   if (error) return <Error error={error} />;
   if (!data) return null;
 
-  const transform = (data: any) => ({ ...data, createdBy: identity?.id, userId });
-  const redirect = (basePath: string) => `${basePath}/${userId}`;
+  const transform = (innerData: any) =>
+    ({ ...innerData, createdBy: identity?.id, userId } as Record<string, unknown>);
+  const redirect = (basePath: string) => `${String(basePath)}/${String(userId)}`;
 
   return (
     <Create

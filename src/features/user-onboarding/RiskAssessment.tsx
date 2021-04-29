@@ -36,7 +36,10 @@ const validationSchema = yup.object({
   riskModelVersion: yup.string(),
   rejectedReasons: yup
     .array()
-    .when('approved', (val: any, schema: any) => (val ? schema.required() : schema)),
+    .when(
+      'approved',
+      (val: any, schema: any) => (val ? schema.required() : schema) as Record<string, unknown>,
+    ),
 });
 
 export default ({
@@ -49,46 +52,47 @@ export default ({
   notify,
   identity,
   riskAssessmentId,
-}: any): JSX.Element => {
+}: Record<string, unknown>): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
   const formik = useFormik({
     initialValues: values,
     validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (_values) => {
+      let thisRiskAssessmentId = riskAssessmentId;
       setLoading(true);
       try {
         dispatch(fetchStart());
-        const incomeSupport = Boolean(values.incomeSupport);
+        const incomeSupport = Boolean(_values.incomeSupport);
         // 1. create or update risk assessment
-        if (riskAssessmentId) {
-          await callApi(`/risk-assessments/${riskAssessmentId}`, 'patch', {
-            ...values,
+        if (thisRiskAssessmentId) {
+          await callApi(`/risk-assessments/${String(thisRiskAssessmentId)}`, 'patch', {
+            ..._values,
             incomeSupport,
             updatedBy: identity?.id,
           });
         } else {
           const { json } = await callApi('/risk-assessments', 'post', {
-            ...values,
+            ..._values,
             incomeSupport,
             userId: userDetails.id,
             createdBy: identity?.id,
           });
-          riskAssessmentId = json.id;
+          thisRiskAssessmentId = json.id;
         }
 
         // 2. call onboarding api to complete this step
-        await callApi(`/onboarding/${userDetails.id}`, 'post', {
+        await callApi(`/onboarding/${String(userDetails.id)}`, 'post', {
           step: 'risk-assessment',
-          riskAssessmentId,
+          thisRiskAssessmentId,
           updatedBy: identity?.id,
         });
 
-        onChange({ ...values, incomeSupport }, undefined, values.approved, {
-          riskAssessmentId,
+        onChange({ ..._values, incomeSupport }, undefined, _values.approved, {
+          thisRiskAssessmentId,
         });
-        onNextStep(!values.approved);
+        onNextStep(!_values.approved);
       } catch (error) {
         notify(error, 'error');
       } finally {

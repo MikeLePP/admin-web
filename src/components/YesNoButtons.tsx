@@ -6,7 +6,7 @@ export default ({
   isYes,
   noLabel = 'No',
   yesLabel = 'Yes',
-}: any): JSX.Element => (
+}: Record<string, unknown>): JSX.Element => (
   <div className="flex space-x-2">
     <Button
       variant={isYes === false ? 'contained' : 'outlined'}

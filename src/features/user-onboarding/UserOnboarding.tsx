@@ -1,4 +1,3 @@
-/* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect, useMemo, useState } from 'react';
 import { Typography } from '@material-ui/core';
 import { set, cloneDeep, reduce, map } from 'lodash';
@@ -19,10 +18,10 @@ import { ONBOARDING_STEPS } from './constants';
 
 const INIT_STEP = 1;
 
-export default (props: any): JSX.Element => {
+export default (props: Record<string, unknown>): JSX.Element => {
   const userId = getId(props.location.search);
   if (!userId) {
-    void props.history.push('/users');
+    props.history.push('/users');
     return null;
   }
 
@@ -35,7 +34,7 @@ export default (props: any): JSX.Element => {
 
   const Component = useMemo(() => {
     if (currentStep < 4) {
-      return ONBOARDING_STEPS[currentStep].component;
+      return ONBOARDING_STEPS[currentStep].component as Record<string, unknown>;
     }
     return Summary;
   }, [currentStep]);
@@ -108,9 +107,10 @@ export default (props: any): JSX.Element => {
       notify(
         reduce(
           message.body.errors,
-          (acc, cur) => {
-            acc += map(cur, (c) => c).join('\n\n');
-            return acc;
+          (acc, cur): any => {
+            let innerAcc = acc;
+            innerAcc += map(cur, (c: Record<string, unknown>) => c).join('\n\n');
+            return innerAcc;
           },
           '',
         ),

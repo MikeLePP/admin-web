@@ -4,7 +4,7 @@ import { useHistory } from 'react-router-dom';
 
 import Dialog from '../../components/Dialog';
 
-export default ({ onBackButtonClick, loading, children }: any): JSX.Element => {
+export default ({ onBackButtonClick, loading, children }: Record<string, unknown>): JSX.Element => {
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const handleCloseDialog = () => setShowExitConfirm(false);
   const handleExitClick = () => setShowExitConfirm(true);

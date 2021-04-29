@@ -15,7 +15,7 @@ export default ({
   onNextStep,
   notify,
   identity,
-}: any): JSX.Element => {
+}: Record<string, unknown>): JSX.Element => {
   const [notifyContinue, setNotifyContinue] = useState(false);
   const [loading, setLoading] = useState(false);
   const handleFormSubmit = async (e: any) => {
@@ -24,11 +24,11 @@ export default ({
       setLoading(true);
 
       await Promise.all([
-        callApi(`/identities/${userDetails.identity.id}`, 'patch', {
+        callApi(`/identities/${String(userDetails.identity.id)}`, 'patch', {
           verified: identityVerified,
           updatedBy: identity?.id,
         }),
-        callApi(`/onboarding/${userDetails.id}`, 'post', {
+        callApi(`/onboarding/${String(userDetails.id)}`, 'post', {
           step: 'identity',
           identityId: userDetails.identity.id,
           notifyUser: notifyContinue,
@@ -68,7 +68,7 @@ export default ({
             <div className="flex items-center space-x-1">
               <Typography component="span">{toLocalDateString(userDetails.dob) || '-'}</Typography>
               {userDetails.dob && (
-                <Chip size="small" label={`${yearOldString(userDetails.dob)} yr old`} />
+                <Chip size="small" label={`${String(yearOldString(userDetails.dob))} yr old`} />
               )}
             </div>
           </Grid>
@@ -96,8 +96,8 @@ export default ({
           </Typography>
           <YesNoButtons
             isYes={identityVerified}
-            onYesClick={() => onChange(true, 'identityVerified')}
-            onNoClick={() => onChange(false, 'identityVerified')}
+            onYesClick={() => onChange(true, 'identityVerified') as Record<string, unknown>}
+            onNoClick={() => onChange(false, 'identityVerified') as Record<string, unknown>}
           />
         </div>
       </div>

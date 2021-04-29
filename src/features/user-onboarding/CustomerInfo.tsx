@@ -5,13 +5,13 @@ import { useHistory } from 'react-router';
 import { getFullname } from '../../helpers/string';
 import TextLabel from '../../components/TextLabel';
 
-export default ({ userDetails, children }: any): JSX.Element => {
+export default ({ userDetails, children }: Record<string, unknown>): JSX.Element => {
   const { email, mobileNumber } = userDetails;
   const fullName = getFullname(userDetails);
   const history = useHistory();
 
   const handleEditUserClick = () => {
-    void history.push(`/users/${userDetails.id}`);
+    history.push(`/users/${String(userDetails.id)}`);
   };
 
   return (

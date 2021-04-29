@@ -15,7 +15,7 @@ import Toolbar from '../../components/SaveToolbar';
 import { pastDate, phone } from '../../helpers/validation';
 import { notifyOnFailure } from '../../helpers/notify';
 
-export default (props: any): JSX.Element => {
+export default (props: Record<string, unknown>): JSX.Element => {
   const notify = useNotify();
   return (
     <Create {...props} onFailure={notifyOnFailure(notify)}>

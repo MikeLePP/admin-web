@@ -23,10 +23,10 @@ import { getFullname } from '../../helpers/string';
 import { getId } from '../../helpers/url';
 import { futureDate } from '../../helpers/validation';
 
-export default (props: any): JSX.Element => {
+export default (props: Record<string, unknown>): JSX.Element => {
   const userId = getId(props.location.pathname);
   if (!userId) {
-    void props.history.push(props.basePath);
+    props.history.push(props.basePath);
     return null;
   }
 
@@ -38,7 +38,8 @@ export default (props: any): JSX.Element => {
   if (error) return <Error error={error} />;
   if (!data) return null;
 
-  const transform = (data: any) => ({ ...data, userId, createdBy: identity?.id });
+  const transform = (innerData: any) =>
+    ({ ...innerData, userId, createdBy: identity?.id } as Record<string, unknown>);
 
   const destinationRecord = {
     destination: process.env.REACT_APP_TRANSACTION_DESTINATION_ACCOUNT,

@@ -2,7 +2,7 @@ import React from 'react';
 import { useLogin } from 'react-admin';
 import { Button, Box } from '@material-ui/core';
 
-const LoginForm = () => {
+const LoginForm = (): JSX.Element => {
   const login = useLogin();
   const handleLogin = () => login({ federated: true, provider: 'COGNITO' });
   return (
@@ -12,7 +12,7 @@ const LoginForm = () => {
   );
 };
 
-export default () => (
+export default (): JSX.Element => (
   <Box display="flex" alignItems="center" justifyContent="center" height="100vh">
     <LoginForm />
   </Box>

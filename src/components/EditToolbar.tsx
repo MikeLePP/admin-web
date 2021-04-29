@@ -10,7 +10,7 @@ interface EditToolbarProps {
 export default ({ basePath, data }: EditToolbarProps): JSX.Element => {
   let path = basePath;
   if (data && data.userId) {
-    path += `?userId=${data.userId}`;
+    path += `?userId=${String(data.userId)}`;
   }
   return (
     <TopToolbar>

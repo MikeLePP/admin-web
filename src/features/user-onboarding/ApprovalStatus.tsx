@@ -5,7 +5,7 @@ import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import { map } from 'lodash';
 import cn from 'classnames';
 
-export default ({ summaries }: any): JSX.Element => {
+export default ({ summaries }: Record<string, unknown>): JSX.Element => {
   const getStatusIcon = (completed?: boolean) => {
     if (completed === true) {
       return <CheckCircleIcon color="secondary" />;

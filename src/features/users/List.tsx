@@ -11,13 +11,13 @@ import {
 import RedirectButton from '../../components/RedirectButton';
 import { getFullname } from '../../helpers/string';
 
-const UserFilter = (props: any) => (
+const UserFilter = (props: Record<string, unknown>) => (
   <Filter {...props}>
     <TextInput label="Search by mobile number" source="mobileNumber" alwaysOn resettable />
   </Filter>
 );
 
-export default (props: any): JSX.Element => (
+export default (props: Record<string, unknown>): JSX.Element => (
   <List
     {...props}
     bulkActionButtons={false}
@@ -35,10 +35,13 @@ export default (props: any): JSX.Element => (
       <TextField label="Email" source="email" />
       <TextField label="Mobile" source="mobileNumber" />
       <TextField label="Current balance" source="balanceCurrent" />
-      <RedirectButton buttonLabel="Transactions" to={(r: any) => `/transactions?userId=${r.id}`} />
+      <RedirectButton
+        buttonLabel="Transactions"
+        to={(r: any) => `/transactions?userId=${String(r.id)}`}
+      />
       <RedirectButton
         buttonLabel="Onboarding"
-        to={(r: any) => `/user-onboarding/create?userId=${r.id}`}
+        to={(r: any) => `/user-onboarding/create?userId=${String(r.id)}`}
       />
       <ShowButton />
       <EditButton />

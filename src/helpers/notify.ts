@@ -5,7 +5,7 @@ interface NotifyDocument {
 }
 
 export const notifyOnFailure = (notify: NotifyDocument) => (error: HttpError): any => {
-  const { errors } = error.body;
+  const { errors }: { errors: { title: string }[] } = error.body;
   if (errors && errors.length)
     notify(
       `Please check the following ${errors

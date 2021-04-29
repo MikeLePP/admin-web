@@ -10,7 +10,7 @@ import {
 } from 'react-admin';
 import ShowToolbar from '../../components/ShowToolbar';
 
-export default (props: any): JSX.Element => (
+export default (props: Record<string, unknown>): JSX.Element => (
   <Show {...props} actions={<ShowToolbar />}>
     <SimpleShowLayout>
       <TextField label="First name" source="firstName" />

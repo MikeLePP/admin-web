@@ -41,7 +41,7 @@ export default ({
   onCompleteStep,
   notify,
   identity,
-}: any): JSX.Element => {
+}: Record<string, unknown>): JSX.Element => {
   const [verified, setVerified] = useState(false);
   const [notifyContinue, setNotifyContinue] = useState(false);
 
@@ -53,7 +53,7 @@ export default ({
     enableReinitialize: true,
     initialValues: values,
     validationSchema,
-    onSubmit: async (values) => {
+    onSubmit: async (innerValues) => {
       if (!formik.dirty) {
         // go to next step when nothing changes
         onCompleteStep(true);
@@ -63,19 +63,19 @@ export default ({
           setLoading(true);
           dispatch(fetchStart());
           // 1. call bank account api to set is verify
-          await callApi(`/bank-accounts/${userDetails.bankAccount.id}`, 'patch', {
+          await callApi(`/bank-accounts/${String(userDetails.bankAccount.id)}`, 'patch', {
             verified,
             updatedBy: identity?.id,
           });
           // 2. call onboarding api to complete this step
-          await callApi(`/onboarding/${userDetails.id}`, 'post', {
+          await callApi(`/onboarding/${String(userDetails.id)}`, 'post', {
             step: 'bank-account',
             bankAccountId: userDetails.bankAccount.id,
             notifyUser: notifyContinue,
             updatedBy: identity?.id,
           });
 
-          onChange(values, undefined, verified);
+          onChange(innerValues, undefined, verified);
           onNextStep(!verified);
         } catch (error) {
           notify(error, 'error');
