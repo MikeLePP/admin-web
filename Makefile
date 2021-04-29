@@ -12,6 +12,7 @@ PACKAGE_DIRECTORY := $(ARTEFACT_DIRECTORY)/package
 
 ENV ?= dev
 
+include .env .env.$(ENV)
 include $(PROJECT_ROOT)/make/*.mk
 
 # Automatically mark all targets as .PHONY
