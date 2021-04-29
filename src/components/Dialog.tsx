@@ -12,8 +12,8 @@ interface DialogProps {
   onCancelClick: any;
   onConfirmClick: any;
   title: any;
-  body: any;
-  cancelLabel: any;
+  body?: any;
+  cancelLabel?: any;
   confirmLabel: any;
 }
 

@@ -4,6 +4,7 @@ import {
   Filter,
   FunctionField,
   List,
+  ResourceComponentProps,
   ShowButton,
   TextField,
   TextInput,
@@ -17,7 +18,7 @@ const UserFilter = (props: Record<string, unknown>) => (
   </Filter>
 );
 
-export default (props: Record<string, unknown>): JSX.Element => (
+export default (props: ResourceComponentProps): JSX.Element => (
   <List
     {...props}
     bulkActionButtons={false}

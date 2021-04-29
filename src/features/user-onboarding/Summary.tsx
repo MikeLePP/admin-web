@@ -1,8 +1,7 @@
+import { Button, Typography } from '@material-ui/core';
+import { every, map } from 'lodash';
 import { Fragment, useState } from 'react';
-import { Typography, Button } from '@material-ui/core';
-import { map, every } from 'lodash';
 import { useHistory } from 'react-router-dom';
-
 import TextLabel from '../../components/TextLabel';
 import { callApi } from '../../helpers/api';
 import { getFullname } from '../../helpers/string';

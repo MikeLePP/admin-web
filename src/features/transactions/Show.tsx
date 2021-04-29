@@ -4,13 +4,14 @@ import {
   DateField,
   FunctionField,
   NumberField,
+  ResourceComponentPropsWithId,
   Show,
   SimpleShowLayout,
   TextField,
 } from 'react-admin';
 import ShowToolbar from '../../components/ShowToolbar';
 
-export default (props: Record<string, unknown>): JSX.Element => (
+export default (props: ResourceComponentPropsWithId): JSX.Element => (
   <Show {...props} actions={<ShowToolbar />}>
     <SimpleShowLayout>
       <TextField label="First name" source="firstName" />

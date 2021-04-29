@@ -10,6 +10,7 @@ import {
   number,
   useNotify,
   SelectInput,
+  ResourceComponentPropsWithId,
 } from 'react-admin';
 import { Divider } from '@material-ui/core';
 import Toolbar from '../../components/SaveToolbar';
@@ -18,7 +19,7 @@ import { futureDate, pastDate, phone } from '../../helpers/validation';
 import EditToolbar from '../../components/EditToolbar';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 
-export default (props: Record<string, unknown>): JSX.Element => {
+export default (props: ResourceComponentPropsWithId): JSX.Element => {
   const notify = useNotify();
 
   return (

@@ -1,11 +1,12 @@
 import { List, ListItem, ListItemIcon, ListItemText, Typography } from '@material-ui/core';
-import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
-import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
-import { map } from 'lodash';
+import CheckCircleIcon from '@material-ui/icons/CheckCircle';
+import CheckCircleOutlineIcon from '@material-ui/icons/CheckCircleOutline';
 import cn from 'classnames';
+import { map } from 'lodash';
+import { OnboardingStep } from './OnboardingSteps';
 
-export default ({ summaries }: Record<string, unknown>): JSX.Element => {
+export default ({ summaries }: { summaries: OnboardingStep }): JSX.Element => {
   const getStatusIcon = (completed?: boolean) => {
     if (completed === true) {
       return <CheckCircleIcon color="secondary" />;

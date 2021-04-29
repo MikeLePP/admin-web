@@ -1,5 +1,13 @@
 import { useState } from 'react';
-import { List, Datagrid, TextField, useListContext, ShowButton, FunctionField } from 'react-admin';
+import {
+  List,
+  Datagrid,
+  TextField,
+  useListContext,
+  ShowButton,
+  FunctionField,
+  ResourceComponentProps,
+} from 'react-admin';
 
 import { Typography, Button, TextField as InputField } from '@material-ui/core';
 import { ListAlt as CheckIcon, Edit as EditIcon } from '@material-ui/icons';
@@ -45,8 +53,8 @@ const Empty = ({ id = '' }): JSX.Element => {
   );
 };
 
-export default (props: Record<string, unknown>): JSX.Element => {
-  const userId = getId(props.location.search);
+export default (props: ResourceComponentProps): JSX.Element => {
+  const userId = getId(props.location?.search);
   return (
     <List
       {...props}

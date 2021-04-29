@@ -101,17 +101,12 @@ export function useAuthProvider(): any {
       await Auth.currentSession();
     },
     checkError: () => Promise.resolve(),
-    getIdentity: (): Promise<UserIdentity> =>
-      new Promise(async (resolve, reject) => {
-        try {
-          const userSession = await Auth.currentSession();
-          const idToken = userSession.getIdToken();
-          const { email } = idToken.payload;
-          return resolve({ id: email, fullName: email, avatar: '' });
-        } catch (error) {
-          return reject(error);
-        }
-      }),
+    getIdentity: async (): Promise<UserIdentity> => {
+      const userSession = await Auth.currentSession();
+      const idToken = userSession.getIdToken();
+      const { email } = idToken.payload;
+      return { id: email, fullName: email, avatar: '' };
+    },
     /** Providers permissions for the whole app. identityId is used with S3Input. */
     getPermissions: () =>
       Promise.all([Auth.currentSession(), Auth.currentCredentials()]).then(

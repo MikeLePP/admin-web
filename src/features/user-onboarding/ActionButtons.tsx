@@ -1,10 +1,15 @@
-import { useState } from 'react';
 import { Button } from '@material-ui/core';
+import { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-
 import Dialog from '../../components/Dialog';
 
-export default ({ onBackButtonClick, loading, children }: Record<string, unknown>): JSX.Element => {
+export interface ActionButtonsProps {
+  children: React.ReactNode;
+  loading: boolean;
+  onBackButtonClick?: React.MouseEventHandler<HTMLButtonElement>;
+}
+
+export default ({ onBackButtonClick, loading, children }: ActionButtonsProps): JSX.Element => {
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const handleCloseDialog = () => setShowExitConfirm(false);
   const handleExitClick = () => setShowExitConfirm(true);
@@ -42,11 +47,11 @@ export default ({ onBackButtonClick, loading, children }: Record<string, unknown
         {children}
       </div>
       <Dialog
-        show={showExitConfirm}
+        confirmLabel="Yes, Exit"
         onCancelClick={handleCloseDialog}
         onConfirmClick={handleExit}
+        show={showExitConfirm}
         title="Are you sure you want to exit?"
-        confirmLabel="Yes, Exit"
       />
     </>
   );

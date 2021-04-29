@@ -1,31 +1,32 @@
-import { useEffect, useMemo, useState } from 'react';
 import { Typography } from '@material-ui/core';
-import { set, cloneDeep, reduce, map } from 'lodash';
+import { cloneDeep, map, reduce, set } from 'lodash';
+import { useEffect, useMemo, useState } from 'react';
 import {
   Error,
   Loading,
   NotificationType,
+  ResourceComponentProps,
   useGetIdentity,
   useGetOne,
   useNotify,
 } from 'react-admin';
-
-import Summary from './Summary';
-import CustomerInfo from './CustomerInfo';
-import ApprovalStatus from './ApprovalStatus';
 import { getId } from '../../helpers/url';
-import { ONBOARDING_STEPS } from './constants';
+import { User } from '../../types/user';
+import ApprovalStatus from './ApprovalStatus';
+import CustomerInfo from './CustomerInfo';
+import OnboardingSteps from './OnboardingSteps';
+import Summary from './Summary';
 
 const INIT_STEP = 1;
 
-export default (props: Record<string, unknown>): JSX.Element => {
-  const userId = getId(props.location.search);
+export default (props: ResourceComponentProps): JSX.Element | null => {
+  const userId = getId(props.location?.search);
   if (!userId) {
-    props.history.push('/users');
+    props.history?.push('/users');
     return null;
   }
 
-  const { data: userDetails, loading, error } = useGetOne('users', userId);
+  const { data: userDetails, loading, error } = useGetOne<User>('users', userId);
   const { identity } = useGetIdentity();
   const notify = useNotify();
 
@@ -34,12 +35,12 @@ export default (props: Record<string, unknown>): JSX.Element => {
 
   const Component = useMemo(() => {
     if (currentStep < 4) {
-      return ONBOARDING_STEPS[currentStep].component as Record<string, unknown>;
+      return OnboardingSteps[currentStep].component;
     }
     return Summary;
   }, [currentStep]);
 
-  const [wizardData, setWizardData] = useState(ONBOARDING_STEPS);
+  const [wizardData, setWizardData] = useState(OnboardingSteps);
 
   useEffect(() => {
     if (userDetails && (userDetails.bankAccount || userDetails.identity)) {

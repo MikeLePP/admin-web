@@ -1,18 +1,17 @@
-/* eslint-disable eqeqeq */
-import { useEffect, useState } from 'react';
-import { Typography, InputAdornment, Button } from '@material-ui/core';
-import { useFormik } from 'formik';
-import * as yup from 'yup';
-import cn from 'classnames';
+import { Button, InputAdornment, Typography } from '@material-ui/core';
 import CancelOutlinedIcon from '@material-ui/icons/CancelOutlined';
 import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
-import { fetchStart, fetchEnd } from 'react-admin';
+import cn from 'classnames';
+import { useFormik } from 'formik';
+import { useEffect, useState } from 'react';
+import { fetchEnd, fetchStart, NotificationType, ResourceProps, useGetIdentity } from 'react-admin';
 import { useDispatch } from 'react-redux';
-
-import YesNoButtons from '../../components/YesNoButtons';
+import * as yup from 'yup';
 import InputField from '../../components/InputField';
-import ActionButtons from './ActionButtons';
+import YesNoButtons from '../../components/YesNoButtons';
 import { callApi } from '../../helpers/api';
+import { User } from '../../types/user';
+import ActionButtons from './ActionButtons';
 
 const validationSchema = yup.object({
   bankDetailsAvailable: yup.boolean(),
@@ -32,6 +31,26 @@ const validationSchema = yup.object({
     ),
 });
 
+export interface BankVerificationProps {
+  values: {
+    bankDetailsAvailable: boolean;
+    accountBsb: string;
+    accountNumber: string;
+  };
+  labels: Record<string, string>;
+  userDetails: User;
+  onChange: (
+    values: Record<string, unknown>,
+    key?: string,
+    completed?: boolean,
+    stepValues?: Record<string, unknown>,
+  ) => void;
+  onNextStep: (goToSummary?: boolean) => void;
+  onCompleteStep: (completed: boolean) => void;
+  notify: (message: string, notificationType: NotificationType) => void;
+  identity: ReturnType<typeof useGetIdentity>['identity'];
+}
+
 export default ({
   values,
   labels,
@@ -41,7 +60,7 @@ export default ({
   onCompleteStep,
   notify,
   identity,
-}: Record<string, unknown>): JSX.Element => {
+}: BankVerificationProps): JSX.Element => {
   const [verified, setVerified] = useState(false);
   const [notifyContinue, setNotifyContinue] = useState(false);
 
@@ -89,8 +108,8 @@ export default ({
 
   useEffect(() => {
     if (
-      formik.values.accountBsb == userDetails.bankAccount.accountBsb &&
-      formik.values.accountNumber == userDetails.bankAccount.accountNumber
+      formik.values.accountBsb === userDetails.bankAccount.accountBsb &&
+      formik.values.accountNumber === userDetails.bankAccount.accountNumber
     ) {
       setVerified(formik.values.bankDetailsAvailable);
     }
@@ -102,8 +121,12 @@ export default ({
     userDetails.bankAccount.accountBsb,
   ]);
 
-  const valueMatched = (name: string) =>
-    formik.values[name] ? formik.values[name] == userDetails.bankAccount[name] : true;
+  const valueMatched = (
+    name: Extract<
+      keyof BankVerificationProps['values'],
+      keyof BankVerificationProps['userDetails']['bankAccount']
+    >,
+  ) => (formik.values[name] ? formik.values[name] === userDetails.bankAccount[name] : true);
 
   const handleNotifyContinue = () => {
     setNotifyContinue(true);
@@ -137,17 +160,19 @@ export default ({
                 className: cn({ 'text-black': !valueMatched('accountBsb') }),
               }}
               InputProps={{
-                ...(formik.values.accountBsb && {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      {valueMatched('accountBsb') ? (
-                        <CheckCircleOutlinedIcon color="inherit" className="text-green-500" />
-                      ) : (
-                        <CancelOutlinedIcon color="error" />
-                      )}
-                    </InputAdornment>
-                  ),
-                }),
+                ...(formik.values.accountBsb
+                  ? {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          {valueMatched('accountBsb') ? (
+                            <CheckCircleOutlinedIcon color="inherit" className="text-green-500" />
+                          ) : (
+                            <CancelOutlinedIcon color="error" />
+                          )}
+                        </InputAdornment>
+                      ),
+                    }
+                  : {}),
               }}
               inputProps={{
                 min: 0,
@@ -168,17 +193,19 @@ export default ({
                 className: cn({ 'text-black': !valueMatched('accountNumber') }),
               }}
               InputProps={{
-                ...(formik.values.accountNumber && {
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      {valueMatched('accountNumber') ? (
-                        <CheckCircleOutlinedIcon color="inherit" className="text-green-500" />
-                      ) : (
-                        <CancelOutlinedIcon color="error" />
-                      )}
-                    </InputAdornment>
-                  ),
-                }),
+                ...(formik.values.accountNumber
+                  ? {
+                      endAdornment: (
+                        <InputAdornment position="end">
+                          {valueMatched('accountNumber') ? (
+                            <CheckCircleOutlinedIcon color="inherit" className="text-green-500" />
+                          ) : (
+                            <CancelOutlinedIcon color="error" />
+                          )}
+                        </InputAdornment>
+                      ),
+                    }
+                  : {}),
               }}
               inputProps={{
                 min: 0,

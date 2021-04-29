@@ -16,6 +16,7 @@ import {
   useGetIdentity,
   useGetOne,
   useNotify,
+  ResourceComponentProps,
 } from 'react-admin';
 import Toolbar from '../../components/SaveToolbar';
 import { notifyOnFailure } from '../../helpers/notify';
@@ -23,10 +24,10 @@ import { getFullname } from '../../helpers/string';
 import { getId } from '../../helpers/url';
 import { futureDate } from '../../helpers/validation';
 
-export default (props: Record<string, unknown>): JSX.Element => {
-  const userId = getId(props.location.pathname);
+export default (props: ResourceComponentProps): JSX.Element | null => {
+  const userId = getId(props.location?.pathname);
   if (!userId) {
-    props.history.push(props.basePath);
+    props.history?.push(props.basePath!);
     return null;
   }
 

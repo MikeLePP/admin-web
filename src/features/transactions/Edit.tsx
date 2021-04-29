@@ -9,6 +9,7 @@ import {
   NumberInput,
   RadioButtonGroupInput,
   required,
+  ResourceComponentPropsWithId,
   SimpleForm,
   TextField,
   TextInput,
@@ -16,16 +17,19 @@ import {
   useGetIdentity,
   useNotify,
 } from 'react-admin';
-import SaveToolbar from '../../components/SaveToolbar';
 import EditToolbar from '../../components/EditToolbar';
+import SaveToolbar from '../../components/SaveToolbar';
 import { notifyOnFailure } from '../../helpers/notify';
 import { getFullname } from '../../helpers/string';
 import { getId } from '../../helpers/url';
 import { futureDate } from '../../helpers/validation';
 
-export default (props: Record<string, unknown>): JSX.Element => {
-  const userId = getId(props.location.search);
-  if (!userId) return props.history.push(props.basePath) as Record<string, unknown>;
+export default (props: ResourceComponentPropsWithId): JSX.Element | null => {
+  const userId = getId(props.location?.search);
+  if (!userId) {
+    props.history?.push(props.basePath!);
+    return null;
+  }
 
   const { identity } = useGetIdentity();
   const notify = useNotify();

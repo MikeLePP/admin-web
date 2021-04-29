@@ -1,29 +1,29 @@
-import { useState } from 'react';
 import {
-  Typography,
-  Grid,
-  MenuItem,
-  InputAdornment,
   Button,
   Checkbox,
-  ListItemText,
   FormControl,
+  Grid,
+  InputAdornment,
   InputLabel,
+  ListItemText,
+  MenuItem,
   Select,
+  Typography,
 } from '@material-ui/core';
 import { useFormik } from 'formik';
-import * as yup from 'yup';
-import { fetchStart, fetchEnd } from 'react-admin';
+import { useState } from 'react';
+import { fetchEnd, fetchStart, NotificationType, useGetIdentity } from 'react-admin';
 import { useDispatch } from 'react-redux';
-
-import { GOVERNMENT_SUPPORT, RISK_MODELS, DECLINE_REASONS } from './constants';
-import YesNoButtons from '../../components/YesNoButtons';
+import * as yup from 'yup';
 import InputField from '../../components/InputField';
-import ActionButtons from './ActionButtons';
 import TextLabel from '../../components/TextLabel';
+import YesNoButtons from '../../components/YesNoButtons';
 import INCOME_FREQUENCIES from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import { toLocalDateString } from '../../helpers/date';
+import { User } from '../../types/user';
+import ActionButtons from './ActionButtons';
+import { DECLINE_REASONS, GOVERNMENT_SUPPORT, RISK_MODELS } from './constants';
 
 const validationSchema = yup.object({
   approved: yup.boolean(),
@@ -36,11 +36,32 @@ const validationSchema = yup.object({
   riskModelVersion: yup.string(),
   rejectedReasons: yup
     .array()
-    .when(
-      'approved',
-      (val: any, schema: any) => (val ? schema.required() : schema) as Record<string, unknown>,
+    .when('approved', (val: boolean, schema: yup.AnySchema) =>
+      val ? (schema.required() as yup.AnySchema) : schema,
     ),
 });
+
+export interface RiskAssessmentProps {
+  values: {
+    approved?: boolean;
+    incomeSupport?: boolean;
+    rejectedReasons: string[];
+  };
+  riskAssessmentId?: string;
+  labels: Record<string, string>;
+  userDetails: User;
+  onChange: (
+    values: Record<string, unknown>,
+    key?: string,
+    completed?: boolean,
+    stepValues?: Record<string, unknown>,
+  ) => void;
+  onPrevStep: () => void;
+  onNextStep: (goToSummary?: boolean) => void;
+  onCompleteStep: (completed: boolean) => void;
+  notify: (message: string, notificationType: NotificationType) => void;
+  identity: ReturnType<typeof useGetIdentity>['identity'];
+}
 
 export default ({
   values,
@@ -52,7 +73,7 @@ export default ({
   notify,
   identity,
   riskAssessmentId,
-}: Record<string, unknown>): JSX.Element => {
+}: RiskAssessmentProps): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
@@ -102,8 +123,8 @@ export default ({
     },
   });
 
-  const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    formik.setFieldValue('rejectedReasons', event.target.value as string[]);
+  const handleChange = async (event: React.ChangeEvent<{ value: unknown }>) => {
+    await formik.setFieldValue('rejectedReasons', event.target.value as string[]);
   };
 
   return (

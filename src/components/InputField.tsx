@@ -1,11 +1,16 @@
-import { TextField } from '@material-ui/core';
+import { TextField, TextFieldProps } from '@material-ui/core';
+import { FormikErrors, FormikTouched } from 'formik';
 
-interface Props {
-  name: any;
-  formik: any;
-  helperText: any;
-  onChange: any;
-}
+type Props = TextFieldProps & {
+  name: string;
+  formik: {
+    values: Record<string, unknown>;
+    touched: FormikTouched<Record<string, unknown>>;
+    errors: FormikErrors<Record<string, unknown>>;
+    handleChange?: React.ChangeEventHandler<HTMLTextAreaElement | HTMLInputElement>;
+  };
+};
+
 export default ({ name, formik, helperText, onChange, ...rest }: Props): JSX.Element => (
   <TextField
     variant="outlined"

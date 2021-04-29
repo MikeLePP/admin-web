@@ -1,11 +1,10 @@
+import { Button, Chip, Grid, Typography } from '@material-ui/core';
 import { useState } from 'react';
-import { Typography, Grid, Button, Chip } from '@material-ui/core';
-
-import YesNoButtons from '../../components/YesNoButtons';
-import ActionButtons from './ActionButtons';
 import TextLabel from '../../components/TextLabel';
+import YesNoButtons from '../../components/YesNoButtons';
 import { callApi } from '../../helpers/api';
 import { toLocalDateString, yearOldString } from '../../helpers/date';
+import ActionButtons from './ActionButtons';
 
 export default ({
   values: { identityVerified },

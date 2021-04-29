@@ -1,21 +1,22 @@
+import { Divider } from '@material-ui/core';
 import {
   Create,
   DateInput,
+  email,
+  maxLength,
+  minLength,
+  number,
+  required,
+  ResourceComponentProps,
   SimpleForm,
   TextInput,
-  required,
-  email,
-  number,
-  minLength,
-  maxLength,
   useNotify,
 } from 'react-admin';
-import { Divider } from '@material-ui/core';
 import Toolbar from '../../components/SaveToolbar';
-import { pastDate, phone } from '../../helpers/validation';
 import { notifyOnFailure } from '../../helpers/notify';
+import { pastDate, phone } from '../../helpers/validation';
 
-export default (props: Record<string, unknown>): JSX.Element => {
+export default (props: ResourceComponentProps): JSX.Element => {
   const notify = useNotify();
   return (
     <Create {...props} onFailure={notifyOnFailure(notify)}>

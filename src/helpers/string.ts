@@ -1,6 +1,6 @@
 interface RecordProps {
   firstName: string;
-  middleName: string;
+  middleName?: string;
   lastName: string;
 }
 export const getFullname = (record: RecordProps): string =>

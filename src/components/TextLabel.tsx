@@ -2,7 +2,7 @@ import { Grid, Typography } from '@material-ui/core';
 
 export interface TextLabelProps {
   label: string;
-  value: string;
+  value: React.ReactNode;
   horizontal?: boolean;
 }
 
