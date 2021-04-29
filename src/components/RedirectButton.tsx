@@ -1,7 +1,7 @@
 import { Button, EditButton, FunctionField } from 'react-admin';
 import { useHistory } from 'react-router-dom';
 
-export default (props: any) => {
+export default (props: any): JSX.Element => {
   const { to, buttonLabel, icon: Icon, ...rest } = props;
   const history = useHistory();
   const handleButtonClick = (path: string) => () => history.push(path);

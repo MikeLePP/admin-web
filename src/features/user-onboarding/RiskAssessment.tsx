@@ -49,7 +49,7 @@ export default ({
   notify,
   identity,
   riskAssessmentId,
-}: any) => {
+}: any): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 

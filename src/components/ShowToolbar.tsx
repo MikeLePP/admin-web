@@ -3,7 +3,7 @@ import { ArrowBack as BackIcon, Edit as EditIcon } from '@material-ui/icons';
 import { Button, DeleteButton, ListButton, TopToolbar } from 'react-admin';
 import { Link } from 'react-router-dom';
 
-export default (props: any) => {
+export default (props: any): JSX.Element => {
   if (!props.data) return null;
   const { basePath, data, resource } = props;
   let listBasePath = basePath;

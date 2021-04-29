@@ -18,7 +18,7 @@ import { futureDate, pastDate, phone } from '../../helpers/validation';
 import EditToolbar from '../../components/EditToolbar';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 
-export default (props: any) => {
+export default (props: any): JSX.Element => {
   const notify = useNotify();
 
   return (

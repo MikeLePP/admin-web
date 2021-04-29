@@ -13,6 +13,9 @@ serve:
 start:
 	npm run start
 
+fix:
+	npm run fix
+
 test: ## Run unit tests
 	npx jest --passWithNoTests
 

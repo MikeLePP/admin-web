@@ -7,7 +7,7 @@ import TextLabel from '../../components/TextLabel';
 import { callApi } from '../../helpers/api';
 import { getFullname } from '../../helpers/string';
 
-export default ({ summaries, onPrevStep, userDetails, identity, notify }: any) => {
+export default ({ summaries, onPrevStep, userDetails, identity, notify }: any): JSX.Element => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
 

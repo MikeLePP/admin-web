@@ -1,7 +1,7 @@
 import Auth from '@aws-amplify/auth';
 import { fetchUtils } from 'react-admin';
 
-export const callApi = async (path: string, method = 'get', body?: any) => {
+export const callApi = async (path: string, method = 'get', body?: any): Promise<any> => {
   const { signInUserSession } = await Auth.currentAuthenticatedUser();
   const options = {
     method: method.toUpperCase(),

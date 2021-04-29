@@ -17,7 +17,7 @@ const UserFilter = (props: any) => (
   </Filter>
 );
 
-export default (props: any) => (
+export default (props: any): JSX.Element => (
   <List
     {...props}
     bulkActionButtons={false}

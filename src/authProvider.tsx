@@ -30,8 +30,8 @@ export const AmplifyAuthProvider: React.FC = ({ children }) => {
     // get user on mount with a immediately invoked function
     (async () => {
       try {
-        const user = await Auth.currentAuthenticatedUser();
-        setUser(user === 'not authenticated' ? undefined : user);
+        const currentUser = await Auth.currentAuthenticatedUser();
+        setUser(currentUser === 'not authenticated' ? undefined : currentUser);
       } catch (error) {
         // trackBug(error)
       }
@@ -41,8 +41,8 @@ export const AmplifyAuthProvider: React.FC = ({ children }) => {
     const listener = async ({ payload }: HubCapsule) => {
       if (payload.event === 'signIn') {
         try {
-          const user = await Auth.currentAuthenticatedUser();
-          setUser(user);
+          const currentUser = await Auth.currentAuthenticatedUser();
+          setUser(currentUser);
         } catch (error) {
           // trackBug(error)
         }
@@ -69,13 +69,13 @@ export const AmplifyAuthProvider: React.FC = ({ children }) => {
   );
 };
 
-export function useAuth() {
+export function useAuth(): any {
   const context = useContext(AmplifyAuthContext);
   if (!context) throw Error(NOT_INSIDE_AMPLIFY_PROVIDER);
   return context;
 }
 
-export function useAuthProvider() {
+export function useAuthProvider(): any {
   return {
     /** Signs in either using username and password, or federated if a provider is passed. */
     login: ({ username, password, provider }: any) =>
@@ -108,7 +108,7 @@ export function useAuthProvider() {
   };
 }
 
-export function useUser() {
+export function useUser(): any {
   const context = useContext(UserContext);
   return context;
 }

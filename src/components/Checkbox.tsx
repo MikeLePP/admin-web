@@ -1,7 +1,14 @@
 import { FormControl, FormControlLabel, Checkbox, FormHelperText } from '@material-ui/core';
 import { useFormState, useField } from 'react-final-form';
 
-export default ({ source, label, handleChange, required = false }: any) => {
+interface CheckboxProps {
+  source: any;
+  label: any;
+  handleChange: any;
+  required: boolean;
+}
+
+export default ({ source, label, handleChange, required = false }: CheckboxProps): JSX.Element => {
   const { values } = useFormState();
   const {
     input: { onChange },

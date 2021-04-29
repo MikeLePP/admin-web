@@ -1,10 +1,16 @@
 import { HttpError } from 'react-admin';
 
-export const notifyOnFailure = (notify: any) => (error: HttpError) => {
+interface NotifyDocument {
+  (props1: string, props2: string, props3: any, props4: boolean, props5: number): void;
+}
+
+export const notifyOnFailure = (notify: NotifyDocument) => (error: HttpError): any => {
   const { errors } = error.body;
   if (errors && errors.length)
     notify(
-      `Please check the following ${errors.map((e: { title: string }) => `* ${e.title},`)}`,
+      `Please check the following ${errors
+        .map((e: { title: string }) => `* ${e.title},`)
+        .join('')}`,
       'error',
       {},
       false,

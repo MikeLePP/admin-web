@@ -23,7 +23,7 @@ import { getFullname } from '../../helpers/string';
 import { getId } from '../../helpers/url';
 import { futureDate } from '../../helpers/validation';
 
-export default (props: any) => {
+export default (props: any): JSX.Element => {
   const userId = getId(props.location.pathname);
   if (!userId) {
     void props.history.push(props.basePath);

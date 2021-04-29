@@ -11,7 +11,7 @@ import ListToolbar from '../../components/ListToolbar';
 import { getId } from '../../helpers/url';
 import RedirectButton from '../../components/RedirectButton';
 
-const Empty = ({ id = '' }) => {
+const Empty = ({ id = '' }): JSX.Element => {
   const [userId, setUserId] = useState(id);
   const { basePath } = useListContext();
   const history = useHistory();

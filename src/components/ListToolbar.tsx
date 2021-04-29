@@ -10,7 +10,12 @@ import {
 import { Box } from '@material-ui/core';
 import { ArrowBack as BackIcon } from '@material-ui/icons';
 
-export default (props: any) => {
+interface ListToolbar {
+  filters: any;
+  maxResults: any;
+  to: any;
+}
+export default (props: ListToolbar): JSX.Element => {
   const { filters, maxResults, to } = props;
   const {
     currentSort,

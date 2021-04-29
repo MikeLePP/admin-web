@@ -19,7 +19,7 @@ import { ONBOARDING_STEPS } from './constants';
 
 const INIT_STEP = 1;
 
-export default (props: any) => {
+export default (props: any): JSX.Element => {
   const userId = getId(props.location.search);
   if (!userId) {
     void props.history.push('/users');

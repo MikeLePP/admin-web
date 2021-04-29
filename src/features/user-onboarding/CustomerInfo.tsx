@@ -5,7 +5,7 @@ import { useHistory } from 'react-router';
 import { getFullname } from '../../helpers/string';
 import TextLabel from '../../components/TextLabel';
 
-export default ({ userDetails, children }: any) => {
+export default ({ userDetails, children }: any): JSX.Element => {
   const { email, mobileNumber } = userDetails;
   const fullName = getFullname(userDetails);
   const history = useHistory();

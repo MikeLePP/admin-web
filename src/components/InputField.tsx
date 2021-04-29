@@ -1,6 +1,12 @@
 import { TextField } from '@material-ui/core';
 
-export default ({ name, formik, helperText, onChange, ...rest }: any) => (
+interface Props {
+  name: any;
+  formik: any;
+  helperText: any;
+  onChange: any;
+}
+export default ({ name, formik, helperText, onChange, ...rest }: Props): JSX.Element => (
   <TextField
     variant="outlined"
     color="secondary"

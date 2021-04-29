@@ -7,6 +7,16 @@ import {
   Button,
 } from '@material-ui/core';
 
+interface DialogProps {
+  show: any;
+  onCancelClick: any;
+  onConfirmClick: any;
+  title: any;
+  body: any;
+  cancelLabel: any;
+  confirmLabel: any;
+}
+
 export default ({
   show,
   onCancelClick,
@@ -15,7 +25,7 @@ export default ({
   body,
   cancelLabel = 'Cancel',
   confirmLabel = 'Confirm',
-}: any) => (
+}: DialogProps): JSX.Element => (
   <Dialog onClose={onCancelClick} open={show}>
     <DialogTitle>{title}</DialogTitle>
     {body && (

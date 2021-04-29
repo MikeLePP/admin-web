@@ -23,6 +23,7 @@
     "aws-amplify": "^3.3.22",
     "classnames": "^2.3.1",
     "date-fns": "^2.19.0",
+    "eslint-config-airbnb": "^18.2.1",
     "formik": "^2.2.6",
     "history": "^5.0.0",
     "lodash": "^4.17.21",
@@ -32,6 +33,7 @@
     "react": "^17.0.1",
     "react-admin": "^3.13.1",
     "react-dom": "^17.0.1",
+    "react-final-form": "^6.5.3",
     "react-number-format": "^4.4.4",
     "react-redux": "^7.2.4",
     "react-router": "^5.2.0",
@@ -45,7 +47,8 @@
     "build": "craco build",
     "test": "craco test",
     "serve": "npx serve -s build",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "fix": "eslint src --ext .js,.ts,.tsx  --fix"
   },
   "eslintConfig": {
     "extends": [

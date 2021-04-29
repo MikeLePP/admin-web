@@ -41,7 +41,7 @@ export default ({
   onCompleteStep,
   notify,
   identity,
-}: any) => {
+}: any): JSX.Element => {
   const [verified, setVerified] = useState(false);
   const [notifyContinue, setNotifyContinue] = useState(false);
 

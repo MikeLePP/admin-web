@@ -2,7 +2,12 @@ import { ListButton, ShowButton, TopToolbar } from 'react-admin';
 import { Box } from '@material-ui/core';
 import { ArrowBack as BackIcon } from '@material-ui/icons';
 
-export default ({ basePath, data }: any) => {
+interface EditToolbarProps {
+  basePath: any;
+  data: any;
+}
+
+export default ({ basePath, data }: EditToolbarProps): JSX.Element => {
   let path = basePath;
   if (data && data.userId) {
     path += `?userId=${data.userId}`;

@@ -9,7 +9,7 @@ import userOnboarding from './features/user-onboarding';
 
 const browserHistory = history.createBrowserHistory();
 
-export default () => {
+const App: React.FC = () => {
   const authProvider = useAuthProvider();
   return (
     <Admin
@@ -24,3 +24,5 @@ export default () => {
     </Admin>
   );
 };
+
+export default App;

@@ -15,7 +15,7 @@ export default ({
   onNextStep,
   notify,
   identity,
-}: any) => {
+}: any): JSX.Element => {
   const [notifyContinue, setNotifyContinue] = useState(false);
   const [loading, setLoading] = useState(false);
   const handleFormSubmit = async (e: any) => {
