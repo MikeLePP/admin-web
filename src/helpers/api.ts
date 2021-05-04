@@ -5,7 +5,7 @@ export const callApi = async (
   path: string,
   method = 'get',
   body?: Record<string, unknown>,
-): Promise<any> => {
+): Promise<{ status: number; headers: Headers; body: string; json: any }> => {
   const { signInUserSession } = await Auth.currentAuthenticatedUser();
   const options = {
     method: method.toUpperCase(),

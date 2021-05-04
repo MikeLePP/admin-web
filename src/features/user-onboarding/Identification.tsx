@@ -6,6 +6,16 @@ import { callApi } from '../../helpers/api';
 import { toLocalDateString, yearOldString } from '../../helpers/date';
 import ActionButtons from './ActionButtons';
 
+export type IdentificationPropsType = {
+  values: any;
+  userDetails: any;
+  onChange: any;
+  onPrevStep: any;
+  onNextStep: any;
+  notify: any;
+  identity: any;
+};
+
 export default ({
   values: { identityVerified },
   userDetails,
@@ -14,7 +24,7 @@ export default ({
   onNextStep,
   notify,
   identity,
-}: Record<string, unknown>): JSX.Element => {
+}: IdentificationPropsType): JSX.Element => {
   const [notifyContinue, setNotifyContinue] = useState(false);
   const [loading, setLoading] = useState(false);
   const handleFormSubmit = async (e: any) => {

@@ -6,13 +6,21 @@ import TextLabel from '../../components/TextLabel';
 import { callApi } from '../../helpers/api';
 import { getFullname } from '../../helpers/string';
 
+type SummaryPropsType = {
+  summaries: any;
+  onPrevStep: any;
+  userDetails: any;
+  identity: any;
+  notify: any;
+};
+
 export default ({
   summaries,
   onPrevStep,
   userDetails,
   identity,
   notify,
-}: Record<string, unknown>): JSX.Element => {
+}: SummaryPropsType): JSX.Element => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
 
@@ -36,7 +44,7 @@ export default ({
         updatedBy: identity?.id,
       });
       history.push('/users');
-      notify(`${getFullname(userDetails)} has been ${approved ? 'Approved' : 'Rejected'}!`);
+      notify(`${String(getFullname(userDetails))} has been ${approved ? 'Approved' : 'Rejected'}!`);
     } catch (error) {
       notify(error, 'error');
     } finally {

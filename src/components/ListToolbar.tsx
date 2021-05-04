@@ -6,14 +6,15 @@ import {
   RefreshButton,
   TopToolbar,
   useListContext,
+  FilterPayload,
 } from 'react-admin';
 import { Box } from '@material-ui/core';
 import { ArrowBack as BackIcon } from '@material-ui/icons';
 
 interface ListToolbar {
-  filters: any;
-  maxResults: any;
-  to: any;
+  filters?: JSX.Element;
+  maxResults?: number;
+  to?: string;
 }
 export default (props: ListToolbar): JSX.Element => {
   const { filters, maxResults, to } = props;

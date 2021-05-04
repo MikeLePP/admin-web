@@ -1,11 +1,16 @@
 import { FormControl, FormControlLabel, Checkbox, FormHelperText } from '@material-ui/core';
 import { useFormState, useField } from 'react-final-form';
+import { ChangeEvent } from 'react';
 
 interface CheckboxProps {
-  source: any;
-  label: any;
-  handleChange: any;
-  required: boolean;
+  source: string;
+  label: string;
+  handleChange?:
+    | ((
+        event: any,
+      ) => ((event: ChangeEvent<HTMLInputElement>, checked: boolean) => void) | undefined)
+    | undefined;
+  required?: boolean;
 }
 
 export default ({ source, label, handleChange, required = false }: CheckboxProps): JSX.Element => {

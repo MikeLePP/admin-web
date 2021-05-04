@@ -1,7 +1,7 @@
 import { TextField, TextFieldProps } from '@material-ui/core';
 import { FormikErrors, FormikTouched } from 'formik';
 
-type Props = TextFieldProps & {
+type InputFieldProps = TextFieldProps & {
   name: string;
   formik: {
     values: Record<string, unknown>;
@@ -11,7 +11,7 @@ type Props = TextFieldProps & {
   };
 };
 
-export default ({ name, formik, helperText, onChange, ...rest }: Props): JSX.Element => (
+export default ({ name, formik, helperText, onChange, ...rest }: InputFieldProps): JSX.Element => (
   <TextField
     variant="outlined"
     color="secondary"

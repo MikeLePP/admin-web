@@ -16,6 +16,7 @@ import {
   useEditController,
   useGetIdentity,
   useNotify,
+  Record,
 } from 'react-admin';
 import EditToolbar from '../../components/EditToolbar';
 import SaveToolbar from '../../components/SaveToolbar';
@@ -35,8 +36,7 @@ export default (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const notify = useNotify();
   const { record } = useEditController(props);
 
-  const transform = (data: any) =>
-    ({ ...data, userId, editedBy: identity?.id } as Record<string, unknown>);
+  const transform = (data: Record) => ({ ...data, userId, editedBy: identity?.id });
 
   const disabled = record?.status !== 'pending_submission';
 

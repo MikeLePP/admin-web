@@ -1,12 +1,20 @@
 import { Button } from '@material-ui/core';
 
-export default ({
+type YesNoButtonsProps = {
+  onNoClick: () => void;
+  onYesClick: () => void;
+  isYes: boolean | undefined;
+  noLabel?: string;
+  yesLabel?: string;
+};
+
+const YesNoButtons = ({
   onNoClick,
   onYesClick,
   isYes,
   noLabel = 'No',
   yesLabel = 'Yes',
-}: Record<string, unknown>): JSX.Element => (
+}: YesNoButtonsProps): JSX.Element => (
   <div className="flex space-x-2">
     <Button
       variant={isYes === false ? 'contained' : 'outlined'}
@@ -27,3 +35,5 @@ export default ({
     </Button>
   </div>
 );
+
+export default YesNoButtons;

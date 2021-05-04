@@ -2,7 +2,7 @@ import { fetchUtils } from 'react-admin';
 import simpleRestProvider from 'ra-data-simple-rest';
 import Auth from '@aws-amplify/auth';
 
-export const httpClient = async (url: string, options = {} as any): any => {
+export const httpClient = async (url: string, options = {} as any): Promise<any> => {
   const innerOptions = options;
   if (!innerOptions.headers) {
     innerOptions.headers = new Headers({ Accept: 'application/json' });

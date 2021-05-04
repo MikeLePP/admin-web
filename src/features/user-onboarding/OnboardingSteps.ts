@@ -1,17 +1,41 @@
-import BankVerification from './BankVerification';
-import RiskAssessment from './RiskAssessment';
-import Identification from './Identification';
+import BankVerification, { BankVerificationProps } from './BankVerification';
+import RiskAssessment, { RiskAssessmentProps } from './RiskAssessment';
+import Identification, { IdentificationPropsType } from './Identification';
 
 export interface OnboardingStep {
   [index: number]: {
     completed?: boolean;
     component: typeof BankVerification | typeof RiskAssessment | typeof Identification;
-    labels: Record<string, unknown>;
+    labels:
+      | BankVerificationProps['labels']
+      | RiskAssessmentProps['labels']
+      | Record<string, string>;
     name: string;
     riskAssessmentId?: string;
-    values: Record<string, unknown>;
+    values:
+      | BankVerificationProps['values']
+      | RiskAssessmentProps['values']
+      | IdentificationPropsType['values'];
   };
 }
+
+// export type BankVerificationPropsType = {
+//   bankDetailsAvailable: boolean;
+//   accountBsb: string;
+//   accountNumber: string;
+// };
+
+// export type RiskAssessmentPropsType = {
+//   approved: boolean;
+//   incomeAverage: string;
+//   incomeDay1Min: string;
+//   incomeFrequency: string;
+//   incomeLastDate: string;
+//   incomeSupport: string;
+//   incomeVariationMax: string;
+//   riskModelVersion: string;
+//   rejectedReasons: string[];
+// };
 
 const onboardingSteps: OnboardingStep = {
   1: {
@@ -19,7 +43,7 @@ const onboardingSteps: OnboardingStep = {
     name: 'Bank information',
     completed: undefined,
     values: {
-      bankDetailsAvailable: undefined,
+      bankDetailsAvailable: false,
       accountBsb: '',
       accountNumber: '',
     },
@@ -35,7 +59,7 @@ const onboardingSteps: OnboardingStep = {
     completed: undefined,
     riskAssessmentId: '',
     values: {
-      approved: undefined,
+      approved: false,
       incomeAverage: '',
       incomeDay1Min: '',
       incomeFrequency: '',
@@ -62,7 +86,7 @@ const onboardingSteps: OnboardingStep = {
     name: 'Identification',
     completed: undefined,
     values: {
-      identityVerified: undefined,
+      identityVerified: false,
     },
     labels: {
       identityVerified: 'Identification verified?',

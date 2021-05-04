@@ -3,8 +3,15 @@ import { ArrowBack as BackIcon, Edit as EditIcon } from '@material-ui/icons';
 import { Button, DeleteButton, ListButton, TopToolbar } from 'react-admin';
 import { Link } from 'react-router-dom';
 
-export default (props: Record<string, unknown>): JSX.Element => {
+type ShowToolbarProps = {
+  basePath?: string;
+  data?: any;
+  resource?: string;
+};
+
+const ShowToolbar = (props: ShowToolbarProps): JSX.Element | null => {
   if (!props.data) return null;
+
   const { basePath, data, resource } = props;
   let listBasePath = basePath;
   let editBasePath = `${String(basePath)}/${String(data.id)}`;
@@ -31,3 +38,5 @@ export default (props: Record<string, unknown>): JSX.Element => {
     </TopToolbar>
   );
 };
+
+export default ShowToolbar;

@@ -49,7 +49,12 @@ const Empty = ({ id = '' }): JSX.Element => {
   );
 };
 
-export default (props: Record<string, unknown>): JSX.Element => {
+type ListProps = {
+  location: any;
+  basePath: string;
+};
+
+export default (props: ListProps): JSX.Element => {
   const userId = getId(props.location.pathname);
   return (
     <List
@@ -60,7 +65,7 @@ export default (props: Record<string, unknown>): JSX.Element => {
       title="Risk Assessments"
       empty={<Empty id={userId} />}
       sort={{ field: 'createdAt', order: 'DESC' }}
-      actions={<ListToolbar to={`${String(props.basePath)}/create/${String(userId)}`} {...props} />}
+      actions={<ListToolbar to={`${String(props.basePath)}/create/${String(userId)}`} />}
     >
       <Datagrid>
         <FunctionField

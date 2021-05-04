@@ -1,6 +1,12 @@
 import NumberFormat from 'react-number-format';
 
-export default (props: Record<string, unknown>): JSX.Element => {
+type NumberFormatProps = {
+  inputRef: () => void;
+  onChange: (values: any) => void;
+  name: string;
+};
+
+export default (props: NumberFormatProps): JSX.Element => {
   const { inputRef, onChange, ...other } = props;
 
   return (

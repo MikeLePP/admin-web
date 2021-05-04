@@ -19,7 +19,7 @@ import {
 } from 'react-admin';
 import { useForm } from 'react-final-form';
 import Checkbox from '../../components/Checkbox';
-import Toolbar from '../../components/SaveToolbar';
+import SaveToolbar from '../../components/SaveToolbar';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { notifyOnFailure } from '../../helpers/notify';
 import { getFullname } from '../../helpers/string';
@@ -52,7 +52,13 @@ const formValidations = (data: any) => (values: any) => {
   return errors as Record<string, unknown>;
 };
 
-export default (props: Record<string, unknown>): JSX.Element => {
+type CreatePropsType = {
+  location: any;
+  history: any;
+  basePath: string;
+};
+
+export default (props: CreatePropsType): JSX.Element | null => {
   const userId = getId(props.location.pathname);
   if (!userId) {
     props.history.push(props.basePath);
@@ -67,8 +73,6 @@ export default (props: Record<string, unknown>): JSX.Element => {
   if (error) return <Error error={error} />;
   if (!data) return null;
 
-  const transform = (innerData: any) =>
-    ({ ...innerData, createdBy: identity?.id, userId } as Record<string, unknown>);
   const redirect = (basePath: string) => `${String(basePath)}/${String(userId)}`;
 
   return (
@@ -77,11 +81,11 @@ export default (props: Record<string, unknown>): JSX.Element => {
       title="Create Risk Assessment"
       record={data}
       onFailure={notifyOnFailure(notify)}
-      transform={transform}
+      transform={(innerData) => ({ ...innerData, createdBy: identity?.id, userId })}
     >
       <SimpleForm
         redirect={redirect}
-        toolbar={<Toolbar saveButtonLabel="Create" />}
+        toolbar={<SaveToolbar saveButtonLabel="Create" />}
         validate={formValidations(data)}
       >
         <FunctionField label="Name" render={getFullname} />

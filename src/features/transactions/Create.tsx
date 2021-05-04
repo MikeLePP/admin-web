@@ -17,6 +17,7 @@ import {
   useGetOne,
   useNotify,
   ResourceComponentProps,
+  Record,
 } from 'react-admin';
 import Toolbar from '../../components/SaveToolbar';
 import { notifyOnFailure } from '../../helpers/notify';
@@ -39,8 +40,7 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
   if (error) return <Error error={error} />;
   if (!data) return null;
 
-  const transform = (innerData: any) =>
-    ({ ...innerData, userId, createdBy: identity?.id } as Record<string, unknown>);
+  const transform = (innerData: Record) => ({ ...innerData, userId, createdBy: identity?.id });
 
   const destinationRecord = {
     destination: process.env.REACT_APP_TRANSACTION_DESTINATION_ACCOUNT,

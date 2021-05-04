@@ -8,13 +8,13 @@ import {
 } from '@material-ui/core';
 
 interface DialogProps {
-  show: any;
-  onCancelClick: any;
-  onConfirmClick: any;
-  title: any;
-  body?: any;
-  cancelLabel?: any;
-  confirmLabel: any;
+  show: boolean;
+  onCancelClick: () => void;
+  onConfirmClick: () => void;
+  title: string;
+  body?: boolean;
+  cancelLabel?: string;
+  confirmLabel: string;
 }
 
 export default ({
