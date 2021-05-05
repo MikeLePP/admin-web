@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import { Divider } from '@material-ui/core';
+import { NullableBooleanInputProps } from 'ra-ui-materialui/lib/input/NullableBooleanInput';
 import { ChangeEvent } from 'react';
 import RA, {
   Create,
