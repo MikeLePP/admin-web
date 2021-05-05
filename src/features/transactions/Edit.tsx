@@ -21,7 +21,7 @@ import {
 import EditToolbar from '../../components/EditToolbar';
 import SaveToolbar from '../../components/SaveToolbar';
 import { notifyOnFailure } from '../../helpers/notify';
-import { getFullname } from '../../helpers/string';
+import { getFullName } from '../../helpers/string';
 import { getId } from '../../helpers/url';
 import { futureDate } from '../../helpers/validation';
 
@@ -55,7 +55,7 @@ export default (props: ResourceComponentPropsWithId): JSX.Element | null => {
       actions={<EditToolbar />}
     >
       <SimpleForm redirect="show" toolbar={<SaveToolbar />}>
-        <FunctionField label="Name" render={getFullname} />
+        <FunctionField label="Name" render={getFullName} />
         <TextField label="Email" source="email" />
         <TextField label="Mobile" source="mobileNumber" />
         <Divider />

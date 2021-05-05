@@ -7,6 +7,7 @@ import {
   FunctionField,
   useListContext,
   NumberField,
+  ResourceComponentProps,
 } from 'react-admin';
 import { Typography, Button, TextField as InputField } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
@@ -49,13 +50,8 @@ const Empty = ({ id = '' }): JSX.Element => {
   );
 };
 
-type ListProps = {
-  location: any;
-  basePath: string;
-};
-
-export default (props: ListProps): JSX.Element => {
-  const userId = getId(props.location.pathname);
+export default (props: ResourceComponentProps): JSX.Element => {
+  const userId = getId(props.location?.pathname);
   return (
     <List
       {...props}

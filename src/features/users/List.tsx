@@ -10,7 +10,7 @@ import {
   TextInput,
 } from 'react-admin';
 import RedirectButton from '../../components/RedirectButton';
-import { getFullname } from '../../helpers/string';
+import { getFullName } from '../../helpers/string';
 
 type TMyPropsType = {
   createdAt: string;
@@ -39,7 +39,7 @@ export default (props: ResourceComponentProps): JSX.Element => (
         }
       />
       <TextField label="Status" source="status" />
-      <FunctionField label="Name" render={getFullname} />
+      <FunctionField label="Name" render={getFullName} />
       <TextField label="Email" source="email" />
       <TextField label="Mobile" source="mobileNumber" />
       <TextField label="Current balance" source="balanceCurrent" />

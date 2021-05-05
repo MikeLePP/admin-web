@@ -1,6 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { Divider } from '@material-ui/core';
-import {
+import { ChangeEvent } from 'react';
+import RA, {
   Create,
   DateInput,
   Error,
@@ -9,6 +10,7 @@ import {
   NullableBooleanInput,
   NumberInput,
   required,
+  ResourceComponentProps,
   SelectInput,
   SimpleForm,
   TextField,
@@ -22,46 +24,44 @@ import Checkbox from '../../components/Checkbox';
 import SaveToolbar from '../../components/SaveToolbar';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { notifyOnFailure } from '../../helpers/notify';
-import { getFullname } from '../../helpers/string';
+import { getFullName } from '../../helpers/string';
 import { getId } from '../../helpers/url';
 import { pastDate } from '../../helpers/validation';
 
-const ApprovedInput = (props: any) => {
+const ApprovedInput = (props: NullableBooleanInputProps) => {
   const { change } = useForm();
 
-  const handleChange = (e: any) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const approved = e.target.value === 'true';
     change('approvedAmount', approved ? '100' : '0');
   };
 
-  return <NullableBooleanInput onChange={handleChange} {...props} />;
+  return <NullableBooleanInput {...props} onChange={handleChange} />;
 };
 
-const formValidations = (data: any) => (values: any) => {
-  const errors: any = {};
+const formValidations = (data: RA.Record) => (values: RA.Record) => {
+  const errors: Record<string, string[]> = {};
 
   if (data.accountBsb !== values._accountBsb) {
     errors._accountBsb = ["Account BSB does not match user's record, please verify and try again"];
   }
+
   if (data.accountNumber !== values._accountNumber) {
     errors._accountNumber = [
       "Account number does not match user's record, please verify and try again",
     ];
   }
 
-  return errors as Record<string, unknown>;
+  return errors;
 };
 
-type CreatePropsType = {
-  location: any;
-  history: any;
-  basePath: string;
-};
-
-export default (props: CreatePropsType): JSX.Element | null => {
-  const userId = getId(props.location.pathname);
+export default (props: ResourceComponentProps): JSX.Element | null => {
+  const userId = getId(props.location?.pathname);
   if (!userId) {
-    props.history.push(props.basePath);
+    if (props.basePath) {
+      props.history?.push(props.basePath);
+    }
+
     return null;
   }
 
@@ -73,7 +73,7 @@ export default (props: CreatePropsType): JSX.Element | null => {
   if (error) return <Error error={error} />;
   if (!data) return null;
 
-  const redirect = (basePath: string) => `${String(basePath)}/${String(userId)}`;
+  const redirect = (basePath: string) => `${basePath}/${userId}`;
 
   return (
     <Create
@@ -88,7 +88,7 @@ export default (props: CreatePropsType): JSX.Element | null => {
         toolbar={<SaveToolbar saveButtonLabel="Create" />}
         validate={formValidations(data)}
       >
-        <FunctionField label="Name" render={getFullname} />
+        <FunctionField label="Name" render={getFullName} />
         <TextField label="Email" source="email" />
         <TextField label="Mobile" source="mobileNumber" />
         <TextField label="Date of Birth" source="dob" />

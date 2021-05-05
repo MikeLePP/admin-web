@@ -68,7 +68,7 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
     values: Record<string, unknown>,
     key?: string,
     completed?: boolean,
-    stepValues?: any,
+    stepValues?: Record<string, unknown>,
   ) => {
     let newObj: typeof OnboardingSteps = cloneDeep(wizardData);
     if (key) {
@@ -108,22 +108,14 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
     }
   };
 
-  const handleNotification = (message: any, notificationType: NotificationType) => {
-    if (typeof message === 'object' && notificationType === 'error' && message.body) {
-      notify(
-        reduce(
-          message.body.errors,
-          (acc, cur): any => {
-            let innerAcc = acc;
-            innerAcc += map(cur, (c: Record<string, unknown>) => c).join('\n\n');
-            return innerAcc;
-          },
-          '',
-        ),
-        'error',
-      );
-    } else {
+  const handleNotification = (
+    message: string | { body?: { errors: unknown[] } },
+    notificationType: NotificationType,
+  ) => {
+    if (typeof message === 'string') {
       notify(message, notificationType);
+    } else if (typeof message === 'object' && notificationType === 'error') {
+      notify(message.body?.errors.join('\n\n') || '', 'error');
     }
   };
 

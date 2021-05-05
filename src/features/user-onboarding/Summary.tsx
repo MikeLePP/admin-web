@@ -1,17 +1,20 @@
 import { Button, Typography } from '@material-ui/core';
 import { every, map } from 'lodash';
 import { Fragment, useState } from 'react';
+import { NotificationType, UserIdentity } from 'react-admin';
 import { useHistory } from 'react-router-dom';
 import TextLabel from '../../components/TextLabel';
 import { callApi } from '../../helpers/api';
-import { getFullname } from '../../helpers/string';
+import { getFullName } from '../../helpers/string';
+import { User } from '../../types/user';
+import { OnboardingStep } from './OnboardingSteps';
 
 type SummaryPropsType = {
-  summaries: any;
-  onPrevStep: any;
-  userDetails: any;
-  identity: any;
-  notify: any;
+  summaries: OnboardingStep;
+  onPrevStep: () => void;
+  userDetails: User;
+  identity: UserIdentity;
+  notify: (message: string, notificationType?: NotificationType) => void;
 };
 
 export default ({
@@ -25,7 +28,7 @@ export default ({
   const [loading, setLoading] = useState(false);
 
   const allCompleted = every(summaries, 'completed');
-  const getValue = (value: any) => {
+  const getValue = (value: number | string | boolean) => {
     let result = '-';
     if (value && (typeof value === 'string' || typeof value === 'number')) {
       result = value.toString();
@@ -38,13 +41,13 @@ export default ({
   const handleCompleteClick = async (approved: boolean) => {
     try {
       setLoading(true);
-      await callApi(`/onboarding/${String(userDetails.id)}`, 'post', {
+      await callApi(`/onboarding/${userDetails.id}`, 'post', {
         step: 'complete',
         approved,
         updatedBy: identity?.id,
       });
       history.push('/users');
-      notify(`${String(getFullname(userDetails))} has been ${approved ? 'Approved' : 'Rejected'}!`);
+      notify(`${getFullName(userDetails)} has been ${approved ? 'Approved' : 'Rejected'}!`);
     } catch (error) {
       notify(error, 'error');
     } finally {

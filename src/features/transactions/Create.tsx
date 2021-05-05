@@ -21,7 +21,7 @@ import {
 } from 'react-admin';
 import Toolbar from '../../components/SaveToolbar';
 import { notifyOnFailure } from '../../helpers/notify';
-import { getFullname } from '../../helpers/string';
+import { getFullName } from '../../helpers/string';
 import { getId } from '../../helpers/url';
 import { futureDate } from '../../helpers/validation';
 
@@ -58,7 +58,7 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
       transform={transform}
     >
       <SimpleForm redirect="show" toolbar={<Toolbar saveButtonLabel="Create" />}>
-        <FunctionField label="Name" render={getFullname} />
+        <FunctionField label="Name" render={getFullName} />
         <TextField label="Email" source="email" />
         <TextField label="Mobile" source="mobileNumber" />
         <Divider />
@@ -101,7 +101,7 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
         <TextInput
           label="Debit from"
           source="source"
-          defaultValue={getFullname(data)}
+          defaultValue={getFullName(data)}
           validate={[required()]}
         />
         <TextInput

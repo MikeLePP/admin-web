@@ -2,7 +2,7 @@ import { IconButton, Typography } from '@material-ui/core';
 import { EditOutlined as EditIcon } from '@material-ui/icons';
 import { useHistory } from 'react-router';
 import TextLabel from '../../components/TextLabel';
-import { getFullname } from '../../helpers/string';
+import { getFullName } from '../../helpers/string';
 import { User } from '../../types/user';
 
 export interface CustomerInfoProps {
@@ -12,7 +12,7 @@ export interface CustomerInfoProps {
 
 export default ({ userDetails, children }: CustomerInfoProps): JSX.Element => {
   const { email, mobileNumber } = userDetails;
-  const fullName = getFullname(userDetails);
+  const fullName = getFullName(userDetails);
   const history = useHistory();
 
   const handleEditUserClick = () => {
