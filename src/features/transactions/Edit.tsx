@@ -25,6 +25,11 @@ import { getFullname } from '../../helpers/string';
 import { getId } from '../../helpers/url';
 import { futureDate } from '../../helpers/validation';
 
+type TMyPropsType = {
+  status: string;
+  id: string;
+};
+
 export default (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const userId = getId(props.location?.search);
   if (!userId) {
@@ -54,7 +59,10 @@ export default (props: ResourceComponentPropsWithId): JSX.Element | null => {
         <TextField label="Email" source="email" />
         <TextField label="Mobile" source="mobileNumber" />
         <Divider />
-        <FunctionField label="Status" render={(v: any) => capitalize(lowerCase(v.status))} />
+        <FunctionField<TMyPropsType>
+          label="Status"
+          render={(v: TMyPropsType | undefined) => capitalize(lowerCase(v ? v.status : ''))}
+        />
 
         <RadioButtonGroupInput
           label="Payment type"

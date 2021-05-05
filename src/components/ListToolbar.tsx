@@ -6,7 +6,6 @@ import {
   RefreshButton,
   TopToolbar,
   useListContext,
-  FilterPayload,
 } from 'react-admin';
 import { Box } from '@material-ui/core';
 import { ArrowBack as BackIcon } from '@material-ui/icons';

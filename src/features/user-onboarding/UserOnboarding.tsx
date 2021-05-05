@@ -44,7 +44,7 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
 
   useEffect(() => {
     if (userDetails && (userDetails.bankAccount || userDetails.identity)) {
-      let newObj: any = cloneDeep(wizardData);
+      let newObj: typeof OnboardingSteps = cloneDeep(wizardData);
       if (userDetails.bankAccount && userDetails.bankAccount.verified) {
         newObj = set(newObj, '1.values', {
           bankDetailsAvailable: userDetails.bankAccount.verified,
@@ -64,8 +64,13 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
   if (error) return <Error error={error} />;
   if (!userDetails) return null;
 
-  const handleChange = (values: any, key?: string, completed?: boolean, stepValues?: any) => {
-    let newObj: any = cloneDeep(wizardData);
+  const handleChange = (
+    values: Record<string, unknown>,
+    key?: string,
+    completed?: boolean,
+    stepValues?: any,
+  ) => {
+    let newObj: typeof OnboardingSteps = cloneDeep(wizardData);
     if (key) {
       newObj = set(newObj, `${currentStep}.values.${key}`, values);
     } else {
@@ -85,7 +90,7 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
   };
 
   const handleCompleteStep = (completed: boolean) => {
-    let newObj: any = cloneDeep(wizardData);
+    let newObj: typeof OnboardingSteps = cloneDeep(wizardData);
     newObj = set(newObj, `${currentStep}.completed`, completed);
     setWizardData(newObj);
   };

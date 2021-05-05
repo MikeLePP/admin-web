@@ -1,10 +1,10 @@
-import { ListButton, ShowButton, TopToolbar } from 'react-admin';
+import { ListButton, ShowButton, TopToolbar, Record } from 'react-admin';
 import { Box } from '@material-ui/core';
 import { ArrowBack as BackIcon } from '@material-ui/icons';
 
 interface EditToolbarProps {
   basePath?: string;
-  data?: any;
+  data?: Record;
 }
 
 export default ({ basePath, data }: EditToolbarProps): JSX.Element => {

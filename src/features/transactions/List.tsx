@@ -53,6 +53,13 @@ const Empty = ({ id = '' }): JSX.Element => {
   );
 };
 
+type TMyPropsType = {
+  submitAt: string;
+  createdAt: string;
+  status: string;
+  id: string;
+};
+
 export default (props: ResourceComponentProps): JSX.Element => {
   const userId = getId(props.location?.search);
   return (
@@ -66,17 +73,26 @@ export default (props: ResourceComponentProps): JSX.Element => {
       actions={<ListToolbar to={`${String(props.basePath)}/create/${String(userId)}`} {...props} />}
     >
       <Datagrid>
-        <FunctionField label="Created on" render={(v: any) => toLocalDateString(v.createdAt)} />
-        <FunctionField label="Status" render={(v: any) => upperFirst(lowerCase(v.status))} />
+        <FunctionField<TMyPropsType>
+          label="Created on"
+          render={(v: TMyPropsType | undefined) => toLocalDateString(v ? v.createdAt : '')}
+        />
+        <FunctionField<TMyPropsType>
+          label="Status"
+          render={(v: TMyPropsType | undefined) => upperFirst(lowerCase(v ? v.status : ''))}
+        />
         <TextField label="Amount" source="amount" />
         <TextField label="Description" source="description" />
         <TextField label="Send to" source="destination" />
         <TextField label="Send from" source="source" />
-        <FunctionField label="Submit on" render={(v: any) => toLocalDateString(v.submitAt)} />
+        <FunctionField<TMyPropsType>
+          label="Submit on"
+          render={(v: TMyPropsType | undefined) => toLocalDateString(v ? v.submitAt : '')}
+        />
         <ShowButton />
         <RedirectButton
           buttonLabel="Edit"
-          to={(r: any) => `/transactions/${String(r.id)}?userId=${String(userId)}`}
+          to={(r: { id: string }) => `/transactions/${String(r.id)}?userId=${String(userId)}`}
           icon={<EditIcon />}
         />
       </Datagrid>

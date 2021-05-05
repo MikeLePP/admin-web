@@ -19,24 +19,6 @@ export interface OnboardingStep {
   };
 }
 
-// export type BankVerificationPropsType = {
-//   bankDetailsAvailable: boolean;
-//   accountBsb: string;
-//   accountNumber: string;
-// };
-
-// export type RiskAssessmentPropsType = {
-//   approved: boolean;
-//   incomeAverage: string;
-//   incomeDay1Min: string;
-//   incomeFrequency: string;
-//   incomeLastDate: string;
-//   incomeSupport: string;
-//   incomeVariationMax: string;
-//   riskModelVersion: string;
-//   rejectedReasons: string[];
-// };
-
 const onboardingSteps: OnboardingStep = {
   1: {
     component: BankVerification,

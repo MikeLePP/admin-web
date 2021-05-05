@@ -1,11 +1,11 @@
 import { Box } from '@material-ui/core';
 import { ArrowBack as BackIcon, Edit as EditIcon } from '@material-ui/icons';
-import { Button, DeleteButton, ListButton, TopToolbar } from 'react-admin';
+import { Button, DeleteButton, ListButton, TopToolbar, Record } from 'react-admin';
 import { Link } from 'react-router-dom';
 
 type ShowToolbarProps = {
   basePath?: string;
-  data?: any;
+  data?: Record | undefined;
   resource?: string;
 };
 

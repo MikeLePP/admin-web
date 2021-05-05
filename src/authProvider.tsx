@@ -83,7 +83,7 @@ export const AmplifyAuthProvider: React.FC = ({ children }) => {
   );
 };
 
-export function useAuth(): any {
+export function useAuth(): AuthClass {
   const context = useContext(AmplifyAuthContext);
   if (!context) throw Error(NOT_INSIDE_AMPLIFY_PROVIDER);
   return context;

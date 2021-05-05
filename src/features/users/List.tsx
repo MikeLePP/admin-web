@@ -12,6 +12,11 @@ import {
 import RedirectButton from '../../components/RedirectButton';
 import { getFullname } from '../../helpers/string';
 
+type TMyPropsType = {
+  createdAt: string;
+  id: string;
+};
+
 const UserFilter = (props: Record<string, unknown>) => (
   <Filter {...props}>
     <TextInput label="Search by mobile number" source="mobileNumber" alwaysOn resettable />
@@ -27,9 +32,11 @@ export default (props: ResourceComponentProps): JSX.Element => (
     pagination={false}
   >
     <Datagrid>
-      <FunctionField
+      <FunctionField<TMyPropsType>
         label="Created on"
-        render={(v: any) => new Date(v.createdAt).toLocaleDateString('en-GB')}
+        render={(v: TMyPropsType | undefined) =>
+          new Date(v ? v.createdAt : '').toLocaleDateString('en-GB')
+        }
       />
       <TextField label="Status" source="status" />
       <FunctionField label="Name" render={getFullname} />
@@ -38,11 +45,11 @@ export default (props: ResourceComponentProps): JSX.Element => (
       <TextField label="Current balance" source="balanceCurrent" />
       <RedirectButton
         buttonLabel="Transactions"
-        to={(r: any) => `/transactions?userId=${String(r.id)}`}
+        to={(r: { id: string }) => `/transactions?userId=${String(r.id)}`}
       />
       <RedirectButton
         buttonLabel="Onboarding"
-        to={(r: any) => `/user-onboarding/create?userId=${String(r.id)}`}
+        to={(r: { id: string }) => `/user-onboarding/create?userId=${String(r.id)}`}
       />
       <ShowButton />
       <EditButton />
