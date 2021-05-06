@@ -36,7 +36,7 @@ module.exports = {
     '@typescript-eslint/no-unsafe-member-access': 'off',
     'eslint-comments/disable-enable-pair': 'off',
     'import/extensions': ['error', { extension: 'never' }],
-    'import/no-extraneous-dependencies': ['error', { devDependencies: true }],
+    'import/no-extraneous-dependencies': 'off',
     'import/prefer-default-export': 'off',
     'no-console': 'error',
     'no-new': 'off',
