@@ -7,7 +7,7 @@ interface CheckboxProps {
   label: string;
   handleChange?:
     | ((
-        event: any,
+        event: unknown,
       ) => ((event: ChangeEvent<HTMLInputElement>, checked: boolean) => void) | undefined)
     | undefined;
   required?: boolean;

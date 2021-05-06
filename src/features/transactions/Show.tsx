@@ -4,6 +4,7 @@ import {
   DateField,
   FunctionField,
   NumberField,
+  Record,
   ResourceComponentPropsWithId,
   Show,
   SimpleShowLayout,
@@ -21,7 +22,10 @@ export default (props: ResourceComponentPropsWithId): JSX.Element => (
       <TextField label="Mobile" source="mobileNumber" />
       <Divider />
 
-      <FunctionField label="Status" render={(v: any) => upperFirst(lowerCase(v.status))} />
+      <FunctionField
+        label="Status"
+        render={(record?: Record) => record && upperFirst(lowerCase(record.status))}
+      />
       <TextField label="Status message" source="statusReason" />
       <TextField label="Payment type" source="paymentType" />
       <NumberField label="Amount" source="amount" />

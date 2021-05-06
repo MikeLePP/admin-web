@@ -4,7 +4,7 @@ export const notifyOnFailure = (
   notify: (
     message: string,
     type: NotificationType | undefined,
-    messageArgs: any,
+    messageArgs: unknown,
     undoable?: boolean,
     autoHideDuration?: number | undefined,
   ) => void,

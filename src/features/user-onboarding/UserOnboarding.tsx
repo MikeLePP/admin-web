@@ -13,8 +13,11 @@ import {
 import { getId } from '../../helpers/url';
 import { User } from '../../types/user';
 import ApprovalStatus from './ApprovalStatus';
+import BankVerification from './BankVerification';
 import CustomerInfo from './CustomerInfo';
-import OnboardingSteps from './OnboardingSteps';
+import Identification from './Identification';
+import onboardingSteps, { OnboardingSteps } from './OnboardingSteps';
+import RiskAssessment from './RiskAssessment';
 import Summary from './Summary';
 
 const INIT_STEP = 1;
@@ -34,17 +37,23 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
   const [previousStep, setPreviousStep] = useState(INIT_STEP);
 
   const Component = useMemo(() => {
-    if (currentStep < 4) {
-      return OnboardingSteps[currentStep].component;
+    switch (currentStep) {
+      case 1:
+        return BankVerification;
+      case 2:
+        return RiskAssessment;
+      case 3:
+        return Identification;
+      default:
+        return Summary;
     }
-    return Summary;
   }, [currentStep]);
 
-  const [wizardData, setWizardData] = useState(OnboardingSteps);
+  const [wizardData, setWizardData] = useState(onboardingSteps);
 
   useEffect(() => {
     if (userDetails && (userDetails.bankAccount || userDetails.identity)) {
-      let newObj: typeof OnboardingSteps = cloneDeep(wizardData);
+      let newObj: OnboardingSteps = cloneDeep(wizardData);
       if (userDetails.bankAccount && userDetails.bankAccount.verified) {
         newObj = set(newObj, '1.values', {
           bankDetailsAvailable: userDetails.bankAccount.verified,
@@ -70,7 +79,7 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
     completed?: boolean,
     stepValues?: Record<string, unknown>,
   ) => {
-    let newObj: typeof OnboardingSteps = cloneDeep(wizardData);
+    let newObj: OnboardingSteps = cloneDeep(wizardData);
     if (key) {
       newObj = set(newObj, `${currentStep}.values.${key}`, values);
     } else if (typeof values === 'object') {
@@ -90,7 +99,7 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
   };
 
   const handleCompleteStep = (completed: boolean) => {
-    let newObj: typeof OnboardingSteps = cloneDeep(wizardData);
+    let newObj: OnboardingSteps = cloneDeep(wizardData);
     newObj = set(newObj, `${currentStep}.completed`, completed);
     setWizardData(newObj);
   };
@@ -128,7 +137,8 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
         <Component
           notify={handleNotification}
           identity={identity}
-          {...wizardData[currentStep]}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          {...(wizardData[currentStep] as any)}
           summaries={wizardData}
           userDetails={userDetails}
           onChange={handleChange}

@@ -1,27 +1,64 @@
-import BankVerification, { BankVerificationProps } from './BankVerification';
-import RiskAssessment, { RiskAssessmentProps } from './RiskAssessment';
-import Identification, { IdentificationPropsType } from './Identification';
+import { NotificationType, UserIdentity } from 'ra-core';
+import { User } from '../../types/user';
 
-export interface OnboardingStep {
-  [index: number]: {
-    completed?: boolean;
-    component: typeof BankVerification | typeof RiskAssessment | typeof Identification;
-    labels:
-      | BankVerificationProps['labels']
-      | RiskAssessmentProps['labels']
-      | Record<string, string>;
-    name: string;
-    riskAssessmentId?: string;
-    values:
-      | BankVerificationProps['values']
-      | RiskAssessmentProps['values']
-      | IdentificationPropsType['values'];
-  };
+export interface OnboardingStep<T extends Record<string, unknown>> {
+  completed?: boolean;
+  labels: Record<keyof T, string>;
+  name: string;
+  riskAssessmentId?: string;
+  values: T;
 }
 
-const onboardingSteps: OnboardingStep = {
+export interface OnboardingSteps {
+  [index: number]:
+    | OnboardingStep<BankVerificationValues>
+    | OnboardingStep<RiskAssessmentValues>
+    | OnboardingStep<IdentificationValues>;
+}
+
+export interface OnboardingComponentProps<T extends Record<string, unknown>>
+  extends OnboardingStep<T> {
+  identity?: UserIdentity;
+  labels: Record<keyof T, string>;
+  notify: (message: string, notificationType?: NotificationType) => void;
+  onChange: (
+    values: Record<string, unknown> | unknown,
+    key?: string,
+    completed?: boolean,
+    stepValues?: Record<string, unknown>,
+  ) => void;
+  onCompleteStep: (completed: boolean) => void;
+  onNextStep: (goToSummary?: boolean) => void;
+  onPrevStep: () => void;
+  riskAssessmentId?: string;
+  userDetails: User;
+  values: T;
+}
+
+export interface BankVerificationValues extends Record<string, unknown> {
+  bankDetailsAvailable?: boolean;
+  accountBsb: string;
+  accountNumber: string;
+}
+
+export interface RiskAssessmentValues extends Record<string, unknown> {
+  approved?: boolean;
+  incomeAverage: string;
+  incomeDay1Min: string;
+  incomeFrequency: string;
+  incomeLastDate: string;
+  incomeSupport?: boolean;
+  incomeVariationMax: string;
+  rejectedReasons: string[];
+  riskModelVersion: string;
+}
+
+export interface IdentificationValues extends Record<string, unknown> {
+  identityVerified?: boolean;
+}
+
+const onboardingSteps: OnboardingSteps = {
   1: {
-    component: BankVerification,
     name: 'Bank information',
     completed: undefined,
     values: {
@@ -36,7 +73,6 @@ const onboardingSteps: OnboardingStep = {
     },
   },
   2: {
-    component: RiskAssessment,
     name: 'Risk assessment',
     completed: undefined,
     riskAssessmentId: '',
@@ -64,7 +100,6 @@ const onboardingSteps: OnboardingStep = {
     },
   },
   3: {
-    component: Identification,
     name: 'Identification',
     completed: undefined,
     values: {

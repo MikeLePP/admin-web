@@ -4,14 +4,14 @@ import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
 import cn from 'classnames';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
-import { fetchEnd, fetchStart, NotificationType, UserIdentity } from 'react-admin';
+import { fetchEnd, fetchStart } from 'react-admin';
 import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
 import InputField from '../../components/InputField';
 import YesNoButtons from '../../components/YesNoButtons';
 import { callApi } from '../../helpers/api';
-import { User } from '../../types/user';
 import ActionButtons from './ActionButtons';
+import { BankVerificationValues, OnboardingComponentProps } from './OnboardingSteps';
 
 const validationSchema = yup.object({
   bankDetailsAvailable: yup.boolean(),
@@ -31,22 +31,6 @@ const validationSchema = yup.object({
     ),
 });
 
-export interface BankVerificationProps {
-  identity?: UserIdentity;
-  labels: Record<string, string>;
-  notify: (message: string, notificationType?: NotificationType) => void;
-  onChange: (
-    values: Record<string, unknown>,
-    key?: string,
-    completed?: boolean,
-    stepValues?: Record<string, unknown>,
-  ) => void;
-  onCompleteStep: (completed: boolean) => void;
-  onNextStep: (goToSummary?: boolean) => void;
-  userDetails: User;
-  values: { bankDetailsAvailable?: boolean; accountBsb: string; accountNumber: string };
-}
-
 export default ({
   values,
   labels,
@@ -56,7 +40,7 @@ export default ({
   onCompleteStep,
   notify,
   identity,
-}: BankVerificationProps): JSX.Element => {
+}: OnboardingComponentProps<BankVerificationValues>): JSX.Element => {
   const [verified, setVerified] = useState<boolean | undefined>(undefined);
   const [notifyContinue, setNotifyContinue] = useState(false);
 
@@ -117,12 +101,8 @@ export default ({
     userDetails.bankAccount.accountBsb,
   ]);
 
-  const valueMatched = (
-    name: Extract<
-      keyof BankVerificationProps['values'],
-      keyof BankVerificationProps['userDetails']['bankAccount']
-    >,
-  ) => (formik.values[name] ? formik.values[name] === userDetails.bankAccount[name] : true);
+  const valueMatched = (name: 'accountBsb' | 'accountNumber') =>
+    formik.values[name] ? formik.values[name] === userDetails.bankAccount[name] : true;
 
   const handleNotifyContinue = () => {
     setNotifyContinue(true);

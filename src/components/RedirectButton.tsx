@@ -1,6 +1,6 @@
-import { Button, EditButton, FunctionField, Record } from 'react-admin';
-import { useHistory } from 'react-router-dom';
 import { SvgIconProps } from '@material-ui/core';
+import { Button, EditButton, FunctionField } from 'react-admin';
+import { useHistory } from 'react-router-dom';
 
 type ToTypesProps = {
   id: string;

@@ -7,13 +7,13 @@ import TextLabel from '../../components/TextLabel';
 import { callApi } from '../../helpers/api';
 import { getFullName } from '../../helpers/string';
 import { User } from '../../types/user';
-import { OnboardingStep } from './OnboardingSteps';
+import { OnboardingSteps } from './OnboardingSteps';
 
 type SummaryPropsType = {
   identity?: UserIdentity;
   notify: (message: string, notificationType?: NotificationType) => void;
   onPrevStep: () => void;
-  summaries: OnboardingStep;
+  summaries: OnboardingSteps;
   userDetails: User;
 };
 

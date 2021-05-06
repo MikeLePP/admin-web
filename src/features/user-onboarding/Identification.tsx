@@ -1,27 +1,11 @@
 import { Button, Chip, Grid, Typography } from '@material-ui/core';
-import { NotificationType, UserIdentity } from 'ra-core';
 import { FormEvent, useState } from 'react';
 import TextLabel from '../../components/TextLabel';
 import YesNoButtons from '../../components/YesNoButtons';
 import { callApi } from '../../helpers/api';
 import { toLocalDateString, yearOldString } from '../../helpers/date';
-import { User } from '../../types/user';
 import ActionButtons from './ActionButtons';
-
-export type IdentificationPropsType = {
-  identity?: UserIdentity;
-  notify: (message: string, notificationType?: NotificationType) => void;
-  onChange: (
-    values: Record<string, unknown> | boolean,
-    key?: string,
-    completed?: boolean,
-    stepValues?: Record<string, unknown>,
-  ) => void;
-  onNextStep: (completed: boolean) => void;
-  onPrevStep: () => void;
-  userDetails: User;
-  values: { identityVerified?: boolean };
-};
+import { IdentificationValues, OnboardingComponentProps } from './OnboardingSteps';
 
 export default ({
   values: { identityVerified },
@@ -31,7 +15,7 @@ export default ({
   onNextStep,
   notify,
   identity,
-}: IdentificationPropsType): JSX.Element => {
+}: OnboardingComponentProps<IdentificationValues>): JSX.Element => {
   const [notifyContinue, setNotifyContinue] = useState(false);
   const [loading, setLoading] = useState(false);
   const handleFormSubmit = async (e: FormEvent) => {

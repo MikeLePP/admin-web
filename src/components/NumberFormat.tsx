@@ -2,7 +2,7 @@ import NumberFormat from 'react-number-format';
 
 type NumberFormatProps = {
   inputRef: () => void;
-  onChange: (values: any) => void;
+  onChange: (values: unknown) => void;
   name: string;
 };
 

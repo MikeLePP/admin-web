@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import { useFormik } from 'formik';
 import { useState } from 'react';
-import { fetchEnd, fetchStart, NotificationType, UserIdentity } from 'react-admin';
+import { fetchEnd, fetchStart } from 'react-admin';
 import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
 import InputField from '../../components/InputField';
@@ -21,9 +21,9 @@ import YesNoButtons from '../../components/YesNoButtons';
 import INCOME_FREQUENCIES from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import { toLocalDateString } from '../../helpers/date';
-import { User } from '../../types/user';
 import ActionButtons from './ActionButtons';
 import { DECLINE_REASONS, GOVERNMENT_SUPPORT, RISK_MODELS } from './constants';
+import { OnboardingComponentProps, RiskAssessmentValues } from './OnboardingSteps';
 
 const validationSchema = yup.object({
   approved: yup.boolean(),
@@ -41,34 +41,6 @@ const validationSchema = yup.object({
     ),
 });
 
-export interface RiskAssessmentProps {
-  identity?: UserIdentity;
-  labels: Record<string, string>;
-  notify: (message: string, notificationType?: NotificationType) => void;
-  onChange: (
-    values: Record<string, unknown>,
-    key?: string,
-    completed?: boolean,
-    stepValues?: Record<string, unknown>,
-  ) => void;
-  onCompleteStep: (completed: boolean) => void;
-  onNextStep: (goToSummary?: boolean) => void;
-  onPrevStep: () => void;
-  riskAssessmentId?: string;
-  userDetails: User;
-  values: {
-    approved?: boolean;
-    incomeAverage: string;
-    incomeDay1Min: string;
-    incomeFrequency: string;
-    incomeLastDate: string;
-    incomeSupport?: boolean;
-    incomeVariationMax: string;
-    rejectedReasons: string[];
-    riskModelVersion: string;
-  };
-}
-
 export default ({
   identity,
   labels,
@@ -79,7 +51,7 @@ export default ({
   riskAssessmentId,
   userDetails,
   values,
-}: RiskAssessmentProps): JSX.Element => {
+}: OnboardingComponentProps<RiskAssessmentValues>): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
@@ -100,7 +72,7 @@ export default ({
             updatedBy: identity?.id,
           });
         } else {
-          const { json } = await callApi('/risk-assessments', 'post', {
+          const { json } = await callApi<{ id: string }>('/risk-assessments', 'post', {
             ..._values,
             incomeSupport,
             userId: userDetails.id,

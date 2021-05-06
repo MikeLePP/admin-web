@@ -8,6 +8,7 @@ import {
   useListContext,
   NumberField,
   ResourceComponentProps,
+  Record,
 } from 'react-admin';
 import { Typography, Button, TextField as InputField } from '@material-ui/core';
 import { useHistory } from 'react-router-dom';
@@ -50,8 +51,13 @@ const Empty = ({ id = '' }): JSX.Element => {
   );
 };
 
-export default (props: ResourceComponentProps): JSX.Element => {
+export default (props: ResourceComponentProps): JSX.Element | null => {
   const userId = getId(props.location?.pathname);
+
+  if (!props.basePath || !userId) {
+    return null;
+  }
+
   return (
     <List
       {...props}
@@ -61,12 +67,14 @@ export default (props: ResourceComponentProps): JSX.Element => {
       title="Risk Assessments"
       empty={<Empty id={userId} />}
       sort={{ field: 'createdAt', order: 'DESC' }}
-      actions={<ListToolbar to={`${String(props.basePath)}/create/${String(userId)}`} />}
+      actions={<ListToolbar to={`${props.basePath}/create/${userId}`} />}
     >
       <Datagrid>
         <FunctionField
           label="Created on"
-          render={(v: any) => new Date(v.createdAt).toLocaleDateString('en-GB')}
+          render={(record?: Record) =>
+            record && new Date(record.createdAt).toLocaleDateString('en-GB')
+          }
         />
         <BooleanField source="approved" label="Approved" />
         <TextField source="approvedBy" label="Approved by" />
