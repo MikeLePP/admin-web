@@ -51,7 +51,7 @@ const Empty = ({ id = '' }): JSX.Element => {
   );
 };
 
-export default (props: ResourceComponentProps): JSX.Element | null => {
+const RiskAssessmentList = (props: ResourceComponentProps): JSX.Element | null => {
   const userId = getId(props.location?.pathname);
 
   if (!props.basePath || !userId) {
@@ -90,3 +90,5 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
     </List>
   );
 };
+
+export default RiskAssessmentList;

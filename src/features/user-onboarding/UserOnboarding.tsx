@@ -22,14 +22,10 @@ import Summary from './Summary';
 
 const INIT_STEP = 1;
 
-export default (props: ResourceComponentProps): JSX.Element | null => {
+const UserOnboarding = (props: ResourceComponentProps): JSX.Element | null => {
   const userId = getId(props.location?.search);
-  if (!userId) {
-    props.history?.push('/users');
-    return null;
-  }
 
-  const { data: userDetails, loading, error } = useGetOne<User>('users', userId);
+  const { data: userDetails, loading, error } = useGetOne<User>('users', userId ?? '');
   const { identity } = useGetIdentity();
   const notify = useNotify();
 
@@ -67,7 +63,12 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
       setWizardData(newObj);
     }
     // only update once when the userDetails change
-  }, [userDetails]);
+  }, [userDetails, wizardData]);
+
+  if (!userId) {
+    props.history?.push('/users');
+    return null;
+  }
 
   if (loading) return <Loading />;
   if (error) return <Error error={error} />;
@@ -155,3 +156,5 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
     </div>
   );
 };
+
+export default UserOnboarding;

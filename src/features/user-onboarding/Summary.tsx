@@ -17,7 +17,7 @@ type SummaryPropsType = {
   userDetails: User;
 };
 
-export default ({
+const Summary = ({
   identity,
   notify,
   onPrevStep,
@@ -136,3 +136,5 @@ export default ({
     </div>
   );
 };
+
+export default Summary;

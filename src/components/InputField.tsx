@@ -11,7 +11,13 @@ type InputFieldProps = TextFieldProps & {
   };
 };
 
-export default ({ name, formik, helperText, onChange, ...rest }: InputFieldProps): JSX.Element => (
+const InputField = ({
+  name,
+  formik,
+  helperText,
+  onChange,
+  ...rest
+}: InputFieldProps): JSX.Element => (
   <TextField
     variant="outlined"
     color="secondary"
@@ -24,3 +30,5 @@ export default ({ name, formik, helperText, onChange, ...rest }: InputFieldProps
     helperText={(formik.touched[name] && formik.errors[name]) || helperText}
   />
 );
+
+export default InputField;

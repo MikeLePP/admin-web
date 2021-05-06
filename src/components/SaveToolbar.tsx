@@ -7,6 +7,7 @@ type SaveToolbarProps = {
   saveButtonLabel?: string;
   pristine?: boolean;
 };
+
 const SaveToolbar = ({
   saveButtonLabel = 'Save',
   pristine,

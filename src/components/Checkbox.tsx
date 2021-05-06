@@ -1,4 +1,9 @@
-import { FormControl, FormControlLabel, Checkbox, FormHelperText } from '@material-ui/core';
+import {
+  FormControl,
+  FormControlLabel,
+  Checkbox as MuiCheckbox,
+  FormHelperText,
+} from '@material-ui/core';
 import { useFormState, useField } from 'react-final-form';
 import { ChangeEvent } from 'react';
 
@@ -13,7 +18,12 @@ interface CheckboxProps {
   required?: boolean;
 }
 
-export default ({ source, label, handleChange, required = false }: CheckboxProps): JSX.Element => {
+const Checkbox = ({
+  source,
+  label,
+  handleChange,
+  required = false,
+}: CheckboxProps): JSX.Element => {
   const { values } = useFormState();
   const {
     input: { onChange },
@@ -24,7 +34,7 @@ export default ({ source, label, handleChange, required = false }: CheckboxProps
     <FormControl required={required} error={error}>
       <FormControlLabel
         control={
-          <Checkbox
+          <MuiCheckbox
             indeterminate={values[source] === undefined}
             checked={values[source] || false}
             onChange={handleChange ? handleChange(onChange) : onChange}
@@ -36,3 +46,5 @@ export default ({ source, label, handleChange, required = false }: CheckboxProps
     </FormControl>
   );
 };
+
+export default Checkbox;

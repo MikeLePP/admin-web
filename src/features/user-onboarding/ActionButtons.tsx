@@ -9,7 +9,11 @@ export interface ActionButtonsProps {
   onBackButtonClick?: React.MouseEventHandler<HTMLButtonElement>;
 }
 
-export default ({ onBackButtonClick, loading, children }: ActionButtonsProps): JSX.Element => {
+const ActionButtons = ({
+  onBackButtonClick,
+  loading,
+  children,
+}: ActionButtonsProps): JSX.Element => {
   const [showExitConfirm, setShowExitConfirm] = useState(false);
   const handleCloseDialog = () => setShowExitConfirm(false);
   const handleExitClick = () => setShowExitConfirm(true);
@@ -56,3 +60,5 @@ export default ({ onBackButtonClick, loading, children }: ActionButtonsProps): J
     </>
   );
 };
+
+export default ActionButtons;

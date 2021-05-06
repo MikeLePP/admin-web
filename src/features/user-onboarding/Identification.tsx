@@ -7,7 +7,7 @@ import { toLocalDateString, yearOldString } from '../../helpers/date';
 import ActionButtons from './ActionButtons';
 import { IdentificationValues, OnboardingComponentProps } from './OnboardingSteps';
 
-export default ({
+const Identification = ({
   values: { identityVerified },
   userDetails,
   onChange,
@@ -123,3 +123,5 @@ export default ({
     </form>
   );
 };
+
+export default Identification;

@@ -12,7 +12,7 @@ import {
 } from 'react-admin';
 import ShowToolbar from '../../components/ShowToolbar';
 
-export default (props: ResourceComponentPropsWithId): JSX.Element => (
+const TransactionShow = (props: ResourceComponentPropsWithId): JSX.Element => (
   <Show {...props} actions={<ShowToolbar />}>
     <SimpleShowLayout>
       <TextField label="First name" source="firstName" />
@@ -40,3 +40,5 @@ export default (props: ResourceComponentPropsWithId): JSX.Element => (
     </SimpleShowLayout>
   </Show>
 );
+
+export default TransactionShow;

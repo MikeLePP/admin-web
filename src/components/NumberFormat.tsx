@@ -1,4 +1,4 @@
-import NumberFormat from 'react-number-format';
+import ReactNumberFormat from 'react-number-format';
 
 type NumberFormatProps = {
   inputRef: () => void;
@@ -6,11 +6,11 @@ type NumberFormatProps = {
   name: string;
 };
 
-export default (props: NumberFormatProps): JSX.Element => {
+const NumberFormat = (props: NumberFormatProps): JSX.Element => {
   const { inputRef, onChange, ...other } = props;
 
   return (
-    <NumberFormat
+    <ReactNumberFormat
       {...other}
       getInputRef={inputRef}
       onValueChange={(values) => {
@@ -24,7 +24,8 @@ export default (props: NumberFormatProps): JSX.Element => {
       // TODO: figure out how to support this with React Admin
       // prefix="$"
       // thousandSeparator
-      decimalSeparator={false}
     />
   );
 };
+
+export default NumberFormat;

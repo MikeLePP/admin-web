@@ -52,7 +52,7 @@ const Empty = ({ id = '' }): JSX.Element => {
   );
 };
 
-export default (props: ResourceComponentProps): JSX.Element | null => {
+const TransactionList = (props: ResourceComponentProps): JSX.Element | null => {
   const userId = getId(props.location?.search);
 
   if (!props.basePath || !userId) {
@@ -96,3 +96,5 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
     </List>
   );
 };
+
+export default TransactionList;

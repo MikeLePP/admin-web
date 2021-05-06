@@ -6,7 +6,7 @@ import cn from 'classnames';
 import { map } from 'lodash';
 import { OnboardingSteps } from './OnboardingSteps';
 
-export default ({ summaries }: { summaries: OnboardingSteps }): JSX.Element => {
+const ApprovalStatus = ({ summaries }: { summaries: OnboardingSteps }): JSX.Element => {
   const getStatusIcon = (completed?: boolean) => {
     if (completed === true) {
       return <CheckCircleIcon color="secondary" />;
@@ -42,3 +42,5 @@ export default ({ summaries }: { summaries: OnboardingSteps }): JSX.Element => {
     </div>
   );
 };
+
+export default ApprovalStatus;

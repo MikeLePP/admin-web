@@ -10,7 +10,7 @@ export interface CustomerInfoProps {
   children: React.ReactNode;
 }
 
-export default ({ userDetails, children }: CustomerInfoProps): JSX.Element => {
+const CustomerInfo = ({ userDetails, children }: CustomerInfoProps): JSX.Element => {
   const { email, mobileNumber } = userDetails;
   const fullName = getFullName(userDetails);
   const history = useHistory();
@@ -36,3 +36,5 @@ export default ({ userDetails, children }: CustomerInfoProps): JSX.Element => {
     </div>
   );
 };
+
+export default CustomerInfo;

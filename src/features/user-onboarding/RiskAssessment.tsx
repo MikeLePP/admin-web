@@ -41,7 +41,7 @@ const validationSchema = yup.object({
     ),
 });
 
-export default ({
+const RiskAssessment = ({
   identity,
   labels,
   notify,
@@ -286,3 +286,5 @@ export default ({
     </div>
   );
 };
+
+export default RiskAssessment;

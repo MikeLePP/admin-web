@@ -19,7 +19,7 @@ import { futureDate, pastDate, phone } from '../../helpers/validation';
 import EditToolbar from '../../components/EditToolbar';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 
-export default (props: ResourceComponentPropsWithId): JSX.Element => {
+const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element => {
   const notify = useNotify();
 
   return (
@@ -65,3 +65,5 @@ export default (props: ResourceComponentPropsWithId): JSX.Element => {
     </Edit>
   );
 };
+
+export default UserEdit;

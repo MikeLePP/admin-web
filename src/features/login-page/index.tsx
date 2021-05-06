@@ -12,8 +12,10 @@ const LoginForm = (): JSX.Element => {
   );
 };
 
-export default (): JSX.Element => (
+const LoginPage = (): JSX.Element => (
   <Box display="flex" alignItems="center" justifyContent="center" height="100vh">
     <LoginForm />
   </Box>
 );
+
+export default LoginPage;

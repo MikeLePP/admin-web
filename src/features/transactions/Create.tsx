@@ -25,16 +25,17 @@ import { getFullName } from '../../helpers/string';
 import { getId } from '../../helpers/url';
 import { futureDate } from '../../helpers/validation';
 
-export default (props: ResourceComponentProps): JSX.Element | null => {
+const TransactionCreate = (props: ResourceComponentProps): JSX.Element | null => {
   const userId = getId(props.location?.pathname);
+
+  const { identity } = useGetIdentity();
+  const notify = useNotify();
+  const { data, loading, error } = useGetOne('users', userId ?? '');
+
   if (!userId) {
     props.history?.push(props.basePath!);
     return null;
   }
-
-  const { data, loading, error } = useGetOne('users', userId);
-  const { identity } = useGetIdentity();
-  const notify = useNotify();
 
   if (loading) return <Loading />;
   if (error) return <Error error={error} />;
@@ -120,3 +121,5 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
     </Create>
   );
 };
+
+export default TransactionCreate;

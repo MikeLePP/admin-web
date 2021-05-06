@@ -1,6 +1,5 @@
 /* eslint-disable no-underscore-dangle */
 import { Divider } from '@material-ui/core';
-import { NullableBooleanInputProps } from 'ra-ui-materialui/lib/input/NullableBooleanInput';
 import { ChangeEvent } from 'react';
 import RA, {
   Create,
@@ -9,6 +8,7 @@ import RA, {
   FunctionField,
   Loading,
   NullableBooleanInput,
+  NullableBooleanInputProps,
   NumberInput,
   required,
   ResourceComponentProps,
@@ -56,19 +56,17 @@ const formValidations = (data: RA.Record) => (values: RA.Record) => {
   return errors;
 };
 
-export default (props: ResourceComponentProps): JSX.Element | null => {
+const RiskAssessmentCreate = (props: ResourceComponentProps): JSX.Element | null => {
   const userId = getId(props.location?.pathname);
-  if (!userId) {
-    if (props.basePath) {
-      props.history?.push(props.basePath);
-    }
 
-    return null;
-  }
-
-  const { data, loading, error } = useGetOne('users', userId);
   const { identity } = useGetIdentity();
   const notify = useNotify();
+  const { data, loading, error } = useGetOne('users', userId ?? '');
+
+  if (!userId) {
+    props.history?.push(props.basePath!);
+    return null;
+  }
 
   if (loading) return <Loading />;
   if (error) return <Error error={error} />;
@@ -127,3 +125,5 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
     </Create>
   );
 };
+
+export default RiskAssessmentCreate;

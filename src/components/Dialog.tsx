@@ -1,5 +1,5 @@
 import {
-  Dialog,
+  Dialog as MuiDialog,
   DialogTitle,
   DialogContent,
   DialogContentText,
@@ -17,7 +17,7 @@ interface DialogProps {
   confirmLabel: string;
 }
 
-export default ({
+const Dialog = ({
   show,
   onCancelClick,
   onConfirmClick,
@@ -26,7 +26,7 @@ export default ({
   cancelLabel = 'Cancel',
   confirmLabel = 'Confirm',
 }: DialogProps): JSX.Element => (
-  <Dialog onClose={onCancelClick} open={show}>
+  <MuiDialog onClose={onCancelClick} open={show}>
     <DialogTitle>{title}</DialogTitle>
     {body && (
       <DialogContent>
@@ -41,5 +41,7 @@ export default ({
         {confirmLabel}
       </Button>
     </DialogActions>
-  </Dialog>
+  </MuiDialog>
 );
+
+export default Dialog;

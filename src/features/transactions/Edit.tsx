@@ -30,16 +30,17 @@ type TMyPropsType = {
   id: string;
 };
 
-export default (props: ResourceComponentPropsWithId): JSX.Element | null => {
+const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const userId = getId(props.location?.search);
-  if (!userId) {
-    props.history?.push(props.basePath!);
-    return null;
-  }
 
   const { identity } = useGetIdentity();
   const notify = useNotify();
   const { record } = useEditController(props);
+
+  if (!userId) {
+    props.history?.push(props.basePath!);
+    return null;
+  }
 
   const transform = (data: Record) => ({ ...data, userId, editedBy: identity?.id });
 
@@ -119,3 +120,5 @@ export default (props: ResourceComponentPropsWithId): JSX.Element | null => {
     </Edit>
   );
 };
+
+export default TransactionEdit;

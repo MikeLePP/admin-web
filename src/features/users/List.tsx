@@ -23,7 +23,7 @@ const UserFilter = (props: Record<string, unknown>) => (
   </Filter>
 );
 
-export default (props: ResourceComponentProps): JSX.Element => (
+const UserList = (props: ResourceComponentProps): JSX.Element => (
   <List
     {...props}
     bulkActionButtons={false}
@@ -56,3 +56,5 @@ export default (props: ResourceComponentProps): JSX.Element => (
     </Datagrid>
   </List>
 );
+
+export default UserList;

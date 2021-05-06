@@ -31,7 +31,7 @@ const validationSchema = yup.object({
     ),
 });
 
-export default ({
+const BankVerification = ({
   values,
   labels,
   userDetails,
@@ -211,3 +211,5 @@ export default ({
     </form>
   );
 };
+
+export default BankVerification;

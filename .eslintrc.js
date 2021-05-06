@@ -13,6 +13,8 @@ module.exports = {
     'plugin:jest/style',
     'plugin:promise/recommended',
     'prettier',
+    'react-app',
+    'react-app/jest',
   ],
   overrides: [
     {
