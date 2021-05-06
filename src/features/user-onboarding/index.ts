@@ -1,7 +1,7 @@
 import AssignmentIndOutlinedIcon from '@material-ui/icons/AssignmentIndOutlined';
 import UserOnboarding from './UserOnboarding';
 
-export default {
+const userOnboarding = {
   name: 'user-onboarding',
   options: {
     label: 'User onboarding',
@@ -10,3 +10,5 @@ export default {
 
   create: UserOnboarding,
 };
+
+export default userOnboarding;

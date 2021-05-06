@@ -17,30 +17,31 @@ import {
   useGetOne,
   useNotify,
   ResourceComponentProps,
+  Record,
 } from 'react-admin';
 import Toolbar from '../../components/SaveToolbar';
 import { notifyOnFailure } from '../../helpers/notify';
-import { getFullname } from '../../helpers/string';
+import { getFullName } from '../../helpers/string';
 import { getId } from '../../helpers/url';
 import { futureDate } from '../../helpers/validation';
 
-export default (props: ResourceComponentProps): JSX.Element | null => {
+const TransactionCreate = (props: ResourceComponentProps): JSX.Element | null => {
   const userId = getId(props.location?.pathname);
+
+  const { identity } = useGetIdentity();
+  const notify = useNotify();
+  const { data, loading, error } = useGetOne('users', userId ?? '');
+
   if (!userId) {
     props.history?.push(props.basePath!);
     return null;
   }
 
-  const { data, loading, error } = useGetOne('users', userId);
-  const { identity } = useGetIdentity();
-  const notify = useNotify();
-
   if (loading) return <Loading />;
   if (error) return <Error error={error} />;
   if (!data) return null;
 
-  const transform = (innerData: any) =>
-    ({ ...innerData, userId, createdBy: identity?.id } as Record<string, unknown>);
+  const transform = (innerData: Record) => ({ ...innerData, userId, createdBy: identity?.id });
 
   const destinationRecord = {
     destination: process.env.REACT_APP_TRANSACTION_DESTINATION_ACCOUNT,
@@ -58,7 +59,7 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
       transform={transform}
     >
       <SimpleForm redirect="show" toolbar={<Toolbar saveButtonLabel="Create" />}>
-        <FunctionField label="Name" render={getFullname} />
+        <FunctionField label="Name" render={getFullName} />
         <TextField label="Email" source="email" />
         <TextField label="Mobile" source="mobileNumber" />
         <Divider />
@@ -101,7 +102,7 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
         <TextInput
           label="Debit from"
           source="source"
-          defaultValue={getFullname(data)}
+          defaultValue={getFullName(data)}
           validate={[required()]}
         />
         <TextInput
@@ -120,3 +121,5 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
     </Create>
   );
 };
+
+export default TransactionCreate;

@@ -2,13 +2,16 @@ import { fetchUtils } from 'react-admin';
 import simpleRestProvider from 'ra-data-simple-rest';
 import Auth from '@aws-amplify/auth';
 
-export const httpClient = async (url: string, options = {} as any): any => {
+export const httpClient = async (
+  url: string,
+  options: fetchUtils.Options = {},
+): ReturnType<typeof fetchUtils.fetchJson> => {
   const innerOptions = options;
   if (!innerOptions.headers) {
     innerOptions.headers = new Headers({ Accept: 'application/json' });
   }
   const { signInUserSession } = await Auth.currentAuthenticatedUser();
-  innerOptions.headers.set(
+  (innerOptions.headers as Headers).set(
     'Authorization',
     `Bearer ${String(signInUserSession.accessToken.jwtToken)}`,
   );

@@ -1,5 +1,5 @@
 import { Typography } from '@material-ui/core';
-import { cloneDeep, map, reduce, set } from 'lodash';
+import { cloneDeep, set } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import {
   Error,
@@ -13,20 +13,19 @@ import {
 import { getId } from '../../helpers/url';
 import { User } from '../../types/user';
 import ApprovalStatus from './ApprovalStatus';
+import BankVerification from './BankVerification';
 import CustomerInfo from './CustomerInfo';
-import OnboardingSteps from './OnboardingSteps';
+import Identification from './Identification';
+import onboardingSteps, { OnboardingSteps } from './OnboardingSteps';
+import RiskAssessment from './RiskAssessment';
 import Summary from './Summary';
 
 const INIT_STEP = 1;
 
-export default (props: ResourceComponentProps): JSX.Element | null => {
+const UserOnboarding = (props: ResourceComponentProps): JSX.Element | null => {
   const userId = getId(props.location?.search);
-  if (!userId) {
-    props.history?.push('/users');
-    return null;
-  }
 
-  const { data: userDetails, loading, error } = useGetOne<User>('users', userId);
+  const { data: userDetails, loading, error } = useGetOne<User>('users', userId ?? '');
   const { identity } = useGetIdentity();
   const notify = useNotify();
 
@@ -34,17 +33,23 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
   const [previousStep, setPreviousStep] = useState(INIT_STEP);
 
   const Component = useMemo(() => {
-    if (currentStep < 4) {
-      return OnboardingSteps[currentStep].component;
+    switch (currentStep) {
+      case 1:
+        return BankVerification;
+      case 2:
+        return RiskAssessment;
+      case 3:
+        return Identification;
+      default:
+        return Summary;
     }
-    return Summary;
   }, [currentStep]);
 
-  const [wizardData, setWizardData] = useState(OnboardingSteps);
+  const [wizardData, setWizardData] = useState(onboardingSteps);
 
   useEffect(() => {
     if (userDetails && (userDetails.bankAccount || userDetails.identity)) {
-      let newObj: any = cloneDeep(wizardData);
+      let newObj: OnboardingSteps = cloneDeep(wizardData);
       if (userDetails.bankAccount && userDetails.bankAccount.verified) {
         newObj = set(newObj, '1.values', {
           bankDetailsAvailable: userDetails.bankAccount.verified,
@@ -58,17 +63,27 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
       setWizardData(newObj);
     }
     // only update once when the userDetails change
-  }, [userDetails]);
+  }, [userDetails, wizardData]);
+
+  if (!userId) {
+    props.history?.push('/users');
+    return null;
+  }
 
   if (loading) return <Loading />;
   if (error) return <Error error={error} />;
   if (!userDetails) return null;
 
-  const handleChange = (values: any, key?: string, completed?: boolean, stepValues?: any) => {
-    let newObj: any = cloneDeep(wizardData);
+  const handleChange = (
+    values: Record<string, unknown> | unknown,
+    key?: string,
+    completed?: boolean,
+    stepValues?: Record<string, unknown>,
+  ) => {
+    let newObj: OnboardingSteps = cloneDeep(wizardData);
     if (key) {
       newObj = set(newObj, `${currentStep}.values.${key}`, values);
-    } else {
+    } else if (typeof values === 'object') {
       newObj = set(newObj, `${currentStep}.values`, {
         ...newObj[currentStep].values,
         ...values,
@@ -85,7 +100,7 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
   };
 
   const handleCompleteStep = (completed: boolean) => {
-    let newObj: any = cloneDeep(wizardData);
+    let newObj: OnboardingSteps = cloneDeep(wizardData);
     newObj = set(newObj, `${currentStep}.completed`, completed);
     setWizardData(newObj);
   };
@@ -103,22 +118,14 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
     }
   };
 
-  const handleNotification = (message: any, notificationType: NotificationType) => {
-    if (typeof message === 'object' && notificationType === 'error' && message.body) {
-      notify(
-        reduce(
-          message.body.errors,
-          (acc, cur): any => {
-            let innerAcc = acc;
-            innerAcc += map(cur, (c: Record<string, unknown>) => c).join('\n\n');
-            return innerAcc;
-          },
-          '',
-        ),
-        'error',
-      );
-    } else {
+  const handleNotification = (
+    message: string | { body?: { errors: unknown[] } },
+    notificationType?: NotificationType,
+  ) => {
+    if (typeof message === 'string') {
       notify(message, notificationType);
+    } else if (typeof message === 'object' && notificationType === 'error') {
+      notify(message.body?.errors.join('\n\n') || '', 'error');
     }
   };
 
@@ -131,7 +138,8 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
         <Component
           notify={handleNotification}
           identity={identity}
-          {...wizardData[currentStep]}
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          {...(wizardData[currentStep] as any)}
           summaries={wizardData}
           userDetails={userDetails}
           onChange={handleChange}
@@ -148,3 +156,5 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
     </div>
   );
 };
+
+export default UserOnboarding;

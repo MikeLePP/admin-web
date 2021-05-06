@@ -12,7 +12,7 @@ import {
 } from '@material-ui/core';
 import { useFormik } from 'formik';
 import { useState } from 'react';
-import { fetchEnd, fetchStart, NotificationType, useGetIdentity } from 'react-admin';
+import { fetchEnd, fetchStart } from 'react-admin';
 import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
 import InputField from '../../components/InputField';
@@ -21,9 +21,9 @@ import YesNoButtons from '../../components/YesNoButtons';
 import INCOME_FREQUENCIES from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import { toLocalDateString } from '../../helpers/date';
-import { User } from '../../types/user';
 import ActionButtons from './ActionButtons';
 import { DECLINE_REASONS, GOVERNMENT_SUPPORT, RISK_MODELS } from './constants';
+import { OnboardingComponentProps, RiskAssessmentValues } from './OnboardingSteps';
 
 const validationSchema = yup.object({
   approved: yup.boolean(),
@@ -41,39 +41,17 @@ const validationSchema = yup.object({
     ),
 });
 
-export interface RiskAssessmentProps {
-  values: {
-    approved?: boolean;
-    incomeSupport?: boolean;
-    rejectedReasons: string[];
-  };
-  riskAssessmentId?: string;
-  labels: Record<string, string>;
-  userDetails: User;
-  onChange: (
-    values: Record<string, unknown>,
-    key?: string,
-    completed?: boolean,
-    stepValues?: Record<string, unknown>,
-  ) => void;
-  onPrevStep: () => void;
-  onNextStep: (goToSummary?: boolean) => void;
-  onCompleteStep: (completed: boolean) => void;
-  notify: (message: string, notificationType: NotificationType) => void;
-  identity: ReturnType<typeof useGetIdentity>['identity'];
-}
-
-export default ({
-  values,
+const RiskAssessment = ({
+  identity,
   labels,
-  userDetails,
+  notify,
   onChange,
   onNextStep,
   onPrevStep,
-  notify,
-  identity,
   riskAssessmentId,
-}: RiskAssessmentProps): JSX.Element => {
+  userDetails,
+  values,
+}: OnboardingComponentProps<RiskAssessmentValues>): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
 
@@ -85,16 +63,16 @@ export default ({
       setLoading(true);
       try {
         dispatch(fetchStart());
-        const incomeSupport = Boolean(_values.incomeSupport);
+        const { incomeSupport } = _values;
         // 1. create or update risk assessment
         if (thisRiskAssessmentId) {
-          await callApi(`/risk-assessments/${String(thisRiskAssessmentId)}`, 'patch', {
+          await callApi(`/risk-assessments/${thisRiskAssessmentId}`, 'patch', {
             ..._values,
             incomeSupport,
             updatedBy: identity?.id,
           });
         } else {
-          const { json } = await callApi('/risk-assessments', 'post', {
+          const { json } = await callApi<{ id: string }>('/risk-assessments', 'post', {
             ..._values,
             incomeSupport,
             userId: userDetails.id,
@@ -104,7 +82,7 @@ export default ({
         }
 
         // 2. call onboarding api to complete this step
-        await callApi(`/onboarding/${String(userDetails.id)}`, 'post', {
+        await callApi(`/onboarding/${userDetails.id}`, 'post', {
           step: 'risk-assessment',
           thisRiskAssessmentId,
           updatedBy: identity?.id,
@@ -308,3 +286,5 @@ export default ({
     </div>
   );
 };
+
+export default RiskAssessment;

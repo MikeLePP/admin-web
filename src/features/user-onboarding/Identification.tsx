@@ -1,12 +1,13 @@
 import { Button, Chip, Grid, Typography } from '@material-ui/core';
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import TextLabel from '../../components/TextLabel';
 import YesNoButtons from '../../components/YesNoButtons';
 import { callApi } from '../../helpers/api';
 import { toLocalDateString, yearOldString } from '../../helpers/date';
 import ActionButtons from './ActionButtons';
+import { IdentificationValues, OnboardingComponentProps } from './OnboardingSteps';
 
-export default ({
+const Identification = ({
   values: { identityVerified },
   userDetails,
   onChange,
@@ -14,20 +15,20 @@ export default ({
   onNextStep,
   notify,
   identity,
-}: Record<string, unknown>): JSX.Element => {
+}: OnboardingComponentProps<IdentificationValues>): JSX.Element => {
   const [notifyContinue, setNotifyContinue] = useState(false);
   const [loading, setLoading] = useState(false);
-  const handleFormSubmit = async (e: any) => {
+  const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
       setLoading(true);
 
       await Promise.all([
-        callApi(`/identities/${String(userDetails.identity.id)}`, 'patch', {
+        callApi(`/identities/${userDetails.identity.id}`, 'patch', {
           verified: identityVerified,
           updatedBy: identity?.id,
         }),
-        callApi(`/onboarding/${String(userDetails.id)}`, 'post', {
+        callApi(`/onboarding/${userDetails.id}`, 'post', {
           step: 'identity',
           identityId: userDetails.identity.id,
           notifyUser: notifyContinue,
@@ -67,7 +68,7 @@ export default ({
             <div className="flex items-center space-x-1">
               <Typography component="span">{toLocalDateString(userDetails.dob) || '-'}</Typography>
               {userDetails.dob && (
-                <Chip size="small" label={`${String(yearOldString(userDetails.dob))} yr old`} />
+                <Chip size="small" label={`${yearOldString(userDetails.dob)} yr old`} />
               )}
             </div>
           </Grid>
@@ -95,8 +96,8 @@ export default ({
           </Typography>
           <YesNoButtons
             isYes={identityVerified}
-            onYesClick={() => onChange(true, 'identityVerified') as Record<string, unknown>}
-            onNoClick={() => onChange(false, 'identityVerified') as Record<string, unknown>}
+            onYesClick={() => onChange(true, 'identityVerified')}
+            onNoClick={() => onChange(false, 'identityVerified')}
           />
         </div>
       </div>
@@ -122,3 +123,5 @@ export default ({
     </form>
   );
 };
+
+export default Identification;

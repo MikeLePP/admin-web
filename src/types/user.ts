@@ -15,7 +15,11 @@ export interface User {
     name: string;
     verified?: boolean;
   };
-  identity?: {
+  identity: {
+    id: string;
+    number: string;
+    source: string;
+    state: string;
     verified?: boolean;
   };
   income: {

@@ -8,6 +8,7 @@ import {
   maxValue,
   NumberInput,
   RadioButtonGroupInput,
+  Record,
   required,
   ResourceComponentPropsWithId,
   SimpleForm,
@@ -20,23 +21,23 @@ import {
 import EditToolbar from '../../components/EditToolbar';
 import SaveToolbar from '../../components/SaveToolbar';
 import { notifyOnFailure } from '../../helpers/notify';
-import { getFullname } from '../../helpers/string';
+import { getFullName } from '../../helpers/string';
 import { getId } from '../../helpers/url';
 import { futureDate } from '../../helpers/validation';
 
-export default (props: ResourceComponentPropsWithId): JSX.Element | null => {
+const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const userId = getId(props.location?.search);
-  if (!userId) {
-    props.history?.push(props.basePath!);
-    return null;
-  }
 
   const { identity } = useGetIdentity();
   const notify = useNotify();
   const { record } = useEditController(props);
 
-  const transform = (data: any) =>
-    ({ ...data, userId, editedBy: identity?.id } as Record<string, unknown>);
+  if (!userId) {
+    props.history?.push(props.basePath!);
+    return null;
+  }
+
+  const transform = (data: Record) => ({ ...data, userId, editedBy: identity?.id });
 
   const disabled = record?.status !== 'pending_submission';
 
@@ -50,11 +51,14 @@ export default (props: ResourceComponentPropsWithId): JSX.Element | null => {
       actions={<EditToolbar />}
     >
       <SimpleForm redirect="show" toolbar={<SaveToolbar />}>
-        <FunctionField label="Name" render={getFullname} />
+        <FunctionField label="Name" render={getFullName} />
         <TextField label="Email" source="email" />
         <TextField label="Mobile" source="mobileNumber" />
         <Divider />
-        <FunctionField label="Status" render={(v: any) => capitalize(lowerCase(v.status))} />
+        <FunctionField
+          label="Status"
+          render={(r?: Record) => capitalize(lowerCase(r ? r.status : ''))}
+        />
 
         <RadioButtonGroupInput
           label="Payment type"
@@ -111,3 +115,5 @@ export default (props: ResourceComponentPropsWithId): JSX.Element | null => {
     </Edit>
   );
 };
+
+export default TransactionEdit;
