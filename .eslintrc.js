@@ -41,5 +41,6 @@ module.exports = {
     'no-console': 'error',
     'no-new': 'off',
     'prettier/prettier': ['error'],
+    'import/no-extraneous-dependencies': 'off',
   },
 };
