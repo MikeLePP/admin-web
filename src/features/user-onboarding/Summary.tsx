@@ -10,25 +10,25 @@ import { User } from '../../types/user';
 import { OnboardingStep } from './OnboardingSteps';
 
 type SummaryPropsType = {
-  summaries: OnboardingStep;
-  onPrevStep: () => void;
-  userDetails: User;
-  identity: UserIdentity;
+  identity?: UserIdentity;
   notify: (message: string, notificationType?: NotificationType) => void;
+  onPrevStep: () => void;
+  summaries: OnboardingStep;
+  userDetails: User;
 };
 
 export default ({
-  summaries,
-  onPrevStep,
-  userDetails,
   identity,
   notify,
+  onPrevStep,
+  summaries,
+  userDetails,
 }: SummaryPropsType): JSX.Element => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
 
   const allCompleted = every(summaries, 'completed');
-  const getValue = (value: number | string | boolean) => {
+  const getValue = (value: unknown) => {
     let result = '-';
     if (value && (typeof value === 'string' || typeof value === 'number')) {
       result = value.toString();
@@ -61,24 +61,35 @@ export default ({
         <Typography variant="h6" className="mb-4">
           Summary
         </Typography>
-        {map(Object.values(summaries), ({ name, values, labels }) => (
-          <div className="mb-8" key={name}>
-            <Typography variant="subtitle2" className="font-bold mb-4">
-              {name}
-            </Typography>
+        {map(
+          Object.values(summaries),
+          ({
+            name,
+            values,
+            labels,
+          }: {
+            name: string;
+            values: Record<string, unknown>;
+            labels: Record<string, string>;
+          }) => (
+            <div className="mb-8" key={name}>
+              <Typography variant="subtitle2" className="font-bold mb-4">
+                {name}
+              </Typography>
 
-            <div className="flex flex-col space-y-3">
-              {map(labels, (label, key) => (
-                <TextLabel
-                  key={key}
-                  label={`${String(label)}:`}
-                  value={getValue(values[key])}
-                  horizontal
-                />
-              ))}
+              <div className="flex flex-col space-y-3">
+                {map(labels, (label, key) => (
+                  <TextLabel
+                    key={key}
+                    label={`${label}:`}
+                    value={getValue(values[key])}
+                    horizontal
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ),
+        )}
       </div>
       <div
         className="flex justify-between px-8 py-6 border-t fixed bg-white z-10"

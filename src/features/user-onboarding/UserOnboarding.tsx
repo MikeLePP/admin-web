@@ -1,5 +1,5 @@
 import { Typography } from '@material-ui/core';
-import { cloneDeep, map, reduce, set } from 'lodash';
+import { cloneDeep, set } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import {
   Error,
@@ -65,7 +65,7 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
   if (!userDetails) return null;
 
   const handleChange = (
-    values: Record<string, unknown>,
+    values: Record<string, unknown> | unknown,
     key?: string,
     completed?: boolean,
     stepValues?: Record<string, unknown>,
@@ -73,7 +73,7 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
     let newObj: typeof OnboardingSteps = cloneDeep(wizardData);
     if (key) {
       newObj = set(newObj, `${currentStep}.values.${key}`, values);
-    } else {
+    } else if (typeof values === 'object') {
       newObj = set(newObj, `${currentStep}.values`, {
         ...newObj[currentStep].values,
         ...values,
@@ -110,7 +110,7 @@ export default (props: ResourceComponentProps): JSX.Element | null => {
 
   const handleNotification = (
     message: string | { body?: { errors: unknown[] } },
-    notificationType: NotificationType,
+    notificationType?: NotificationType,
   ) => {
     if (typeof message === 'string') {
       notify(message, notificationType);

@@ -25,7 +25,7 @@ const onboardingSteps: OnboardingStep = {
     name: 'Bank information',
     completed: undefined,
     values: {
-      bankDetailsAvailable: false,
+      bankDetailsAvailable: undefined,
       accountBsb: '',
       accountNumber: '',
     },
@@ -41,15 +41,15 @@ const onboardingSteps: OnboardingStep = {
     completed: undefined,
     riskAssessmentId: '',
     values: {
-      approved: false,
+      approved: undefined,
       incomeAverage: '',
       incomeDay1Min: '',
       incomeFrequency: '',
       incomeLastDate: '',
-      incomeSupport: '',
+      incomeSupport: undefined,
       incomeVariationMax: '',
-      riskModelVersion: '',
       rejectedReasons: [],
+      riskModelVersion: '',
     },
     labels: {
       approved: 'Risk assessment approved?',
@@ -68,7 +68,7 @@ const onboardingSteps: OnboardingStep = {
     name: 'Identification',
     completed: undefined,
     values: {
-      identityVerified: false,
+      identityVerified: undefined,
     },
     labels: {
       identityVerified: 'Identification verified?',
