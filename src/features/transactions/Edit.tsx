@@ -8,6 +8,7 @@ import {
   maxValue,
   NumberInput,
   RadioButtonGroupInput,
+  Record,
   required,
   ResourceComponentPropsWithId,
   SimpleForm,
@@ -16,7 +17,6 @@ import {
   useEditController,
   useGetIdentity,
   useNotify,
-  Record,
 } from 'react-admin';
 import EditToolbar from '../../components/EditToolbar';
 import SaveToolbar from '../../components/SaveToolbar';
@@ -57,7 +57,7 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
         <Divider />
         <FunctionField
           label="Status"
-          render={(record?: Record) => capitalize(lowerCase(record ? record.status : ''))}
+          render={(r?: Record) => capitalize(lowerCase(r ? r.status : ''))}
         />
 
         <RadioButtonGroupInput
