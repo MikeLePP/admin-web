@@ -89,7 +89,7 @@ const TransactionList = (props: ResourceComponentProps): JSX.Element | null => {
         <ShowButton />
         <RedirectButton
           buttonLabel="Edit"
-          to={(record: Record) => `/transactions/${record.id}?userId=${userId}`}
+          to={(record?: Record) => (record ? `/transactions/${record.id}?userId=${userId}` : '')}
           icon={<EditIcon />}
         />
       </Datagrid>
