@@ -25,11 +25,6 @@ import { getFullName } from '../../helpers/string';
 import { getId } from '../../helpers/url';
 import { futureDate } from '../../helpers/validation';
 
-type TMyPropsType = {
-  status: string;
-  id: string;
-};
-
 const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const userId = getId(props.location?.search);
 
@@ -60,9 +55,9 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
         <TextField label="Email" source="email" />
         <TextField label="Mobile" source="mobileNumber" />
         <Divider />
-        <FunctionField<TMyPropsType>
+        <FunctionField
           label="Status"
-          render={(v: TMyPropsType | undefined) => capitalize(lowerCase(v ? v.status : ''))}
+          render={(record?: Record) => capitalize(lowerCase(record ? record.status : ''))}
         />
 
         <RadioButtonGroupInput

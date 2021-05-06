@@ -4,6 +4,7 @@ import {
   Filter,
   FunctionField,
   List,
+  Record as RaRecord,
   ResourceComponentProps,
   ShowButton,
   TextField,
@@ -11,11 +12,6 @@ import {
 } from 'react-admin';
 import RedirectButton from '../../components/RedirectButton';
 import { getFullName } from '../../helpers/string';
-
-type TMyPropsType = {
-  createdAt: string;
-  id: string;
-};
 
 const UserFilter = (props: Record<string, unknown>) => (
   <Filter {...props}>
@@ -32,10 +28,10 @@ const UserList = (props: ResourceComponentProps): JSX.Element => (
     pagination={false}
   >
     <Datagrid>
-      <FunctionField<TMyPropsType>
+      <FunctionField
         label="Created on"
-        render={(v: TMyPropsType | undefined) =>
-          new Date(v ? v.createdAt : '').toLocaleDateString('en-GB')
+        render={(record?: RaRecord) =>
+          new Date(record ? record.createdAt : '').toLocaleDateString('en-GB')
         }
       />
       <TextField label="Status" source="status" />
@@ -45,11 +41,11 @@ const UserList = (props: ResourceComponentProps): JSX.Element => (
       <TextField label="Current balance" source="balanceCurrent" />
       <RedirectButton
         buttonLabel="Transactions"
-        to={(r: { id: string }) => `/transactions?userId=${String(r.id)}`}
+        to={(record?: RaRecord) => (record ? `/transactions?userId=${record.id}` : '')}
       />
       <RedirectButton
         buttonLabel="Onboarding"
-        to={(r: { id: string }) => `/user-onboarding/create?userId=${String(r.id)}`}
+        to={(record?: RaRecord) => (record ? `/user-onboarding/create?userId=${record.id}` : '')}
       />
       <ShowButton />
       <EditButton />
