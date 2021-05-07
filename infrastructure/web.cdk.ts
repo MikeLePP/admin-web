@@ -17,25 +17,24 @@ export default class WebConstruct extends core.Construct {
   constructor(scope: core.Construct, id: string, props: WebConstructProps) {
     super(scope, id);
 
-    const { bucketName, domainName, hostedZone } = props;
-    const stack = core.Stack.of(this);
+    const { domainName, hostedZone } = props;
 
-    const s3Bucket = new s3.Bucket(this, 'WebBucket', {
-      bucketName: `${bucketName}-${stack.stackId}`,
+    const s3Bucket = new s3.Bucket(this, 'Bucket', {
+      bucketName: core.PhysicalName.GENERATE_IF_NEEDED,
       // The default removal policy is RETAIN, which means that cdk destroy will not attempt to delete
       // the new bucket, and it will remain in your account until manually deleted. By setting the policy to
       // DESTROY, cdk destroy will attempt to delete the bucket, but will error if the bucket is not empty.
-      removalPolicy: core.RemovalPolicy.DESTROY, // NOT recommended for production code
+      removalPolicy: core.RemovalPolicy.DESTROY,
     });
 
-    const certificate = new acm.DnsValidatedCertificate(this, 'WebCertificate', {
+    const certificate = new acm.DnsValidatedCertificate(this, 'Certificate', {
       domainName,
       hostedZone,
       // Required to be in us-east-1 for cross-region certificates
       region: 'us-east-1',
     });
 
-    const distribution = new cloudfront.Distribution(this, 'WebDistribution', {
+    const distribution = new cloudfront.Distribution(this, 'Distribution', {
       certificate,
       defaultRootObject: 'index.html',
       defaultBehavior: {
@@ -49,22 +48,22 @@ export default class WebConstruct extends core.Construct {
       domainNames: [domainName],
     });
 
-    new route53.ARecord(this, 'WebDnsRecord', {
+    new route53.ARecord(this, 'DnsRecord', {
       recordName: domainName,
       zone: hostedZone,
       target: route53.RecordTarget.fromAlias(new route53Targets.CloudFrontTarget(distribution)),
     });
 
-    new s3deploy.BucketDeployment(this, 'WebDeploy', {
-      sources: [s3deploy.Source.asset('./src/web/build')],
+    new s3deploy.BucketDeployment(this, 'Deploy', {
+      sources: [s3deploy.Source.asset('./build')],
       destinationBucket: s3Bucket,
       distribution,
       distributionPaths: ['/*'],
     });
 
-    new core.CfnOutput(this, 'WebS3BucketArn', { value: s3Bucket.bucketArn });
-    new core.CfnOutput(this, 'WebS3BucketName', { value: s3Bucket.bucketName });
-    new core.CfnOutput(this, 'WebDistributionId', {
+    new core.CfnOutput(this, 'S3BucketArn', { value: s3Bucket.bucketArn });
+    new core.CfnOutput(this, 'S3BucketName', { value: s3Bucket.bucketName });
+    new core.CfnOutput(this, 'DistributionId', {
       value: distribution.distributionId,
     });
   }

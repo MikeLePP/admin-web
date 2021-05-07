@@ -63,6 +63,7 @@
     "@testing-library/jest-dom": "^5.12.0",
     "@testing-library/react": "^11.2.6",
     "@testing-library/user-event": "^13.1.8",
+    "@tsconfig/node14": "^1.0.0",
     "@types/classnames": "^2.3.0",
     "@types/convict": "^6.0.1",
     "@types/convict-format-with-validator": "^6.0.2",

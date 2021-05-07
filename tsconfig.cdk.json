@@ -1,0 +1,12 @@
+{
+  "extends": "@tsconfig/node14/tsconfig.json",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "inlineSourceMap": true,
+    "noImplicitAny": false,
+    "strict": true
+  },
+  "include": ["src", "infrastructure"]
+}
