@@ -18,14 +18,8 @@ interface ListToolbarProps {
 
 const ListToolbar = (props: ListToolbarProps): JSX.Element => {
   const { filters, maxResults, to } = props;
-  const {
-    currentSort,
-    resource,
-    displayedFilters,
-    filterValues,
-    showFilter,
-    total,
-  } = useListContext();
+  const { currentSort, resource, displayedFilters, filterValues, showFilter, total } =
+    useListContext();
   return (
     <TopToolbar className="flex flex-1">
       {filters &&

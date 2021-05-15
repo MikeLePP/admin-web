@@ -25,7 +25,7 @@ const SaveToolbar = ({
     default:
   }
   const handleCancelClick = () => {
-    history.back();
+    history.goBack();
   };
   return (
     <Toolbar {...rest}>
