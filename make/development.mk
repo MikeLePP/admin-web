@@ -7,10 +7,10 @@ clean: ## Clean up the project artefacts
 lint: ## Lint the code
 	npx eslint .
 
-serve:
+serve: local-env
 	npm run serve
 
-start:
+start: local-env
 	npm run start
 
 fix:
@@ -22,3 +22,7 @@ test: ## Run unit tests
 smoke: check-API_URL ## Execute smoke tests against the deployed environment
 	curl $(API_URL)/messages -H "Content-Type: application/json" -d '{"text":"hello"}'
 	curl $(API_URL)/messages
+
+local-env: # Configure environment variables for connecting to local development resources
+	$(eval ENV := local)
+	$(eval include .env .env.local)
