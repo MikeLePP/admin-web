@@ -47,7 +47,7 @@ export interface RiskAssessmentValues extends Record<string, unknown> {
   incomeDay1Min: string;
   incomeFrequency: string;
   incomeLastDate: string;
-  incomeSupport?: boolean;
+  incomeSupport: string;
   incomeVariationMax: string;
   rejectedReasons: string[];
   riskModelVersion: string;
@@ -82,7 +82,7 @@ const onboardingSteps: OnboardingSteps = {
       incomeDay1Min: '',
       incomeFrequency: '',
       incomeLastDate: '',
-      incomeSupport: undefined,
+      incomeSupport: '',
       incomeVariationMax: '',
       rejectedReasons: [],
       riskModelVersion: '',

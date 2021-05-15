@@ -59,14 +59,14 @@ const RiskAssessment = ({
     initialValues: values,
     validationSchema,
     onSubmit: async (_values) => {
-      let thisRiskAssessmentId = riskAssessmentId;
+      let newRiskAssessmentId = riskAssessmentId;
       setLoading(true);
       try {
         dispatch(fetchStart());
-        const { incomeSupport } = _values;
+        const incomeSupport = _values.incomeSupport === 'true';
         // 1. create or update risk assessment
-        if (thisRiskAssessmentId) {
-          await callApi(`/risk-assessments/${thisRiskAssessmentId}`, 'patch', {
+        if (riskAssessmentId) {
+          await callApi(`/risk-assessments/${riskAssessmentId}`, 'patch', {
             ..._values,
             incomeSupport,
             updatedBy: identity?.id,
@@ -78,18 +78,18 @@ const RiskAssessment = ({
             userId: userDetails.id,
             createdBy: identity?.id,
           });
-          thisRiskAssessmentId = json.id;
+          newRiskAssessmentId = json.id;
         }
 
         // 2. call onboarding api to complete this step
         await callApi(`/onboarding/${userDetails.id}`, 'post', {
           step: 'risk-assessment',
-          thisRiskAssessmentId,
+          riskAssessmentId: newRiskAssessmentId,
           updatedBy: identity?.id,
         });
 
         onChange({ ..._values, incomeSupport }, undefined, _values.approved, {
-          thisRiskAssessmentId,
+          riskAssessmentId: newRiskAssessmentId,
         });
         onNextStep(!_values.approved);
       } catch (error) {

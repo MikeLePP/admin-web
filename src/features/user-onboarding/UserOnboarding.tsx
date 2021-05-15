@@ -63,7 +63,7 @@ const UserOnboarding = (props: ResourceComponentProps): JSX.Element | null => {
       setWizardData(newObj);
     }
     // only update once when the userDetails change
-  }, [userDetails, wizardData]);
+  }, [userDetails]);
 
   if (!userId) {
     props.history?.push('/users');
