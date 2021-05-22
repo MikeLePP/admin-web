@@ -93,7 +93,7 @@ const Summary = ({
       </div>
       <div
         className="flex justify-between px-8 py-6 border-t fixed bg-white z-10"
-        style={{ width: 'calc(100% - 1.8125rem - 16rem - 15rem)', bottom: '1.5rem' }}
+        style={{ width: 'calc(100% - 36.25rem)', bottom: '1.5rem' }}
       >
         <Button variant="outlined" onClick={onPrevStep} disabled={loading}>
           Back

@@ -33,6 +33,7 @@ export interface OnboardingComponentProps<T extends Record<string, unknown>>
   riskAssessmentId?: string;
   userDetails: User;
   values: T;
+  bankAccounts: BankAccount[];
 }
 
 export interface BankVerificationValues extends Record<string, unknown> {
@@ -51,25 +52,60 @@ export interface RiskAssessmentValues extends Record<string, unknown> {
   incomeVariationMax: string;
   rejectedReasons: string[];
   riskModelVersion: string;
+  primaryAccountId: string;
 }
 
 export interface IdentificationValues extends Record<string, unknown> {
   identityVerified?: boolean;
 }
 
+export interface Account {
+  id: string;
+  selected?: boolean;
+  type: string;
+  name: string;
+  details: string;
+  amount: string;
+}
+
+export interface BankAccountData {
+  id: string;
+  attributes: BankAccount;
+}
+
+export interface BankAccount {
+  id: string;
+  accountBsb?: string;
+  accountHolder: string;
+  accountHolderType: string;
+  accountName: string;
+  accountNumber: string;
+  accountRef: string;
+  accountType: string;
+  balanceAvailable: number;
+  balanceCurrent: number;
+  createdAt: Date;
+  credentialId: string;
+  dataLastAt: Date;
+  dataLastId: string;
+  institutionName: string;
+  isPrimary: boolean;
+  isSelected: boolean;
+  referenceId: string;
+  status: string;
+  userId: string;
+}
+
 const onboardingSteps: OnboardingSteps = {
   1: {
-    name: 'Bank information',
+    name: 'Bank selection',
     completed: undefined,
     values: {
-      bankDetailsAvailable: undefined,
-      accountBsb: '',
-      accountNumber: '',
+      accounts: [],
+      noAccountSelected: false,
     },
     labels: {
-      bankDetailsAvailable: 'Bank details available?',
-      accountBsb: 'BSB',
-      accountNumber: 'Account number',
+      noAccountSelected: 'No transactional account?',
     },
   },
   2: {
@@ -86,6 +122,7 @@ const onboardingSteps: OnboardingSteps = {
       incomeVariationMax: '',
       rejectedReasons: [],
       riskModelVersion: '',
+      primaryAccountId: '',
     },
     labels: {
       approved: 'Risk assessment approved?',
