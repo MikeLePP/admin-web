@@ -38,8 +38,9 @@ module.exports = {
     'import/extensions': ['error', { extension: 'never' }],
     'import/no-extraneous-dependencies': 'off',
     'import/prefer-default-export': 'off',
-    'no-console': 'error',
+    'no-console': process.env.NODE_ENV === 'production' ? 2 : 0,
     'no-new': 'off',
     'prettier/prettier': ['error'],
+    'no-void': ['error', { allowAsStatement: true }],
   },
 };

@@ -3,6 +3,7 @@ import { cloneDeep, set } from 'lodash';
 import { useEffect, useMemo, useState } from 'react';
 import {
   Error,
+  HttpError,
   Loading,
   NotificationType,
   ResourceComponentProps,
@@ -10,13 +11,15 @@ import {
   useGetOne,
   useNotify,
 } from 'react-admin';
+import { callApi } from '../../helpers/api';
+import { parseBankAccount } from '../../helpers/bankAccount';
 import { getId } from '../../helpers/url';
 import { User } from '../../types/user';
 import ApprovalStatus from './ApprovalStatus';
-import BankVerification from './BankVerification';
+import BankSelection from './BankSelection';
 import CustomerInfo from './CustomerInfo';
 import Identification from './Identification';
-import onboardingSteps, { OnboardingSteps } from './OnboardingSteps';
+import onboardingSteps, { OnboardingSteps, BankAccountData, BankAccount } from './OnboardingSteps';
 import RiskAssessment from './RiskAssessment';
 import Summary from './Summary';
 
@@ -25,17 +28,23 @@ const INIT_STEP = 1;
 const UserOnboarding = (props: ResourceComponentProps): JSX.Element | null => {
   const userId = getId(props.location?.search);
 
-  const { data: userDetails, loading, error } = useGetOne<User>('users', userId ?? '');
+  const {
+    data: userDetails,
+    loading,
+    error: getUserError,
+  } = useGetOne<User>('users', userId ?? '');
   const { identity } = useGetIdentity();
   const notify = useNotify();
 
   const [currentStep, setCurrentStep] = useState(INIT_STEP);
   const [previousStep, setPreviousStep] = useState(INIT_STEP);
+  const [bankAccounts, setBankAccounts] = useState<BankAccount[] | undefined>(undefined);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const Component = useMemo(() => {
     switch (currentStep) {
       case 1:
-        return BankVerification;
+        return BankSelection;
       case 2:
         return RiskAssessment;
       case 3:
@@ -66,13 +75,35 @@ const UserOnboarding = (props: ResourceComponentProps): JSX.Element | null => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [userDetails]);
 
+  useEffect(() => {
+    const getUserBankAccounts = async () => {
+      try {
+        if (!userId) return;
+        const { json } = await callApi<{ data: BankAccountData[] }>(
+          `/users/${userId}/bank-data/accounts`,
+        );
+        setBankAccounts(parseBankAccount(json.data));
+      } catch (e) {
+        setErrorMessage(e.message);
+      }
+    };
+
+    void getUserBankAccounts();
+  }, [userId]);
+
+  useEffect(() => {
+    if (getUserError) {
+      setErrorMessage(getUserError);
+    }
+  }, [getUserError]);
+
   if (!userId) {
     props.history?.push('/users');
     return null;
   }
 
   if (loading) return <Loading />;
-  if (error) return <Error error={error} />;
+  if (errorMessage) return <Error error={errorMessage} />;
   if (!userDetails) return null;
 
   const handleChange = (
@@ -119,14 +150,16 @@ const UserOnboarding = (props: ResourceComponentProps): JSX.Element | null => {
     }
   };
 
-  const handleNotification = (
-    message: string | { body?: { errors: unknown[] } },
-    notificationType?: NotificationType,
-  ) => {
+  const handleNotification = (message: string | HttpError, notificationType?: NotificationType) => {
     if (typeof message === 'string') {
       notify(message, notificationType);
-    } else if (typeof message === 'object' && notificationType === 'error') {
-      notify(message.body?.errors.join('\n\n') || '', 'error');
+    } else if (message.body?.errors) {
+      notify(
+        message.body?.errors.map((e: { title: string }) => e.title).join('\n\n') || '',
+        'error',
+      );
+    } else {
+      notify(message.message, 'error');
     }
   };
 
@@ -147,9 +180,10 @@ const UserOnboarding = (props: ResourceComponentProps): JSX.Element | null => {
           onNextStep={handleNextStep}
           onPrevStep={handlePrevStep}
           onCompleteStep={handleCompleteStep}
+          bankAccounts={bankAccounts}
         />
       </div>
-      <div className="w-64 border-l">
+      <div className="w-94 border-l">
         <CustomerInfo userDetails={userDetails}>
           <ApprovalStatus summaries={wizardData} />
         </CustomerInfo>
