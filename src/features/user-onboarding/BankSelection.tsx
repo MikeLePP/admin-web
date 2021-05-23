@@ -20,7 +20,7 @@ import {
 import { useFormik } from 'formik';
 import { fetchEnd, fetchStart } from 'react-admin';
 import ActionButtons from './ActionButtons';
-import { OnboardingComponentProps } from './OnboardingSteps';
+import { BankAccount, OnboardingComponentProps } from './OnboardingSteps';
 import { currencyFormat } from '../../helpers/string';
 import { callApi } from '../../helpers/api';
 
@@ -29,9 +29,14 @@ interface BankSelectionProps extends Record<string, unknown> {
   noAccountSelected: boolean;
 }
 
+const accountTypes = {
+  transaction: 'transaction',
+  savings: 'savings',
+  creditCard: 'credit_card',
+};
+
 const BankSelection = ({
   identity,
-  labels,
   notify,
   onChange,
   onCompleteStep,
@@ -50,19 +55,21 @@ const BankSelection = ({
     enableReinitialize: true,
     initialValues: values,
     onSubmit: async (innerValues) => {
+      // get selected bank account details
+      const selectedAccounts = filter(
+        bankAccounts,
+        (acc) => indexOf(innerValues.accounts, acc.id) !== -1,
+      );
+
       if (!formik.dirty) {
         // go to next step when nothing changes
-        onCompleteStep(true);
-        onNextStep(false);
+        onCompleteStep(!!selectedAccounts.length);
+        onNextStep(innerValues.noAccountSelected);
       } else {
         try {
           setLoading(true);
           dispatch(fetchStart());
-          // get selected bank account details
-          const selectedAccounts = filter(
-            bankAccounts,
-            (acc) => indexOf(innerValues.accounts, acc.id) !== -1,
-          );
+
           if (selectedAccounts.length) {
             // call bank to create selected bank accounts
             await callApi(`/users/${userDetails.id}/bank-accounts`, 'put', {
@@ -111,7 +118,15 @@ const BankSelection = ({
   };
 
   const isAccountSelected = (accountId: string) =>
-    indexOf(formik.values.accounts, accountId) !== -1;
+    indexOf(formik.values.accounts, accountId) !== -1 || bankAccounts.length === 1;
+
+  const getAccountDetails = (account: BankAccount) => {
+    if (account.accountType === accountTypes.creditCard) {
+      return `[${account.accountNumber}]`;
+    }
+
+    return `[BSB: ${account.accountBsb || '-'} ACC: ${account.accountNumber || '-'}]`;
+  };
 
   return (
     <form className="flex flex-col" onSubmit={formik.handleSubmit}>
@@ -138,18 +153,18 @@ const BankSelection = ({
                     icon={<CheckboxOutlineIcon />}
                     checkedIcon={<CheckboxIcon />}
                     onChange={handleAccountSelect(account.id)}
-                    disabled={account.accountType === 'credit_card'}
+                    disabled={account.accountType === accountTypes.creditCard}
                   />
                 </ListItemIcon>
                 <ListItemText
                   primary={account.accountName}
-                  secondary={`[BSB: ${account.accountBsb || '-'} ACC: ${account.accountNumber}]`}
+                  secondary={getAccountDetails(account)}
                 />
                 <Typography variant="subtitle1">
                   {currencyFormat(account.balanceCurrent)}
                 </Typography>
               </ListItem>
-              {isAccountSelected(account.id) && account.accountType !== 'transaction' && (
+              {isAccountSelected(account.id) && account.accountType !== accountTypes.transaction && (
                 <Typography color="error" className="pl-12">
                   This does not seem like a transaction account.
                   <br />

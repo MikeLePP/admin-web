@@ -20,7 +20,7 @@ import {
 } from '@material-ui/core';
 import { Close as CloseIcon } from '@material-ui/icons';
 import { useFormik } from 'formik';
-import { map } from 'lodash';
+import { map, startCase } from 'lodash';
 import { useEffect, useState } from 'react';
 import { fetchEnd, fetchStart } from 'react-admin';
 import { useDispatch } from 'react-redux';
@@ -107,11 +107,11 @@ const RiskAssessment = ({
     initialValues: values,
     validationSchema,
     onSubmit: async (_values) => {
-      let newRiskAssessmentId = riskAssessmentId;
-      setLoading(true);
       try {
+        let newRiskAssessmentId = riskAssessmentId;
+        setLoading(true);
         dispatch(fetchStart());
-        const incomeSupport = _values.incomeSupport === 'true';
+
         if (_values.primaryAccountId) {
           // set primary bank account
           await callApi(`/onboarding/${userDetails.id}`, 'post', {
@@ -122,6 +122,7 @@ const RiskAssessment = ({
         }
 
         // 1. create or update risk assessment
+        const incomeSupport = _values.incomeSupport === 'true';
         if (riskAssessmentId) {
           await callApi(`/risk-assessments/${riskAssessmentId}`, 'patch', {
             ..._values,
@@ -204,7 +205,7 @@ const RiskAssessment = ({
                 color="secondary"
                 onClick={() => setShowAllTransactions(true)}
               >
-                View all transactions
+                View bank statements
               </Button>
             </div>
 
@@ -215,7 +216,10 @@ const RiskAssessment = ({
                     <Radio
                       required
                       name="primaryAccountId"
-                      checked={formik.values.primaryAccountId === account.id}
+                      checked={
+                        formik.values.primaryAccountId === account.id ||
+                        userBankAccounts.length === 1
+                      }
                       onChange={() => formik.setFieldValue('primaryAccountId', account.id)}
                     />
                     <ListItemText
@@ -233,8 +237,8 @@ const RiskAssessment = ({
                         </div>
                       }
                       secondary={`[BSB: ${account.accountBsb || '-'} ACC: ${
-                        account.accountNumber
-                      }]`}
+                        account.accountNumber || '-'
+                      }] ${startCase(account.accountType)}`}
                     />
                   </ListItem>
                   {formik.values.primaryAccountId === account.id &&
@@ -259,7 +263,6 @@ const RiskAssessment = ({
             <Grid item xs={6}>
               <InputField
                 required
-                autoFocus
                 select
                 name="incomeFrequency"
                 label={labels.incomeFrequency}
