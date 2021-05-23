@@ -18,7 +18,7 @@ jobs:
       - node/install-packages
       - run:
           name: Build
-          command: make lint test build ENV=<< parameters.env >>
+          command: make lint test build ENV=<<parameters.env>>
       - store_artifacts:
           path: ./build
       - persist_to_workspace:
@@ -38,22 +38,46 @@ jobs:
       - node/install-packages
       - attach_workspace:
           at: '.'
-      - aws-cli/setup:
-          profile-name: << parameters.env >>
+      - aws-cli/setup
+      - run:
+          # AWS assume role missing https://github.com/CircleCI-Public/aws-cli-orb/issues/57
+          name: Configure AWS Assume Role
+          command: |-
+            aws configure set profile.<<parameters.env>>.role_arn "$AWS_ROLE_ARN"
+            aws configure set profile.<<parameters.env>>.source_profile default
       - run:
           name: Deploy
-          command: make deploy ENV=<< parameters.env >>
+          command: make deploy ENV=<<parameters.env>>
 
 workflows:
-  build-deploy:
+  build-deploy-dev:
     jobs:
-      - build
-      - deploy:
-          name: deploy-dev
-          context: aws-dev
+      - build:
           env: dev
           filters:
             branches:
               only: develop
+      - deploy:
+          name: deploy
+          context: dev
+          env: dev
+          filters:
+            branches:
+              only: develop
+          requires:
+            - build
+  build-deploy-staging:
+    jobs:
+      - build:
+          env: staging
+          filters:
+            branches:
+              only: master
+      - deploy:
+          context: staging
+          env: staging
+          filters:
+            branches:
+              only: master
           requires:
             - build
