@@ -18,7 +18,7 @@ import {
   DialogContent,
   IconButton,
 } from '@material-ui/core';
-import { Close as CloseIcon } from '@material-ui/icons';
+import { Close as CloseIcon, OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
 import { useFormik } from 'formik';
 import { map, startCase } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -67,7 +67,6 @@ const RiskAssessment = ({
   riskAssessmentId,
   userDetails,
   values,
-  bankAccounts,
 }: OnboardingComponentProps<RiskAssessmentValues>): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [showAllTransactions, setShowAllTransactions] = useState(false);
@@ -201,13 +200,18 @@ const RiskAssessment = ({
                 <Typography variant="subtitle2" className="font-bold">
                   Verify transactions and set primary account
                 </Typography>
-                <Button
-                  variant="outlined"
-                  color="secondary"
-                  onClick={() => setShowAllTransactions(true)}
-                >
-                  View bank statements
-                </Button>
+                <div>
+                  <IconButton href={reportUrl} target="_blank">
+                    <OpenInNewIcon />
+                  </IconButton>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => setShowAllTransactions(true)}
+                  >
+                    View bank statements
+                  </Button>
+                </div>
               </div>
 
               <List>
@@ -419,6 +423,7 @@ const RiskAssessment = ({
       >
         <DialogTitle disableTypography className="flex items-center justify-between">
           <Typography variant="h6">All account transactions</Typography>
+
           <IconButton onClick={() => setShowAllTransactions(false)}>
             <CloseIcon />
           </IconButton>

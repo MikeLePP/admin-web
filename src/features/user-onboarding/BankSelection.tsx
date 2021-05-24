@@ -13,10 +13,6 @@ import {
 } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
 import { chain, filter, indexOf, map, startCase, xor } from 'lodash';
-import {
-  RadioButtonUncheckedOutlined as CheckboxOutlineIcon,
-  CheckCircleOutlined as CheckboxIcon,
-} from '@material-ui/icons';
 import { useFormik } from 'formik';
 import { fetchEnd, fetchStart } from 'react-admin';
 import ActionButtons from './ActionButtons';
@@ -161,8 +157,6 @@ const BankSelection = ({
                     tabIndex={-1}
                     disableRipple
                     checked={isAccountSelected(account.id)}
-                    icon={<CheckboxOutlineIcon />}
-                    checkedIcon={<CheckboxIcon />}
                     onChange={handleAccountSelect(account.id)}
                     disabled={account.accountType === accountTypes.creditCard}
                   />
