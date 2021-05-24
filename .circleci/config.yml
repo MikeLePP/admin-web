@@ -63,7 +63,9 @@ workflows:
           env: dev
           filters:
             branches:
-              only: develop
+              only: 
+                - develop
+                - /features\/.*/
           requires:
             - build
   build-deploy-staging:

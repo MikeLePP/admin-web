@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import {
   Edit,
   DateInput,
@@ -13,14 +14,49 @@ import {
   ResourceComponentPropsWithId,
 } from 'react-admin';
 import { Divider } from '@material-ui/core';
+import { get } from 'lodash';
 import Toolbar from '../../components/SaveToolbar';
 import { notifyOnFailure } from '../../helpers/notify';
 import { futureDate, pastDate, phone } from '../../helpers/validation';
 import EditToolbar from '../../components/EditToolbar';
 import incomeFrequencies from '../../constants/incomeFrequencies';
+import { callApi } from '../../helpers/api';
+import { getId } from '../../helpers/url';
+import { BankAccount } from '../../types/bankAccount';
 
-const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element => {
+const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const notify = useNotify();
+  const userId = getId(props.id);
+  const [bankAccounts, setBankAccounts] = useState([] as BankAccount[]);
+
+  useEffect(() => {
+    // get bank accounts with a immediately invoked function
+    (async () => {
+      try {
+        const response = await callApi(`/users/${userId || ''}/bank-accounts`);
+        const mappingbankAccounts: BankAccount[] = (
+          get(response, 'json.data', []) as { attributes: BankAccount; id: string }[]
+        ).map((item) => ({
+          bankAccountId: item.id,
+          accountBsb: item.attributes.accountBsb,
+          accountNumber: item.attributes.accountNumber,
+          bankName: item.attributes.bankName,
+        }));
+        setBankAccounts(mappingbankAccounts);
+      } catch (error) {
+        console.log('🚀 ~ file: Edit.tsx ~ line 36 ~ error', error);
+      }
+    })()
+      .then(() => null)
+      .catch((err) => new Error(err));
+  }, []);
+
+  if (!props.basePath || !userId) {
+    return null;
+  }
+
+  const optionRenderer = (choiceBankAccount: BankAccount) =>
+    `BN: ${choiceBankAccount.bankName} | BSB: ${choiceBankAccount.accountBsb} | ACC: ${choiceBankAccount.accountNumber}`;
 
   return (
     <Edit
@@ -45,7 +81,15 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element => {
         <DateInput label="Next pay date" source="incomeNextDate" validate={[futureDate()]} />
 
         <Divider />
-        <TextInput label="Bank Name" source="bankAccount.bankName" />
+        <SelectInput
+          label="Bank accounts"
+          source="primaryBankAccountId"
+          choices={bankAccounts}
+          optionText={optionRenderer}
+          optionValue="bankAccountId"
+          validate={[required()]}
+        />
+        {/* <TextInput label="Bank Name" source="bankAccount.bankName" />
         <TextInput
           label="Account BSB"
           source="bankAccount.accountBsb"
@@ -60,7 +104,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element => {
           label="Account number"
           source="bankAccount.accountNumber"
           validate={[required(), number('Please enter a valid account number'), maxLength(9)]}
-        />
+        /> */}
       </SimpleForm>
     </Edit>
   );
