@@ -195,66 +195,70 @@ const RiskAssessment = ({
             Risk assessment
           </Typography>
 
-          <div className="mb-4">
-            <div className="flex items-center justify-between">
-              <Typography variant="subtitle2" className="font-bold">
-                Verify transactions and set primary account
-              </Typography>
-              <Button
-                variant="outlined"
-                color="secondary"
-                onClick={() => setShowAllTransactions(true)}
-              >
-                View bank statements
-              </Button>
-            </div>
+          {userBankAccounts.length && (
+            <div className="mb-4">
+              <div className="flex items-center justify-between">
+                <Typography variant="subtitle2" className="font-bold">
+                  Verify transactions and set primary account
+                </Typography>
+                <Button
+                  variant="outlined"
+                  color="secondary"
+                  onClick={() => setShowAllTransactions(true)}
+                >
+                  View bank statements
+                </Button>
+              </div>
 
-            <List>
-              {map(userBankAccounts, (account) => (
-                <>
-                  <ListItem key={account.id}>
-                    <Radio
-                      required
-                      name="primaryAccountId"
-                      checked={
-                        formik.values.primaryAccountId === account.id ||
-                        userBankAccounts.length === 1
-                      }
-                      onChange={() => formik.setFieldValue('primaryAccountId', account.id)}
-                    />
-                    <ListItemText
-                      primary={
-                        <div className="flex">
-                          <Typography className="mr-2">{account.accountName}</Typography>
-                          {formik.values.primaryAccountId === account.id && (
-                            <Chip
-                              variant="outlined"
-                              color="secondary"
-                              size="small"
-                              label="Primary account"
-                            />
-                          )}
-                        </div>
-                      }
-                      secondary={`[BSB: ${account.accountBsb || '-'} ACC: ${
-                        account.accountNumber || '-'
-                      }] ${startCase(account.accountType)}`}
-                    />
-                  </ListItem>
-                  {formik.values.primaryAccountId === account.id &&
-                    account.accountType !== 'transaction' && (
-                      <Typography color="error" className="ml-4 pl-14">
-                        Primary account is not a transaction account type.
-                        <br />
-                        Are you sure that direct debits may be made to this account?
-                        <br />
-                        WARNING THIS IS NOT COMMON, SEEK MANAGEMENT APPROVAL.
-                      </Typography>
-                    )}
-                </>
-              ))}
-            </List>
-          </div>
+              <List>
+                {map(userBankAccounts, (account) => (
+                  <>
+                    <ListItem key={account.id}>
+                      <Radio
+                        required
+                        name="primaryAccountId"
+                        checked={
+                          formik.values.primaryAccountId === account.id ||
+                          userBankAccounts.length === 1
+                        }
+                        onChange={() => formik.setFieldValue('primaryAccountId', account.id)}
+                      />
+                      <ListItemText
+                        primary={
+                          <div className="flex">
+                            <Typography className="mr-2">
+                              {startCase(account.accountType)}
+                            </Typography>
+                            {formik.values.primaryAccountId === account.id && (
+                              <Chip
+                                variant="outlined"
+                                color="secondary"
+                                size="small"
+                                label="Primary account"
+                              />
+                            )}
+                          </div>
+                        }
+                        secondary={`[BSB: ${account.accountBsb || '-'} ACC: ${
+                          account.accountNumber || '-'
+                        }] ${account.accountName}`}
+                      />
+                    </ListItem>
+                    {formik.values.primaryAccountId === account.id &&
+                      account.accountType !== 'transaction' && (
+                        <Typography color="error" className="ml-4 pl-14">
+                          Primary account is not a transaction account type.
+                          <br />
+                          Are you sure that direct debits may be made to this account?
+                          <br />
+                          WARNING THIS IS NOT COMMON, SEEK MANAGEMENT APPROVAL.
+                        </Typography>
+                      )}
+                  </>
+                ))}
+              </List>
+            </div>
+          )}
 
           <Typography variant="subtitle2" className="mb-4 font-bold">
             Employment details

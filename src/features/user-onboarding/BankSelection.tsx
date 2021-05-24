@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Typography,
   List,
@@ -12,7 +12,7 @@ import {
   Button,
 } from '@material-ui/core';
 import { useDispatch } from 'react-redux';
-import { filter, indexOf, map, xor } from 'lodash';
+import { chain, filter, indexOf, map, startCase, xor } from 'lodash';
 import {
   RadioButtonUncheckedOutlined as CheckboxOutlineIcon,
   CheckCircleOutlined as CheckboxIcon,
@@ -49,7 +49,6 @@ const BankSelection = ({
   const [notifyUser, setNotifyUser] = useState(false);
 
   const dispatch = useDispatch();
-
   const formik = useFormik({
     validateOnBlur: true,
     enableReinitialize: true,
@@ -105,6 +104,16 @@ const BankSelection = ({
     },
   });
 
+  useEffect(() => {
+    // auto select all transaction accounts
+    const transactionAccountIds = chain(bankAccounts)
+      .filter(['accountType', 'transaction'])
+      .map((account: BankAccount) => account.id)
+      .value();
+    void formik.setFieldValue('accounts', transactionAccountIds);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [bankAccounts]);
+
   const handleAccountSelect = (accountId: string) => () => {
     void formik.setFieldValue('noAccountSelected', false);
     void formik.setFieldValue('accounts', xor(formik.values.accounts, [accountId]));
@@ -118,14 +127,16 @@ const BankSelection = ({
   };
 
   const isAccountSelected = (accountId: string) =>
-    indexOf(formik.values.accounts, accountId) !== -1 || bankAccounts.length === 1;
+    indexOf(formik.values.accounts, accountId) !== -1;
 
   const getAccountDetails = (account: BankAccount) => {
     if (account.accountType === accountTypes.creditCard) {
-      return `[${account.accountNumber}]`;
+      return `[${account.accountNumber}] ${startCase(account.accountName)}`;
     }
 
-    return `[BSB: ${account.accountBsb || '-'} ACC: ${account.accountNumber || '-'}]`;
+    return `[BSB: ${account.accountBsb || '-'} ACC: ${account.accountNumber || '-'}] ${
+      account.accountName
+    }`;
   };
 
   return (
@@ -157,7 +168,7 @@ const BankSelection = ({
                   />
                 </ListItemIcon>
                 <ListItemText
-                  primary={account.accountName}
+                  primary={startCase(account.accountType)}
                   secondary={getAccountDetails(account)}
                 />
                 <Typography variant="subtitle1">
