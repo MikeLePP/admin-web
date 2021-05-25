@@ -50,34 +50,65 @@ jobs:
           command: make deploy ENV=<<parameters.env>>
 
 workflows:
-  build-deploy-dev:
+  build-deploy:
     jobs:
       - build:
-          env: dev
           filters:
             branches:
-              only: develop
+              ignore: master
       - deploy:
-          name: deploy
           context: dev
-          env: dev
           filters:
             branches:
-              only: develop
+              only:
+                - develop
+                - /features?\/.*/
           requires:
             - build
   build-deploy-staging:
     jobs:
       - build:
+          name: build-staging
           env: staging
           filters:
             branches:
               only: master
       - deploy:
+          name: deploy-staging
           context: staging
           env: staging
           filters:
             branches:
               only: master
           requires:
-            - build
+            - build-staging
+  build-deploy-prod:
+    jobs:
+      - build:
+          name: build-prod
+          env: prod
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d+\.\d+\.\d+$/
+      - hold:
+          type: approval
+          requires:
+            - build-prod
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d+\.\d+\.\d+$/
+      - deploy:
+          name: deploy-prod
+          context: prod
+          env: prod
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d+\.\d+\.\d+$/
+          requires:
+            - hold
