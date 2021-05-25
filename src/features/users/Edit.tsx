@@ -41,7 +41,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
     })()
       .then(() => null)
       .catch((err) => new Error(err));
-  }, []);
+  }, [userId]);
 
   if (!props.basePath || !userId) {
     return null;
