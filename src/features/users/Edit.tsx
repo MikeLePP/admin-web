@@ -75,7 +75,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
         <Divider />
         <SelectInput
           label="Bank accounts"
-          source="primaryBankAccountId"
+          source="bankAccountId"
           choices={bankAccounts}
           optionText={optionRenderer}
           optionValue="bankAccountId"
