@@ -6,9 +6,6 @@ import {
   TextInput,
   required,
   email,
-  minLength,
-  maxLength,
-  number,
   useNotify,
   SelectInput,
   ResourceComponentPropsWithId,
@@ -21,31 +18,26 @@ import { futureDate, pastDate, phone } from '../../helpers/validation';
 import EditToolbar from '../../components/EditToolbar';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
-import { getId } from '../../helpers/url';
 import { BankAccount } from '../../types/bankAccount';
 
 const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const notify = useNotify();
-  const userId = getId(props.id);
+  const userId = props.id;
   const [bankAccounts, setBankAccounts] = useState([] as BankAccount[]);
 
   useEffect(() => {
     // get bank accounts with a immediately invoked function
     (async () => {
-      try {
-        const response = await callApi(`/users/${userId || ''}/bank-accounts`);
-        const mappingbankAccounts: BankAccount[] = (
-          get(response, 'json.data', []) as { attributes: BankAccount; id: string }[]
-        ).map((item) => ({
-          bankAccountId: item.id,
-          accountBsb: item.attributes.accountBsb,
-          accountNumber: item.attributes.accountNumber,
-          bankName: item.attributes.bankName,
-        }));
-        setBankAccounts(mappingbankAccounts);
-      } catch (error) {
-        console.log('🚀 ~ file: Edit.tsx ~ line 36 ~ error', error);
-      }
+      const response = await callApi(`/users/${userId || ''}/bank-accounts`);
+      const mappingbankAccounts: BankAccount[] = (
+        get(response, 'json.data', []) as { attributes: BankAccount; id: string }[]
+      ).map((item) => ({
+        bankAccountId: item.id,
+        accountBsb: item.attributes.accountBsb,
+        accountNumber: item.attributes.accountNumber,
+        bankName: item.attributes.bankName,
+      }));
+      setBankAccounts(mappingbankAccounts);
     })()
       .then(() => null)
       .catch((err) => new Error(err));
