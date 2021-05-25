@@ -56,7 +56,9 @@ workflows:
           env: dev
           filters:
             branches:
-              only: develop
+              only: 
+                - develop
+                - /features\/.*/
       - deploy:
           name: deploy
           context: dev
