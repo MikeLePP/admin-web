@@ -12,6 +12,9 @@
     "url": "https://github.com/Press-Pay-Official/admin-web/issues"
   },
   "private": true,
+  "resolutions": {
+    "react-scripts/eslint-webpack-plugin": "2.4.1"
+  },
   "scripts": {
     "start": "craco start",
     "build": "craco build",
