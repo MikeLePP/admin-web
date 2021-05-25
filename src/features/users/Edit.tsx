@@ -10,7 +10,7 @@ import {
   SelectInput,
   ResourceComponentPropsWithId,
 } from 'react-admin';
-import { Divider } from '@material-ui/core';
+import { Divider, makeStyles } from '@material-ui/core';
 import { get } from 'lodash';
 import Toolbar from '../../components/SaveToolbar';
 import { notifyOnFailure } from '../../helpers/notify';
@@ -20,8 +20,17 @@ import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import { BankAccount } from '../../types/bankAccount';
 
+const useStyles = makeStyles(() => ({
+  select: {
+    '& #bankAccountId': {
+      whiteSpace: 'unset !important',
+    },
+  },
+}));
+
 const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const notify = useNotify();
+  const classes = useStyles();
   const userId = props.id;
   const [bankAccounts, setBankAccounts] = useState([] as BankAccount[]);
 
@@ -80,6 +89,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
           optionText={optionRenderer}
           optionValue="bankAccountId"
           validate={[required()]}
+          className={classes.select}
         />
         {/* <TextInput label="Bank Name" source="bankAccount.bankName" />
         <TextInput
