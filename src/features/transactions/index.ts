@@ -4,7 +4,7 @@ import create from './Create';
 import edit from './Edit';
 import show from './Show';
 
-export default {
+const transactions = {
   name: 'transactions',
   options: {
     label: 'Transactions',
@@ -16,3 +16,5 @@ export default {
   edit,
   show,
 };
+
+export default transactions;

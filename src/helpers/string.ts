@@ -1,7 +1,12 @@
-interface RecordProps {
-  firstName: string;
-  middleName?: string;
-  lastName: string;
-}
-export const getFullname = (record: RecordProps): string =>
-  record && [record.firstName, record.middleName, record.lastName].filter(Boolean).join(' ');
+import { Record } from 'react-admin';
+
+export const getFullName = (record?: Record): string =>
+  record ? [record.firstName, record.middleName, record.lastName].filter(Boolean).join(' ') : '';
+
+export const currencyFormat = (amount: number, defaultString = ''): string =>
+  amount
+    ? amount.toLocaleString('en-AU', {
+        style: 'currency',
+        currency: 'AUD',
+      })
+    : defaultString;

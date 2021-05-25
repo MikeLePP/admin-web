@@ -1,36 +1,114 @@
-import BankVerification from './BankVerification';
-import RiskAssessment from './RiskAssessment';
-import Identification from './Identification';
+import { NotificationType, UserIdentity } from 'ra-core';
+import { User } from '../../types/user';
 
-export interface OnboardingStep {
-  [index: number]: {
-    completed?: boolean;
-    component: typeof BankVerification | typeof RiskAssessment | typeof Identification;
-    labels: Record<string, unknown>;
-    name: string;
-    riskAssessmentId?: string;
-    values: Record<string, unknown>;
-  };
+export interface OnboardingStep<T extends Record<string, unknown>> {
+  completed?: boolean;
+  labels: Record<keyof T, string>;
+  name: string;
+  riskAssessmentId?: string;
+  values: T;
 }
 
-const onboardingSteps: OnboardingStep = {
+export interface OnboardingSteps {
+  [index: number]:
+    | OnboardingStep<BankVerificationValues>
+    | OnboardingStep<RiskAssessmentValues>
+    | OnboardingStep<IdentificationValues>;
+}
+
+export interface OnboardingComponentProps<T extends Record<string, unknown>>
+  extends OnboardingStep<T> {
+  identity?: UserIdentity;
+  labels: Record<keyof T, string>;
+  notify: (message: string, notificationType?: NotificationType) => void;
+  onChange: (
+    values: Record<string, unknown> | unknown,
+    key?: string,
+    completed?: boolean,
+    stepValues?: Record<string, unknown>,
+  ) => void;
+  onCompleteStep: (completed: boolean) => void;
+  onNextStep: (goToSummary?: boolean) => void;
+  onPrevStep: () => void;
+  riskAssessmentId?: string;
+  userDetails: User;
+  values: T;
+  bankAccounts: BankAccount[];
+}
+
+export interface BankVerificationValues extends Record<string, unknown> {
+  bankDetailsAvailable?: boolean;
+  accountBsb: string;
+  accountNumber: string;
+}
+
+export interface RiskAssessmentValues extends Record<string, unknown> {
+  approved?: boolean;
+  incomeAverage: string;
+  incomeDay1Min: string;
+  incomeFrequency: string;
+  incomeLastDate: string;
+  incomeSupport: string;
+  incomeVariationMax: string;
+  rejectedReasons: string[];
+  riskModelVersion: string;
+  primaryAccountId: string;
+}
+
+export interface IdentificationValues extends Record<string, unknown> {
+  identityVerified?: boolean;
+}
+
+export interface Account {
+  id: string;
+  selected?: boolean;
+  type: string;
+  name: string;
+  details: string;
+  amount: string;
+}
+
+export interface BankAccountData {
+  id: string;
+  attributes: BankAccount;
+}
+
+export interface BankAccount {
+  id: string;
+  accountBsb?: string;
+  accountHolder: string;
+  accountHolderType: string;
+  accountName: string;
+  accountNumber: string;
+  accountRef: string;
+  accountType: string;
+  balanceAvailable: number;
+  balanceCurrent: number;
+  createdAt: Date;
+  credentialId: string;
+  dataLastAt: Date;
+  dataLastId: string;
+  institutionName: string;
+  isPrimary: boolean;
+  isSelected: boolean;
+  referenceId: string;
+  status: string;
+  userId: string;
+}
+
+const onboardingSteps: OnboardingSteps = {
   1: {
-    component: BankVerification,
-    name: 'Bank information',
+    name: 'Bank selection',
     completed: undefined,
     values: {
-      bankDetailsAvailable: undefined,
-      accountBsb: '',
-      accountNumber: '',
+      accounts: [],
+      noAccountSelected: false,
     },
     labels: {
-      bankDetailsAvailable: 'Bank details available?',
-      accountBsb: 'BSB',
-      accountNumber: 'Account number',
+      noAccountSelected: 'No transactional account?',
     },
   },
   2: {
-    component: RiskAssessment,
     name: 'Risk assessment',
     completed: undefined,
     riskAssessmentId: '',
@@ -42,8 +120,9 @@ const onboardingSteps: OnboardingStep = {
       incomeLastDate: '',
       incomeSupport: '',
       incomeVariationMax: '',
-      riskModelVersion: '',
       rejectedReasons: [],
+      riskModelVersion: '',
+      primaryAccountId: '',
     },
     labels: {
       approved: 'Risk assessment approved?',
@@ -58,7 +137,6 @@ const onboardingSteps: OnboardingStep = {
     },
   },
   3: {
-    component: Identification,
     name: 'Identification',
     completed: undefined,
     values: {

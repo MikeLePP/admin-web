@@ -9,10 +9,20 @@ import {
   MenuItem,
   Select,
   Typography,
+  List,
+  ListItem,
+  Radio,
+  Chip,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  IconButton,
 } from '@material-ui/core';
+import { Close as CloseIcon, OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
 import { useFormik } from 'formik';
-import { useState } from 'react';
-import { fetchEnd, fetchStart, NotificationType, useGetIdentity } from 'react-admin';
+import { map, startCase } from 'lodash';
+import { useEffect, useState } from 'react';
+import { fetchEnd, fetchStart } from 'react-admin';
 import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
 import InputField from '../../components/InputField';
@@ -20,10 +30,16 @@ import TextLabel from '../../components/TextLabel';
 import YesNoButtons from '../../components/YesNoButtons';
 import INCOME_FREQUENCIES from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
+import { parseBankAccount } from '../../helpers/bankAccount';
 import { toLocalDateString } from '../../helpers/date';
-import { User } from '../../types/user';
 import ActionButtons from './ActionButtons';
 import { DECLINE_REASONS, GOVERNMENT_SUPPORT, RISK_MODELS } from './constants';
+import {
+  BankAccountData,
+  BankAccount,
+  OnboardingComponentProps,
+  RiskAssessmentValues,
+} from './OnboardingSteps';
 
 const validationSchema = yup.object({
   approved: yup.boolean(),
@@ -41,77 +57,96 @@ const validationSchema = yup.object({
     ),
 });
 
-export interface RiskAssessmentProps {
-  values: {
-    approved?: boolean;
-    incomeSupport?: boolean;
-    rejectedReasons: string[];
-  };
-  riskAssessmentId?: string;
-  labels: Record<string, string>;
-  userDetails: User;
-  onChange: (
-    values: Record<string, unknown>,
-    key?: string,
-    completed?: boolean,
-    stepValues?: Record<string, unknown>,
-  ) => void;
-  onPrevStep: () => void;
-  onNextStep: (goToSummary?: boolean) => void;
-  onCompleteStep: (completed: boolean) => void;
-  notify: (message: string, notificationType: NotificationType) => void;
-  identity: ReturnType<typeof useGetIdentity>['identity'];
-}
-
-export default ({
-  values,
+const RiskAssessment = ({
+  identity,
   labels,
-  userDetails,
+  notify,
   onChange,
   onNextStep,
   onPrevStep,
-  notify,
-  identity,
   riskAssessmentId,
-}: RiskAssessmentProps): JSX.Element => {
+  userDetails,
+  values,
+}: OnboardingComponentProps<RiskAssessmentValues>): JSX.Element => {
   const [loading, setLoading] = useState(false);
+  const [showAllTransactions, setShowAllTransactions] = useState(false);
+  const [reportUrl, setReportUrl] = useState('');
+  const [userBankAccounts, setUserBankAccounts] = useState<BankAccount[]>([]);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    // get bank transactions
+    const getTransactions = async () => {
+      try {
+        const { json } = await callApi<{ data: { meta: { reportUrl: string } } }>(
+          `/users/${userDetails.id}/bank-data`,
+        );
+        setReportUrl(json.data.meta.reportUrl);
+      } catch (error) {
+        notify(error, 'error');
+      }
+    };
+    void getTransactions();
+
+    // get user bank accounts
+    const getBankAccounts = async () => {
+      try {
+        const { json } = await callApi<{ data: BankAccountData[] }>(
+          `/users/${userDetails.id}/bank-accounts`,
+        );
+        setUserBankAccounts(parseBankAccount(json.data));
+      } catch (error) {
+        notify(error, 'error');
+      }
+    };
+    void getBankAccounts();
+  }, [notify, userDetails.id]);
 
   const formik = useFormik({
     initialValues: values,
     validationSchema,
     onSubmit: async (_values) => {
-      let thisRiskAssessmentId = riskAssessmentId;
-      setLoading(true);
       try {
+        let newRiskAssessmentId = riskAssessmentId;
+        setLoading(true);
         dispatch(fetchStart());
-        const incomeSupport = Boolean(_values.incomeSupport);
+
+        if (_values.primaryAccountId) {
+          // set primary bank account
+          await callApi(`/onboarding/${userDetails.id}`, 'post', {
+            step: 'bank-account',
+            bankAccountId: _values.primaryAccountId,
+            updatedBy: identity?.id,
+          });
+        }
+
         // 1. create or update risk assessment
-        if (thisRiskAssessmentId) {
-          await callApi(`/risk-assessments/${String(thisRiskAssessmentId)}`, 'patch', {
+        const incomeSupport = _values.incomeSupport === 'true';
+        if (riskAssessmentId) {
+          await callApi(`/risk-assessments/${riskAssessmentId}`, 'patch', {
             ..._values,
             incomeSupport,
             updatedBy: identity?.id,
           });
         } else {
-          const { json } = await callApi('/risk-assessments', 'post', {
+          const { json } = await callApi<{ id: string }>('/risk-assessments', 'post', {
             ..._values,
             incomeSupport,
             userId: userDetails.id,
             createdBy: identity?.id,
           });
-          thisRiskAssessmentId = json.id;
+          newRiskAssessmentId = json.id;
         }
 
         // 2. call onboarding api to complete this step
-        await callApi(`/onboarding/${String(userDetails.id)}`, 'post', {
+        await callApi(`/onboarding/${userDetails.id}`, 'post', {
           step: 'risk-assessment',
-          thisRiskAssessmentId,
+          riskAssessmentId: newRiskAssessmentId,
           updatedBy: identity?.id,
         });
 
         onChange({ ..._values, incomeSupport }, undefined, _values.approved, {
-          thisRiskAssessmentId,
+          riskAssessmentId: newRiskAssessmentId,
         });
         onNextStep(!_values.approved);
       } catch (error) {
@@ -153,16 +188,89 @@ export default ({
           </Grid>
         </div>
       )}
-      <form className="mt-8 flex flex-col" onSubmit={formik.handleSubmit}>
+      <form className="flex flex-col" onSubmit={formik.handleSubmit}>
         <div className="px-8">
           <Typography variant="h6" className="mb-4">
             Risk assessment
+          </Typography>
+
+          {userBankAccounts.length && (
+            <div className="mb-4">
+              <div className="flex items-center justify-between">
+                <Typography variant="subtitle2" className="font-bold">
+                  Verify transactions and set primary account
+                </Typography>
+                <div>
+                  <IconButton href={reportUrl} target="_blank">
+                    <OpenInNewIcon />
+                  </IconButton>
+                  <Button
+                    variant="outlined"
+                    color="secondary"
+                    onClick={() => setShowAllTransactions(true)}
+                  >
+                    View bank statements
+                  </Button>
+                </div>
+              </div>
+
+              <List>
+                {map(userBankAccounts, (account) => (
+                  <>
+                    <ListItem key={account.id}>
+                      <Radio
+                        required
+                        name="primaryAccountId"
+                        checked={
+                          formik.values.primaryAccountId === account.id ||
+                          userBankAccounts.length === 1
+                        }
+                        onChange={() => formik.setFieldValue('primaryAccountId', account.id)}
+                      />
+                      <ListItemText
+                        primary={
+                          <div className="flex">
+                            <Typography className="mr-2">
+                              {startCase(account.accountType)}
+                            </Typography>
+                            {formik.values.primaryAccountId === account.id && (
+                              <Chip
+                                variant="outlined"
+                                color="secondary"
+                                size="small"
+                                label="Primary account"
+                              />
+                            )}
+                          </div>
+                        }
+                        secondary={`[BSB: ${account.accountBsb || '-'} ACC: ${
+                          account.accountNumber || '-'
+                        }] ${account.accountName}`}
+                      />
+                    </ListItem>
+                    {formik.values.primaryAccountId === account.id &&
+                      account.accountType !== 'transaction' && (
+                        <Typography color="error" className="ml-4 pl-14">
+                          Primary account is not a transaction account type.
+                          <br />
+                          Are you sure that direct debits may be made to this account?
+                          <br />
+                          WARNING THIS IS NOT COMMON, SEEK MANAGEMENT APPROVAL.
+                        </Typography>
+                      )}
+                  </>
+                ))}
+              </List>
+            </div>
+          )}
+
+          <Typography variant="subtitle2" className="mb-4 font-bold">
+            Employment details
           </Typography>
           <Grid container spacing={4}>
             <Grid item xs={6}>
               <InputField
                 required
-                autoFocus
                 select
                 name="incomeFrequency"
                 label={labels.incomeFrequency}
@@ -259,6 +367,7 @@ export default ({
               </InputField>
             </Grid>
           </Grid>
+
           <div className="mt-8">
             <YesNoButtons
               isYes={formik.values.approved}
@@ -305,6 +414,31 @@ export default ({
           </Button>
         </ActionButtons>
       </form>
+      <Dialog
+        open={showAllTransactions}
+        disableBackdropClick
+        disableEscapeKeyDown
+        fullWidth
+        maxWidth="lg"
+      >
+        <DialogTitle disableTypography className="flex items-center justify-between">
+          <Typography variant="h6">All account transactions</Typography>
+
+          <IconButton onClick={() => setShowAllTransactions(false)}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers className="h-screen p-0">
+          <iframe
+            title="Account transactions"
+            src={reportUrl}
+            className="w-full h-full border-0"
+            loading="eager"
+          />
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
+
+export default RiskAssessment;

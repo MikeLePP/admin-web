@@ -3,11 +3,16 @@ import { Button } from '@material-ui/core';
 import { SaveOutlined as SaveIcon, Add as CreateIcon } from '@material-ui/icons';
 import { useHistory } from 'react-router-dom';
 
-export default ({
+type SaveToolbarProps = {
+  saveButtonLabel?: string;
+  pristine?: boolean;
+};
+
+const SaveToolbar = ({
   saveButtonLabel = 'Save',
   pristine,
   ...rest
-}: Record<string, unknown>): JSX.Element => {
+}: SaveToolbarProps): JSX.Element => {
   const history = useHistory();
   let icon;
   switch (saveButtonLabel) {
@@ -29,3 +34,5 @@ export default ({
     </Toolbar>
   );
 };
+
+export default SaveToolbar;

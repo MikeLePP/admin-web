@@ -8,7 +8,7 @@ export default class CoreStack extends Stack {
     super(scope, id, props);
 
     const hostedZone = route53.HostedZone.fromLookup(this, 'HostedZone', {
-      domainName: config.get('network.hostedZoneName'),
+      domainName: config.get('network.hostedZoneName')!,
     });
 
     new WebConstruct(this, 'Web', {

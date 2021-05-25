@@ -1,10 +1,10 @@
 import React, { useEffect, useState, useContext } from 'react';
-import Auth from '@aws-amplify/auth';
+import Auth, { CognitoHostedUIIdentityProvider } from '@aws-amplify/auth';
 import Amplify, { Hub } from '@aws-amplify/core';
 import { HubCapsule } from '@aws-amplify/core/lib-esm/Hub';
 import { CognitoUser } from 'amazon-cognito-identity-js';
 import { AuthClass } from '@aws-amplify/auth/lib-esm/Auth';
-import { UserIdentity } from 'react-admin';
+import { AuthProvider, UserIdentity } from 'react-admin';
 import awsconfig from './aws-exports';
 
 Amplify.configure(awsconfig);
@@ -83,16 +83,24 @@ export const AmplifyAuthProvider: React.FC = ({ children }) => {
   );
 };
 
-export function useAuth(): any {
+export function useAuth(): AuthClass {
   const context = useContext(AmplifyAuthContext);
   if (!context) throw Error(NOT_INSIDE_AMPLIFY_PROVIDER);
   return context;
 }
 
-export function useAuthProvider(): any {
+export function useAuthProvider(): AuthProvider {
   return {
     /** Signs in either using username and password, or federated if a provider is passed. */
-    login: ({ username, password, provider }: any) =>
+    login: ({
+      username,
+      password,
+      provider,
+    }: {
+      username: string;
+      password: string;
+      provider: CognitoHostedUIIdentityProvider;
+    }) =>
       username && password && !provider
         ? Auth.signIn(username, password)
         : Auth.federatedSignIn({ provider }),
@@ -117,7 +125,7 @@ export function useAuthProvider(): any {
   };
 }
 
-export function useUser(): any {
+export function useUser(): CognitoUser | undefined {
   const context = useContext(UserContext);
   return context;
 }

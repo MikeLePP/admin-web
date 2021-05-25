@@ -4,13 +4,14 @@ import {
   Filter,
   FunctionField,
   List,
+  Record as RaRecord,
   ResourceComponentProps,
   ShowButton,
   TextField,
   TextInput,
 } from 'react-admin';
 import RedirectButton from '../../components/RedirectButton';
-import { getFullname } from '../../helpers/string';
+import { getFullName } from '../../helpers/string';
 
 const UserFilter = (props: Record<string, unknown>) => (
   <Filter {...props}>
@@ -18,7 +19,7 @@ const UserFilter = (props: Record<string, unknown>) => (
   </Filter>
 );
 
-export default (props: ResourceComponentProps): JSX.Element => (
+const UserList = (props: ResourceComponentProps): JSX.Element => (
   <List
     {...props}
     bulkActionButtons={false}
@@ -29,23 +30,27 @@ export default (props: ResourceComponentProps): JSX.Element => (
     <Datagrid>
       <FunctionField
         label="Created on"
-        render={(v: any) => new Date(v.createdAt).toLocaleDateString('en-GB')}
+        render={(record?: RaRecord) =>
+          new Date(record ? record.createdAt : '').toLocaleDateString('en-GB')
+        }
       />
       <TextField label="Status" source="status" />
-      <FunctionField label="Name" render={getFullname} />
+      <FunctionField label="Name" render={getFullName} />
       <TextField label="Email" source="email" />
       <TextField label="Mobile" source="mobileNumber" />
       <TextField label="Current balance" source="balanceCurrent" />
       <RedirectButton
         buttonLabel="Transactions"
-        to={(r: any) => `/transactions?userId=${String(r.id)}`}
+        to={(record?: RaRecord) => (record ? `/transactions?userId=${record.id}` : '')}
       />
       <RedirectButton
         buttonLabel="Onboarding"
-        to={(r: any) => `/user-onboarding/create?userId=${String(r.id)}`}
+        to={(record?: RaRecord) => (record ? `/user-onboarding/create?userId=${record.id}` : '')}
       />
       <ShowButton />
       <EditButton />
     </Datagrid>
   </List>
 );
+
+export default UserList;

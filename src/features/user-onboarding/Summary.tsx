@@ -1,23 +1,34 @@
 import { Button, Typography } from '@material-ui/core';
 import { every, map } from 'lodash';
 import { Fragment, useState } from 'react';
+import { NotificationType, UserIdentity } from 'react-admin';
 import { useHistory } from 'react-router-dom';
 import TextLabel from '../../components/TextLabel';
 import { callApi } from '../../helpers/api';
-import { getFullname } from '../../helpers/string';
+import { getFullName } from '../../helpers/string';
+import { User } from '../../types/user';
+import { OnboardingSteps } from './OnboardingSteps';
 
-export default ({
-  summaries,
-  onPrevStep,
-  userDetails,
+type SummaryPropsType = {
+  identity?: UserIdentity;
+  notify: (message: string, notificationType?: NotificationType) => void;
+  onPrevStep: () => void;
+  summaries: OnboardingSteps;
+  userDetails: User;
+};
+
+const Summary = ({
   identity,
   notify,
-}: Record<string, unknown>): JSX.Element => {
+  onPrevStep,
+  summaries,
+  userDetails,
+}: SummaryPropsType): JSX.Element => {
   const history = useHistory();
   const [loading, setLoading] = useState(false);
 
   const allCompleted = every(summaries, 'completed');
-  const getValue = (value: any) => {
+  const getValue = (value: unknown) => {
     let result = '-';
     if (value && (typeof value === 'string' || typeof value === 'number')) {
       result = value.toString();
@@ -30,13 +41,13 @@ export default ({
   const handleCompleteClick = async (approved: boolean) => {
     try {
       setLoading(true);
-      await callApi(`/onboarding/${String(userDetails.id)}`, 'post', {
+      await callApi(`/onboarding/${userDetails.id}`, 'post', {
         step: 'complete',
         approved,
         updatedBy: identity?.id,
       });
       history.push('/users');
-      notify(`${getFullname(userDetails)} has been ${approved ? 'Approved' : 'Rejected'}!`);
+      notify(`${getFullName(userDetails)} has been ${approved ? 'Approved' : 'Rejected'}!`);
     } catch (error) {
       notify(error, 'error');
     } finally {
@@ -50,28 +61,39 @@ export default ({
         <Typography variant="h6" className="mb-4">
           Summary
         </Typography>
-        {map(Object.values(summaries), ({ name, values, labels }) => (
-          <div className="mb-8" key={name}>
-            <Typography variant="subtitle2" className="font-bold mb-4">
-              {name}
-            </Typography>
+        {map(
+          Object.values(summaries),
+          ({
+            name,
+            values,
+            labels,
+          }: {
+            name: string;
+            values: Record<string, unknown>;
+            labels: Record<string, string>;
+          }) => (
+            <div className="mb-8" key={name}>
+              <Typography variant="subtitle2" className="font-bold mb-4">
+                {name}
+              </Typography>
 
-            <div className="flex flex-col space-y-3">
-              {map(labels, (label, key) => (
-                <TextLabel
-                  key={key}
-                  label={`${String(label)}:`}
-                  value={getValue(values[key])}
-                  horizontal
-                />
-              ))}
+              <div className="flex flex-col space-y-3">
+                {map(labels, (label, key) => (
+                  <TextLabel
+                    key={key}
+                    label={`${label}:`}
+                    value={getValue(values[key])}
+                    horizontal
+                  />
+                ))}
+              </div>
             </div>
-          </div>
-        ))}
+          ),
+        )}
       </div>
       <div
         className="flex justify-between px-8 py-6 border-t fixed bg-white z-10"
-        style={{ width: 'calc(100% - 1.8125rem - 16rem - 15rem)', bottom: '1.5rem' }}
+        style={{ width: 'calc(100% - 36.25rem)', bottom: '1.5rem' }}
       >
         <Button variant="outlined" onClick={onPrevStep} disabled={loading}>
           Back
@@ -114,3 +136,5 @@ export default ({
     </div>
   );
 };
+
+export default Summary;

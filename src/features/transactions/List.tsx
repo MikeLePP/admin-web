@@ -1,23 +1,22 @@
+import { Button, TextField as InputField, Typography } from '@material-ui/core';
+import { Edit as EditIcon, ListAlt as CheckIcon } from '@material-ui/icons';
+import { lowerCase, upperFirst } from 'lodash';
 import { useState } from 'react';
 import {
-  List,
   Datagrid,
+  FunctionField,
+  List,
+  Record,
+  ResourceComponentProps,
+  ShowButton,
   TextField,
   useListContext,
-  ShowButton,
-  FunctionField,
-  ResourceComponentProps,
 } from 'react-admin';
-
-import { Typography, Button, TextField as InputField } from '@material-ui/core';
-import { ListAlt as CheckIcon, Edit as EditIcon } from '@material-ui/icons';
 import { useHistory } from 'react-router';
-import { lowerCase, upperFirst } from 'lodash';
-
-import { toLocalDateString } from '../../helpers/date';
 import ListToolbar from '../../components/ListToolbar';
-import { getId } from '../../helpers/url';
 import RedirectButton from '../../components/RedirectButton';
+import { toLocalDateString } from '../../helpers/date';
+import { getId } from '../../helpers/url';
 
 const Empty = ({ id = '' }): JSX.Element => {
   const [userId, setUserId] = useState(id);
@@ -53,8 +52,13 @@ const Empty = ({ id = '' }): JSX.Element => {
   );
 };
 
-export default (props: ResourceComponentProps): JSX.Element => {
+const TransactionList = (props: ResourceComponentProps): JSX.Element | null => {
   const userId = getId(props.location?.search);
+
+  if (!props.basePath || !userId) {
+    return null;
+  }
+
   return (
     <List
       {...props}
@@ -63,29 +67,34 @@ export default (props: ResourceComponentProps): JSX.Element => {
       pagination={false}
       empty={<Empty id={userId} />}
       sort={{ field: 'createdAt', order: 'DESC' }}
-      actions={<ListToolbar to={`${String(props.basePath)}/create/${String(userId)}`} {...props} />}
+      actions={<ListToolbar to={`${props.basePath}/create/${userId}`} {...props} />}
     >
       <Datagrid>
         <FunctionField
           label="Created on"
-          render={(v: any) => toLocalDateString(v.createdAt) as Record<string, unknown>}
+          render={(record?: Record) => toLocalDateString(record ? record.createdAt : '')}
         />
-        <FunctionField label="Status" render={(v: any) => upperFirst(lowerCase(v.status))} />
+        <FunctionField
+          label="Status"
+          render={(record?: Record) => upperFirst(lowerCase(record ? record.status : ''))}
+        />
         <TextField label="Amount" source="amount" />
         <TextField label="Description" source="description" />
         <TextField label="Send to" source="destination" />
         <TextField label="Send from" source="source" />
         <FunctionField
           label="Submit on"
-          render={(v: any) => toLocalDateString(v.submitAt) as Record<string, unknown>}
+          render={(record?: Record) => toLocalDateString(record ? record.submitAt : '')}
         />
         <ShowButton />
         <RedirectButton
           buttonLabel="Edit"
-          to={(r: any) => `/transactions/${String(r.id)}?userId=${String(userId)}`}
+          to={(record?: Record) => (record ? `/transactions/${record.id}?userId=${userId}` : '')}
           icon={<EditIcon />}
         />
       </Datagrid>
     </List>
   );
 };
+
+export default TransactionList;

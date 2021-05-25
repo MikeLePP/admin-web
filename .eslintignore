@@ -1,4 +1,7 @@
 .eslintrc.js
+build/
 cdk.out/
+craco.config.js
 jest.config.js
 output/
+tailwind.config.js

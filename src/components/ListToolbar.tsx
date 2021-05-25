@@ -10,21 +10,16 @@ import {
 import { Box } from '@material-ui/core';
 import { ArrowBack as BackIcon } from '@material-ui/icons';
 
-interface ListToolbar {
-  filters: any;
-  maxResults: any;
-  to: any;
+interface ListToolbarProps {
+  filters?: JSX.Element;
+  maxResults?: number;
+  to?: string;
 }
-export default (props: ListToolbar): JSX.Element => {
+
+const ListToolbar = (props: ListToolbarProps): JSX.Element => {
   const { filters, maxResults, to } = props;
-  const {
-    currentSort,
-    resource,
-    displayedFilters,
-    filterValues,
-    showFilter,
-    total,
-  } = useListContext();
+  const { currentSort, resource, displayedFilters, filterValues, showFilter, total } =
+    useListContext();
   return (
     <TopToolbar className="flex flex-1">
       {filters &&
@@ -49,3 +44,5 @@ export default (props: ListToolbar): JSX.Element => {
     </TopToolbar>
   );
 };
+
+export default ListToolbar;

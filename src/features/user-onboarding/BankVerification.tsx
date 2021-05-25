@@ -4,14 +4,14 @@ import CheckCircleOutlinedIcon from '@material-ui/icons/CheckCircleOutlined';
 import cn from 'classnames';
 import { useFormik } from 'formik';
 import { useEffect, useState } from 'react';
-import { fetchEnd, fetchStart, NotificationType, ResourceProps, useGetIdentity } from 'react-admin';
+import { fetchEnd, fetchStart } from 'react-admin';
 import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
 import InputField from '../../components/InputField';
 import YesNoButtons from '../../components/YesNoButtons';
 import { callApi } from '../../helpers/api';
-import { User } from '../../types/user';
 import ActionButtons from './ActionButtons';
+import { BankVerificationValues, OnboardingComponentProps } from './OnboardingSteps';
 
 const validationSchema = yup.object({
   bankDetailsAvailable: yup.boolean(),
@@ -31,27 +31,7 @@ const validationSchema = yup.object({
     ),
 });
 
-export interface BankVerificationProps {
-  values: {
-    bankDetailsAvailable: boolean;
-    accountBsb: string;
-    accountNumber: string;
-  };
-  labels: Record<string, string>;
-  userDetails: User;
-  onChange: (
-    values: Record<string, unknown>,
-    key?: string,
-    completed?: boolean,
-    stepValues?: Record<string, unknown>,
-  ) => void;
-  onNextStep: (goToSummary?: boolean) => void;
-  onCompleteStep: (completed: boolean) => void;
-  notify: (message: string, notificationType: NotificationType) => void;
-  identity: ReturnType<typeof useGetIdentity>['identity'];
-}
-
-export default ({
+const BankVerification = ({
   values,
   labels,
   userDetails,
@@ -60,8 +40,8 @@ export default ({
   onCompleteStep,
   notify,
   identity,
-}: BankVerificationProps): JSX.Element => {
-  const [verified, setVerified] = useState(false);
+}: OnboardingComponentProps<BankVerificationValues>): JSX.Element => {
+  const [verified, setVerified] = useState<boolean | undefined>(undefined);
   const [notifyContinue, setNotifyContinue] = useState(false);
 
   const [loading, setLoading] = useState(false);
@@ -82,12 +62,12 @@ export default ({
           setLoading(true);
           dispatch(fetchStart());
           // 1. call bank account api to set is verify
-          await callApi(`/bank-accounts/${String(userDetails.bankAccount.id)}`, 'patch', {
+          await callApi(`/bank-accounts/${userDetails.bankAccount.id}`, 'patch', {
             verified,
             updatedBy: identity?.id,
           });
           // 2. call onboarding api to complete this step
-          await callApi(`/onboarding/${String(userDetails.id)}`, 'post', {
+          await callApi(`/onboarding/${userDetails.id}`, 'post', {
             step: 'bank-account',
             bankAccountId: userDetails.bankAccount.id,
             notifyUser: notifyContinue,
@@ -121,12 +101,8 @@ export default ({
     userDetails.bankAccount.accountBsb,
   ]);
 
-  const valueMatched = (
-    name: Extract<
-      keyof BankVerificationProps['values'],
-      keyof BankVerificationProps['userDetails']['bankAccount']
-    >,
-  ) => (formik.values[name] ? formik.values[name] === userDetails.bankAccount[name] : true);
+  const valueMatched = (name: 'accountBsb' | 'accountNumber') =>
+    formik.values[name] ? formik.values[name] === userDetails.bankAccount[name] : true;
 
   const handleNotifyContinue = () => {
     setNotifyContinue(true);
@@ -235,3 +211,5 @@ export default ({
     </form>
   );
 };
+
+export default BankVerification;

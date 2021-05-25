@@ -18,7 +18,7 @@ jobs:
       - node/install-packages
       - run:
           name: Build
-          command: make lint test build ENV=<< parameters.env >>
+          command: make lint test build ENV=<<parameters.env>>
       - store_artifacts:
           path: ./build
       - persist_to_workspace:
@@ -38,22 +38,77 @@ jobs:
       - node/install-packages
       - attach_workspace:
           at: '.'
-      - aws-cli/setup:
-          profile-name: << parameters.env >>
+      - aws-cli/setup
+      - run:
+          # AWS assume role missing https://github.com/CircleCI-Public/aws-cli-orb/issues/57
+          name: Configure AWS Assume Role
+          command: |-
+            aws configure set profile.<<parameters.env>>.role_arn "$AWS_ROLE_ARN"
+            aws configure set profile.<<parameters.env>>.source_profile default
       - run:
           name: Deploy
-          command: make deploy ENV=<< parameters.env >>
+          command: make deploy ENV=<<parameters.env>>
 
 workflows:
   build-deploy:
     jobs:
-      - build
-      - deploy:
-          name: deploy-dev
-          context: aws-dev
-          env: dev
+      - build:
           filters:
             branches:
-              only: develop
+              ignore: master
+      - deploy:
+          context: dev
+          filters:
+            branches:
+              only:
+                - develop
+                - /features?\/.*/
           requires:
             - build
+  build-deploy-staging:
+    jobs:
+      - build:
+          name: build-staging
+          env: staging
+          filters:
+            branches:
+              only: master
+      - deploy:
+          name: deploy-staging
+          context: staging
+          env: staging
+          filters:
+            branches:
+              only: master
+          requires:
+            - build-staging
+  build-deploy-prod:
+    jobs:
+      - build:
+          name: build-prod
+          env: prod
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d+\.\d+\.\d+$/
+      - hold:
+          type: approval
+          requires:
+            - build-prod
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d+\.\d+\.\d+$/
+      - deploy:
+          name: deploy-prod
+          context: prod
+          env: prod
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v\d+\.\d+\.\d+$/
+          requires:
+            - hold
