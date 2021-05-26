@@ -89,7 +89,6 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
     initialValues: userRecord,
     validationSchema,
     onSubmit: async (_values) => {
-      console.log('submit');
       const userUpdated = {
         ...user,
         ..._values,
