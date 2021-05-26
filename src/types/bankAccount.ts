@@ -3,4 +3,6 @@ export interface BankAccount {
   bankName: string;
   accountBsb: string;
   accountNumber: string;
+  accountName: string;
+  accountType: string;
 }
