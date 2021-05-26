@@ -3,7 +3,6 @@ import moment from 'moment';
 import { useHistory } from 'react-router-dom';
 import { useNotify, ResourceComponentPropsWithId } from 'react-admin';
 import {
-  makeStyles,
   List,
   ListItem,
   Radio,
@@ -26,23 +25,8 @@ import { notifyOnFailure } from '../../helpers/notify';
 import EditToolbar from '../../components/EditToolbar';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
-import { BankAccount } from '../../types/bankAccount';
+import { BankAccount } from '../../types/bank-account';
 import { User } from '../../types/user';
-
-const useStyles = makeStyles(() => ({
-  inputField: {
-    width: 256,
-    marginTop: 10,
-    marginBottom: 10,
-  },
-  boxContainer: {
-    padding: 16,
-    backgroundColor: '#f5f5f5',
-    display: 'flex',
-    position: 'relative',
-    alignItems: 'center',
-  },
-}));
 
 const validationSchema = yup.object({
   firstName: yup.string().required(),
@@ -74,7 +58,6 @@ interface UserRecord extends Record<string, unknown> {
 const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const notify = useNotify();
   const history = useHistory();
-  const classes = useStyles();
   const userId = get(props, 'id', '');
   const [user, setUser] = useState<User>({} as User);
   const [bankAccounts, setBankAccounts] = useState([] as BankAccount[]);
@@ -101,7 +84,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   useEffect(() => {
     // get bank accounts with a immediately invoked function
     (async () => {
-      const response = await callApi(`/users/${userId || ''}/bank-accounts`);
+      const response = await callApi(`/users/${userId}/bank-accounts`);
       const mappingBankAccounts: BankAccount[] = (
         get(response, 'json.data', []) as { attributes: BankAccount; id: string }[]
       ).map((item) => ({
@@ -115,12 +98,12 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
       setBankAccounts(mappingBankAccounts);
     })()
       .then(() => null)
-      .catch((err) => new Error(err));
+      .catch((err) => new Error('get bank accounts error'));
 
     // get user info
     (async () => {
-      const response = await callApi(`/users/${userId || ''}`);
-      const userResponse: User = get(response, 'json', {}) as User;
+      const response = await callApi(`/users/${userId}`);
+      const userResponse = get(response, 'json', {}) as User;
       setUser(userResponse);
       const mappingUserRecord: UserRecord = {
         firstName: userResponse.firstName,
@@ -137,7 +120,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
       setUserRecord(mappingUserRecord);
     })()
       .then(() => null)
-      .catch((err) => new Error(err));
+      .catch((err) => new Error('get user error'));
   }, [userId]);
   const handleChangeField =
     (type: string) => async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
@@ -163,10 +146,10 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   return (
     <div>
       <EditToolbar />
-      <form className="border-1 border-gray-100 bg-white" onSubmit={formik.handleSubmit}>
+      <form className="border border-gray-100 bg-white" onSubmit={formik.handleSubmit}>
         <div className="flex flex-col bg-white p-4">
           <InputField
-            className={classes.inputField}
+            className="w-64 my-2.5"
             required
             name="firstName"
             label="First name"
@@ -178,7 +161,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
             onChange={handleChangeField('firstName')}
           />
           <InputField
-            className={classes.inputField}
+            className="w-64 my-2.5"
             name="middleName"
             label="Middle name"
             formik={formik}
@@ -189,7 +172,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
             onChange={handleChangeField('middleName')}
           />
           <InputField
-            className={classes.inputField}
+            className="w-64 my-2.5"
             required
             name="lastName"
             label="Last name"
@@ -201,7 +184,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
             onChange={handleChangeField('lastName')}
           />
           <InputField
-            className={classes.inputField}
+            className="w-64 my-2.5"
             required
             name="email"
             label="Email"
@@ -213,7 +196,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
             onChange={handleChangeField('email')}
           />
           <InputField
-            className={classes.inputField}
+            className="w-64 my-2.5"
             required
             name="mobileNumber"
             label="Mobile number"
@@ -225,7 +208,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
             onChange={handleChangeField('mobileNumber')}
           />
           <InputField
-            className={classes.inputField}
+            className="w-64 my-2.5"
             required
             type="date"
             name="dob"
@@ -237,7 +220,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
               shrink: true,
             }}
           />
-          <FormControl fullWidth={false} className={classes.inputField}>
+          <FormControl fullWidth={false} className="w-64 my-2.5">
             <InputLabel htmlFor="uncontrolled-native">Pay frequency</InputLabel>
             <NativeSelect
               defaultValue={formik.values.incomeFrequency}
@@ -256,7 +239,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
             <FormHelperText>Uncontrolled</FormHelperText>
           </FormControl>
           <InputField
-            className={classes.inputField}
+            className="w-64 my-2.5"
             type="date"
             name="incomeNextDate"
             label="Next pay date"
@@ -302,7 +285,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
             </>
           )}
         </div>
-        <Box className={classes.boxContainer}>
+        <Box className="p-4 bg-gray-100 flex relative items-center	">
           <Button
             color="primary"
             variant="contained"
