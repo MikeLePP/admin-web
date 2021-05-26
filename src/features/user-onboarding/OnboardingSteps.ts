@@ -53,6 +53,7 @@ export interface RiskAssessmentValues extends Record<string, unknown> {
   rejectedReasons: string[];
   riskModelVersion: string;
   primaryAccountId: string;
+  approvedAmount: number;
 }
 
 export interface IdentificationValues extends Record<string, unknown> {
@@ -123,6 +124,7 @@ const onboardingSteps: OnboardingSteps = {
       rejectedReasons: [],
       riskModelVersion: '',
       primaryAccountId: '',
+      approvedAmount: 100
     },
     labels: {
       approved: 'Risk assessment approved?',
@@ -134,6 +136,7 @@ const onboardingSteps: OnboardingSteps = {
       incomeVariationMax: 'Largest income variation',
       riskModelVersion: 'Risk model',
       rejectedReasons: 'Decline reasons',
+      approvedAmount: 'Approved Amount'
     },
   },
   3: {

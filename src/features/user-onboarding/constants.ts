@@ -14,3 +14,10 @@ export const DECLINE_REASONS = [
   { value: 'B1', label: 'Min day 1 ending balance' },
   { value: 'B2', label: 'Number times day 1 income is allowed below minimum' },
 ];
+export const APPROVED_AMOUNT_DEFAULT_VALUE = 100;
+export const APPROVED_AMOUNT = [
+  {value: 50, label: 50},
+  {value: 100, label: 100},
+  {value: 200, label: 200},
+  {value: 300, label: 300}
+];

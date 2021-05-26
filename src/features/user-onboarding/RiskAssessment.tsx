@@ -33,7 +33,7 @@ import { callApi } from '../../helpers/api';
 import { parseBankAccount } from '../../helpers/bankAccount';
 import { toLocalDateString } from '../../helpers/date';
 import ActionButtons from './ActionButtons';
-import { DECLINE_REASONS, GOVERNMENT_SUPPORT, RISK_MODELS } from './constants';
+import { DECLINE_REASONS, GOVERNMENT_SUPPORT, RISK_MODELS, APPROVED_AMOUNT } from './constants';
 import {
   BankAccountData,
   BankAccount,
@@ -158,8 +158,8 @@ const RiskAssessment = ({
     },
   });
 
-  const handleChange = async (event: React.ChangeEvent<{ value: unknown }>) => {
-    await formik.setFieldValue('rejectedReasons', event.target.value as string[]);
+  const handleChange =  (type: string) => async (event: React.ChangeEvent<{ value: unknown }>) => {
+    await formik.setFieldValue(type, event.target.value as string[]);
   };
 
   return (
@@ -389,12 +389,34 @@ const RiskAssessment = ({
                   name="rejectedReasons-checkbox-label"
                   label={labels.rejectedReasons}
                   value={formik.values.rejectedReasons}
-                  onChange={handleChange}
+                  onChange={handleChange('rejectedReasons')}
                   renderValue={(selected) => (selected as string[]).join(', ')}
                 >
                   {DECLINE_REASONS.map(({ value, label }) => (
                     <MenuItem key={value} value={value}>
                       <Checkbox checked={formik.values.rejectedReasons.indexOf(value) > -1} />
+                      <ListItemText primary={label} />
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </div>
+          )}
+          {formik.values.approved === true && (
+            <div className="mt-8 max-w-sm">
+              <FormControl variant="outlined" className="w-full">
+                <InputLabel required htmlFor="approvedAmount-checkbox-label">
+                  {labels.approvedAmount}
+                </InputLabel>
+                <Select
+                  required
+                  name="approvedAmount-checkbox-label"
+                  label={labels.approvedAmount}
+                  value={formik.values.approvedAmount}
+                  onChange={handleChange('approvedAmount')}
+                >
+                  {APPROVED_AMOUNT.map(({ value, label }) => (
+                    <MenuItem key={value} value={value}>
                       <ListItemText primary={label} />
                     </MenuItem>
                   ))}

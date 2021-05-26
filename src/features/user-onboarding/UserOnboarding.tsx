@@ -55,7 +55,7 @@ const UserOnboarding = (props: ResourceComponentProps): JSX.Element | null => {
   }, [currentStep]);
 
   const [wizardData, setWizardData] = useState(onboardingSteps);
-
+  console.log('wizardData', wizardData)
   useEffect(() => {
     if (userDetails && (userDetails.bankAccount || userDetails.identity)) {
       let newObj: OnboardingSteps = cloneDeep(wizardData);
@@ -84,7 +84,7 @@ const UserOnboarding = (props: ResourceComponentProps): JSX.Element | null => {
         );
         setBankAccounts(parseBankAccount(json.data));
       } catch (e) {
-        setErrorMessage(e.message);
+        // setErrorMessage(e.message);
       }
     };
 
