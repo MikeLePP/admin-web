@@ -221,10 +221,7 @@ const RiskAssessment = ({
                       <Radio
                         required
                         name="primaryAccountId"
-                        checked={
-                          formik.values.primaryAccountId === account.id ||
-                          userBankAccounts.length === 1
-                        }
+                        checked={formik.values.primaryAccountId === account.id}
                         onChange={() => formik.setFieldValue('primaryAccountId', account.id)}
                       />
                       <ListItemText
