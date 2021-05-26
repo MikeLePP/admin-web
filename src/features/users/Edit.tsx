@@ -1,7 +1,13 @@
 import React, { ChangeEvent, useEffect, useState } from 'react';
 import moment from 'moment';
 import { useHistory } from 'react-router-dom';
-import { useNotify, ResourceComponentPropsWithId } from 'react-admin';
+import {
+  useNotify,
+  ResourceComponentPropsWithId,
+  ListButton,
+  ShowButton,
+  TopToolbar,
+} from 'react-admin';
 import {
   List,
   ListItem,
@@ -9,12 +15,12 @@ import {
   ListItemText,
   Typography,
   InputLabel,
-  FormHelperText,
   FormControl,
   NativeSelect,
   Button,
   Box,
 } from '@material-ui/core';
+import { ArrowBack as BackIcon } from '@material-ui/icons';
 import SaveIcon from '@material-ui/icons/Save';
 import { get, map, startCase } from 'lodash';
 import { useFormik } from 'formik';
@@ -22,7 +28,6 @@ import * as yup from 'yup';
 
 import InputField from '../../components/InputField';
 import { notifyOnFailure } from '../../helpers/notify';
-import EditToolbar from '../../components/EditToolbar';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import { BankAccount } from '../../types/bank-account';
@@ -54,6 +59,22 @@ interface UserRecord extends Record<string, unknown> {
   incomeNextDate?: string;
   bankAccountId: string;
 }
+
+interface CustomEditToolbarProps {
+  basePath: string;
+  id: string;
+}
+
+const CustomEditToolbar = ({ basePath, id }: CustomEditToolbarProps): JSX.Element => {
+  const showPath = `${basePath}/${id}/show`;
+  return (
+    <TopToolbar>
+      <ListButton icon={<BackIcon />} />
+      <Box display="flex" flexGrow={1} />
+      <ShowButton basePath={basePath} to={showPath} />
+    </TopToolbar>
+  );
+};
 
 const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const notify = useNotify();
@@ -145,7 +166,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
 
   return (
     <div>
-      <EditToolbar />
+      <CustomEditToolbar basePath={props.basePath} id={userId} />
       <form className="border border-gray-100 bg-white" onSubmit={formik.handleSubmit}>
         <div className="flex flex-col bg-white p-4">
           <InputField
@@ -236,7 +257,6 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
                 </option>
               ))}
             </NativeSelect>
-            <FormHelperText>Uncontrolled</FormHelperText>
           </FormControl>
           <InputField
             className="w-64 my-2.5"
