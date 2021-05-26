@@ -103,7 +103,10 @@ const BankSelection = ({
   useEffect(() => {
     // auto select all transaction accounts
     const transactionAccountIds = chain(bankAccounts)
-      .filter(['accountType', 'transaction'])
+      .filter(
+        (bankAccount) =>
+          bankAccount.accountType === 'transaction' && bankAccount.accountNumber.length <= 9,
+      )
       .map((account: BankAccount) => account.id)
       .value();
     void formik.setFieldValue('accounts', transactionAccountIds);
