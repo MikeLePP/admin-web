@@ -1,57 +1,46 @@
-import { useEffect, useState } from 'react';
+import React, { ChangeEvent, useEffect, useState } from 'react';
+import moment from 'moment';
+import { useHistory } from 'react-router-dom';
+import { useNotify, ResourceComponentPropsWithId } from 'react-admin';
 import {
-  Edit,
-  DateInput,
-  SimpleForm,
-  TextInput,
-  required,
-  email,
-  useNotify,
-  SelectInput,
-  ResourceComponentPropsWithId,
-  RadioButtonGroupInput,
-} from 'react-admin';
-import {
-  Divider,
   makeStyles,
-  MenuItem,
   List,
   ListItem,
   Radio,
   ListItemText,
   Typography,
-  TextField,
+  InputLabel,
+  FormHelperText,
+  FormControl,
+  NativeSelect,
+  Button,
+  Box,
 } from '@material-ui/core';
-import InputField from '../../components/InputField';
-import TextLabel from '../../components/TextLabel';
+import SaveIcon from '@material-ui/icons/Save';
 import { get, map, startCase } from 'lodash';
-import Toolbar from '../../components/SaveToolbar';
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+
+import InputField from '../../components/InputField';
 import { notifyOnFailure } from '../../helpers/notify';
-import { futureDate, pastDate, phone } from '../../helpers/validation';
 import EditToolbar from '../../components/EditToolbar';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import { BankAccount } from '../../types/bankAccount';
 import { User } from '../../types/user';
-import { useFormik, FormikValues } from 'formik';
-import * as yup from 'yup';
-import moment from "moment";
 
 const useStyles = makeStyles(() => ({
-  select: {
-    '& #bankAccountId': {
-      whiteSpace: 'unset !important',
-    },
-  },
   inputField: {
     width: 256,
     marginTop: 10,
     marginBottom: 10,
   },
-  formContainer: {
-    background: 'white',
+  boxContainer: {
     padding: 16,
-    border: '1px solid #e5e7eb',
+    backgroundColor: '#f5f5f5',
+    display: 'flex',
+    position: 'relative',
+    alignItems: 'center',
   },
 }));
 
@@ -60,10 +49,13 @@ const validationSchema = yup.object({
   middleName: yup.string(),
   lastName: yup.string().required(),
   email: yup.string().required(),
-  mobileNumber: yup.string().required(),
-  dob: yup.date().required(),
+  mobileNumber: yup
+    .string()
+    .matches(/^\+61[0-9]{9}$/, 'Please enter a valid phone number')
+    .required(),
+  dob: yup.date().max(new Date(), 'Please select an earlier date').required(),
   incomeFrequency: yup.string(),
-  incomeNextDate: yup.date().required(),
+  incomeNextDate: yup.date().min(new Date(), 'Please select a future date').required(),
   bankAccountId: yup.string(),
 });
 
@@ -81,16 +73,36 @@ interface UserRecord extends Record<string, unknown> {
 
 const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const notify = useNotify();
+  const history = useHistory();
   const classes = useStyles();
-  const userId = props.id;
+  const userId = get(props, 'id', '');
+  const [user, setUser] = useState<User>({} as User);
   const [bankAccounts, setBankAccounts] = useState([] as BankAccount[]);
   const [userRecord, setUserRecord] = useState({} as UserRecord);
-
+  const [updating, setUpdating] = useState(false);
+  const formik = useFormik({
+    enableReinitialize: true,
+    initialValues: userRecord,
+    validationSchema,
+    onSubmit: async (_values) => {
+      console.log('submit');
+      const userUpdated = {
+        ...user,
+        ..._values,
+      };
+      try {
+        await callApi(`/users/${userId}`, 'put', userUpdated);
+        history.push('/');
+      } catch (err) {
+        notifyOnFailure(notify);
+      }
+    },
+  });
   useEffect(() => {
     // get bank accounts with a immediately invoked function
     (async () => {
       const response = await callApi(`/users/${userId || ''}/bank-accounts`);
-      const mappingbankAccounts: BankAccount[] = (
+      const mappingBankAccounts: BankAccount[] = (
         get(response, 'json.data', []) as { attributes: BankAccount; id: string }[]
       ).map((item) => ({
         bankAccountId: item.id,
@@ -100,7 +112,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
         accountType: item.attributes.accountType,
         accountName: item.attributes.accountName,
       }));
-      setBankAccounts(mappingbankAccounts);
+      setBankAccounts(mappingBankAccounts);
     })()
       .then(() => null)
       .catch((err) => new Error(err));
@@ -108,51 +120,51 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
     // get user info
     (async () => {
       const response = await callApi(`/users/${userId || ''}`);
-      const user: User = get(response, 'json', {}) as User;
-      const {
-        firstName,
-        middleName,
-        lastName,
-        email,
-        mobileNumber,
-        dob,
-        incomeFrequency,
-        incomeNextDate,
-        bankAccountId,
-      } = user;
+      const userResponse: User = get(response, 'json', {}) as User;
+      setUser(userResponse);
       const mappingUserRecord: UserRecord = {
-        firstName,
-        middleName,
-        lastName,
-        email,
-        mobileNumber,
-        dob,
-        incomeFrequency,
-        incomeNextDate,
-        bankAccountId,
+        firstName: userResponse.firstName,
+        middleName: userResponse.middleName,
+        lastName: userResponse.lastName,
+        email: userResponse.email,
+        mobileNumber: userResponse.mobileNumber,
+        dob: moment(userResponse.dob).format('YYYY-MM-DD'),
+        incomeFrequency: userResponse.incomeFrequency,
+        incomeNextDate: moment(userResponse.incomeNextDate).format('YYYY-MM-DD'),
+        bankAccountId: userResponse.bankAccountId,
       };
-      mappingUserRecord.dob = moment(mappingUserRecord.dob).format("YYYY-MM-DD");
+      mappingUserRecord.dob = moment(mappingUserRecord.dob).format('YYYY-MM-DD');
       setUserRecord(mappingUserRecord);
     })()
       .then(() => null)
       .catch((err) => new Error(err));
   }, [userId]);
-
+  const handleChangeField =
+    (type: string) => async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { value } = e.target;
+      await formik.setFieldValue(type, value);
+      setUpdating(true);
+    };
+  const handleChangeIncomeFrequency = async (e: ChangeEvent<HTMLSelectElement>) => {
+    await formik.setFieldValue('incomeFrequency', e.target.value);
+    setUpdating(true);
+  };
+  const updateBankAccountId = (account: BankAccount) => async () => {
+    setUpdating(true);
+    await formik.setFieldValue('bankAccountId', account.bankAccountId);
+  };
+  const handleCancel = () => {
+    history.goBack();
+  };
   if (!props.basePath || !userId) {
     return null;
   }
 
-  const formik = useFormik({
-    enableReinitialize: true,
-    initialValues: userRecord,
-    validationSchema,
-    onSubmit: async (_values) => {},
-  });
   return (
     <div>
       <EditToolbar />
-      <div className={classes.formContainer}>
-        <form className="flex flex-col" onSubmit={formik.handleSubmit}>
+      <form className="border-1 border-gray-100 bg-white" onSubmit={formik.handleSubmit}>
+        <div className="flex flex-col bg-white p-4">
           <InputField
             className={classes.inputField}
             required
@@ -163,10 +175,10 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
             InputLabelProps={{
               shrink: !!formik.values.firstName,
             }}
+            onChange={handleChangeField('firstName')}
           />
           <InputField
             className={classes.inputField}
-            required
             name="middleName"
             label="Middle name"
             formik={formik}
@@ -174,6 +186,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
             InputLabelProps={{
               shrink: !!formik.values.middleName,
             }}
+            onChange={handleChangeField('middleName')}
           />
           <InputField
             className={classes.inputField}
@@ -185,6 +198,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
             InputLabelProps={{
               shrink: !!formik.values.lastName,
             }}
+            onChange={handleChangeField('lastName')}
           />
           <InputField
             className={classes.inputField}
@@ -196,6 +210,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
             InputLabelProps={{
               shrink: !!formik.values.email,
             }}
+            onChange={handleChangeField('email')}
           />
           <InputField
             className={classes.inputField}
@@ -207,6 +222,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
             InputLabelProps={{
               shrink: !!formik.values.mobileNumber,
             }}
+            onChange={handleChangeField('mobileNumber')}
           />
           <InputField
             className={classes.inputField}
@@ -216,104 +232,90 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
             label="Date of birth"
             formik={formik}
             variant="standard"
-            onChange={event => console.log(event.target.value)}
+            onChange={handleChangeField('dob')}
             InputLabelProps={{
-              shrink: !!formik.values.dob,
+              shrink: true,
             }}
           />
+          <FormControl fullWidth={false} className={classes.inputField}>
+            <InputLabel htmlFor="uncontrolled-native">Pay frequency</InputLabel>
+            <NativeSelect
+              defaultValue={formik.values.incomeFrequency}
+              inputProps={{
+                name: 'name',
+                id: 'uncontrolled-native',
+              }}
+              onChange={handleChangeIncomeFrequency}
+            >
+              {incomeFrequencies.map(({ id, name }) => (
+                <option key={id} value={id}>
+                  {name}
+                </option>
+              ))}
+            </NativeSelect>
+            <FormHelperText>Uncontrolled</FormHelperText>
+          </FormControl>
           <InputField
-            select
             className={classes.inputField}
-            name="incomeFrequency"
-            label="Pay frequency"
-            formik={formik}
-            variant="standard"
-            InputLabelProps={{
-              shrink: !!formik.values.incomeFrequency,
-            }}
-          >
-            {incomeFrequencies.map(({ id, name }) => (
-              <MenuItem key={id} value={id}>
-                {name}
-              </MenuItem>
-            ))}
-          </InputField>
-          <InputField
-            className={classes.inputField}
-            required
             type="date"
             name="incomeNextDate"
             label="Next pay date"
             formik={formik}
             variant="standard"
+            onChange={handleChangeField('incomeNextDate')}
             InputLabelProps={{
-              shrink: !!formik.values.incomeNextDate,
+              shrink: true,
             }}
           />
-          <Typography>Primary Bank Account</Typography>
-          <List>
-            {map(bankAccounts, (account) => (
-              <>
-                <ListItem key={account.bankAccountId}>
-                  <Radio
-                    required
-                    name="primaryAccountId"
-                    // checked={
-                    //   formik.values['bankAccountId'] === account.bankAccountId || bankAccounts.length === 1
-                    // }
-                    onChange={() => formik.setFieldValue('bankAccountId', account.bankAccountId)}
-                  />
-                  <ListItemText
-                    primary={
-                      <div className="flex">
-                        <Typography className="mr-2">{startCase(account.accountType)}</Typography>
-                      </div>
-                    }
-                    secondary={`[BSB: ${account.accountBsb || '-'} ACC: ${
-                      account.accountNumber || '-'
-                    }] ${account.accountName}`}
-                  />
-                </ListItem>
-              </>
-            ))}
-          </List>
-        </form>
-      </div>
+          {bankAccounts.length > 0 && (
+            <>
+              <Typography>Primary Bank Account</Typography>
+              <List>
+                {map(bankAccounts, (account) =>
+                  React.cloneElement(
+                    <ListItem key={account.bankAccountId}>
+                      <Radio
+                        required
+                        name="primaryAccountId"
+                        checked={
+                          formik.values.bankAccountId === account.bankAccountId ||
+                          bankAccounts.length === 1
+                        }
+                        onChange={updateBankAccountId(account)}
+                      />
+                      <ListItemText
+                        primary={
+                          <div className="flex">
+                            <Typography className="mr-2">
+                              {startCase(account.accountType)}
+                            </Typography>
+                          </div>
+                        }
+                        secondary={`[BSB: ${account.accountBsb || '-'} ACC: ${
+                          account.accountNumber || '-'
+                        }] ${account.accountName}`}
+                      />
+                    </ListItem>,
+                  ),
+                )}
+              </List>
+            </>
+          )}
+        </div>
+        <Box className={classes.boxContainer}>
+          <Button
+            color="primary"
+            variant="contained"
+            type="submit"
+            startIcon={<SaveIcon />}
+            disabled={!updating}
+          >
+            Save
+          </Button>
+          <Button onClick={handleCancel}>Cancel</Button>
+        </Box>
+      </form>
     </div>
-  );
-  return (
-    <Edit
-      {...props}
-      title="Edit User"
-      onFailure={notifyOnFailure(notify)}
-      mutationMode="pessimistic"
-      actions={<EditToolbar />}
-    >
-      <SimpleForm redirect="list" toolbar={<Toolbar />}>
-        <TextInput label="First name" source="firstName" validate={[required()]} autoFocus />
-        <TextInput label="Middle name" source="middleName" />
-        <TextInput label="Last name" source="lastName" validate={[required()]} />
-        <TextInput
-          label="Email"
-          source="email"
-          validate={[required(), email('Please enter a valid email address')]}
-        />
-        <TextInput label="Mobile number" source="mobileNumber" validate={[required(), phone()]} />
-        <DateInput label="Date of birth" source="dob" validate={[required(), pastDate()]} />
-        <SelectInput label="Pay frequency" source="incomeFrequency" choices={incomeFrequencies} />
-        <DateInput label="Next pay date" source="incomeNextDate" validate={[futureDate()]} />
-
-        <Divider />
-        <RadioButtonGroupInput
-          children={<div>ewdwqiew owieweiwoiewew</div>}
-          label="Bank accounts"
-          source="bankAccountId"
-          row={false}
-          optionValue="bankAccountId"
-          choices={bankAccounts}
-        />
-      </SimpleForm>
-    </Edit>
   );
 };
 
