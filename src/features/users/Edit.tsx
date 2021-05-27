@@ -96,7 +96,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
         await callApi(`/users/${userId}`, 'put', userUpdated);
         history.push('/');
       } catch (err) {
-        notify(err, 'error')
+        notify(err, 'error');
       }
     },
   });
@@ -140,7 +140,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
     })()
       .then(() => null)
       .catch((err) => notify(err, 'error'));
-  }, [userId]);
+  }, [userId, notify]);
   const handleChangeField =
     (type: string) => async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { value } = e.target;
