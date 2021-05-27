@@ -9,6 +9,7 @@ import {
   TopToolbar,
 } from 'react-admin';
 import {
+  Chip,
   List,
   ListItem,
   Radio,
@@ -94,7 +95,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
       };
       try {
         await callApi(`/users/${userId}`, 'put', userUpdated);
-        history.push('/');
+        history.push(`${props.basePath || ''}/${userId}/show`);
       } catch (err) {
         notify(err, 'error');
       }
@@ -274,29 +275,49 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
               <List>
                 {map(bankAccounts, (account) =>
                   React.cloneElement(
-                    <ListItem key={account.bankAccountId}>
-                      <Radio
-                        required
-                        name="primaryAccountId"
-                        checked={
-                          formik.values.bankAccountId === account.bankAccountId ||
-                          bankAccounts.length === 1
-                        }
-                        onChange={updateBankAccountId(account)}
-                      />
-                      <ListItemText
-                        primary={
-                          <div className="flex">
-                            <Typography className="mr-2">
-                              {startCase(account.accountType)}
-                            </Typography>
-                          </div>
-                        }
-                        secondary={`[BSB: ${account.accountBsb || '-'} ACC: ${
-                          account.accountNumber || '-'
-                        }] ${account.accountName}`}
-                      />
-                    </ListItem>,
+                    <>
+                      <ListItem key={account.bankAccountId}>
+                        <Radio
+                          required
+                          name="primaryAccountId"
+                          checked={
+                            formik.values.bankAccountId === account.bankAccountId ||
+                            bankAccounts.length === 1
+                          }
+                          onChange={updateBankAccountId(account)}
+                        />
+                        <ListItemText
+                          primary={
+                            <div className="flex">
+                              <Typography className="mr-2">
+                                {startCase(account.accountType)}
+                              </Typography>
+                              {formik.values.bankAccountId === account.bankAccountId && (
+                                <Chip
+                                  variant="outlined"
+                                  color="secondary"
+                                  size="small"
+                                  label="Primary account"
+                                />
+                              )}
+                            </div>
+                          }
+                          secondary={`[BSB: ${account.accountBsb || '-'} ACC: ${
+                            account.accountNumber || '-'
+                          }] ${account.accountName}`}
+                        />
+                      </ListItem>
+                      {formik.values.bankAccountId === account.bankAccountId &&
+                        account.accountType !== 'transaction' && (
+                          <Typography color="error" className="ml-4 pl-14">
+                            Primary account is not a transaction account type.
+                            <br />
+                            Are you sure that direct debits may be made to this account?
+                            <br />
+                            WARNING THIS IS NOT COMMON, SEEK MANAGEMENT APPROVAL.
+                          </Typography>
+                        )}
+                    </>,
                   ),
                 )}
               </List>
