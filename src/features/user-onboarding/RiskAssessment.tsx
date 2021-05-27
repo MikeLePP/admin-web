@@ -158,7 +158,7 @@ const RiskAssessment = ({
     },
   });
 
-  const handleChange =  (type: string) => async (event: React.ChangeEvent<{ value: unknown }>) => {
+  const handleChange = (type: string) => async (event: React.ChangeEvent<{ value: unknown }>) => {
     await formik.setFieldValue(type, event.target.value as string[]);
   };
 

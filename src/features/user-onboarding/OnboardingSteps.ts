@@ -124,7 +124,7 @@ const onboardingSteps: OnboardingSteps = {
       rejectedReasons: [],
       riskModelVersion: '',
       primaryAccountId: '',
-      approvedAmount: 100
+      approvedAmount: 100,
     },
     labels: {
       approved: 'Risk assessment approved?',
@@ -136,7 +136,7 @@ const onboardingSteps: OnboardingSteps = {
       incomeVariationMax: 'Largest income variation',
       riskModelVersion: 'Risk model',
       rejectedReasons: 'Decline reasons',
-      approvedAmount: 'Approved Amount'
+      approvedAmount: 'Approved Amount',
     },
   },
   3: {

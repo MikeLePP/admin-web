@@ -16,8 +16,8 @@ export const DECLINE_REASONS = [
 ];
 export const APPROVED_AMOUNT_DEFAULT_VALUE = 100;
 export const APPROVED_AMOUNT = [
-  {value: 50, label: 50},
-  {value: 100, label: 100},
-  {value: 200, label: 200},
-  {value: 300, label: 300}
+  { value: 50, label: 50 },
+  { value: 100, label: 100 },
+  { value: 200, label: 200 },
+  { value: 300, label: 300 },
 ];
