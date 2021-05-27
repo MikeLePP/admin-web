@@ -27,7 +27,6 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 
 import InputField from '../../components/InputField';
-import { notifyOnFailure } from '../../helpers/notify';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import { BankAccount } from '../../types/bank-account';
@@ -97,7 +96,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
         await callApi(`/users/${userId}`, 'put', userUpdated);
         history.push('/');
       } catch (err) {
-        notifyOnFailure(notify);
+        notify(err, 'error')
       }
     },
   });
@@ -118,7 +117,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
       setBankAccounts(mappingBankAccounts);
     })()
       .then(() => null)
-      .catch((err) => new Error('get bank accounts error'));
+      .catch((err) => notify(err, 'error'));
 
     // get user info
     (async () => {
@@ -140,7 +139,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
       setUserRecord(mappingUserRecord);
     })()
       .then(() => null)
-      .catch((err) => new Error('get user error'));
+      .catch((err) => notify(err, 'error'));
   }, [userId]);
   const handleChangeField =
     (type: string) => async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
