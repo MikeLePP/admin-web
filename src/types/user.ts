@@ -15,6 +15,7 @@ export interface User {
     name: string;
     verified?: boolean;
   };
+  bankAccountId: string;
   identity: {
     id: string;
     number: string;
