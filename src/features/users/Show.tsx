@@ -33,9 +33,9 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
     const bankAccount = bankAccounts.find((account) => account.bankAccountId === useBankAccountId);
     return {
       bankAccount,
-      text: `${bankAccount?.accountName || ''} | BSB: ${
-        bankAccount?.accountBsb || '-'
-      } | Account number: ${bankAccount?.accountNumber || '-'}`,
+      text: `${bankAccount?.accountName || ''} | BSB: ${bankAccount?.accountBsb || '-'} | ACC: ${
+        bankAccount?.accountNumber || '-'
+      }`,
     };
   }, [bankAccounts, user]);
   return (
@@ -120,23 +120,9 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
               containerClass="mt-2 mb-1"
               labelClass="text-xs"
               valueClass="text-sm pt-2 pb-1"
-              label="Primary Account"
+              label="Primary Bank Account"
               value={primaryBankAccount?.text}
             />
-            {/* <TextLabel
-              containerClass="mt-2 mb-1"
-              labelClass="text-xs"
-              valueClass="text-sm pt-2 pb-1"
-              label="Account BSB"
-              value={primaryBankAccount?.accountBsb}
-            />
-            <TextLabel
-              containerClass="mt-2 mb-1"
-              labelClass="text-xs"
-              valueClass="text-sm pt-2 pb-1"
-              label="Account number"
-              value={primaryBankAccount?.accountNumber}
-            /> */}
           </>
         ) : null}
         <TextLabel

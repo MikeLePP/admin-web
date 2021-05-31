@@ -119,16 +119,16 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
     }
   }, [user]);
 
-  useEffect(() => {
-    if (bankAccounts.length === 1 && user.id && !user.bankAccountId) {
-      setUpdating(true);
-      // need confirm!!!!
-      setUserRecord((currentUserRecord: UserRecord) => ({
-        ...currentUserRecord,
-        bankAccountId: bankAccounts[0].bankAccountId,
-      }));
-    }
-  }, [bankAccounts, user, setUserRecord]);
+  // useEffect(() => {
+  //   if (bankAccounts.length === 1 && user.id && !user.bankAccountId) {
+  //     setUpdating(true);
+  //     // need confirm!!!!
+  //     setUserRecord((currentUserRecord: UserRecord) => ({
+  //       ...currentUserRecord,
+  //       bankAccountId: bankAccounts[0].bankAccountId,
+  //     }));
+  //   }
+  // }, [bankAccounts, user, setUserRecord]);
   const handleChangeField =
     (type: string) => async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { value } = e.target;
