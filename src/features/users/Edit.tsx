@@ -31,7 +31,7 @@ import InputField from '../../components/InputField';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import { BankAccount } from '../../types/bank-account';
-import { User } from '../../types/user';
+import { useUser, useBankAccount } from './userHook';
 
 const validationSchema = yup.object({
   firstName: yup.string().required(),
@@ -80,8 +80,8 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const notify = useNotify();
   const history = useHistory();
   const userId = get(props, 'id', '');
-  const [user, setUser] = useState<User>({} as User);
-  const [bankAccounts, setBankAccounts] = useState([] as BankAccount[]);
+  const { user } = useUser(userId);
+  const { bankAccounts } = useBankAccount(userId);
   const [userRecord, setUserRecord] = useState({} as UserRecord);
   const [updating, setUpdating] = useState(false);
   const formik = useFormik({
@@ -102,46 +102,33 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
     },
   });
   useEffect(() => {
-    // get bank accounts with a immediately invoked function
-    (async () => {
-      const response = await callApi(`/users/${userId}/bank-accounts`);
-      const mappingBankAccounts: BankAccount[] = (
-        get(response, 'json.data', []) as { attributes: BankAccount; id: string }[]
-      ).map((item) => ({
-        bankAccountId: item.id,
-        accountBsb: item.attributes.accountBsb,
-        accountNumber: item.attributes.accountNumber,
-        bankName: item.attributes.bankName,
-        accountType: item.attributes.accountType,
-        accountName: item.attributes.accountName,
-      }));
-      setBankAccounts(mappingBankAccounts);
-    })()
-      .then(() => null)
-      .catch((err) => notify(err, 'error'));
-
-    // get user info
-    (async () => {
-      const response = await callApi(`/users/${userId}`);
-      const userResponse = get(response, 'json', {}) as User;
-      setUser(userResponse);
+    if (user.id) {
       const mappingUserRecord: UserRecord = {
-        firstName: userResponse.firstName,
-        middleName: userResponse.middleName,
-        lastName: userResponse.lastName,
-        email: userResponse.email,
-        mobileNumber: userResponse.mobileNumber,
-        dob: moment(userResponse.dob).format('YYYY-MM-DD'),
-        incomeFrequency: userResponse.incomeFrequency,
-        incomeNextDate: moment(userResponse.incomeNextDate).format('YYYY-MM-DD'),
-        bankAccountId: userResponse.bankAccountId,
+        firstName: user.firstName,
+        middleName: user.middleName,
+        lastName: user.lastName,
+        email: user.email,
+        mobileNumber: user.mobileNumber,
+        dob: moment(user.dob).format('YYYY-MM-DD'),
+        incomeFrequency: user.incomeFrequency,
+        incomeNextDate: moment(user.incomeNextDate).format('YYYY-MM-DD'),
+        bankAccountId: user.bankAccountId,
       };
       mappingUserRecord.dob = moment(mappingUserRecord.dob).format('YYYY-MM-DD');
       setUserRecord(mappingUserRecord);
-    })()
-      .then(() => null)
-      .catch((err) => notify(err, 'error'));
-  }, [userId, notify]);
+    }
+  }, [user]);
+
+  useEffect(() => {
+    if (bankAccounts.length === 1 && user.id && !user.bankAccountId) {
+      setUpdating(true);
+      // need confirm!!!!
+      setUserRecord((currentUserRecord: UserRecord) => ({
+        ...currentUserRecord,
+        bankAccountId: bankAccounts[0].bankAccountId,
+      }));
+    }
+  }, [bankAccounts, user, setUserRecord]);
   const handleChangeField =
     (type: string) => async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { value } = e.target;
@@ -243,7 +230,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
           <FormControl fullWidth={false} className="w-64 my-2.5">
             <InputLabel htmlFor="uncontrolled-native">Pay frequency</InputLabel>
             <NativeSelect
-              defaultValue={formik.values.incomeFrequency}
+              value={formik.values.incomeFrequency}
               inputProps={{
                 name: 'name',
                 id: 'uncontrolled-native',
@@ -275,7 +262,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
               <List>
                 {map(bankAccounts, (account) =>
                   React.cloneElement(
-                    <>
+                    <React.Fragment key={account.bankAccountId}>
                       <ListItem key={account.bankAccountId}>
                         <Radio
                           required
@@ -304,12 +291,12 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
                           }
                           secondary={`[BSB: ${account.accountBsb || '-'} ACC: ${
                             account.accountNumber || '-'
-                          }] ${account.accountName}`}
+                          }] ${account?.accountName || '-'}`}
                         />
                       </ListItem>
                       {formik.values.bankAccountId === account.bankAccountId &&
                         account.accountType !== 'transaction' && (
-                          <Typography color="error" className="ml-4 pl-14">
+                          <Typography color="error" className="ml-4 pl-10">
                             Primary account is not a transaction account type.
                             <br />
                             Are you sure that direct debits may be made to this account?
@@ -317,7 +304,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
                             WARNING THIS IS NOT COMMON, SEEK MANAGEMENT APPROVAL.
                           </Typography>
                         )}
-                    </>,
+                    </React.Fragment>,
                   ),
                 )}
               </List>

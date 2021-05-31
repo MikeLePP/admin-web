@@ -30,4 +30,5 @@ export interface User {
     lastAmount: number;
     source: string;
   };
+  balanceCurrent: number;
 }
