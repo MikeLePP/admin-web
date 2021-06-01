@@ -4,9 +4,10 @@ import React from 'react';
 import moment from 'moment';
 import { get } from 'lodash';
 import ShowToolbar from '../../components/ShowToolbar';
-import { useUser, useBankAccount } from './userHook';
+import { useUser, useBankAccount } from './user-hooks';
 import TextLabel from '../../components/TextLabel';
 import incomeFrequencies from '../../constants/incomeFrequencies';
+import { User } from '../../types/user';
 
 interface CustomEditToolbarProps {
   basePath: string;
@@ -22,7 +23,7 @@ const CustomEditToolbar = ({ basePath, id }: CustomEditToolbarProps): JSX.Elemen
 
 const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const userId = get(props, 'id', '');
-  const { user } = useUser(userId);
+  const { user = {} as User } = useUser(userId);
   const { bankAccounts } = useBankAccount(userId);
   const payFrequency = React.useMemo(() => {
     const frequency = incomeFrequencies.find((item) => item.id === user.incomeFrequency);

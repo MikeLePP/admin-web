@@ -31,7 +31,7 @@ import InputField from '../../components/InputField';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import { BankAccount } from '../../types/bank-account';
-import { useUser, useBankAccount } from './userHook';
+import { useUser, useBankAccount } from './user-hooks';
 
 const validationSchema = yup.object({
   firstName: yup.string().required(),
@@ -102,7 +102,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
     },
   });
   useEffect(() => {
-    if (user.id) {
+    if (user) {
       const mappingUserRecord: UserRecord = {
         firstName: user.firstName,
         middleName: user.middleName,
@@ -119,16 +119,6 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
     }
   }, [user]);
 
-  // useEffect(() => {
-  //   if (bankAccounts.length === 1 && user.id && !user.bankAccountId) {
-  //     setUpdating(true);
-  //     // need confirm!!!!
-  //     setUserRecord((currentUserRecord: UserRecord) => ({
-  //       ...currentUserRecord,
-  //       bankAccountId: bankAccounts[0].bankAccountId,
-  //     }));
-  //   }
-  // }, [bankAccounts, user, setUserRecord]);
   const handleChangeField =
     (type: string) => async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
       const { value } = e.target;
@@ -267,10 +257,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
                         <Radio
                           required
                           name="primaryAccountId"
-                          checked={
-                            formik.values.bankAccountId === account.bankAccountId ||
-                            bankAccounts.length === 1
-                          }
+                          checked={formik.values.bankAccountId === account.bankAccountId}
                           onChange={updateBankAccountId(account)}
                         />
                         <ListItemText

@@ -7,7 +7,7 @@ import { BankAccount } from '../../types/bank-account';
 
 type IStatus = 'idle' | 'loading' | 'success' | 'fail';
 type IUserHook = {
-  user: User;
+  user?: User;
   status: IStatus;
 };
 
@@ -17,7 +17,7 @@ type IBankAccountHook = {
 };
 
 export function useUser(userId: string): IUserHook {
-  const [user, setUser] = useState<User>({} as User);
+  const [user, setUser] = useState<User | undefined>(undefined);
   const [status, setStatus] = useState<IStatus>('idle');
   const notify = useNotify();
   useEffect(() => {
