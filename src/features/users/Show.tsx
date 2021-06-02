@@ -7,7 +7,6 @@ import ShowToolbar from '../../components/ShowToolbar';
 import { useUser, useBankAccount } from './user-hooks';
 import TextLabel from '../../components/TextLabel';
 import incomeFrequencies from '../../constants/incomeFrequencies';
-import { User } from '../../types/user';
 
 interface CustomEditToolbarProps {
   basePath: string;
@@ -23,20 +22,25 @@ const CustomEditToolbar = ({ basePath, id }: CustomEditToolbarProps): JSX.Elemen
 
 const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const userId = get(props, 'id', '');
-  const { user = {} as User } = useUser(userId);
+  const { user } = useUser(userId);
   const { bankAccounts } = useBankAccount(userId);
+  const incomeFrequency = user?.incomeFrequency;
   const payFrequency = React.useMemo(() => {
-    const frequency = incomeFrequencies.find((item) => item.id === user.incomeFrequency);
+    const frequency = incomeFrequencies.find(
+      (item) => incomeFrequency && item.id === incomeFrequency,
+    );
     return frequency?.name;
-  }, [user.incomeFrequency]);
+  }, [incomeFrequency]);
   const primaryBankAccount = React.useMemo(() => {
-    const { bankAccountId: useBankAccountId } = user;
-    const bankAccount = bankAccounts.find((account) => account.bankAccountId === useBankAccountId);
+    const useBankAccountId = user?.bankAccountId;
+    const bankAccount = bankAccounts.find(
+      (account) => useBankAccountId && account.bankAccountId === useBankAccountId,
+    );
     return {
       bankAccount,
-      text: `${bankAccount?.accountName || ''} | BSB: ${bankAccount?.accountBsb || '-'} | ACC: ${
-        bankAccount?.accountNumber || '-'
-      }`,
+      text: `Name: ${bankAccount?.accountName || 'N/A'} | BSB: ${
+        bankAccount?.accountBsb || 'N/A'
+      } | ACC: ${bankAccount?.accountNumber || 'N/A'}`,
     };
   }, [bankAccounts, user]);
   return (
@@ -48,9 +52,9 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
           labelClass="text-xs"
           valueClass="text-sm pt-2 pb-1"
           label="First name"
-          value={user.firstName}
+          value={user?.firstName}
         />
-        {user.middleName ? (
+        {user?.middleName ? (
           <TextLabel
             containerClass="mt-2 mb-1"
             labelClass="text-xs"
@@ -64,28 +68,28 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
           labelClass="text-xs"
           valueClass="text-sm pt-2 pb-1"
           label="Last name"
-          value={user.lastName}
+          value={user?.lastName}
         />
         <TextLabel
           containerClass="mt-2 mb-1"
           labelClass="text-xs"
           valueClass="text-sm pt-2 pb-1"
           label="Email"
-          value={user.email}
+          value={user?.email}
         />
         <TextLabel
           containerClass="mt-2 mb-1"
           labelClass="text-xs"
           valueClass="text-sm pt-2 pb-1"
           label="Mobile number"
-          value={user.mobileNumber}
+          value={user?.mobileNumber}
         />
         <TextLabel
           containerClass="mt-2 mb-1"
           labelClass="text-xs"
           valueClass="text-sm pt-2 pb-1"
           label="Date of birth"
-          value={moment(user.dob).format('YYYY-MM-DD')}
+          value={user?.dob ? moment(user.dob).format('YYYY-MM-DD') : undefined}
         />
         <TextLabel
           containerClass="mt-2 mb-1"
@@ -106,14 +110,16 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
           labelClass="text-xs"
           valueClass="text-sm pt-2 pb-1"
           label="Next pay date"
-          value={moment(user.incomeNextDate).format('YYYY-MM-DD')}
+          value={
+            user?.incomeNextDate ? moment(user.incomeNextDate).format('YYYY-MM-DD') : undefined
+          }
         />
         <TextLabel
           containerClass="mt-2 mb-1"
           labelClass="text-xs"
           valueClass="text-sm pt-2 pb-1"
           label="Bank Name"
-          value={get(user, 'bankAccount.bankName')}
+          value={user?.bankAccount?.bankName}
         />
         {primaryBankAccount?.bankAccount ? (
           <>
@@ -131,7 +137,7 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
           labelClass="text-xs"
           valueClass="text-sm pt-2 pb-1"
           label="Current balance"
-          value={user.balanceCurrent}
+          value={user?.balanceCurrent}
         />
       </Card>
     </>
