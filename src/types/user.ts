@@ -12,6 +12,7 @@ export interface User {
     id: string;
     accountBsb: string;
     accountNumber: string;
+    bankName?: string;
     name: string;
     verified?: boolean;
   };
@@ -30,4 +31,5 @@ export interface User {
     lastAmount: number;
     source: string;
   };
+  balanceCurrent: number;
 }
