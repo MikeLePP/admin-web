@@ -6,6 +6,7 @@ import { callApi } from '../../helpers/api';
 import { toLocalDateString, yearOldString } from '../../helpers/date';
 import ActionButtons from './ActionButtons';
 import { IdentificationValues, OnboardingComponentProps } from './OnboardingSteps';
+import GreenIDVerification from './GreenIDVerification';
 
 const Identification = ({
   values: { identityVerified },
@@ -120,6 +121,7 @@ const Identification = ({
           )}
         </div>
       </ActionButtons>
+      <GreenIDVerification userDetails={userDetails} />
     </form>
   );
 };
