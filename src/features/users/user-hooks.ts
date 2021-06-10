@@ -30,12 +30,10 @@ export function useUser(userId: string): IUserHook {
       const userResponse = get(response, 'json', {}) as User;
       setStatus('success');
       setUser(userResponse);
-    })()
-      .then(() => null)
-      .catch((err) => {
-        notify(err, 'error');
-        setStatus('fail');
-      });
+    })().catch((err) => {
+      notify('Cannot get user', 'error');
+      setStatus('fail');
+    });
   }, [notify, userId]);
   return {
     user,
@@ -70,7 +68,7 @@ export function useBankAccount(userId: string): IBankAccountHook {
     })()
       .then(() => null)
       .catch((err) => {
-        notify(err, 'error');
+        notify('Cannot get bank account', 'error');
         setStatus('fail');
       });
   }, [notify, userId]);
