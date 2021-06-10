@@ -91,16 +91,25 @@ const Identification = ({
             </>
           )}
         </Grid>
-        <div className="mt-8">
-          <Typography variant="h6" className="mb-4">
-            Identification verified?
-          </Typography>
-          <YesNoButtons
-            isYes={identityVerified}
-            onYesClick={() => onChange(true, 'identityVerified')}
-            onNoClick={() => onChange(false, 'identityVerified')}
-          />
-        </div>
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <Typography variant="h6" className="mb-4">
+              Identification verified?
+            </Typography>
+            <YesNoButtons
+              isYes={identityVerified}
+              onYesClick={() => onChange(true, 'identityVerified')}
+              onNoClick={() => onChange(false, 'identityVerified')}
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <GreenIDVerification
+              userDetails={userDetails}
+              loading={loading}
+              setLoading={setLoading}
+            />
+          </Grid>
+        </Grid>
       </div>
       <div className="flex-grow"></div>
       <ActionButtons onBackButtonClick={onPrevStep} loading={loading}>
@@ -121,7 +130,6 @@ const Identification = ({
           )}
         </div>
       </ActionButtons>
-      <GreenIDVerification userDetails={userDetails} />
     </form>
   );
 };
