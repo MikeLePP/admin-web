@@ -1,4 +1,4 @@
-import { Button, Chip, Grid, Typography } from '@material-ui/core';
+import { Button, Chip, Grid, Typography, Box } from '@material-ui/core';
 import { FormEvent, useState } from 'react';
 import TextLabel from '../../components/TextLabel';
 import YesNoButtons from '../../components/YesNoButtons';
@@ -6,7 +6,6 @@ import { callApi } from '../../helpers/api';
 import { toLocalDateString, yearOldString } from '../../helpers/date';
 import ActionButtons from './ActionButtons';
 import { IdentificationValues, OnboardingComponentProps } from './OnboardingSteps';
-import GreenIDVerification from './GreenIDVerification';
 
 const Identification = ({
   values: { identityVerified },
@@ -19,6 +18,10 @@ const Identification = ({
 }: OnboardingComponentProps<IdentificationValues>): JSX.Element => {
   const [notifyContinue, setNotifyContinue] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [greenIDResult, setGreenIDVerification] = useState({
+    isFirstRender: true,
+    isGreenIDVerified: false,
+  });
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
@@ -45,7 +48,26 @@ const Identification = ({
       setLoading(false);
     }
   };
-
+  const checkGreenID = async () => {
+    setLoading(true);
+    setGreenIDVerification({ isFirstRender: true, isGreenIDVerified: false });
+    const identityVerification = await callApi(
+      `/users/${userDetails.id}/identity-verification`,
+      'put',
+    );
+    if (identityVerification) {
+      setGreenIDVerification({
+        isFirstRender: false,
+        isGreenIDVerified: true,
+      });
+    } else {
+      setGreenIDVerification({
+        isFirstRender: false,
+        isGreenIDVerified: false,
+      });
+    }
+    setLoading(false);
+  };
   return (
     <form className="flex flex-col" onSubmit={handleFormSubmit}>
       <div className="px-8 mb-8">
@@ -94,19 +116,43 @@ const Identification = ({
         <Grid container spacing={2}>
           <Grid item xs={6}>
             <Typography variant="h6" className="mb-4">
+              Green ID Verification
+            </Typography>
+
+            <Button
+              className="flex flex-col"
+              variant="contained"
+              color="secondary"
+              onClick={() => checkGreenID()}
+              disabled={loading}
+            >
+              Green ID Verification
+            </Button>
+            <Grid item xs={6} spacing={2}>
+              {!greenIDResult.isFirstRender &&
+                !loading &&
+                (greenIDResult.isGreenIDVerified ? (
+                  <Box bgcolor="success.light" m={1} textAlign="center">
+                    <Typography>User is verified</Typography>
+                  </Box>
+                ) : (
+                  <Box bgcolor="error.light">
+                    <Typography>Unverified</Typography>
+                  </Box>
+                ))}
+            </Grid>
+          </Grid>
+        </Grid>
+
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <Typography variant="h6" className="mb-4">
               Identification verified?
             </Typography>
             <YesNoButtons
               isYes={identityVerified}
               onYesClick={() => onChange(true, 'identityVerified')}
               onNoClick={() => onChange(false, 'identityVerified')}
-            />
-          </Grid>
-          <Grid item xs={6}>
-            <GreenIDVerification
-              userDetails={userDetails}
-              loading={loading}
-              setLoading={setLoading}
             />
           </Grid>
         </Grid>
