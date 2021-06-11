@@ -57,6 +57,7 @@ export interface RiskAssessmentValues extends Record<string, unknown> {
 }
 
 export interface IdentificationValues extends Record<string, unknown> {
+  identityStatus?: string;
   identityVerified?: boolean;
 }
 
@@ -143,6 +144,7 @@ const onboardingSteps: OnboardingSteps = {
     name: 'Identification',
     completed: undefined,
     values: {
+      identityStatus: undefined,
       identityVerified: undefined,
     },
     labels: {
