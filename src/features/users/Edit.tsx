@@ -97,7 +97,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
         await callApi(`/users/${userId}`, 'put', userUpdated);
         history.push(`${props.basePath || ''}/${userId}/show`);
       } catch (err) {
-        notify(err, 'error');
+        notify('Cannot update this user', 'error');
       }
     },
   });

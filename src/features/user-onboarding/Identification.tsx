@@ -7,8 +7,13 @@ import { toLocalDateString, yearOldString } from '../../helpers/date';
 import ActionButtons from './ActionButtons';
 import { IdentificationValues, OnboardingComponentProps } from './OnboardingSteps';
 
+interface GreenIdResult {
+  verified: boolean;
+  status: string;
+}
+
 const Identification = ({
-  values: { identityVerified },
+  values: { identityStatus, identityVerified },
   userDetails,
   onChange,
   onPrevStep,
@@ -18,6 +23,7 @@ const Identification = ({
 }: OnboardingComponentProps<IdentificationValues>): JSX.Element => {
   const [notifyContinue, setNotifyContinue] = useState(false);
   const [loading, setLoading] = useState(false);
+
   const handleFormSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
@@ -38,6 +44,30 @@ const Identification = ({
 
       onChange({ identityVerified }, undefined, identityVerified);
       onNextStep(!identityVerified);
+    } catch (error) {
+      notify(error, 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const checkGreenId = async () => {
+    try {
+      setLoading(true);
+      const response = await callApi<{ data: { attributes: GreenIdResult } }>(
+        `/users/${userDetails.id}/identity-verification`,
+        'put',
+      );
+
+      const { status, verified } = response.json.data.attributes;
+      onChange(
+        {
+          identityStatus: status,
+          identityVerified: verified,
+        },
+        undefined,
+        verified,
+      );
     } catch (error) {
       notify(error, 'error');
     } finally {
@@ -75,7 +105,7 @@ const Identification = ({
           <Grid item xs={6}>
             <TextLabel label="ID type" value={userDetails.identity.source || '-'} />
           </Grid>
-          {userDetails.identity?.source?.toLowerCase() === 'passport' ? (
+          {userDetails.identity?.source?.toLowerCase() === 'aus-passport' ? (
             <Grid item xs={6}>
               <TextLabel label="Passport number" value={userDetails.identity.number || '-'} />
             </Grid>
@@ -90,16 +120,39 @@ const Identification = ({
             </>
           )}
         </Grid>
-        <div className="mt-8">
-          <Typography variant="h6" className="mb-4">
-            Identification verified?
-          </Typography>
-          <YesNoButtons
-            isYes={identityVerified}
-            onYesClick={() => onChange(true, 'identityVerified')}
-            onNoClick={() => onChange(false, 'identityVerified')}
-          />
-        </div>
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <Typography variant="h6" className="mb-4">
+              Green ID Verification
+            </Typography>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => checkGreenId()}
+              disabled={loading}
+            >
+              Verify ID
+            </Button>
+          </Grid>
+          {identityStatus && (
+            <Grid item xs={6}>
+              <TextLabel label="Status" value={identityStatus} />
+            </Grid>
+          )}
+        </Grid>
+
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <Typography variant="h6" className="mb-4">
+              Identification verified?
+            </Typography>
+            <YesNoButtons
+              isYes={identityVerified}
+              onYesClick={() => onChange(true, 'identityVerified')}
+              onNoClick={() => onChange(false, 'identityVerified')}
+            />
+          </Grid>
+        </Grid>
       </div>
       <div className="flex-grow"></div>
       <ActionButtons onBackButtonClick={onPrevStep} loading={loading}>
