@@ -4,16 +4,21 @@ export const GOVERNMENT_SUPPORT = [
 ];
 export const RISK_MODELS = ['COMB-A', 'COMB-B', 'COMB-C', 'COMB-D', 'COMB-E'];
 export const DECLINE_REASONS = [
-  { value: 'NI', label: 'No employer income' },
+  { value: 'NI', label: 'No income' },
   { value: 'I1', label: 'Number consecutive pay cycles assessed' },
-  { value: 'I2', label: 'Average weekly income minimum' },
-  { value: 'I3', label: 'Number income timing variations' },
+  { value: 'I2', label: 'Average income per cycle' },
+  {
+    value: 'I3',
+    label: 'Number income timing variations or balance on expected income day below requirement',
+  },
   { value: 'I4', label: 'Number days income is off by ' },
   { value: 'I5', label: 'Income variance percentage' },
   { value: 'I6', label: 'Government income as % total' },
-  { value: 'B1', label: 'Min day 1 ending balance' },
+  { value: 'B1', label: 'Min day 0 balance' },
   { value: 'B2', label: 'Number times day 1 income is allowed below minimum' },
+  { value: 'B3', label: 'Min day 1 ending balance' },
 ];
+
 export const APPROVED_AMOUNT_DEFAULT_VALUE = 100;
 export const APPROVED_AMOUNT = [
   { value: 50, label: 50 },
