@@ -11,11 +11,8 @@ export const DECLINE_REASONS = [
     value: 'I3',
     label: 'Number income timing variations or balance on expected income day below requirement',
   },
-  { value: 'I4', label: 'Number days income is off by ' },
-  { value: 'I5', label: 'Income variance percentage' },
   { value: 'I6', label: 'Government income as % total' },
   { value: 'B1', label: 'Min day 0 balance' },
-  { value: 'B2', label: 'Number times day 1 income is allowed below minimum' },
   { value: 'B3', label: 'Min day 1 ending balance' },
 ];
 
