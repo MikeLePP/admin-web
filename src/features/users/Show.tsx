@@ -1,5 +1,8 @@
-import { ResourceComponentPropsWithId, Record } from 'react-admin';
+import { ResourceComponentPropsWithId, Record, useGetIdentity, useNotify } from 'react-admin';
 import Card from '@material-ui/core/Card';
+import Button from '@material-ui/core/Button';
+import IconButton from '@material-ui/core/IconButton';
+import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
 import React from 'react';
 import moment from 'moment';
 import { get } from 'lodash';
@@ -7,6 +10,9 @@ import ShowToolbar from '../../components/ShowToolbar';
 import { useUser, useBankAccount } from './user-hooks';
 import TextLabel from '../../components/TextLabel';
 import incomeFrequencies from '../../constants/incomeFrequencies';
+import { callApi } from '../../helpers/api';
+import TransactionDialog from '../user-onboarding/TransactionDialog';
+import { useTransaction } from '../user-onboarding/transaction-hook';
 
 interface CustomEditToolbarProps {
   basePath: string;
@@ -22,8 +28,13 @@ const CustomEditToolbar = ({ basePath, id }: CustomEditToolbarProps): JSX.Elemen
 
 const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const userId = get(props, 'id', '');
+  const [showAllTransactions, setShowAllTransactions] = React.useState(false);
+  const notify = useNotify();
+  const { identity } = useGetIdentity();
+  const { reportUrl } = useTransaction(userId);
   const { user } = useUser(userId);
   const { bankAccounts } = useBankAccount(userId);
+  const [loading, setLoading] = React.useState(false);
   const incomeFrequency = user?.incomeFrequency;
   const payFrequency = React.useMemo(() => {
     const frequency = incomeFrequencies.find(
@@ -43,6 +54,29 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
       } | ACC: ${bankAccount?.accountNumber || 'N/A'}`,
     };
   }, [bankAccounts, user]);
+  const handleRequestBankData = () => {
+    setLoading(true);
+    async function requestBankData() {
+      try {
+        await callApi(`/onboarding/${userId}`, 'post', {
+          step: 'bank-account',
+          notifyUser: true,
+          updatedBy: identity?.id,
+        });
+        setLoading(false);
+        notify('Request bank data success', 'success');
+      } catch (err) {
+        setLoading(false);
+        notify('Cannot request bank data', 'error');
+      }
+    }
+    void requestBankData();
+  };
+
+  const handleShowBankStatement = () => {
+    setShowAllTransactions(true);
+  };
+
   return (
     <>
       <CustomEditToolbar basePath={props.basePath || ''} id={userId} />
@@ -140,6 +174,31 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
           value={user?.balanceCurrent}
         />
       </Card>
+      <div className="flex justify-end py-4">
+        <div>
+          <IconButton href={reportUrl} target="_blank">
+            <OpenInNewIcon />
+          </IconButton>
+          <Button variant="outlined" color="secondary" onClick={handleShowBankStatement}>
+            View bank statements
+          </Button>
+        </div>
+        <div className="p-1.5">
+          <Button
+            variant="contained"
+            color="primary"
+            disabled={loading}
+            onClick={handleRequestBankData}
+          >
+            REQUEST BANK DATA
+          </Button>
+        </div>
+      </div>
+      <TransactionDialog
+        openDialog={showAllTransactions}
+        setShowAllTransactions={setShowAllTransactions}
+        reportUrl={reportUrl}
+      />
     </>
   );
 };
