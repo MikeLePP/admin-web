@@ -1,4 +1,4 @@
-import { ResourceComponentPropsWithId, Record, useGetIdentity, useNotify } from 'react-admin';
+import { ResourceComponentPropsWithId, Record, useNotify } from 'react-admin';
 import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
@@ -30,7 +30,6 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const userId = get(props, 'id', '');
   const [showAllTransactions, setShowAllTransactions] = React.useState(false);
   const notify = useNotify();
-  const { identity } = useGetIdentity();
   const { reportUrl } = useTransaction(userId);
   const { user } = useUser(userId);
   const { bankAccounts } = useBankAccount(userId);
@@ -58,11 +57,7 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
     setLoading(true);
     async function requestBankData() {
       try {
-        await callApi(`/onboarding/${userId}`, 'post', {
-          step: 'bank-account',
-          notifyUser: true,
-          updatedBy: identity?.id,
-        });
+        await callApi(`/users/${userId}/bank-data`, 'put');
         setLoading(false);
         notify('Request bank data success', 'success');
       } catch (err) {
