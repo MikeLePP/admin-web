@@ -37,7 +37,7 @@ import {
   OnboardingComponentProps,
   RiskAssessmentValues,
 } from './OnboardingSteps';
-import { useTransaction } from '../transactions/transaction-hook';
+import { useTransaction } from '../../hooks/transaction-hook';
 import TransactionDialog from '../../components/TransactionDialog';
 
 const validationSchema = yup.object({

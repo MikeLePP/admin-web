@@ -12,7 +12,7 @@ import TextLabel from '../../components/TextLabel';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import TransactionDialog from '../../components/TransactionDialog';
-import { useTransaction } from '../transactions/transaction-hook';
+import { useTransaction } from '../../hooks/transaction-hook';
 
 interface CustomEditToolbarProps {
   basePath: string;

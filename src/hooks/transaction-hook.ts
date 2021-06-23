@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNotify } from 'react-admin';
-import { callApi } from '../../helpers/api';
+import { callApi } from '../helpers/api';
 
 type IStatus = 'idle' | 'loading' | 'success' | 'fail';
 
