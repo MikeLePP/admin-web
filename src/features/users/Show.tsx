@@ -11,8 +11,8 @@ import { useUser, useBankAccount } from './user-hooks';
 import TextLabel from '../../components/TextLabel';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
-import TransactionDialog from '../user-onboarding/TransactionDialog';
-import { useTransaction } from '../user-onboarding/transaction-hook';
+import TransactionDialog from '../../components/TransactionDialog';
+import { useTransaction } from '../transactions/transaction-hook';
 
 interface CustomEditToolbarProps {
   basePath: string;

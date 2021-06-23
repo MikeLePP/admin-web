@@ -37,8 +37,8 @@ import {
   OnboardingComponentProps,
   RiskAssessmentValues,
 } from './OnboardingSteps';
-import { useTransaction } from './transaction-hook';
-import TransactionDialog from './TransactionDialog';
+import { useTransaction } from '../transactions/transaction-hook';
+import TransactionDialog from '../../components/TransactionDialog';
 
 const validationSchema = yup.object({
   approved: yup.boolean(),
