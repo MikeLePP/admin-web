@@ -57,7 +57,7 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
     setLoading(true);
     async function requestBankData() {
       try {
-        await callApi(`/users/${userId}/bank-data`, 'put');
+        await callApi(`/users/${userId}/bank-data`, 'post');
         setLoading(false);
         notify('Request bank data success', 'success');
       } catch (err) {
