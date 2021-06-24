@@ -7,12 +7,13 @@ type ShowToolbarProps = {
   basePath?: string;
   data?: Record | undefined;
   resource?: string;
+  deleteCustomLabel?: string;
 };
 
 const ShowToolbar = (props: ShowToolbarProps): JSX.Element | null => {
   if (!props.data) return null;
 
-  const { basePath, data, resource } = props;
+  const { basePath, data, resource, deleteCustomLabel = 'Delete' } = props;
   let listBasePath = basePath;
   let editBasePath = `${String(basePath)}/${String(data.id)}`;
   if (data && data.userId) {
@@ -29,6 +30,7 @@ const ShowToolbar = (props: ShowToolbarProps): JSX.Element | null => {
         <EditIcon />
       </Button>
       <DeleteButton
+        label={deleteCustomLabel}
         basePath={basePath}
         record={data}
         resource={resource}
