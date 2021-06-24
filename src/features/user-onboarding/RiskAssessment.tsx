@@ -13,12 +13,9 @@ import {
   ListItem,
   Radio,
   Chip,
-  Dialog,
-  DialogTitle,
-  DialogContent,
   IconButton,
 } from '@material-ui/core';
-import { Close as CloseIcon, OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
+import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
 import { useFormik } from 'formik';
 import { map, startCase } from 'lodash';
 import { useEffect, useState } from 'react';
@@ -40,6 +37,8 @@ import {
   OnboardingComponentProps,
   RiskAssessmentValues,
 } from './OnboardingSteps';
+import { useTransaction } from '../../hooks/transaction-hook';
+import TransactionDialog from '../../components/TransactionDialog';
 
 const validationSchema = yup.object({
   approved: yup.boolean(),
@@ -70,24 +69,11 @@ const RiskAssessment = ({
 }: OnboardingComponentProps<RiskAssessmentValues>): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [showAllTransactions, setShowAllTransactions] = useState(false);
-  const [reportUrl, setReportUrl] = useState('');
+  const { reportUrl } = useTransaction(userDetails?.id);
   const [userBankAccounts, setUserBankAccounts] = useState<BankAccount[]>([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    // get bank transactions
-    const getTransactions = async () => {
-      try {
-        const { json } = await callApi<{ data: { meta: { reportUrl: string } } }>(
-          `/users/${userDetails.id}/bank-data`,
-        );
-        setReportUrl(json.data.meta.reportUrl);
-      } catch (error) {
-        notify(error, 'error');
-      }
-    };
-    void getTransactions();
-
     // get user bank accounts
     const getBankAccounts = async () => {
       try {
@@ -433,29 +419,11 @@ const RiskAssessment = ({
           </Button>
         </ActionButtons>
       </form>
-      <Dialog
-        open={showAllTransactions}
-        disableBackdropClick
-        disableEscapeKeyDown
-        fullWidth
-        maxWidth="lg"
-      >
-        <DialogTitle disableTypography className="flex items-center justify-between">
-          <Typography variant="h6">All account transactions</Typography>
-
-          <IconButton onClick={() => setShowAllTransactions(false)}>
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent dividers className="h-screen p-0">
-          <iframe
-            title="Account transactions"
-            src={reportUrl}
-            className="w-full h-full border-0"
-            loading="eager"
-          />
-        </DialogContent>
-      </Dialog>
+      <TransactionDialog
+        openDialog={showAllTransactions}
+        setShowAllTransactions={setShowAllTransactions}
+        reportUrl={reportUrl}
+      />
     </div>
   );
 };
