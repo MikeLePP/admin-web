@@ -25,7 +25,7 @@ export function useTransaction(userId: string): ITransaction {
         );
         setReportUrl(json.data.meta.reportUrl);
       } catch (error) {
-        notify(error, 'error');
+        notify("Cannot get user's bank data", 'error');
       }
     };
     void getTransactions();

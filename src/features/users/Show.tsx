@@ -12,6 +12,7 @@ import TextLabel from '../../components/TextLabel';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import TransactionDialog from '../../components/TransactionDialog';
+import ConfirmDialog from '../../components/Dialog';
 import { useTransaction } from '../../hooks/transaction-hook';
 
 interface CustomEditToolbarProps {
@@ -29,6 +30,7 @@ const CustomEditToolbar = ({ basePath, id }: CustomEditToolbarProps): JSX.Elemen
 const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const userId = get(props, 'id', '');
   const [showAllTransactions, setShowAllTransactions] = React.useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = React.useState(false);
   const notify = useNotify();
   const { reportUrl } = useTransaction(userId);
   const { user } = useUser(userId);
@@ -74,10 +76,22 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
     setShowAllTransactions(true);
   };
 
+  const handleCancelRequestBankData = () => {
+    setShowConfirmDialog(false);
+  };
+  const handleConfirmRequestBankData = () => {
+    handleRequestBankData();
+    setShowConfirmDialog(false);
+  };
+  const handleClickRequestBankDataButton = () => {
+    setShowConfirmDialog(true);
+  };
+
   return (
     <>
       <CustomEditToolbar basePath={props.basePath || ''} id={userId} />
       <Card className="p-4">
+        <div className="text-lg">User Details</div>
         <TextLabel
           containerClass="mt-2 mb-1"
           labelClass="text-xs"
@@ -145,12 +159,39 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
             user?.incomeNextDate ? moment(user.incomeNextDate).format('YYYY-MM-DD') : undefined
           }
         />
+      </Card>
+      <Card className="p-4 my-4">
+        <div className="flex justify-between items-center">
+          <div className="text-lg">Bank Details</div>
+          <div className="flex justify-end">
+            {reportUrl && (
+              <div>
+                <IconButton href={reportUrl} target="_blank">
+                  <OpenInNewIcon />
+                </IconButton>
+                <Button variant="outlined" color="secondary" onClick={handleShowBankStatement}>
+                  View bank statements
+                </Button>
+              </div>
+            )}
+            <div className="p-1.5">
+              <Button
+                variant="contained"
+                color="primary"
+                disabled={loading}
+                onClick={handleClickRequestBankDataButton}
+              >
+                REQUEST BANK DATA
+              </Button>
+            </div>
+          </div>
+        </div>
         <TextLabel
           containerClass="mt-2 mb-1"
           labelClass="text-xs"
           valueClass="text-sm pt-2 pb-1"
           label="Bank Name"
-          value={user?.bankAccount?.bankName}
+          value={user?.bankAccount?.bankName || '-'}
         />
         {primaryBankAccount?.bankAccount ? (
           <>
@@ -171,30 +212,19 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
           value={user?.balanceCurrent}
         />
       </Card>
-      <div className="flex justify-end py-4">
-        <div>
-          <IconButton href={reportUrl} target="_blank">
-            <OpenInNewIcon />
-          </IconButton>
-          <Button variant="outlined" color="secondary" onClick={handleShowBankStatement}>
-            View bank statements
-          </Button>
-        </div>
-        <div className="p-1.5">
-          <Button
-            variant="contained"
-            color="primary"
-            disabled={loading}
-            onClick={handleRequestBankData}
-          >
-            REQUEST BANK DATA
-          </Button>
-        </div>
-      </div>
       <TransactionDialog
         openDialog={showAllTransactions}
         setShowAllTransactions={setShowAllTransactions}
         reportUrl={reportUrl}
+      />
+      <ConfirmDialog
+        show={showConfirmDialog}
+        onCancelClick={handleCancelRequestBankData}
+        onConfirmClick={handleConfirmRequestBankData}
+        title=""
+        body="Would you like to notify the user to resubmit their bank statements?"
+        confirmLabel="Yes"
+        cancelLabel="No"
       />
     </>
   );
