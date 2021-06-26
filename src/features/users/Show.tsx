@@ -30,7 +30,7 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const userId = get(props, 'id', '');
   const [showAllTransactions, setShowAllTransactions] = React.useState(false);
   const notify = useNotify();
-  const { reportUrl } = useTransaction(userId);
+  const { reportUrl, dataLastAt } = useTransaction(userId);
   const { user } = useUser(userId);
   const { bankAccounts } = useBankAccount(userId);
   const [loading, setLoading] = React.useState(false);
@@ -195,6 +195,8 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
         openDialog={showAllTransactions}
         setShowAllTransactions={setShowAllTransactions}
         reportUrl={reportUrl}
+        dataLastAt={dataLastAt}
+        userId={userId}
       />
     </>
   );

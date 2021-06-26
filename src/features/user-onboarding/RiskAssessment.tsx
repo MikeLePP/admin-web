@@ -69,7 +69,7 @@ const RiskAssessment = ({
 }: OnboardingComponentProps<RiskAssessmentValues>): JSX.Element => {
   const [loading, setLoading] = useState(false);
   const [showAllTransactions, setShowAllTransactions] = useState(false);
-  const { reportUrl } = useTransaction(userDetails?.id);
+  const { reportUrl, dataLastAt } = useTransaction(userDetails?.id);
   const [userBankAccounts, setUserBankAccounts] = useState<BankAccount[]>([]);
   const dispatch = useDispatch();
 
@@ -423,6 +423,8 @@ const RiskAssessment = ({
         openDialog={showAllTransactions}
         setShowAllTransactions={setShowAllTransactions}
         reportUrl={reportUrl}
+        userId={userDetails?.id}
+        dataLastAt={dataLastAt}
       />
     </div>
   );
