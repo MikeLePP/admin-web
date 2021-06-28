@@ -1,19 +1,20 @@
-import { ResourceComponentPropsWithId, Record, useNotify } from 'react-admin';
-import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
 import IconButton from '@material-ui/core/IconButton';
 import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
-import React from 'react';
-import moment from 'moment';
 import { get } from 'lodash';
+import moment from 'moment';
+import React from 'react';
+import { CardActions, Record, ResourceComponentPropsWithId, useNotify } from 'react-admin';
+
+import ConfirmDialog from '../../components/Dialog';
 import ShowToolbar from '../../components/ShowToolbar';
-import { useUser, useBankAccount } from './user-hooks';
 import TextLabel from '../../components/TextLabel';
+import TransactionDialog from '../../components/TransactionDialog';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
-import TransactionDialog from '../../components/TransactionDialog';
-import ConfirmDialog from '../../components/Dialog';
 import { useTransaction } from '../../hooks/transaction-hook';
+import { useBankAccount, useUser } from './user-hooks';
 
 interface CustomEditToolbarProps {
   basePath: string;
@@ -163,28 +164,6 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
       <Card className="p-4 my-4">
         <div className="flex justify-between items-center">
           <div className="text-lg">Bank Details</div>
-          <div className="flex justify-end">
-            {reportUrl && (
-              <div>
-                <IconButton href={reportUrl} target="_blank">
-                  <OpenInNewIcon />
-                </IconButton>
-                <Button variant="outlined" color="secondary" onClick={handleShowBankStatement}>
-                  View bank statements
-                </Button>
-              </div>
-            )}
-            <div className="p-1.5">
-              <Button
-                variant="contained"
-                color="primary"
-                disabled={loading}
-                onClick={handleClickRequestBankDataButton}
-              >
-                REQUEST BANK DATA
-              </Button>
-            </div>
-          </div>
         </div>
         <TextLabel
           containerClass="mt-2 mb-1"
@@ -211,6 +190,28 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
           label="Current balance"
           value={user?.balanceCurrent}
         />
+        <CardActions className="justify-start">
+          <div className="pr-1.5 py-1.5">
+            <Button
+              variant="contained"
+              color="primary"
+              disabled={loading}
+              onClick={handleClickRequestBankDataButton}
+            >
+              REQUEST BANK DATA
+            </Button>
+          </div>
+          {reportUrl && (
+            <div>
+              <Button variant="outlined" color="secondary" onClick={handleShowBankStatement}>
+                View bank statements
+              </Button>
+              <IconButton href={reportUrl} target="_blank">
+                <OpenInNewIcon />
+              </IconButton>
+            </div>
+          )}
+        </CardActions>
       </Card>
       <TransactionDialog
         openDialog={showAllTransactions}
