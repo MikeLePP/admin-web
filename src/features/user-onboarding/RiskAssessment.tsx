@@ -1,4 +1,3 @@
-import moment from 'moment';
 import {
   Button,
   Checkbox,
@@ -69,15 +68,15 @@ const RiskAssessment = ({
   values,
 }: OnboardingComponentProps<RiskAssessmentValues>): JSX.Element => {
   const [loading, setLoading] = useState(false);
-  const [lastUpdatedAt, setLastUpdatedAt] = useState(new Date().toISOString());
+  const [dataLastAt, setDataLastAt] = useState<string | undefined>();
   const [showAllTransactions, setShowAllTransactions] = useState(false);
-  const { reportUrl, dataLastAt } = useTransaction(userDetails?.id);
+  const transactionData = useTransaction(userDetails?.id);
   const [userBankAccounts, setUserBankAccounts] = useState<BankAccount[]>([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
-    setLastUpdatedAt(dataLastAt);
-  }, [dataLastAt]);
+    setDataLastAt(transactionData.dataLastAt);
+  }, [transactionData.dataLastAt]);
 
   useEffect(() => {
     // get user bank accounts
@@ -193,7 +192,7 @@ const RiskAssessment = ({
                   Verify transactions and set primary account
                 </Typography>
                 <div>
-                  <IconButton href={reportUrl} target="_blank">
+                  <IconButton href={transactionData.reportUrl} target="_blank">
                     <OpenInNewIcon />
                   </IconButton>
                   <Button
@@ -428,10 +427,10 @@ const RiskAssessment = ({
       <TransactionDialog
         openDialog={showAllTransactions}
         setShowAllTransactions={setShowAllTransactions}
-        reportUrl={reportUrl}
+        reportUrl={transactionData.reportUrl}
         userId={userDetails?.id}
-        lastUpdatedAt={lastUpdatedAt}
-        setLastUpdatedAt={setLastUpdatedAt}
+        dataLastAt={dataLastAt}
+        setDataLastAt={setDataLastAt}
       />
     </div>
   );

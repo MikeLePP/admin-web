@@ -8,13 +8,13 @@ type IStatus = 'idle' | 'loading' | 'success' | 'fail';
 export interface ITransaction {
   reportUrl: string;
   status: IStatus;
-  dataLastAt: string;
+  dataLastAt: string | undefined;
 }
 
 export function useTransaction(userId: string): ITransaction {
   const [reportUrl, setReportUrl] = useState<string>('');
   const [status, setStatus] = useState<IStatus>('idle');
-  const [dataLastAt, setDataLastAt] = useState<string>(moment('2020-12-1').utc.toString());
+  const [dataLastAt, setDataLastAt] = useState<string | undefined>();
   const notify = useNotify();
   useEffect(() => {
     if (!userId) {
@@ -23,11 +23,17 @@ export function useTransaction(userId: string): ITransaction {
     setStatus('loading');
     const getTransactions = async () => {
       try {
-        const { json } = await callApi<{
+        const {
+          json: {
+            data: { meta, attributes },
+          },
+        } = await callApi<{
           data: { meta: { reportUrl: string }; attributes: { dataLastAt: string } };
         }>(`/users/${userId}/bank-data`);
-        setReportUrl(json.data.meta.reportUrl);
-        setDataLastAt(json.data.attributes.dataLastAt);
+        setReportUrl(meta.reportUrl);
+        if (attributes.dataLastAt) {
+          setDataLastAt(moment(attributes.dataLastAt).toString());
+        }
       } catch (error) {
         notify(error, 'error');
       }

@@ -30,15 +30,15 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const userId = get(props, 'id', '');
   const [showAllTransactions, setShowAllTransactions] = useState(false);
   const notify = useNotify();
-  const { reportUrl, dataLastAt } = useTransaction(userId);
-  const [lastUpdatedAt, setLastUpdatedAt] = useState(moment().toISOString());
+  const transactionData = useTransaction(userId);
+  const [dataLastAt, setDataLastAt] = useState<string | undefined>();
   const { user } = useUser(userId);
   const { bankAccounts } = useBankAccount(userId);
   const [loading, setLoading] = useState(false);
   const incomeFrequency = user?.incomeFrequency;
   useEffect(() => {
-    setLastUpdatedAt(dataLastAt);
-  }, [dataLastAt]);
+    setDataLastAt(transactionData.dataLastAt);
+  }, [transactionData.dataLastAt]);
 
   const payFrequency = useMemo(() => {
     const frequency = incomeFrequencies.find(
@@ -178,7 +178,7 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
       </Card>
       <div className="flex justify-end py-4">
         <div>
-          <IconButton href={reportUrl} target="_blank">
+          <IconButton href={transactionData.reportUrl} target="_blank">
             <OpenInNewIcon />
           </IconButton>
           <Button variant="outlined" color="secondary" onClick={handleShowBankStatement}>
@@ -199,9 +199,9 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
       <TransactionDialog
         openDialog={showAllTransactions}
         setShowAllTransactions={setShowAllTransactions}
-        reportUrl={reportUrl}
-        lastUpdatedAt={lastUpdatedAt}
-        setLastUpdatedAt={setLastUpdatedAt}
+        reportUrl={transactionData.reportUrl}
+        dataLastAt={dataLastAt}
+        setDataLastAt={setDataLastAt}
         userId={userId}
       />
     </>
