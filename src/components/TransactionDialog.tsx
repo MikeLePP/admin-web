@@ -49,9 +49,10 @@ function TransactionDialog({
 
   useEffect(() => {
     setOpen(openDialog);
+  }, [openDialog]);
+  useEffect(() => {
     setUrl(reportUrl);
-  }, [openDialog, reportUrl]);
-
+  }, [reportUrl]);
   const handleShowAllTransactions = (): void => {
     setOpen(false);
     setShowAllTransactions(false);
