@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import moment from 'moment';
-import { useNotify } from 'react-admin';
 import {
   Button,
   CircularProgress,
@@ -19,18 +18,22 @@ import {
 
 import { Close as CloseIcon } from '@material-ui/icons';
 import TextLabel from './TextLabel';
-import { REFRESH_DAYS } from '../constants/days-refresh-bank-data';
 import { callApi } from '../helpers/api';
 
 const MINUTES_TO_DISABLE_REFRESH = 1;
+const REFRESH_DAYS = [
+  { value: 1, label: '1 day' },
+  { value: 30, label: '30 days' },
+  { value: 180, label: '180 days' },
+];
 
 interface IProps {
   setShowAllTransactions: (value: boolean) => void;
   openDialog: boolean;
   reportUrl: string;
   userId: string;
-  lastUpdatedAt: moment.Moment;
-  setLastUpdatedAt: React.Dispatch<React.SetStateAction<moment.Moment>>;
+  lastUpdatedAt: string;
+  setLastUpdatedAt: React.Dispatch<React.SetStateAction<string>>;
 }
 
 function TransactionDialog({
@@ -45,7 +48,6 @@ function TransactionDialog({
   const [loading, setLoading] = useState(true);
   const [days, setDays] = useState(1);
   const [url, setUrl] = useState('');
-  const notify = useNotify();
 
   useEffect(() => {
     setOpen(openDialog);
@@ -61,7 +63,7 @@ function TransactionDialog({
     setLoading(false);
   };
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
-    setDays(event.target.value as number);
+    setDays(Number(event.target.value));
   };
 
   const onRefreshClick = async (): Promise<void> => {
@@ -71,9 +73,9 @@ function TransactionDialog({
         data: { meta: { reportUrl: string }; attributes: { dataLastAt: string } };
       }>(`/users/${userId}/data?days=${days}`, 'post');
       setUrl(json.data.meta.reportUrl);
-      setLastUpdatedAt(moment(json.data.attributes.dataLastAt));
+      setLastUpdatedAt(json.data.attributes.dataLastAt);
     } catch (error) {
-      notify(error, 'error');
+      throw new Error(error.message);
     } finally {
       setLoading(false);
     }
@@ -104,7 +106,7 @@ function TransactionDialog({
       <DialogActions>
         <Grid container justify="center" spacing={8}>
           <Grid item>
-            <TextLabel label="Last Refreshed" value={lastUpdatedAt.fromNow()} />
+            <TextLabel label="Last Refreshed" value={moment(lastUpdatedAt).fromNow()} />
           </Grid>
           <Grid item>
             <FormControl>

@@ -31,7 +31,7 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const [showAllTransactions, setShowAllTransactions] = useState(false);
   const notify = useNotify();
   const { reportUrl, dataLastAt } = useTransaction(userId);
-  const [lastUpdatedAt, setLastUpdatedAt] = useState(moment());
+  const [lastUpdatedAt, setLastUpdatedAt] = useState(moment().toISOString());
   const { user } = useUser(userId);
   const { bankAccounts } = useBankAccount(userId);
   const [loading, setLoading] = useState(false);

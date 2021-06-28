@@ -69,7 +69,7 @@ const RiskAssessment = ({
   values,
 }: OnboardingComponentProps<RiskAssessmentValues>): JSX.Element => {
   const [loading, setLoading] = useState(false);
-  const [lastUpdatedAt, setLastUpdatedAt] = useState(moment());
+  const [lastUpdatedAt, setLastUpdatedAt] = useState(new Date().toISOString());
   const [showAllTransactions, setShowAllTransactions] = useState(false);
   const { reportUrl, dataLastAt } = useTransaction(userDetails?.id);
   const [userBankAccounts, setUserBankAccounts] = useState<BankAccount[]>([]);
