@@ -1,18 +1,19 @@
-import { ResourceComponentPropsWithId, Record, useNotify } from 'react-admin';
-import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
+import Card from '@material-ui/core/Card';
 import IconButton from '@material-ui/core/IconButton';
 import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
-import { useState, useEffect, useMemo } from 'react';
-import moment from 'moment';
 import { get } from 'lodash';
+import moment from 'moment';
+import React, { useEffect, useMemo, useState } from 'react';
+import { CardActions, Record, ResourceComponentPropsWithId, useNotify } from 'react-admin';
+import ConfirmDialog from '../../components/Dialog';
 import ShowToolbar from '../../components/ShowToolbar';
-import { useUser, useBankAccount } from './user-hooks';
 import TextLabel from '../../components/TextLabel';
+import TransactionDialog from '../../components/TransactionDialog';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
-import TransactionDialog from '../../components/TransactionDialog';
 import { useTransaction } from '../../hooks/transaction-hook';
+import { useBankAccount, useUser } from './user-hooks';
 
 interface CustomEditToolbarProps {
   basePath: string;
@@ -28,7 +29,8 @@ const CustomEditToolbar = ({ basePath, id }: CustomEditToolbarProps): JSX.Elemen
 
 const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const userId = get(props, 'id', '');
-  const [showAllTransactions, setShowAllTransactions] = useState(false);
+  const [showAllTransactions, setShowAllTransactions] = React.useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = React.useState(false);
   const notify = useNotify();
   const transactionData = useTransaction(userId);
   const [dataLastAt, setDataLastAt] = useState<string | undefined>();
@@ -79,10 +81,22 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
     setShowAllTransactions(true);
   };
 
+  const handleCancelRequestBankData = () => {
+    setShowConfirmDialog(false);
+  };
+  const handleConfirmRequestBankData = () => {
+    handleRequestBankData();
+    setShowConfirmDialog(false);
+  };
+  const handleClickRequestBankDataButton = () => {
+    setShowConfirmDialog(true);
+  };
+
   return (
     <>
       <CustomEditToolbar basePath={props.basePath || ''} id={userId} />
       <Card className="p-4">
+        <div className="text-lg">User Details</div>
         <TextLabel
           containerClass="mt-2 mb-1"
           labelClass="text-xs"
@@ -150,12 +164,17 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
             user?.incomeNextDate ? moment(user.incomeNextDate).format('YYYY-MM-DD') : undefined
           }
         />
+      </Card>
+      <Card className="p-4 my-4">
+        <div className="flex justify-between items-center">
+          <div className="text-lg">Bank Details</div>
+        </div>
         <TextLabel
           containerClass="mt-2 mb-1"
           labelClass="text-xs"
           valueClass="text-sm pt-2 pb-1"
           label="Bank Name"
-          value={user?.bankAccount?.bankName}
+          value={user?.bankAccount?.bankName || '-'}
         />
         {primaryBankAccount?.bankAccount ? (
           <>
@@ -175,27 +194,27 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
           label="Current balance"
           value={user?.balanceCurrent}
         />
-      </Card>
-      <div className="flex justify-end py-4">
-        <div>
-          <IconButton href={transactionData.reportUrl} target="_blank">
-            <OpenInNewIcon />
-          </IconButton>
-          <Button variant="outlined" color="secondary" onClick={handleShowBankStatement}>
-            View bank statements
-          </Button>
-        </div>
-        <div className="p-1.5">
+        <CardActions className="justify-start items-center">
+          {transactionData.reportUrl && (
+            <div className="pr-1.5 py-1.5">
+              <Button variant="contained" color="secondary" onClick={handleShowBankStatement}>
+                View bank statements
+              </Button>
+              <IconButton href={transactionData.reportUrl} target="_blank">
+                <OpenInNewIcon />
+              </IconButton>
+            </div>
+          )}
           <Button
-            variant="contained"
+            variant="text"
             color="primary"
             disabled={loading}
-            onClick={handleRequestBankData}
+            onClick={handleClickRequestBankDataButton}
           >
-            REQUEST BANK DATA
+            Request bank statements
           </Button>
-        </div>
-      </div>
+        </CardActions>
+      </Card>
       <TransactionDialog
         openDialog={showAllTransactions}
         setShowAllTransactions={setShowAllTransactions}
@@ -203,6 +222,15 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
         dataLastAt={dataLastAt}
         setDataLastAt={setDataLastAt}
         userId={userId}
+      />
+      <ConfirmDialog
+        show={showConfirmDialog}
+        onCancelClick={handleCancelRequestBankData}
+        onConfirmClick={handleConfirmRequestBankData}
+        title=""
+        body="Would you like to notify the user to resubmit their bank statements?"
+        confirmLabel="Yes"
+        cancelLabel="No"
       />
     </>
   );

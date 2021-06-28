@@ -12,7 +12,7 @@ interface DialogProps {
   onCancelClick: () => void;
   onConfirmClick: () => void;
   title: string;
-  body?: boolean;
+  body?: string;
   cancelLabel?: string;
   confirmLabel: string;
 }

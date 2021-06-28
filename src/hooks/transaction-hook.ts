@@ -35,7 +35,7 @@ export function useTransaction(userId: string): ITransaction {
           setDataLastAt(moment(attributes.dataLastAt).toString());
         }
       } catch (error) {
-        notify(error, 'error');
+        notify("Cannot get user's bank data", 'error');
       }
     };
     void getTransactions();
