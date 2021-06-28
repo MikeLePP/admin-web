@@ -194,20 +194,10 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
           label="Current balance"
           value={user?.balanceCurrent}
         />
-        <CardActions className="justify-start">
-          <div className="pr-1.5 py-1.5">
-            <Button
-              variant="contained"
-              color="primary"
-              disabled={loading}
-              onClick={handleClickRequestBankDataButton}
-            >
-              REQUEST BANK DATA
-            </Button>
-          </div>
+        <CardActions className="justify-start items-center">
           {transactionData.reportUrl && (
-            <div>
-              <Button variant="outlined" color="secondary" onClick={handleShowBankStatement}>
+            <div className="pr-1.5 py-1.5">
+              <Button variant="contained" color="secondary" onClick={handleShowBankStatement}>
                 View bank statements
               </Button>
               <IconButton href={transactionData.reportUrl} target="_blank">
@@ -215,6 +205,14 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
               </IconButton>
             </div>
           )}
+          <Button
+            variant="text"
+            color="primary"
+            disabled={loading}
+            onClick={handleClickRequestBankDataButton}
+          >
+            Request bank statements
+          </Button>
         </CardActions>
       </Card>
       <TransactionDialog
