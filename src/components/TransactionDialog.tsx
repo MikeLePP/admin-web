@@ -8,7 +8,6 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
-  FormControl,
   IconButton,
   MenuItem,
   Select,
@@ -19,7 +18,7 @@ import { Close as CloseIcon } from '@material-ui/icons';
 
 import { callApi } from '../helpers/api';
 
-const MINUTES_TO_DISABLE_REFRESH = 1;
+const MINUTES_TO_DISABLE_REFRESH = 15;
 const REFRESH_DAYS = [
   { value: 1, label: '1 day' },
   { value: 30, label: '30 days' },
