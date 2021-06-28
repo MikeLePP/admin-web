@@ -8,13 +8,13 @@ type IStatus = 'idle' | 'loading' | 'success' | 'fail';
 export interface ITransaction {
   reportUrl: string;
   status: IStatus;
-  dataLastAt: string;
+  dataLastAt: string | undefined;
 }
 
 export function useTransaction(userId: string): ITransaction {
   const [reportUrl, setReportUrl] = useState<string>('');
   const [status, setStatus] = useState<IStatus>('idle');
-  const [dataLastAt, setDataLastAt] = useState<string>(moment('2020-12-1').toString());
+  const [dataLastAt, setDataLastAt] = useState<string | undefined>();
   const notify = useNotify();
   useEffect(() => {
     if (!userId) {

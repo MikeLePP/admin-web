@@ -30,16 +30,16 @@ interface IProps {
   openDialog: boolean;
   reportUrl: string;
   userId: string;
-  lastUpdatedAt: string;
-  setLastUpdatedAt: React.Dispatch<React.SetStateAction<string>>;
+  dataLastAt: string | undefined;
+  setDataLastAt: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
 function TransactionDialog({
   setShowAllTransactions,
   openDialog,
   reportUrl,
-  lastUpdatedAt,
-  setLastUpdatedAt,
+  dataLastAt,
+  setDataLastAt,
   userId,
 }: IProps): JSX.Element {
   const [open, setOpen] = useState(false);
@@ -68,10 +68,10 @@ function TransactionDialog({
     try {
       setLoading(true);
       const { json } = await callApi<{
-        data: { meta: { reportUrl: string }; attributes: { dataLastAt: string } };
+        data: { meta: { reportUrl: string }; attributes: { dataLastAt: string | undefined } };
       }>(`/users/${userId}/data?days=${days}`, 'post');
       setUrl(json.data.meta.reportUrl);
-      setLastUpdatedAt(json.data.attributes.dataLastAt);
+      setDataLastAt(json.data.attributes.dataLastAt);
     } catch (error) {
       throw new Error(error.message);
     } finally {
@@ -103,7 +103,11 @@ function TransactionDialog({
           />
         </DialogContent>
         <DialogActions>
-          <Typography>Last Refreshed: {moment(lastUpdatedAt).fromNow()}</Typography>
+          <Typography>
+            {dataLastAt
+              ? `Last Refreshed: ${moment(dataLastAt).fromNow()}`
+              : 'Last Refreshed time is unavailable'}
+          </Typography>
           <Box display="flex" flexGrow={1} />
           <Select value={days} onChange={handleChange} autoWidth>
             {REFRESH_DAYS.map(({ value, label }) => (
@@ -118,7 +122,8 @@ function TransactionDialog({
             color="secondary"
             onClick={onRefreshClick}
             disabled={
-              loading || moment().diff(lastUpdatedAt, 'minutes') < MINUTES_TO_DISABLE_REFRESH
+              loading ||
+              (!!dataLastAt && moment().diff(dataLastAt, 'minutes') < MINUTES_TO_DISABLE_REFRESH)
             }
           >
             REFRESH BANK DATA
