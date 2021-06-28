@@ -2,22 +2,21 @@ import { useState, useEffect } from 'react';
 import moment from 'moment';
 import {
   Button,
+  Box,
   CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
   FormControl,
-  Grid,
   IconButton,
-  InputLabel,
   MenuItem,
   Select,
   Typography,
 } from '@material-ui/core';
 
 import { Close as CloseIcon } from '@material-ui/icons';
-import TextLabel from './TextLabel';
+
 import { callApi } from '../helpers/api';
 
 const MINUTES_TO_DISABLE_REFRESH = 1;
@@ -81,60 +80,53 @@ function TransactionDialog({
     }
   };
   return (
-    <Dialog open={open} disableBackdropClick disableEscapeKeyDown fullWidth maxWidth="lg">
-      <DialogTitle disableTypography className="flex items-center justify-between">
-        <Typography variant="h6">All account transactions</Typography>
+    <div>
+      <Dialog open={open} disableBackdropClick disableEscapeKeyDown fullWidth maxWidth="lg">
+        <DialogTitle disableTypography className="flex items-center justify-between">
+          <Typography variant="h6">All account transactions</Typography>
 
-        <IconButton onClick={handleShowAllTransactions}>
-          <CloseIcon />
-        </IconButton>
-      </DialogTitle>
-      <DialogContent dividers className="h-screen p-0">
-        {loading && (
-          <div className="flex items-center justify-center w-full h-4/5 absolute">
-            <CircularProgress />
-          </div>
-        )}
-        <iframe
-          title="Account transactions"
-          src={url}
-          className="w-full h-full border-0"
-          loading="eager"
-          onLoad={handleLoaded}
-        />
-      </DialogContent>
-      <DialogActions>
-        <Grid container justify="center" spacing={8}>
-          <Grid item>
-            <TextLabel label="Last Refreshed" value={moment(lastUpdatedAt).fromNow()} />
-          </Grid>
-          <Grid item>
-            <FormControl>
-              <InputLabel>days</InputLabel>
-              <Select value={days} onChange={handleChange} autoWidth>
-                {REFRESH_DAYS.map(({ value, label }) => (
-                  <MenuItem key={value} value={value}>
-                    {label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </Grid>
-          <Grid item>
-            <Button
-              variant="outlined"
-              color="secondary"
-              onClick={onRefreshClick}
-              disabled={
-                loading || moment().diff(lastUpdatedAt, 'minutes') < MINUTES_TO_DISABLE_REFRESH
-              }
-            >
-              REFRESH BANK DATA
-            </Button>
-          </Grid>
-        </Grid>
-      </DialogActions>
-    </Dialog>
+          <IconButton onClick={handleShowAllTransactions}>
+            <CloseIcon />
+          </IconButton>
+        </DialogTitle>
+        <DialogContent dividers className="h-screen p-0">
+          {loading && (
+            <div className="flex items-center justify-center w-full h-4/5 absolute">
+              <CircularProgress />
+            </div>
+          )}
+          <iframe
+            title="Account transactions"
+            src={url}
+            className="w-full h-full border-0"
+            loading="eager"
+            onLoad={handleLoaded}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Typography>Last Refreshed {moment(lastUpdatedAt).fromNow()}</Typography>
+          <Box display="flex" flexGrow={1} />
+          <Select value={days} onChange={handleChange} autoWidth>
+            {REFRESH_DAYS.map(({ value, label }) => (
+              <MenuItem key={value} value={value}>
+                {label}
+              </MenuItem>
+            ))}
+          </Select>
+
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={onRefreshClick}
+            disabled={
+              loading || moment().diff(lastUpdatedAt, 'minutes') < MINUTES_TO_DISABLE_REFRESH
+            }
+          >
+            REFRESH BANK DATA
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </div>
   );
 }
 
