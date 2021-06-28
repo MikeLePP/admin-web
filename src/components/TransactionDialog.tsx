@@ -104,7 +104,7 @@ function TransactionDialog({
           />
         </DialogContent>
         <DialogActions>
-          <Typography>Last Refreshed {moment(lastUpdatedAt).fromNow()}</Typography>
+          <Typography>Last Refreshed: {moment(lastUpdatedAt).fromNow()}</Typography>
           <Box display="flex" flexGrow={1} />
           <Select value={days} onChange={handleChange} autoWidth>
             {REFRESH_DAYS.map(({ value, label }) => (
