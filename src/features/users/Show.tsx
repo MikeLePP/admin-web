@@ -3,7 +3,7 @@ import Card from '@material-ui/core/Card';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
-import React from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import moment from 'moment';
 import { get } from 'lodash';
 import ShowToolbar from '../../components/ShowToolbar';
@@ -28,20 +28,25 @@ const CustomEditToolbar = ({ basePath, id }: CustomEditToolbarProps): JSX.Elemen
 
 const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const userId = get(props, 'id', '');
-  const [showAllTransactions, setShowAllTransactions] = React.useState(false);
+  const [showAllTransactions, setShowAllTransactions] = useState(false);
   const notify = useNotify();
   const { reportUrl, dataLastAt } = useTransaction(userId);
+  const [lastUpdatedAt, setLastUpdatedAt] = useState(moment());
   const { user } = useUser(userId);
   const { bankAccounts } = useBankAccount(userId);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
   const incomeFrequency = user?.incomeFrequency;
-  const payFrequency = React.useMemo(() => {
+  useEffect(() => {
+    setLastUpdatedAt(dataLastAt);
+  }, [dataLastAt]);
+
+  const payFrequency = useMemo(() => {
     const frequency = incomeFrequencies.find(
       (item) => incomeFrequency && item.id === incomeFrequency,
     );
     return frequency?.name;
   }, [incomeFrequency]);
-  const primaryBankAccount = React.useMemo(() => {
+  const primaryBankAccount = useMemo(() => {
     const useBankAccountId = user?.bankAccountId;
     const bankAccount = bankAccounts.find(
       (account) => useBankAccountId && account.bankAccountId === useBankAccountId,
@@ -195,7 +200,8 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
         openDialog={showAllTransactions}
         setShowAllTransactions={setShowAllTransactions}
         reportUrl={reportUrl}
-        dataLastAt={dataLastAt}
+        lastUpdatedAt={lastUpdatedAt}
+        setLastUpdatedAt={setLastUpdatedAt}
         userId={userId}
       />
     </>

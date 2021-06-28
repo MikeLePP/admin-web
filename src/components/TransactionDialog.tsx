@@ -3,47 +3,55 @@ import moment from 'moment';
 import { useNotify } from 'react-admin';
 import {
   Button,
-  Typography,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  IconButton,
   CircularProgress,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
   FormControl,
-  Select,
+  Grid,
+  IconButton,
+  InputLabel,
   MenuItem,
-  ListItemText,
+  Select,
+  Typography,
 } from '@material-ui/core';
-import { Close as CloseIcon } from '@material-ui/icons';
 
+import { Close as CloseIcon } from '@material-ui/icons';
+import TextLabel from './TextLabel';
 import { REFRESH_DAYS } from '../constants/days-refresh-bank-data';
 import { callApi } from '../helpers/api';
+
+const MINUTES_TO_DISABLE_REFRESH = 1;
 
 interface IProps {
   setShowAllTransactions: (value: boolean) => void;
   openDialog: boolean;
   reportUrl: string;
   userId: string;
-  dataLastAt: moment.Moment;
+  lastUpdatedAt: moment.Moment;
+  setLastUpdatedAt: React.Dispatch<React.SetStateAction<moment.Moment>>;
 }
 
 function TransactionDialog({
   setShowAllTransactions,
   openDialog,
   reportUrl,
-  dataLastAt,
+  lastUpdatedAt,
+  setLastUpdatedAt,
   userId,
 }: IProps): JSX.Element {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [days, setDays] = useState(1);
-  const [url, setUrl] = useState(reportUrl);
-  const [lastUpdatedAt, setLastUpdatedAt] = useState(dataLastAt);
+  const [url, setUrl] = useState('');
   const notify = useNotify();
 
   useEffect(() => {
     setOpen(openDialog);
-  }, [openDialog]);
+    setUrl(reportUrl);
+  }, [openDialog, reportUrl]);
+
   const handleShowAllTransactions = (): void => {
     setOpen(false);
     setShowAllTransactions(false);
@@ -54,7 +62,6 @@ function TransactionDialog({
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setDays(event.target.value as number);
   };
-  const now = moment().utc();
 
   const onRefreshClick = async (): Promise<void> => {
     try {
@@ -74,26 +81,7 @@ function TransactionDialog({
     <Dialog open={open} disableBackdropClick disableEscapeKeyDown fullWidth maxWidth="lg">
       <DialogTitle disableTypography className="flex items-center justify-between">
         <Typography variant="h6">All account transactions</Typography>
-        <label></label>
-        <div className="mt-8 max-w-sm">
-          <FormControl variant="outlined">
-            <Select
-              labelId="demo-simple-select-label"
-              id="demo-simple-select"
-              value={days}
-              onChange={handleChange}
-            >
-              {REFRESH_DAYS.map(({ value, label }) => (
-                <MenuItem key={value} value={value}>
-                  <ListItemText primary={label} />
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <Button variant="outlined" color="secondary" onClick={onRefreshClick}>
-            REFRESH BANK DATA
-          </Button>
-        </div>
+
         <IconButton onClick={handleShowAllTransactions}>
           <CloseIcon />
         </IconButton>
@@ -106,12 +94,43 @@ function TransactionDialog({
         )}
         <iframe
           title="Account transactions"
-          src={reportUrl}
+          src={url}
           className="w-full h-full border-0"
           loading="eager"
           onLoad={handleLoaded}
         />
       </DialogContent>
+      <DialogActions>
+        <Grid container justify="center" spacing={8}>
+          <Grid item>
+            <TextLabel label="Last Refreshed" value={lastUpdatedAt.fromNow()} />
+          </Grid>
+          <Grid item>
+            <FormControl>
+              <InputLabel>days</InputLabel>
+              <Select value={days} onChange={handleChange} autoWidth>
+                {REFRESH_DAYS.map(({ value, label }) => (
+                  <MenuItem key={value} value={value}>
+                    {label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={onRefreshClick}
+              disabled={
+                loading || moment().diff(lastUpdatedAt, 'minutes') < MINUTES_TO_DISABLE_REFRESH
+              }
+            >
+              REFRESH BANK DATA
+            </Button>
+          </Grid>
+        </Grid>
+      </DialogActions>
     </Dialog>
   );
 }
