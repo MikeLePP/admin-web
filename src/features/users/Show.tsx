@@ -4,9 +4,8 @@ import IconButton from '@material-ui/core/IconButton';
 import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
 import { get } from 'lodash';
 import moment from 'moment';
-import React from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { CardActions, Record, ResourceComponentPropsWithId, useNotify } from 'react-admin';
-
 import ConfirmDialog from '../../components/Dialog';
 import ShowToolbar from '../../components/ShowToolbar';
 import TextLabel from '../../components/TextLabel';
@@ -33,18 +32,23 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const [showAllTransactions, setShowAllTransactions] = React.useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = React.useState(false);
   const notify = useNotify();
-  const { reportUrl } = useTransaction(userId);
+  const transactionData = useTransaction(userId);
+  const [dataLastAt, setDataLastAt] = useState<string | undefined>();
   const { user } = useUser(userId);
   const { bankAccounts } = useBankAccount(userId);
-  const [loading, setLoading] = React.useState(false);
+  const [loading, setLoading] = useState(false);
   const incomeFrequency = user?.incomeFrequency;
-  const payFrequency = React.useMemo(() => {
+  useEffect(() => {
+    setDataLastAt(transactionData.dataLastAt);
+  }, [transactionData.dataLastAt]);
+
+  const payFrequency = useMemo(() => {
     const frequency = incomeFrequencies.find(
       (item) => incomeFrequency && item.id === incomeFrequency,
     );
     return frequency?.name;
   }, [incomeFrequency]);
-  const primaryBankAccount = React.useMemo(() => {
+  const primaryBankAccount = useMemo(() => {
     const useBankAccountId = user?.bankAccountId;
     const bankAccount = bankAccounts.find(
       (account) => useBankAccountId && account.bankAccountId === useBankAccountId,
@@ -201,12 +205,12 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
               REQUEST BANK DATA
             </Button>
           </div>
-          {reportUrl && (
+          {transactionData.reportUrl && (
             <div>
               <Button variant="outlined" color="secondary" onClick={handleShowBankStatement}>
                 View bank statements
               </Button>
-              <IconButton href={reportUrl} target="_blank">
+              <IconButton href={transactionData.reportUrl} target="_blank">
                 <OpenInNewIcon />
               </IconButton>
             </div>
@@ -216,7 +220,10 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
       <TransactionDialog
         openDialog={showAllTransactions}
         setShowAllTransactions={setShowAllTransactions}
-        reportUrl={reportUrl}
+        reportUrl={transactionData.reportUrl}
+        dataLastAt={dataLastAt}
+        setDataLastAt={setDataLastAt}
+        userId={userId}
       />
       <ConfirmDialog
         show={showConfirmDialog}

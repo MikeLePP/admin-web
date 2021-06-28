@@ -68,10 +68,15 @@ const RiskAssessment = ({
   values,
 }: OnboardingComponentProps<RiskAssessmentValues>): JSX.Element => {
   const [loading, setLoading] = useState(false);
+  const [dataLastAt, setDataLastAt] = useState<string | undefined>();
   const [showAllTransactions, setShowAllTransactions] = useState(false);
-  const { reportUrl } = useTransaction(userDetails?.id);
+  const transactionData = useTransaction(userDetails?.id);
   const [userBankAccounts, setUserBankAccounts] = useState<BankAccount[]>([]);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setDataLastAt(transactionData.dataLastAt);
+  }, [transactionData.dataLastAt]);
 
   useEffect(() => {
     // get user bank accounts
@@ -187,7 +192,7 @@ const RiskAssessment = ({
                   Verify transactions and set primary account
                 </Typography>
                 <div>
-                  <IconButton href={reportUrl} target="_blank">
+                  <IconButton href={transactionData.reportUrl} target="_blank">
                     <OpenInNewIcon />
                   </IconButton>
                   <Button
@@ -422,7 +427,10 @@ const RiskAssessment = ({
       <TransactionDialog
         openDialog={showAllTransactions}
         setShowAllTransactions={setShowAllTransactions}
-        reportUrl={reportUrl}
+        reportUrl={transactionData.reportUrl}
+        userId={userDetails?.id}
+        dataLastAt={dataLastAt}
+        setDataLastAt={setDataLastAt}
       />
     </div>
   );
