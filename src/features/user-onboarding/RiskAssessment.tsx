@@ -1,3 +1,4 @@
+import moment from 'moment';
 import {
   Button,
   Checkbox,
@@ -68,10 +69,15 @@ const RiskAssessment = ({
   values,
 }: OnboardingComponentProps<RiskAssessmentValues>): JSX.Element => {
   const [loading, setLoading] = useState(false);
+  const [lastUpdatedAt, setLastUpdatedAt] = useState(new Date().toISOString());
   const [showAllTransactions, setShowAllTransactions] = useState(false);
-  const { reportUrl } = useTransaction(userDetails?.id);
+  const { reportUrl, dataLastAt } = useTransaction(userDetails?.id);
   const [userBankAccounts, setUserBankAccounts] = useState<BankAccount[]>([]);
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    setLastUpdatedAt(dataLastAt);
+  }, [dataLastAt]);
 
   useEffect(() => {
     // get user bank accounts
@@ -423,6 +429,9 @@ const RiskAssessment = ({
         openDialog={showAllTransactions}
         setShowAllTransactions={setShowAllTransactions}
         reportUrl={reportUrl}
+        userId={userDetails?.id}
+        lastUpdatedAt={lastUpdatedAt}
+        setLastUpdatedAt={setLastUpdatedAt}
       />
     </div>
   );
