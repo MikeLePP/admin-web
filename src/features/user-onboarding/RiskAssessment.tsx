@@ -73,7 +73,6 @@ const RiskAssessment = ({
   const transactionData = useTransaction(userDetails?.id);
   const [userBankAccounts, setUserBankAccounts] = useState<BankAccount[]>([]);
   const dispatch = useDispatch();
-
   useEffect(() => {
     setDataLastAt(transactionData.dataLastAt);
   }, [transactionData.dataLastAt]);
@@ -148,6 +147,16 @@ const RiskAssessment = ({
       }
     },
   });
+
+  useEffect(() => {
+    // pre-select primary bank account
+    if (userBankAccounts.length > 0 && userDetails.bankAccountId) {
+      const preAccount = userBankAccounts.find(
+        (account) => account.id === userDetails.bankAccountId,
+      );
+      preAccount?.id && formik.setFieldValue('primaryAccountId', preAccount.id);
+    }
+  }, [userDetails.bankAccountId, userBankAccounts]);
 
   const handleChange = (type: string) => async (event: React.ChangeEvent<{ value: unknown }>) => {
     await formik.setFieldValue(type, event.target.value as string[]);
