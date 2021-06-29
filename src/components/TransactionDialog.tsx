@@ -69,7 +69,7 @@ function TransactionDialog({
       setLoading(true);
       const { json } = await callApi<{
         data: { meta: { reportUrl: string }; attributes: { dataLastAt: string | undefined } };
-      }>(`/users/${userId}/data?days=${days}`, 'post');
+      }>(`/users/${userId}/bank-data?days=${days}`, 'post');
       setUrl(json.data.meta.reportUrl);
       setDataLastAt(json.data.attributes.dataLastAt);
     } catch (error) {
