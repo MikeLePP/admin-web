@@ -23,6 +23,9 @@ export interface User {
     source: string;
     state: string;
     verified?: boolean;
+    colour?: 'G' | 'Y' | 'B';
+    expiryDate?: string;
+    refNumber?: string;
   };
   income: {
     frequency: string;
