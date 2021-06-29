@@ -1,12 +1,19 @@
-import { ResourceComponentPropsWithId, Record } from 'react-admin';
+import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
-import React from 'react';
-import moment from 'moment';
+import IconButton from '@material-ui/core/IconButton';
+import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
 import { get } from 'lodash';
+import moment from 'moment';
+import React, { useEffect, useMemo, useState } from 'react';
+import { CardActions, Record, ResourceComponentPropsWithId, useNotify } from 'react-admin';
+import ConfirmDialog from '../../components/Dialog';
 import ShowToolbar from '../../components/ShowToolbar';
-import { useUser, useBankAccount } from './user-hooks';
 import TextLabel from '../../components/TextLabel';
+import TransactionDialog from '../../components/TransactionDialog';
 import incomeFrequencies from '../../constants/incomeFrequencies';
+import { callApi } from '../../helpers/api';
+import { useTransaction } from '../../hooks/transaction-hook';
+import { useBankAccount, useUser } from './user-hooks';
 
 interface CustomEditToolbarProps {
   basePath: string;
@@ -22,16 +29,26 @@ const CustomEditToolbar = ({ basePath, id }: CustomEditToolbarProps): JSX.Elemen
 
 const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const userId = get(props, 'id', '');
+  const [showAllTransactions, setShowAllTransactions] = React.useState(false);
+  const [showConfirmDialog, setShowConfirmDialog] = React.useState(false);
+  const notify = useNotify();
+  const transactionData = useTransaction(userId);
+  const [dataLastAt, setDataLastAt] = useState<string | undefined>();
   const { user } = useUser(userId);
   const { bankAccounts } = useBankAccount(userId);
+  const [loading, setLoading] = useState(false);
   const incomeFrequency = user?.incomeFrequency;
-  const payFrequency = React.useMemo(() => {
+  useEffect(() => {
+    setDataLastAt(transactionData.dataLastAt);
+  }, [transactionData.dataLastAt]);
+
+  const payFrequency = useMemo(() => {
     const frequency = incomeFrequencies.find(
       (item) => incomeFrequency && item.id === incomeFrequency,
     );
     return frequency?.name;
   }, [incomeFrequency]);
-  const primaryBankAccount = React.useMemo(() => {
+  const primaryBankAccount = useMemo(() => {
     const useBankAccountId = user?.bankAccountId;
     const bankAccount = bankAccounts.find(
       (account) => useBankAccountId && account.bankAccountId === useBankAccountId,
@@ -43,10 +60,43 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
       } | ACC: ${bankAccount?.accountNumber || 'N/A'}`,
     };
   }, [bankAccounts, user]);
+  const handleRequestBankData = () => {
+    setLoading(true);
+    async function requestBankData() {
+      try {
+        await callApi(`/messaging/bank-data`, 'post', {
+          userId,
+        });
+        setLoading(false);
+        notify('Request bank data success', 'success');
+      } catch (err) {
+        setLoading(false);
+        notify('Cannot request bank data', 'error');
+      }
+    }
+    void requestBankData();
+  };
+
+  const handleShowBankStatement = () => {
+    setShowAllTransactions(true);
+  };
+
+  const handleCancelRequestBankData = () => {
+    setShowConfirmDialog(false);
+  };
+  const handleConfirmRequestBankData = () => {
+    handleRequestBankData();
+    setShowConfirmDialog(false);
+  };
+  const handleClickRequestBankDataButton = () => {
+    setShowConfirmDialog(true);
+  };
+
   return (
     <>
       <CustomEditToolbar basePath={props.basePath || ''} id={userId} />
       <Card className="p-4">
+        <div className="text-lg">User Details</div>
         <TextLabel
           containerClass="mt-2 mb-1"
           labelClass="text-xs"
@@ -114,12 +164,17 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
             user?.incomeNextDate ? moment(user.incomeNextDate).format('YYYY-MM-DD') : undefined
           }
         />
+      </Card>
+      <Card className="p-4 my-4">
+        <div className="flex justify-between items-center">
+          <div className="text-lg">Bank Details</div>
+        </div>
         <TextLabel
           containerClass="mt-2 mb-1"
           labelClass="text-xs"
           valueClass="text-sm pt-2 pb-1"
           label="Bank Name"
-          value={user?.bankAccount?.bankName}
+          value={user?.bankAccount?.bankName || '-'}
         />
         {primaryBankAccount?.bankAccount ? (
           <>
@@ -139,7 +194,44 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
           label="Current balance"
           value={user?.balanceCurrent}
         />
+        <CardActions className="justify-start items-center">
+          {transactionData.reportUrl && (
+            <div className="pr-1.5 py-1.5">
+              <Button variant="contained" color="secondary" onClick={handleShowBankStatement}>
+                View bank statements
+              </Button>
+              <IconButton href={transactionData.reportUrl} target="_blank">
+                <OpenInNewIcon />
+              </IconButton>
+            </div>
+          )}
+          <Button
+            variant="text"
+            color="primary"
+            disabled={loading}
+            onClick={handleClickRequestBankDataButton}
+          >
+            Request bank statements
+          </Button>
+        </CardActions>
       </Card>
+      <TransactionDialog
+        openDialog={showAllTransactions}
+        setShowAllTransactions={setShowAllTransactions}
+        reportUrl={transactionData.reportUrl}
+        dataLastAt={dataLastAt}
+        setDataLastAt={setDataLastAt}
+        userId={userId}
+      />
+      <ConfirmDialog
+        show={showConfirmDialog}
+        onCancelClick={handleCancelRequestBankData}
+        onConfirmClick={handleConfirmRequestBankData}
+        title=""
+        body="Would you like to notify the user to resubmit their bank statements?"
+        confirmLabel="Yes"
+        cancelLabel="No"
+      />
     </>
   );
 };

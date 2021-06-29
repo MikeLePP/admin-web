@@ -13,7 +13,7 @@ import {
 import ShowToolbar from '../../components/ShowToolbar';
 
 const TransactionShow = (props: ResourceComponentPropsWithId): JSX.Element => (
-  <Show {...props} actions={<ShowToolbar />}>
+  <Show {...props} actions={<ShowToolbar deleteCustomLabel="Cancel" />}>
     <SimpleShowLayout>
       <TextField label="First name" source="firstName" />
       <TextField label="Middle name" source="middleName" />
