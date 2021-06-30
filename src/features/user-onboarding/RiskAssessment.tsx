@@ -158,7 +158,7 @@ const RiskAssessment = ({
         void formik.setFieldValue('primaryAccountId', preAccount.id);
       }
     }
-  }, [formik, userDetails.bankAccountId, userBankAccounts]);
+  }, [userDetails.bankAccountId, userBankAccounts]);
 
   const handleChange = (type: string) => async (event: React.ChangeEvent<{ value: unknown }>) => {
     await formik.setFieldValue(type, event.target.value as string[]);
