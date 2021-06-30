@@ -6,6 +6,7 @@ import { callApi } from '../../helpers/api';
 import { toLocalDateString, yearOldString } from '../../helpers/date';
 import ActionButtons from './ActionButtons';
 import { IdentificationValues, OnboardingComponentProps } from './OnboardingSteps';
+import colourLabelById from '../../constants/medicareCardColour';
 
 interface GreenIdResult {
   verified: boolean;
@@ -105,17 +106,51 @@ const Identification = ({
           <Grid item xs={6}>
             <TextLabel label="ID type" value={userDetails.identity.source || '-'} />
           </Grid>
-          {userDetails.identity?.source?.toLowerCase() === 'aus-passport' ? (
+          {userDetails.identity?.source?.toLowerCase() === 'aus-passport' && (
             <Grid item xs={6}>
               <TextLabel label="Passport number" value={userDetails.identity.number || '-'} />
             </Grid>
-          ) : (
+          )}
+          {userDetails.identity?.source?.toLowerCase() === 'aus-driver-license' && (
             <>
               <Grid item xs={6}>
                 <TextLabel label="Licence number" value={userDetails.identity.number || '-'} />
               </Grid>
               <Grid item xs={6}>
                 <TextLabel label="Licence State" value={userDetails.identity.state || '-'} />
+              </Grid>
+            </>
+          )}
+          {userDetails.identity?.source?.toLowerCase() === 'aus-medicare' && (
+            <>
+              <Grid item xs={6}>
+                <TextLabel
+                  label="Medicare card number"
+                  value={userDetails.identity.number || '-'}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextLabel label="Ref number" value={userDetails.identity.refNumber || '-'} />
+              </Grid>
+              <Grid item xs={6}>
+                <TextLabel
+                  label="Expiry date"
+                  value={
+                    userDetails.identity.expiryDate
+                      ? toLocalDateString(userDetails.identity.expiryDate)
+                      : '-'
+                  }
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <TextLabel
+                  label="Colour"
+                  value={
+                    userDetails.identity.colour
+                      ? colourLabelById[userDetails.identity.colour]?.label
+                      : '-'
+                  }
+                />
               </Grid>
             </>
           )}
