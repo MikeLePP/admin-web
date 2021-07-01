@@ -95,12 +95,14 @@ const RiskAssessment = ({
   }, [riskAssessment, values, addNewAssessment]);
 
   useEffect(() => {
+    // set time of last transaction data
     if (transactionData?.dataLastAt) {
       setDataLastAt(transactionData.dataLastAt);
     }
   }, [transactionData]);
 
   useEffect(() => {
+    // set existed risk assessment for form
     if (riskAssessmentData) {
       for (const key of Object.keys(riskAssessmentData)) {
         const value = get(riskAssessmentData, [key], '');
@@ -108,6 +110,7 @@ const RiskAssessment = ({
       }
     }
   }, [riskAssessmentData]);
+
   useEffect(() => {
     // pre-select primary bank account
     if (userBankAccounts.length > 0 && userDetails?.bankAccountId) {
@@ -119,6 +122,7 @@ const RiskAssessment = ({
       }
     }
   }, [userDetails, userBankAccounts, riskAssessmentData]);
+
   useEffect(() => {
     // get user bank accounts
     const getBankAccounts = async () => {
@@ -496,7 +500,7 @@ const RiskAssessment = ({
               type="submit"
               disabled={loading || formik.values.approved === undefined}
             >
-              {!isAddNewAssessment ? 'Update and continue' : 'Create and continue'}
+              {isAddNewAssessment ? 'Create and continue' : 'Update and continue'}
             </Button>
           </div>
         </ActionButtons>
