@@ -1,44 +1,46 @@
 import {
   Button,
   Checkbox,
+  Chip,
   FormControl,
   Grid,
+  IconButton,
   InputAdornment,
   InputLabel,
-  ListItemText,
-  MenuItem,
-  Select,
-  Typography,
   List,
   ListItem,
+  ListItemText,
+  MenuItem,
   Radio,
-  Chip,
-  IconButton,
+  Select,
+  Typography,
 } from '@material-ui/core';
 import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
 import { useFormik } from 'formik';
-import { map, startCase } from 'lodash';
-import { useEffect, useState } from 'react';
+import { get, map, startCase } from 'lodash';
+import { useEffect, useMemo, useState } from 'react';
 import { fetchEnd, fetchStart } from 'react-admin';
 import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
+import moment from 'moment';
 import InputField from '../../components/InputField';
 import TextLabel from '../../components/TextLabel';
+import TransactionDialog from '../../components/TransactionDialog';
 import YesNoButtons from '../../components/YesNoButtons';
 import INCOME_FREQUENCIES from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import { parseBankAccount } from '../../helpers/bankAccount';
 import { toLocalDateString } from '../../helpers/date';
+import { useRiskAssessment } from '../../hooks/assessment-hook';
+import { useTransaction } from '../../hooks/transaction-hook';
 import ActionButtons from './ActionButtons';
-import { DECLINE_REASONS, GOVERNMENT_SUPPORT, RISK_MODELS, APPROVED_AMOUNT } from './constants';
+import { APPROVED_AMOUNT, DECLINE_REASONS, GOVERNMENT_SUPPORT, RISK_MODELS } from './constants';
 import {
-  BankAccountData,
   BankAccount,
+  BankAccountData,
   OnboardingComponentProps,
   RiskAssessmentValues,
 } from './OnboardingSteps';
-import { useTransaction } from '../../hooks/transaction-hook';
-import TransactionDialog from '../../components/TransactionDialog';
 
 const validationSchema = yup.object({
   approved: yup.boolean(),
@@ -68,15 +70,53 @@ const RiskAssessment = ({
   values,
 }: OnboardingComponentProps<RiskAssessmentValues>): JSX.Element => {
   const [loading, setLoading] = useState(false);
+  const [addNewAssessment, setAddNewAssessment] = useState(false);
   const [dataLastAt, setDataLastAt] = useState<string | undefined>();
   const [showAllTransactions, setShowAllTransactions] = useState(false);
   const transactionData = useTransaction(userDetails?.id);
   const [userBankAccounts, setUserBankAccounts] = useState<BankAccount[]>([]);
+  const { riskAssessment } = useRiskAssessment(riskAssessmentId);
   const dispatch = useDispatch();
+  const isAddNewAssessment = useMemo(() => {
+    if (addNewAssessment) {
+      return true;
+    }
+    return !riskAssessmentId;
+  }, [riskAssessmentId, addNewAssessment]);
+
+  const riskAssessmentData = useMemo(() => {
+    if (addNewAssessment) {
+      return values;
+    }
+    return {
+      ...riskAssessment,
+      incomeLastDate: riskAssessment
+        ? moment(riskAssessment?.incomeLastDate).format('yyyy-MM-DD')
+        : values.incomeLastDate,
+    };
+  }, [riskAssessment, values, addNewAssessment]);
+
   useEffect(() => {
     setDataLastAt(transactionData.dataLastAt);
   }, [transactionData.dataLastAt]);
-
+  useEffect(() => {
+    if (riskAssessmentData) {
+      for (const key of Object.keys(riskAssessmentData)) {
+        console.log('key', key);
+        const value = get(riskAssessmentData, [key], '');
+        void formik.setFieldValue(key, value);
+      }
+    }
+  }, [riskAssessmentData]);
+  useEffect(() => {
+    // pre-select primary bank account
+    if (userBankAccounts.length > 0 && userDetails.bankAccountId) {
+      const preAccount = userBankAccounts.find(
+        (account) => account.id === userDetails.bankAccountId,
+      );
+      preAccount?.id && formik.setFieldValue('primaryAccountId', preAccount.id);
+    }
+  }, [userDetails.bankAccountId, userBankAccounts, riskAssessmentData]);
   useEffect(() => {
     // get user bank accounts
     const getBankAccounts = async () => {
@@ -112,7 +152,7 @@ const RiskAssessment = ({
 
         // 1. create or update risk assessment
         const incomeSupport = _values.incomeSupport === 'true';
-        if (riskAssessmentId) {
+        if (riskAssessmentId && !isAddNewAssessment) {
           await callApi(`/risk-assessments/${riskAssessmentId}`, 'patch', {
             ..._values,
             incomeSupport,
@@ -148,20 +188,16 @@ const RiskAssessment = ({
     },
   });
 
-  useEffect(() => {
-    // pre-select primary bank account
-    if (userBankAccounts.length > 0 && userDetails.bankAccountId) {
-      const preAccount = userBankAccounts.find(
-        (account) => account.id === userDetails.bankAccountId,
-      );
-      if (preAccount?.id) {
-        void formik.setFieldValue('primaryAccountId', preAccount.id);
-      }
-    }
-  }, [userDetails.bankAccountId, userBankAccounts]);
-
   const handleChange = (type: string) => async (event: React.ChangeEvent<{ value: unknown }>) => {
     await formik.setFieldValue(type, event.target.value as string[]);
+  };
+
+  const handleClickNewRiskAssessment = () => {
+    setAddNewAssessment(true);
+  };
+
+  const handleClickCancelRiskAssessment = () => {
+    setAddNewAssessment(false);
   };
 
   return (
@@ -424,15 +460,41 @@ const RiskAssessment = ({
             </div>
           )}
         </div>
-        <ActionButtons onBackButtonClick={onPrevStep} loading={loading}>
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            disabled={loading || formik.values.approved === undefined}
-          >
-            {riskAssessmentId ? 'Update and continue' : 'Create and continue'}
-          </Button>
+
+        <ActionButtons onBackButtonClick={onPrevStep} loading={loading} width="calc(100% - 40rem)">
+          <div className="flex">
+            {!!riskAssessmentId && (
+              <div className="mr-4">
+                {isAddNewAssessment ? (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={loading}
+                    onClick={handleClickCancelRiskAssessment}
+                  >
+                    Cancel
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={loading}
+                    onClick={handleClickNewRiskAssessment}
+                  >
+                    New
+                  </Button>
+                )}
+              </div>
+            )}
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              disabled={loading || formik.values.approved === undefined}
+            >
+              {!isAddNewAssessment ? 'Update and continue' : 'Create and continue'}
+            </Button>
+          </div>
         </ActionButtons>
       </form>
       <TransactionDialog
