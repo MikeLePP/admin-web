@@ -77,12 +77,10 @@ const RiskAssessment = ({
   const [userBankAccounts, setUserBankAccounts] = useState<BankAccount[]>([]);
   const { riskAssessment } = useRiskAssessment(riskAssessmentId);
   const dispatch = useDispatch();
-  const isAddNewAssessment = useMemo(() => {
-    if (addNewAssessment) {
-      return true;
-    }
-    return !riskAssessmentId;
-  }, [riskAssessmentId, addNewAssessment]);
+  const isAddNewAssessment = useMemo(
+    () => addNewAssessment || !riskAssessmentId,
+    [riskAssessmentId, addNewAssessment],
+  );
 
   const riskAssessmentData = useMemo(() => {
     if (addNewAssessment) {
@@ -97,12 +95,14 @@ const RiskAssessment = ({
   }, [riskAssessment, values, addNewAssessment]);
 
   useEffect(() => {
-    setDataLastAt(transactionData.dataLastAt);
-  }, [transactionData.dataLastAt]);
+    if (transactionData?.dataLastAt) {
+      setDataLastAt(transactionData.dataLastAt);
+    }
+  }, [transactionData]);
+
   useEffect(() => {
     if (riskAssessmentData) {
       for (const key of Object.keys(riskAssessmentData)) {
-        console.log('key', key);
         const value = get(riskAssessmentData, [key], '');
         void formik.setFieldValue(key, value);
       }
@@ -110,13 +110,15 @@ const RiskAssessment = ({
   }, [riskAssessmentData]);
   useEffect(() => {
     // pre-select primary bank account
-    if (userBankAccounts.length > 0 && userDetails.bankAccountId) {
+    if (userBankAccounts.length > 0 && userDetails?.bankAccountId) {
       const preAccount = userBankAccounts.find(
         (account) => account.id === userDetails.bankAccountId,
       );
-      preAccount?.id && formik.setFieldValue('primaryAccountId', preAccount.id);
+      if (preAccount?.id) {
+        void formik.setFieldValue('primaryAccountId', preAccount.id);
+      }
     }
-  }, [userDetails.bankAccountId, userBankAccounts, riskAssessmentData]);
+  }, [userDetails, userBankAccounts, riskAssessmentData]);
   useEffect(() => {
     // get user bank accounts
     const getBankAccounts = async () => {
@@ -129,8 +131,10 @@ const RiskAssessment = ({
         notify(error, 'error');
       }
     };
-    void getBankAccounts();
-  }, [notify, userDetails.id]);
+    if (userDetails.id) {
+      void getBankAccounts();
+    }
+  }, [notify, userDetails]);
 
   const formik = useFormik({
     initialValues: values,
