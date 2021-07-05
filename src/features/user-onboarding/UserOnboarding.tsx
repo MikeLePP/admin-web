@@ -180,6 +180,7 @@ const UserOnboarding = (props: ResourceComponentProps): JSX.Element | null => {
           onPrevStep={handlePrevStep}
           onCompleteStep={handleCompleteStep}
           bankAccounts={bankAccounts}
+          riskAssessmentId={userDetails.riskAssessmentId}
         />
       </div>
       <div className="w-94 border-l">
