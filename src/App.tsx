@@ -6,6 +6,7 @@ import LoginPage from './features/login-page';
 import transactions from './features/transactions';
 import users from './features/users';
 import userOnboarding from './features/user-onboarding';
+import riskModel from './features/risk-model';
 
 const browserHistory = history.createBrowserHistory();
 
@@ -20,6 +21,7 @@ const App: React.FC = () => {
     >
       <Resource {...users} />
       <Resource {...transactions} />
+      <Resource {...riskModel} />
       <Resource {...userOnboarding} />
     </Admin>
   );
