@@ -19,6 +19,7 @@ const RiskModelList = (props: ResourceComponentProps): JSX.Element => (
     pagination={false}
   >
     <Datagrid>
+      <TextField label="Id" source="id" />
       <TextField label="Name" source="name" />
       <ShowButton />
       <EditButton />
