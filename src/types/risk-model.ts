@@ -1,5 +1,5 @@
 export interface RiskRuleSet {
-  approveLimit: number;
+  approvedLimit: number;
   parameters: RiskParameter[];
 }
 
