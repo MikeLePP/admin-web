@@ -1,114 +1,10 @@
-import {
-  TableContainer,
-  Table,
-  TableHead,
-  TableRow,
-  TableCell,
-  TableBody,
-  Paper,
-} from '@material-ui/core';
-import { withStyles, Theme, createStyles } from '@material-ui/core/styles';
+import { TableContainer, Table, TableHead, TableRow, TableBody, Paper } from '@material-ui/core';
 import { get } from 'lodash';
 import { ResourceComponentPropsWithId, Show, SimpleShowLayout, TextField } from 'react-admin';
 
 import { useRiskModel } from './risk-model-hooks';
 import ShowToolbar from '../../components/ShowToolbar';
-
-interface RiskModelTableRow {
-  name: string;
-  code?: string;
-  parameterPath?: string;
-}
-const rows: RiskModelTableRow[] = [
-  {
-    name: 'Number consecutive pay...',
-    code: 'I1',
-  },
-  {
-    name: 'Weekly',
-    parameterPath: 'parameters[0].variables.minCountWeekly',
-  },
-  {
-    name: 'Fortnightly',
-    parameterPath: 'parameters[0].variables.minCountFortnightly',
-  },
-  {
-    name: 'Monthly',
-    parameterPath: 'parameters[0].variables.minCountMonthly',
-  },
-  {
-    name: 'Average income per cycle',
-    code: 'I2',
-    parameterPath: 'parameters[1].variables.minAmount',
-  },
-  { name: 'Number income timing...', code: 'I3' },
-  {
-    name: 'Max count',
-    parameterPath: 'parameters[2].variables.maxCount',
-  },
-  {
-    name: 'Min balance',
-    parameterPath: 'parameters[2].variables.minBalance',
-  },
-  {
-    name: 'Government income as %...',
-    code: 'I6',
-    parameterPath: 'parameters[3].variables.maxPercent',
-  },
-  { name: 'Recent income', code: 'I7' },
-  {
-    name: 'Weekly',
-    parameterPath: 'parameters[4].variables.maxCountWeekly',
-  },
-  {
-    name: 'Fortnightly',
-    parameterPath: 'parameters[4].variables.maxCountFortnightly',
-  },
-  {
-    name: 'Monthly',
-    parameterPath: 'parameters[4].variables.maxCountMonthly',
-  },
-  { name: 'Number times day 0 balance is allowed below minimum', code: 'B2' },
-  {
-    name: 'Max count',
-    parameterPath: 'parameters[5].variables.maxCount',
-  },
-  {
-    name: 'Min balance',
-    parameterPath: 'parameters[5].variables.minBalance',
-  },
-  { name: 'Number times day 1 income is allowed below minimum', code: 'B4' },
-  {
-    name: 'Max count',
-    parameterPath: 'parameters[6].variables.maxCount',
-  },
-  {
-    name: 'Min balance',
-    parameterPath: 'parameters[6].variables.minBalance',
-  },
-];
-
-const StyledTableCell = withStyles((theme: Theme) =>
-  createStyles({
-    head: {
-      backgroundColor: theme.palette.grey[700],
-      color: theme.palette.common.white,
-    },
-    body: {
-      fontSize: 14,
-    },
-  }),
-)(TableCell);
-
-const CellWithRightBorder = withStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      borderRightWidth: 1,
-      borderRightColor: theme.palette.grey[300],
-      borderRightStyle: 'solid',
-    },
-  }),
-)(TableCell);
+import { RowsData, StyledTableCell, CellWithRightBorder } from './common';
 
 const RiskModelShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const riskModelId = get(props, 'id', '');
@@ -132,7 +28,7 @@ const RiskModelShow = (props: ResourceComponentPropsWithId): JSX.Element => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {RowsData.map((row) => (
                 <TableRow key={row.name}>
                   <CellWithRightBorder
                     component="th"

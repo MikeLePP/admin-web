@@ -1,116 +1,102 @@
-import { Divider } from '@material-ui/core';
-import { capitalize, lowerCase } from 'lodash';
 import {
-  DateTimeInput,
+  TableContainer,
+  Table,
+  TableHead,
+  TableRow,
+  TableBody,
+  Paper,
+  TextField,
+} from '@material-ui/core';
+import { get } from 'lodash';
+import {
   Edit,
-  FunctionField,
-  maxLength,
-  maxValue,
-  NumberInput,
-  RadioButtonGroupInput,
   Record,
-  required,
   ResourceComponentPropsWithId,
   SimpleForm,
-  TextField,
-  TextInput,
   useEditController,
   useGetIdentity,
   useNotify,
+  TextInput,
+  NumberInput,
+  maxValue,
 } from 'react-admin';
+import { useFormik } from 'formik';
+
+import { RowsData, StyledTableCell, CellWithRightBorder } from './common';
+
 import EditToolbar from '../../components/EditToolbar';
 import SaveToolbar from '../../components/SaveToolbar';
 import { notifyOnFailure } from '../../helpers/notify';
-import { getFullName } from '../../helpers/string';
 import { getId } from '../../helpers/url';
-import { futureDate } from '../../helpers/validation';
+import { useRiskModel } from './risk-model-hooks';
 
 const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
-  const userId = getId(props.location?.search);
+  const riskModelId = get(props, 'id', '');
+  const { riskModel } = useRiskModel(riskModelId);
+  const approvedLimits = riskModel?.ruleSets.map((ruleSet) =>
+    ruleSet.approvedLimit ? ruleSet.approvedLimit : undefined,
+  );
 
   const { identity } = useGetIdentity();
   const notify = useNotify();
   const { record } = useEditController(props);
-
-  if (!userId) {
-    props.history?.push(props.basePath!);
-    return null;
-  }
-
-  const transform = (data: Record) => ({ ...data, userId, editedBy: identity?.id });
-
-  const disabled = record?.status !== 'pending_submission';
 
   return (
     <Edit
       {...props}
       title="Edit Transaction"
       onFailure={notifyOnFailure(notify)}
-      transform={transform}
+      // transform={transform}
       mutationMode="pessimistic"
       actions={<EditToolbar />}
     >
-      <SimpleForm redirect="show" toolbar={<SaveToolbar />}>
-        <FunctionField label="Name" render={getFullName} />
-        <TextField label="Email" source="email" />
-        <TextField label="Mobile" source="mobileNumber" />
-        <Divider />
-        <FunctionField
-          label="Status"
-          render={(r?: Record) => capitalize(lowerCase(r ? r.status : ''))}
-        />
-
-        <RadioButtonGroupInput
-          label="Payment type"
-          source="paymentType"
-          defaultValue="debit"
-          disabled
-          choices={[
-            { id: 'credit', name: 'Credit' },
-            { id: 'debit', name: 'Debit' },
-          ]}
-        />
-        <NumberInput
-          type="tel"
-          label="Amount"
-          source="amount"
-          min={0}
-          max={100}
-          autoFocus
-          validate={[required(), maxValue(100)]}
-          disabled={disabled}
-        />
-        <NumberInput
-          type="number"
-          label="Fee"
-          source="amountFee"
-          min={0}
-          max={100}
-          autoFocus
-          validate={[required(), maxValue(100)]}
-          disabled={disabled}
-        />
-        <TextInput
-          label="Description"
-          source="description"
-          helperText="What happened?"
-          multiline
-          rows={4}
-          validate={[required(), maxLength(500)]}
-          disabled={disabled}
-        />
-        <TextInput label="Debit from" source="source" validate={[required()]} disabled={disabled} />
-        <TextInput label="Debit from ID" source="sourceId" validate={[required()]} disabled />
-        <DateTimeInput
-          label="Submit on"
-          source="submitAt"
-          validate={[required(), futureDate()]}
-          disabled={disabled}
-        />
-        <Divider />
-
-        <TextInput label="Send to" source="destination" disabled />
-        <TextInput label="Send to ID" source="destinationId" disabled />
+      <SimpleForm>
+        <TextInput source="name" />
+        <TableContainer component={Paper} style={{ width: '100%' }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <StyledTableCell>Parameters</StyledTableCell>
+                <StyledTableCell align="right">Code</StyledTableCell>
+                {approvedLimits?.map((approvedLimit) => (
+                  <StyledTableCell align="right">${approvedLimit}</StyledTableCell>
+                ))}
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {RowsData.map((row) => (
+                <TableRow key={row.name}>
+                  <CellWithRightBorder
+                    component="th"
+                    scope="row"
+                    align={row.code ? 'left' : 'right'}
+                  >
+                    {row.name}
+                  </CellWithRightBorder>
+                  <CellWithRightBorder align="right">{row.code}</CellWithRightBorder>
+                  {approvedLimits?.map((approvedLimit, index) => (
+                    <CellWithRightBorder align="right">
+                      {row.parameterPath && (
+                        <TextField
+                          id="filled-number"
+                          label="Number"
+                          type="number"
+                          InputLabelProps={{
+                            shrink: true,
+                          }}
+                          value={
+                            row.parameterPath &&
+                            get(riskModel, `ruleSets[${index}].${row.parameterPath}`)
+                          }
+                        />
+                      )}
+                    </CellWithRightBorder>
+                  ))}
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
       </SimpleForm>
     </Edit>
   );
