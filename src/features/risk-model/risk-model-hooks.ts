@@ -14,7 +14,6 @@ type IRiskModel = {
 export function useRiskModel(riskModelId: string): IRiskModel {
   const [riskModel, setRiskModel] = useState<RiskModel | undefined>(undefined);
   const [status, setStatus] = useState<IStatus>('idle');
-  const [approvedLimit, setApprovedLimit] = useState(0);
   const notify = useNotify();
   useEffect(() => {
     if (!riskModelId) {
@@ -26,7 +25,6 @@ export function useRiskModel(riskModelId: string): IRiskModel {
       const riskModelResponse = get(response, 'json', {}) as RiskModel;
       setStatus('success');
       setRiskModel(riskModelResponse);
-      setApprovedLimit(riskModelResponse.ruleSets.length);
     })().catch((err) => {
       notify('Cannot get risk-model', 'error');
       setStatus('fail');
