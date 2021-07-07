@@ -10,7 +10,7 @@ import ConfirmDialog from '../../components/Dialog';
 import ShowToolbar from '../../components/ShowToolbar';
 import TextLabel from '../../components/TextLabel';
 import TransactionDialog from '../../components/TransactionDialog';
-import incomeFrequencies, { oldIncomeFrequencies } from '../../constants/incomeFrequencies';
+import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import { useTransaction } from '../../hooks/transaction-hook';
 import { useBankAccount, useUser } from './user-hooks';
@@ -43,7 +43,7 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   }, [transactionData.dataLastAt]);
 
   const payFrequency = useMemo(() => {
-    const frequency = [...incomeFrequencies, ...oldIncomeFrequencies].find(
+    const frequency = incomeFrequencies.find(
       (item) => incomeFrequency && item.id === incomeFrequency,
     );
     return frequency?.name;
