@@ -30,16 +30,17 @@ import { notifyOnFailure } from '../../helpers/notify';
 import { getId } from '../../helpers/url';
 import { useRiskModel } from './risk-model-hooks';
 
-const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
+const RiskModelEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const riskModelId = get(props, 'id', '');
   const { riskModel } = useRiskModel(riskModelId);
   const approvedLimits = riskModel?.ruleSets.map((ruleSet) =>
     ruleSet.approvedLimit ? ruleSet.approvedLimit : undefined,
   );
-
-  const { identity } = useGetIdentity();
   const notify = useNotify();
   const { record } = useEditController(props);
+
+  const onRiskModelParameterChange =
+    (parameterPath: string) => (e: React.ChangeEvent<HTMLInputElement>) => {};
 
   return (
     <Edit
@@ -79,7 +80,6 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
                       {row.parameterPath && (
                         <TextField
                           id="filled-number"
-                          label="Number"
                           type="number"
                           InputLabelProps={{
                             shrink: true,
@@ -88,6 +88,9 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
                             row.parameterPath &&
                             get(riskModel, `ruleSets[${index}].${row.parameterPath}`)
                           }
+                          onChange={onRiskModelParameterChange(
+                            `ruleSets[${index}].${row.parameterPath}`,
+                          )}
                         />
                       )}
                     </CellWithRightBorder>
@@ -102,4 +105,4 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
   );
 };
 
-export default TransactionEdit;
+export default RiskModelEdit;
