@@ -197,7 +197,7 @@ const BankSelection = ({
           </div>
         </List>
       </div>
-      <ActionButtons loading={loading} width="calc(100% - 40rem)">
+      <ActionButtons loading={loading}>
         <div className="space-x-2">
           <Button variant="contained" color="secondary" type="submit" disabled={loading}>
             Continue

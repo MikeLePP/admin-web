@@ -469,23 +469,19 @@ const RiskAssessment = ({
           )}
         </div>
 
-        <ActionButtons onBackButtonClick={onPrevStep} loading={loading} width="calc(100% - 40rem)">
+        <ActionButtons onBackButtonClick={onPrevStep} loading={loading}>
           <div className="flex">
-            {!!riskAssessmentId && (
+            {!!riskAssessmentId && status !== 'fail' && (
               <div className="mr-4">
                 {isAddNewAssessment ? (
-                  <React.Fragment>
-                    {status !== 'fail' && (
-                      <Button
-                        variant="contained"
-                        color="primary"
-                        disabled={loading || status === 'loading'}
-                        onClick={handleClickCancelRiskAssessment}
-                      >
-                        Cancel
-                      </Button>
-                    )}
-                  </React.Fragment>
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={loading || status === 'loading'}
+                    onClick={handleClickCancelRiskAssessment}
+                  >
+                    Cancel
+                  </Button>
                 ) : (
                   <Button
                     variant="contained"
