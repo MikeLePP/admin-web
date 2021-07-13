@@ -92,6 +92,7 @@ const UserEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
       const userUpdated = {
         ...user,
         ..._values,
+        middleName: _values.middleName || null,
       };
       try {
         await callApi(`/users/${userId}`, 'put', userUpdated);
