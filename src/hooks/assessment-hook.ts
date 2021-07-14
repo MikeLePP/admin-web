@@ -40,7 +40,9 @@ export function useRiskAssessment(riskAssessmentId?: string): IRiskAssessment {
           data: { attributes: RiskAssessment };
         }>(`/risk-assessments/${riskAssessmentId}`);
         setRiskAssessment(data.attributes);
+        setStatus('success');
       } catch (error) {
+        setStatus('fail');
         notify("Cannot get user's risk assessment data", 'error');
       }
     };

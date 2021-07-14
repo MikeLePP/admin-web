@@ -190,7 +190,7 @@ const Identification = ({
         </Grid>
       </div>
       <div className="flex-grow"></div>
-      <ActionButtons onBackButtonClick={onPrevStep} loading={loading} width="calc(100% - 40rem)">
+      <ActionButtons onBackButtonClick={onPrevStep} loading={loading}>
         <div className="space-x-2">
           <Button variant="contained" color="secondary" type="submit" disabled={loading}>
             Continue

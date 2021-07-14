@@ -18,11 +18,11 @@ import {
 import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
 import { useFormik } from 'formik';
 import { get, map, startCase } from 'lodash';
-import { useEffect, useMemo, useState } from 'react';
+import moment from 'moment';
+import React, { useEffect, useMemo, useState } from 'react';
 import { fetchEnd, fetchStart } from 'react-admin';
 import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
-import moment from 'moment';
 import InputField from '../../components/InputField';
 import TextLabel from '../../components/TextLabel';
 import TransactionDialog from '../../components/TransactionDialog';
@@ -75,11 +75,11 @@ const RiskAssessment = ({
   const [showAllTransactions, setShowAllTransactions] = useState(false);
   const transactionData = useTransaction(userDetails?.id);
   const [userBankAccounts, setUserBankAccounts] = useState<BankAccount[]>([]);
-  const { riskAssessment } = useRiskAssessment(riskAssessmentId);
+  const { riskAssessment, status } = useRiskAssessment(riskAssessmentId);
   const dispatch = useDispatch();
   const isAddNewAssessment = useMemo(
-    () => addNewAssessment || !riskAssessmentId,
-    [riskAssessmentId, addNewAssessment],
+    () => status === 'fail' || addNewAssessment || !riskAssessmentId,
+    [riskAssessmentId, addNewAssessment, status],
   );
 
   const riskAssessmentData = useMemo(() => {
@@ -469,15 +469,15 @@ const RiskAssessment = ({
           )}
         </div>
 
-        <ActionButtons onBackButtonClick={onPrevStep} loading={loading} width="calc(100% - 40rem)">
+        <ActionButtons onBackButtonClick={onPrevStep} loading={loading}>
           <div className="flex">
-            {!!riskAssessmentId && (
+            {!!riskAssessmentId && status !== 'fail' && (
               <div className="mr-4">
                 {isAddNewAssessment ? (
                   <Button
                     variant="contained"
                     color="primary"
-                    disabled={loading}
+                    disabled={loading || status === 'loading'}
                     onClick={handleClickCancelRiskAssessment}
                   >
                     Cancel
