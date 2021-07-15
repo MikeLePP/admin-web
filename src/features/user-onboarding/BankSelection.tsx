@@ -74,6 +74,7 @@ const BankSelection = ({
                   accountName: account.accountName,
                   accountNumber: account.accountNumber,
                   accountType: account.accountType,
+                  bankDataAccountId: account.id,
                   bankName: account.institutionName,
                   createdBy: identity?.id,
                 },
