@@ -1,5 +1,6 @@
 import {
   Button,
+  Box,
   Checkbox,
   Chip,
   FormControl,
@@ -14,10 +15,15 @@ import {
   Radio,
   Select,
   Typography,
+  TextField,
 } from '@material-ui/core';
-import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
+import {
+  OpenInNewOutlined as OpenInNewIcon,
+  ArrowRight as ArrowRightIcon,
+  ArrowDropDown as ArrowDropDownIcon,
+} from '@material-ui/icons';
 import { useFormik } from 'formik';
-import { get, map, startCase } from 'lodash';
+import { get, map, pick, startCase } from 'lodash';
 import moment from 'moment';
 import React, { useEffect, useMemo, useState } from 'react';
 import { fetchEnd, fetchStart } from 'react-admin';
@@ -31,8 +37,9 @@ import INCOME_FREQUENCIES from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import { parseBankAccount } from '../../helpers/bankAccount';
 import { toLocalDateString } from '../../helpers/date';
-import { useRiskAssessment } from '../../hooks/assessment-hook';
+import { RiskAssessment as IRiskAssessment, useRiskAssessment } from '../../hooks/assessment-hook';
 import { useTransaction } from '../../hooks/transaction-hook';
+import { useRiskModels } from '../../hooks/risk-model-hook';
 import ActionButtons from './ActionButtons';
 import { APPROVED_AMOUNT, DECLINE_REASONS, GOVERNMENT_SUPPORT, RISK_MODELS } from './constants';
 import {
@@ -68,14 +75,18 @@ const RiskAssessment = ({
   riskAssessmentId,
   userDetails,
   values,
+  bankAccounts,
 }: OnboardingComponentProps<RiskAssessmentValues>): JSX.Element => {
   const [loading, setLoading] = useState(false);
+  const [openAutomateGenerate, setOpenAutomateGenerate] = useState(false);
+  const [selectedRiskModelId, setSelectedRiskModelId] = useState<string | undefined>();
   const [addNewAssessment, setAddNewAssessment] = useState(false);
   const [dataLastAt, setDataLastAt] = useState<string | undefined>();
   const [showAllTransactions, setShowAllTransactions] = useState(false);
   const transactionData = useTransaction(userDetails?.id);
   const [userBankAccounts, setUserBankAccounts] = useState<BankAccount[]>([]);
   const { riskAssessment, status } = useRiskAssessment(riskAssessmentId);
+  const { riskModels, status: riskModelStatus } = useRiskModels({});
   const dispatch = useDispatch();
   const isAddNewAssessment = useMemo(
     () => status === 'fail' || addNewAssessment || !riskAssessmentId,
@@ -208,6 +219,56 @@ const RiskAssessment = ({
     setAddNewAssessment(false);
   };
 
+  const handleSelectRiskModel = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const { value } = e.target;
+    setSelectedRiskModelId(value);
+  };
+
+  const handleGenerateRiskModel = () => {
+    const userBankAccount = userBankAccounts.find(
+      (bankAccountItem) => bankAccountItem.id === formik.values.primaryAccountId,
+    );
+    const bankData = bankAccounts.find(
+      (bankItem) =>
+        bankItem.accountBsb === userBankAccount?.accountBsb &&
+        bankItem.accountNumber === userBankAccount?.accountNumber,
+    );
+    async function generate() {
+      try {
+        const { json } = await callApi<{ data: IRiskAssessment }>(
+          `/automated-risk-assessments`,
+          'post',
+          {
+            riskModelId: selectedRiskModelId,
+            bankAccountDataId: bankData?.dataLastId,
+            userId: userDetails?.id,
+          },
+        );
+        const formData = pick(json, [
+          'approved',
+          'approvedAmount',
+          'incomeAverage',
+          'incomeDay1Min',
+          'incomeFrequency',
+          'incomeLastDate',
+          'incomeSupport',
+          'incomeVariationMax',
+          'rejectedReasons',
+          'riskModelVersion',
+          'userId',
+        ]);
+        for (const key of Object.keys(formData)) {
+          const value = get(formData, [key], '');
+          void formik.setFieldValue(key, value);
+        }
+        notify('Generate success', 'success');
+      } catch (err) {
+        notify('Cannot generate risk assessment', 'error');
+      }
+    }
+    void generate();
+  };
+
   return (
     <div className="flex flex-col">
       {userDetails.income && (
@@ -239,7 +300,53 @@ const RiskAssessment = ({
           <Typography variant="h6" className="mb-4">
             Risk assessment
           </Typography>
-
+          <Box>
+            <Box
+              className="flex items-center cursor-pointer select-none"
+              onClick={() => setOpenAutomateGenerate(!openAutomateGenerate)}
+            >
+              <Typography variant="subtitle2" className="mb-4 font-bold">
+                Auto-generate risk assessment
+              </Typography>
+              {openAutomateGenerate ? (
+                <ArrowDropDownIcon className="mb-4" fontSize="small" />
+              ) : (
+                <ArrowRightIcon className="mb-4" fontSize="small" />
+              )}
+            </Box>
+            {openAutomateGenerate && (
+              <Grid container spacing={2} className="mb-4 ">
+                <Grid item xs={6}>
+                  <TextField
+                    variant="outlined"
+                    color="secondary"
+                    fullWidth
+                    required
+                    select
+                    label="Risk Model"
+                    value={selectedRiskModelId}
+                    onChange={handleSelectRiskModel}
+                  >
+                    {riskModels?.map(({ id, name }) => (
+                      <MenuItem key={id} value={id}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+                <Grid item xs={6} className="flex items-center">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={riskModelStatus === 'loading' || !selectedRiskModelId}
+                    onClick={handleGenerateRiskModel}
+                  >
+                    Generate
+                  </Button>
+                </Grid>
+              </Grid>
+            )}
+          </Box>
           {userBankAccounts.length && (
             <div className="mb-4">
               <div className="flex items-center justify-between">
@@ -306,110 +413,111 @@ const RiskAssessment = ({
               </List>
             </div>
           )}
-
-          <Typography variant="subtitle2" className="mb-4 font-bold">
-            Employment details
-          </Typography>
-          <Grid container spacing={4}>
-            <Grid item xs={6}>
-              <InputField
-                required
-                select
-                name="incomeFrequency"
-                label={labels.incomeFrequency}
-                formik={formik}
-              >
-                {INCOME_FREQUENCIES.map(({ id, name }) => (
-                  <MenuItem key={id} value={id}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </InputField>
+          <Box>
+            <Typography variant="subtitle2" className="mb-4 font-bold">
+              Employment details
+            </Typography>
+            <Grid container spacing={4}>
+              <Grid item xs={6}>
+                <InputField
+                  required
+                  select
+                  name="incomeFrequency"
+                  label={labels.incomeFrequency}
+                  formik={formik}
+                >
+                  {INCOME_FREQUENCIES.map(({ id, name }) => (
+                    <MenuItem key={id} value={id}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </InputField>
+              </Grid>
+              <Grid item xs={6}>
+                <InputField
+                  required
+                  name="incomeLastDate"
+                  label={labels.incomeLastDate}
+                  type="date"
+                  formik={formik}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <InputField
+                  required
+                  name="incomeAverage"
+                  label={labels.incomeAverage}
+                  type="number"
+                  formik={formik}
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  }}
+                  inputProps={{
+                    min: 0,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <InputField
+                  required
+                  select
+                  name="incomeSupport"
+                  label={labels.incomeSupport}
+                  formik={formik}
+                >
+                  {GOVERNMENT_SUPPORT.map(({ id, name }) => (
+                    <MenuItem key={id.toString()} value={id.toString()}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </InputField>
+              </Grid>
+              <Grid item xs={6}>
+                <InputField
+                  name="incomeDay1Min"
+                  label={labels.incomeDay1Min}
+                  type="number"
+                  formik={formik}
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  }}
+                  inputProps={{
+                    min: 0,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <InputField
+                  name="incomeVariationMax"
+                  label={labels.incomeVariationMax}
+                  type="number"
+                  formik={formik}
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                  }}
+                  inputProps={{
+                    min: 0,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <InputField
+                  required
+                  select
+                  name="riskModelVersion"
+                  label={labels.riskModelVersion}
+                  formik={formik}
+                >
+                  {RISK_MODELS.map((name) => (
+                    <MenuItem key={name} value={name}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </InputField>
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <InputField
-                required
-                name="incomeLastDate"
-                label={labels.incomeLastDate}
-                type="date"
-                formik={formik}
-                InputLabelProps={{ shrink: true }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputField
-                required
-                name="incomeAverage"
-                label={labels.incomeAverage}
-                type="number"
-                formik={formik}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                }}
-                inputProps={{
-                  min: 0,
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputField
-                required
-                select
-                name="incomeSupport"
-                label={labels.incomeSupport}
-                formik={formik}
-              >
-                {GOVERNMENT_SUPPORT.map(({ id, name }) => (
-                  <MenuItem key={id.toString()} value={id.toString()}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </InputField>
-            </Grid>
-            <Grid item xs={6}>
-              <InputField
-                name="incomeDay1Min"
-                label={labels.incomeDay1Min}
-                type="number"
-                formik={formik}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                }}
-                inputProps={{
-                  min: 0,
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputField
-                name="incomeVariationMax"
-                label={labels.incomeVariationMax}
-                type="number"
-                formik={formik}
-                InputProps={{
-                  endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                }}
-                inputProps={{
-                  min: 0,
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputField
-                required
-                select
-                name="riskModelVersion"
-                label={labels.riskModelVersion}
-                formik={formik}
-              >
-                {RISK_MODELS.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </InputField>
-            </Grid>
-          </Grid>
+          </Box>
 
           <div className="mt-8">
             <YesNoButtons
