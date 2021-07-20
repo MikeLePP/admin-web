@@ -1,6 +1,6 @@
 import {
-  Button,
   Box,
+  Button,
   Checkbox,
   Chip,
   FormControl,
@@ -14,13 +14,13 @@ import {
   MenuItem,
   Radio,
   Select,
-  Typography,
   TextField,
+  Typography,
 } from '@material-ui/core';
 import {
-  OpenInNewOutlined as OpenInNewIcon,
-  ArrowRight as ArrowRightIcon,
   ArrowDropDown as ArrowDropDownIcon,
+  ArrowRight as ArrowRightIcon,
+  OpenInNewOutlined as OpenInNewIcon,
 } from '@material-ui/icons';
 import { useFormik } from 'formik';
 import { get, map, pick, startCase } from 'lodash';
@@ -38,8 +38,8 @@ import { callApi } from '../../helpers/api';
 import { parseBankAccount } from '../../helpers/bankAccount';
 import { toLocalDateString } from '../../helpers/date';
 import { RiskAssessment as IRiskAssessment, useRiskAssessment } from '../../hooks/assessment-hook';
-import { useTransaction } from '../../hooks/transaction-hook';
 import { useRiskModels } from '../../hooks/risk-model-hook';
+import { useTransaction } from '../../hooks/transaction-hook';
 import ActionButtons from './ActionButtons';
 import { APPROVED_AMOUNT, DECLINE_REASONS, GOVERNMENT_SUPPORT, RISK_MODELS } from './constants';
 import {
@@ -268,19 +268,22 @@ const RiskAssessment = ({
         ]);
         for (const key of Object.keys(formData)) {
           const value = get(formData, [key], '');
-          if (key !== 'id') {
-            void formik.setFieldValue(key, value);
-          } else {
+          if (key === 'id') {
             void formik.setFieldValue('automatedRiskAssessmentId', value);
+          } else if (key === 'incomeLastDate') {
+            const dateString = moment(value).format('yyyy-MM-DD');
+            void formik.setFieldValue('incomeLastDate', dateString);
+          } else {
+            void formik.setFieldValue(key, value);
           }
         }
         void formik.setFieldValue(
           'riskModelVersion',
           riskModels?.find((riskModel) => riskModel.id === selectedRiskModelId)?.name,
         );
-        notify('Generate success', 'success');
+        notify('Risk assessment completed', 'success');
       } catch (err) {
-        notify('Cannot generate risk assessment', 'error');
+        notify('Risk assessment fail', 'error');
       }
     }
     void generate();
@@ -317,53 +320,6 @@ const RiskAssessment = ({
           <Typography variant="h6" className="mb-4">
             Risk assessment
           </Typography>
-          <Box>
-            <Box
-              className="flex items-center cursor-pointer select-none"
-              onClick={() => setOpenAutomateGenerate(!openAutomateGenerate)}
-            >
-              <Typography variant="subtitle2" className="mb-4 font-bold">
-                Automated risk assessment
-              </Typography>
-              {openAutomateGenerate ? (
-                <ArrowDropDownIcon className="mb-4" fontSize="small" />
-              ) : (
-                <ArrowRightIcon className="mb-4" fontSize="small" />
-              )}
-            </Box>
-            {openAutomateGenerate && (
-              <Grid container spacing={2} className="mb-4 ">
-                <Grid item xs={6}>
-                  <TextField
-                    variant="outlined"
-                    color="secondary"
-                    fullWidth
-                    required
-                    select
-                    label="Risk Model"
-                    value={selectedRiskModelId}
-                    onChange={handleSelectRiskModel}
-                  >
-                    {riskModels?.map(({ id, name }) => (
-                      <MenuItem key={id} value={id}>
-                        {name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                </Grid>
-                <Grid item xs={6} className="flex items-center">
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    disabled={riskModelStatus === 'loading' || !selectedRiskModelId}
-                    onClick={handleGenerateRiskModel}
-                  >
-                    Perform risk assessment
-                  </Button>
-                </Grid>
-              </Grid>
-            )}
-          </Box>
           {userBankAccounts.length && (
             <div className="mb-4">
               <div className="flex items-center justify-between">
@@ -430,6 +386,53 @@ const RiskAssessment = ({
               </List>
             </div>
           )}
+          <Box>
+            <Box
+              className="flex items-center cursor-pointer select-none"
+              onClick={() => setOpenAutomateGenerate(!openAutomateGenerate)}
+            >
+              <Typography variant="subtitle2" className="mb-4 font-bold">
+                Automated risk assessment
+              </Typography>
+              {openAutomateGenerate ? (
+                <ArrowDropDownIcon className="mb-4" fontSize="small" />
+              ) : (
+                <ArrowRightIcon className="mb-4" fontSize="small" />
+              )}
+            </Box>
+            {openAutomateGenerate && (
+              <Grid container spacing={2} className="mb-4 ">
+                <Grid item xs={6}>
+                  <TextField
+                    variant="outlined"
+                    color="secondary"
+                    fullWidth
+                    required
+                    select
+                    label="Risk Model"
+                    value={selectedRiskModelId}
+                    onChange={handleSelectRiskModel}
+                  >
+                    {riskModels?.map(({ id, name }) => (
+                      <MenuItem key={id} value={id}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+                <Grid item xs={6} className="flex items-center">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={riskModelStatus === 'loading' || !selectedRiskModelId}
+                    onClick={handleGenerateRiskModel}
+                  >
+                    Perform risk assessment
+                  </Button>
+                </Grid>
+              </Grid>
+            )}
+          </Box>
           <Box>
             <Typography variant="subtitle2" className="mb-4 font-bold">
               Employment details

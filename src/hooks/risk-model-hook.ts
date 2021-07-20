@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { get, isEqual } from 'lodash';
+import { get } from 'lodash';
 import { useNotify } from 'react-admin';
 import { callApi } from '../helpers/api';
 import { RiskModel } from '../types/risk-model';
@@ -31,15 +31,18 @@ export function useRiskModel(riskModelId: string): IRiskModel {
       return;
     }
     setStatus('loading');
-    (async () => {
-      const response = await callApi(`/risk-models/${riskModelId}`);
-      const riskModelResponse = get(response, 'json', {}) as RiskModel;
-      setStatus('success');
-      setRiskModel(riskModelResponse);
-    })().catch((err) => {
-      notify('Cannot get risk model', 'error');
-      setStatus('fail');
-    });
+    async function getRiskModel() {
+      try {
+        const response = await callApi(`/risk-models/${riskModelId}`);
+        const riskModelResponse = get(response, 'json', {}) as RiskModel;
+        setStatus('success');
+        setRiskModel(riskModelResponse);
+      } catch (err) {
+        notify('Cannot get risk model', 'error');
+        setStatus('fail');
+      }
+    }
+    void getRiskModel();
   }, [notify, riskModelId]);
   return {
     riskModel,
@@ -59,15 +62,18 @@ export function useRiskModels(params?: IFilter): IRiskModels {
       range: JSON.stringify(range),
       sort: JSON.stringify(sort),
     }).toString();
-    (async () => {
-      const response = await callApi(`/risk-models?${queryString}`);
-      const riskModelResponse = get(response, 'json', {}) as RiskModel[];
-      setStatus('success');
-      setRiskModels(riskModelResponse);
-    })().catch((err) => {
-      notify('Cannot get risk model', 'error');
-      setStatus('fail');
-    });
+    async function getRiskModels() {
+      try {
+        const response = await callApi(`/risk-models?${queryString}`);
+        const riskModelResponse = get(response, 'json', {}) as RiskModel[];
+        setStatus('success');
+        setRiskModels(riskModelResponse);
+      } catch (err) {
+        notify('Cannot get risk models', 'error');
+        setStatus('fail');
+      }
+    }
+    void getRiskModels();
   }, [notify, params]);
   return {
     riskModels,
