@@ -86,7 +86,8 @@ const RiskAssessment = ({
   const transactionData = useTransaction(userDetails?.id);
   const [userBankAccounts, setUserBankAccounts] = useState<BankAccount[]>([]);
   const { riskAssessment, status } = useRiskAssessment(riskAssessmentId);
-  const { riskModels, status: riskModelStatus } = useRiskModels({});
+  const { riskModels, status: riskModelStatus } = useRiskModels();
+  const [fixedRiskModels, setFixedRiskModels] = useState<Array<string>>(RISK_MODELS);
   const dispatch = useDispatch();
   const isAddNewAssessment = useMemo(
     () => status === 'fail' || addNewAssessment || !riskAssessmentId,
@@ -111,6 +112,14 @@ const RiskAssessment = ({
       setDataLastAt(transactionData.dataLastAt);
     }
   }, [transactionData]);
+
+  useEffect(() => {
+    const newRiskModels =
+      riskModels
+        ?.filter((riskModel) => !fixedRiskModels.includes(riskModel.name))
+        .map((riskModel) => riskModel.name) || [];
+    setFixedRiskModels([...fixedRiskModels, ...newRiskModels]);
+  }, [riskModels]);
 
   useEffect(() => {
     // set existed risk assessment for form
@@ -245,6 +254,7 @@ const RiskAssessment = ({
           },
         );
         const formData = pick(json, [
+          'id',
           'approved',
           'approvedAmount',
           'incomeAverage',
@@ -254,13 +264,20 @@ const RiskAssessment = ({
           'incomeSupport',
           'incomeVariationMax',
           'rejectedReasons',
-          'riskModelVersion',
           'userId',
         ]);
         for (const key of Object.keys(formData)) {
           const value = get(formData, [key], '');
-          void formik.setFieldValue(key, value);
+          if (key !== 'id') {
+            void formik.setFieldValue(key, value);
+          } else {
+            void formik.setFieldValue('automatedRiskAssessmentId', value);
+          }
         }
+        void formik.setFieldValue(
+          'riskModelVersion',
+          riskModels?.find((riskModel) => riskModel.id === selectedRiskModelId)?.name,
+        );
         notify('Generate success', 'success');
       } catch (err) {
         notify('Cannot generate risk assessment', 'error');
@@ -306,7 +323,7 @@ const RiskAssessment = ({
               onClick={() => setOpenAutomateGenerate(!openAutomateGenerate)}
             >
               <Typography variant="subtitle2" className="mb-4 font-bold">
-                Auto-generate risk assessment
+                Automated risk assessment
               </Typography>
               {openAutomateGenerate ? (
                 <ArrowDropDownIcon className="mb-4" fontSize="small" />
@@ -341,7 +358,7 @@ const RiskAssessment = ({
                     disabled={riskModelStatus === 'loading' || !selectedRiskModelId}
                     onClick={handleGenerateRiskModel}
                   >
-                    Generate
+                    Perform risk assessment
                   </Button>
                 </Grid>
               </Grid>
@@ -445,7 +462,6 @@ const RiskAssessment = ({
               </Grid>
               <Grid item xs={6}>
                 <InputField
-                  required
                   name="incomeAverage"
                   label={labels.incomeAverage}
                   type="number"
@@ -460,7 +476,6 @@ const RiskAssessment = ({
               </Grid>
               <Grid item xs={6}>
                 <InputField
-                  required
                   select
                   name="incomeSupport"
                   label={labels.incomeSupport}
@@ -509,7 +524,7 @@ const RiskAssessment = ({
                   label={labels.riskModelVersion}
                   formik={formik}
                 >
-                  {RISK_MODELS.map((name) => (
+                  {fixedRiskModels.map((name) => (
                     <MenuItem key={name} value={name}>
                       {name}
                     </MenuItem>

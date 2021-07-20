@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { get } from 'lodash';
+import { get, isEqual } from 'lodash';
 import { useNotify } from 'react-admin';
 import { callApi } from '../helpers/api';
 import { RiskModel } from '../types/risk-model';
@@ -15,6 +15,12 @@ type IRiskModel = {
   riskModel?: RiskModel;
   status: IStatus;
 };
+
+interface IFilter {
+  filter?: Record<string, string>;
+  range?: number[];
+  sort?: string[];
+}
 
 export function useRiskModel(riskModelId: string): IRiskModel {
   const [riskModel, setRiskModel] = useState<RiskModel | undefined>(undefined);
@@ -41,26 +47,23 @@ export function useRiskModel(riskModelId: string): IRiskModel {
   };
 }
 
-export function useRiskModels({
-  filter = {},
-  range = [0.9],
-  sort = ['createdAt', 'DESC'],
-}: {
-  filter?: Record<string, string>;
-  range?: number[];
-  sort?: string[];
-}): IRiskModels {
+export function useRiskModels(params?: IFilter): IRiskModels {
   const [riskModels, setRiskModels] = useState<RiskModel[] | undefined>(undefined);
   const [status, setStatus] = useState<IStatus>('idle');
+  const [lastParams, setLastParams] = useState<IFilter | undefined>();
   const notify = useNotify();
   useEffect(() => {
+    if (isEqual(params, lastParams)) {
+      return;
+    }
+    setLastParams(params);
+    const { filter = {}, range = [0.9], sort = ['createdAt', 'DESC'] } = params || {};
     setStatus('loading');
     const queryString = new URLSearchParams({
       filter: JSON.stringify(filter),
       range: JSON.stringify(range),
       sort: JSON.stringify(sort),
     }).toString();
-
     (async () => {
       const response = await callApi(`/risk-models?${queryString}`);
       const riskModelResponse = get(response, 'json', {}) as RiskModel[];
@@ -70,7 +73,7 @@ export function useRiskModels({
       notify('Cannot get risk model', 'error');
       setStatus('fail');
     });
-  }, [filter, notify, range, sort]);
+  }, [notify, params, lastParams]);
   return {
     riskModels,
     status,
