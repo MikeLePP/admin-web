@@ -105,3 +105,165 @@ export const CellWithRightBorder = withStyles((theme: Theme) =>
     },
   }),
 )(TableCell);
+
+const PARAMETER_NAMES = {
+  I1: 'Number consecutive pay cycles assessed',
+  I2: 'Average income per cycle',
+  I3: 'Number income timing variations OR Balance on expected income day greater than',
+  I6: 'Government income as % total',
+  I7: 'Recent income',
+  B2: 'Number times day 0 balance is allowed below minimum',
+  B4: 'Number times day 1 income is allowed below minimum',
+};
+
+export const ruleSetDefault = [
+  {
+    approveLimit: 50,
+    parameters: [
+      {
+        active: true,
+        code: 'I1',
+        name: PARAMETER_NAMES.I1,
+        variables: {
+          minCountWeekly: 0,
+          minCountFortnightly: 0,
+          minCountMonthly: 0,
+        },
+      },
+      {
+        active: true,
+        code: 'I2',
+        name: PARAMETER_NAMES.I2,
+        variables: { minAmount: 0 },
+      },
+      {
+        active: true,
+        code: 'I3',
+        name: PARAMETER_NAMES.I3,
+        variables: { maxCount: 0, minBalance: 0 },
+      },
+      {
+        active: true,
+        code: 'I6',
+        name: PARAMETER_NAMES.I6,
+        variables: { maxPercent: 0 },
+      },
+      {
+        active: true,
+        code: 'I7',
+        name: PARAMETER_NAMES.I7,
+        variables: {
+          maxCountWeekly: 0,
+          maxCountFortnightly: 0,
+          maxCountMonthly: 0,
+        },
+      },
+      {
+        active: true,
+        code: 'B2',
+        name: PARAMETER_NAMES.B2,
+        variables: { maxCount: 0, minBalance: 0 },
+      },
+      {
+        active: true,
+        code: 'B4',
+        name: PARAMETER_NAMES.B4,
+        variables: { maxCount: 0, minBalance: 0 },
+      },
+    ],
+  },
+  {
+    approveLimit: 75,
+    parameters: [
+      {
+        active: true,
+        code: 'I1',
+        name: PARAMETER_NAMES.I1,
+        variables: { minCountWeekly: 0, minCountFortnightly: 0, minCountMonthly: 0 },
+      },
+      {
+        active: true,
+        code: 'I2',
+        name: PARAMETER_NAMES.I2,
+        variables: { minAmount: 0 },
+      },
+      {
+        active: true,
+        code: 'I3',
+        name: PARAMETER_NAMES.I3,
+        variables: { maxCount: 0, minBalance: 0 },
+      },
+      {
+        active: true,
+        code: 'I6',
+        name: PARAMETER_NAMES.I6,
+        variables: { maxPercent: 0 },
+      },
+      {
+        active: true,
+        code: 'I7',
+        name: PARAMETER_NAMES.I7,
+        variables: { maxCountWeekly: 0, maxCountFortnightly: 0, maxCountMonthly: 0 },
+      },
+      {
+        active: true,
+        code: 'B2',
+        name: PARAMETER_NAMES.B2,
+        variables: { maxCount: 0, minBalance: 0 },
+      },
+      {
+        active: true,
+        code: 'B4',
+        name: PARAMETER_NAMES.B4,
+        variables: { maxCount: 0, minBalance: 0 },
+      },
+    ],
+  },
+  {
+    approveLimit: 100,
+    parameters: [
+      {
+        active: true,
+        code: 'I1',
+        name: PARAMETER_NAMES.I1,
+        variables: { minCountWeekly: 0, minCountFortnightly: 0, minCountMonthly: 0 },
+      },
+      {
+        active: true,
+        code: 'I2',
+        name: PARAMETER_NAMES.I2,
+        variables: { minAmount: 0 },
+      },
+      {
+        active: true,
+        code: 'I3',
+        name: PARAMETER_NAMES.I3,
+        variables: { maxCount: 0, minBalance: 0 },
+      },
+      {
+        active: true,
+        code: 'I6',
+        name: PARAMETER_NAMES.I6,
+        variables: { maxPercent: 0 },
+      },
+      {
+        active: true,
+        code: 'I7',
+        name: PARAMETER_NAMES.I7,
+        variables: { maxCountWeekly: 0, maxCountFortnightly: 0, maxCountMonthly: 0 },
+      },
+      {
+        active: true,
+        code: 'B2',
+        name: PARAMETER_NAMES.B2,
+        variables: { maxCount: 0, minBalance: 0 },
+      },
+      {
+        active: true,
+        code: 'B4',
+        name: PARAMETER_NAMES.B4,
+        variables: { maxCount: 0, minBalance: 0 },
+      },
+    ],
+  },
+];

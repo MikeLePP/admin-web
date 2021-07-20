@@ -1,48 +1,40 @@
 import {
-  TableContainer,
+  Button,
+  Paper,
   Table,
+  TableBody,
+  TableContainer,
   TableHead,
   TableRow,
-  TableBody,
-  Paper,
   TextField,
 } from '@material-ui/core';
-import { SaveOutlined as SaveIcon, Add as CreateIcon } from '@material-ui/icons';
-import { useHistory } from 'react-router-dom';
+import { Add as CreateIcon, SaveOutlined as SaveIcon } from '@material-ui/icons';
 import { get, set } from 'lodash';
-import {
-  Edit,
-  Record,
-  ResourceComponentPropsWithId,
-  SimpleForm,
-  useEditController,
-  useGetIdentity,
-  useNotify,
-  TextInput,
-  NumberInput,
-  maxValue,
-} from 'react-admin';
-import { useFormik } from 'formik';
-import { RowsData, StyledTableCell, CellWithRightBorder } from './common';
+import { MouseEvent, useEffect, useState } from 'react';
+import { Edit, ResourceComponentPropsWithId, SimpleForm, Toolbar, useNotify } from 'react-admin';
+import { useHistory } from 'react-router-dom';
 import EditToolbar from '../../components/EditToolbar';
-import { SaveButton, Toolbar } from 'react-admin';
-import { Button } from '@material-ui/core';
+import { callApi } from '../../helpers/api';
 import { notifyOnFailure } from '../../helpers/notify';
-import { useRiskModel } from './risk-model-hooks';
-import { useState, useEffect } from 'react';
 import { RiskModel } from '../../types/risk-model';
+import { CellWithRightBorder, RowsData, StyledTableCell } from './common';
+import { useRiskModel } from './risk-model-hooks';
+
 type SaveToolbarProps = {
   saveButtonLabel?: string;
   pristine?: boolean;
-  currentRiskModel?: RiskModel
+  currentRiskModel?: RiskModel;
+  riskModelId: string;
 };
 const EditSaveToolbar = ({
   saveButtonLabel = 'Save',
   pristine,
   currentRiskModel,
+  riskModelId,
   ...rest
 }: SaveToolbarProps): JSX.Element => {
   const history = useHistory();
+  const notify = useNotify();
   let icon;
   switch (saveButtonLabel) {
     case 'Save':
@@ -56,18 +48,35 @@ const EditSaveToolbar = ({
   const handleCancelClick = () => {
     history.goBack();
   };
-  const handleSave = (): void => {
+  const handleSave = (e: MouseEvent<HTMLButtonElement>) => {
+    e.stopPropagation();
     // Call PUT API
+    async function saveRiskModel() {
+      try {
+        if (riskModelId && currentRiskModel) {
+          await callApi(`/risk-models/${riskModelId}`, 'put', {
+            ...currentRiskModel,
+          });
+          history.goBack();
+        }
+      } catch (err) {
+        notify('Cannot update risk model', 'error');
+      }
+    }
+    void saveRiskModel();
   };
   return (
     <Toolbar {...rest}>
-      <SaveButton
+      <Button
         onClick={handleSave}
-        label={saveButtonLabel}
-        icon={icon}
+        startIcon={icon}
         disabled={false}
         className="mr-2"
-      />
+        variant="contained"
+        color="primary"
+      >
+        Save
+      </Button>
       <Button onClick={handleCancelClick}>Cancel</Button>
     </Toolbar>
   );
@@ -87,10 +96,18 @@ const RiskModelEdit = (props: ResourceComponentPropsWithId): JSX.Element | null 
   }, [riskModel]);
   const onRiskModelParameterChange =
     (parameterPath: string) => (e: React.ChangeEvent<HTMLInputElement>) => {
-      const currentValue = e.target.value;
-      console.log("---", parameterPath, currentValue)
-      // Update the "value" state with parameterPath and currentValue inside here
+      const { value: currentValue } = e.target;
+      const newValue = set(value || {}, parameterPath, parseFloat(currentValue)) as RiskModel;
+      setValue(newValue);
     };
+  const handleChangeName = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { value: nameValue } = e.target;
+    const newValue = {
+      ...value,
+      name: nameValue,
+    } as RiskModel;
+    setValue(newValue);
+  };
   return (
     <Edit
       {...props}
@@ -100,8 +117,21 @@ const RiskModelEdit = (props: ResourceComponentPropsWithId): JSX.Element | null 
       mutationMode="pessimistic"
       actions={<EditToolbar />}
     >
-      <SimpleForm toolbar={<EditSaveToolbar pristine={false} currentRiskModel={value} />}>
-        <TextInput source="name" />
+      <SimpleForm
+        toolbar={
+          <EditSaveToolbar pristine={false} currentRiskModel={value} riskModelId={riskModelId} />
+        }
+      >
+        <TextField
+          variant="standard"
+          value={value?.name}
+          label="Name"
+          onChange={handleChangeName}
+          InputLabelProps={{
+            shrink: !!value?.name,
+          }}
+          className="pb-4"
+        />
         <TableContainer component={Paper} style={{ width: '100%' }}>
           <Table>
             <TableHead>
@@ -127,7 +157,7 @@ const RiskModelEdit = (props: ResourceComponentPropsWithId): JSX.Element | null 
                   {approvedLimits?.map((approvedLimit, index) => (
                     <CellWithRightBorder align="right">
                       {row.parameterPath && (
-                        <TextField 
+                        <TextField
                           id="filled-number"
                           type="number"
                           defaultValue={
