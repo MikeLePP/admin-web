@@ -50,13 +50,8 @@ export function useRiskModel(riskModelId: string): IRiskModel {
 export function useRiskModels(params?: IFilter): IRiskModels {
   const [riskModels, setRiskModels] = useState<RiskModel[] | undefined>(undefined);
   const [status, setStatus] = useState<IStatus>('idle');
-  const [lastParams, setLastParams] = useState<IFilter | undefined>();
   const notify = useNotify();
   useEffect(() => {
-    if (isEqual(params, lastParams)) {
-      return;
-    }
-    setLastParams(params);
     const { filter = {}, range = [0.9], sort = ['createdAt', 'DESC'] } = params || {};
     setStatus('loading');
     const queryString = new URLSearchParams({
@@ -73,7 +68,7 @@ export function useRiskModels(params?: IFilter): IRiskModels {
       notify('Cannot get risk model', 'error');
       setStatus('fail');
     });
-  }, [notify, params, lastParams]);
+  }, [notify, params]);
   return {
     riskModels,
     status,
