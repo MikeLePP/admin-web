@@ -11,7 +11,14 @@ import {
 import { Add as CreateIcon, SaveOutlined as SaveIcon } from '@material-ui/icons';
 import { get, set } from 'lodash';
 import { MouseEvent, useEffect, useState } from 'react';
-import { Edit, ResourceComponentPropsWithId, SimpleForm, Toolbar, useNotify } from 'react-admin';
+import {
+  Edit,
+  ResourceComponentPropsWithId,
+  SimpleForm,
+  Toolbar,
+  useGetIdentity,
+  useNotify,
+} from 'react-admin';
 import { useHistory } from 'react-router-dom';
 import EditToolbar from '../../components/EditToolbar';
 import { callApi } from '../../helpers/api';
@@ -34,6 +41,7 @@ const EditSaveToolbar = ({
   ...rest
 }: SaveToolbarProps): JSX.Element => {
   const history = useHistory();
+  const { identity } = useGetIdentity();
   const notify = useNotify();
   let icon;
   switch (saveButtonLabel) {
@@ -54,8 +62,9 @@ const EditSaveToolbar = ({
     async function saveRiskModel() {
       try {
         if (riskModelId && currentRiskModel) {
-          await callApi(`/risk-models/${riskModelId}`, 'put', {
+          await callApi(`/risk-models/${riskModelId}`, 'patch', {
             ...currentRiskModel,
+            updatedBy: identity?.id,
           });
           history.goBack();
         }

@@ -13,7 +13,14 @@ import {
 import { Add as CreateIcon } from '@material-ui/icons';
 import { get, set } from 'lodash';
 import { ChangeEvent, MouseEvent, useState } from 'react';
-import { Create, ResourceComponentProps, SimpleForm, Toolbar, useNotify } from 'react-admin';
+import {
+  Create,
+  ResourceComponentProps,
+  SimpleForm,
+  Toolbar,
+  useGetIdentity,
+  useNotify,
+} from 'react-admin';
 import { useHistory } from 'react-router-dom';
 import { riskModelTypes } from '../../constants/riskModelType';
 import { callApi } from '../../helpers/api';
@@ -27,6 +34,7 @@ type SaveToolbarProps = {
 const EditSaveToolbar = ({ currentRiskModel, ...rest }: SaveToolbarProps): JSX.Element => {
   const history = useHistory();
   const notify = useNotify();
+  const { identity } = useGetIdentity();
   const handleCancelClick = () => {
     history.goBack();
   };
@@ -38,6 +46,7 @@ const EditSaveToolbar = ({ currentRiskModel, ...rest }: SaveToolbarProps): JSX.E
         if (currentRiskModel) {
           await callApi(`/risk-models`, 'post', {
             ...currentRiskModel,
+            createdBy: identity?.id,
           });
           history.goBack();
         }
