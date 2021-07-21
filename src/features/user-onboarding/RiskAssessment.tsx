@@ -3,6 +3,7 @@ import {
   Button,
   Checkbox,
   Chip,
+  Collapse,
   FormControl,
   Grid,
   IconButton,
@@ -17,11 +18,7 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
-import {
-  ArrowDropDown as ArrowDropDownIcon,
-  ArrowRight as ArrowRightIcon,
-  OpenInNewOutlined as OpenInNewIcon,
-} from '@material-ui/icons';
+import { ExpandLess, ExpandMore, OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
 import { useFormik } from 'formik';
 import { get, map, pick, startCase } from 'lodash';
 import moment from 'moment';
@@ -78,7 +75,7 @@ const RiskAssessment = ({
   bankAccounts,
 }: OnboardingComponentProps<RiskAssessmentValues>): JSX.Element => {
   const [loading, setLoading] = useState(false);
-  const [openAutomateGenerate, setOpenAutomateGenerate] = useState(false);
+  const [riskAssessmentSectionOpened, setRiskAssessmentSectionOpened] = useState(false);
   const [selectedRiskModelId, setSelectedRiskModelId] = useState<string | undefined>();
   const [addNewAssessment, setAddNewAssessment] = useState(false);
   const [dataLastAt, setDataLastAt] = useState<string | undefined>();
@@ -389,19 +386,19 @@ const RiskAssessment = ({
           <Box>
             <Box
               className="flex items-center cursor-pointer select-none"
-              onClick={() => setOpenAutomateGenerate(!openAutomateGenerate)}
+              onClick={() => setRiskAssessmentSectionOpened(!riskAssessmentSectionOpened)}
             >
               <Typography variant="subtitle2" className="mb-4 font-bold">
                 Automated risk assessment
               </Typography>
-              {openAutomateGenerate ? (
-                <ArrowDropDownIcon className="mb-4" fontSize="small" />
+              {riskAssessmentSectionOpened ? (
+                <ExpandLess className="mb-4" fontSize="small" />
               ) : (
-                <ArrowRightIcon className="mb-4" fontSize="small" />
+                <ExpandMore className="mb-4" fontSize="small" />
               )}
             </Box>
-            {openAutomateGenerate && (
-              <Grid container spacing={2} className="mb-4 ">
+            <Collapse in={riskAssessmentSectionOpened} timeout="auto" unmountOnExit>
+              <Grid container spacing={4} className="mb-4 ">
                 <Grid item xs={6}>
                   <TextField
                     variant="outlined"
@@ -431,7 +428,7 @@ const RiskAssessment = ({
                   </Button>
                 </Grid>
               </Grid>
-            )}
+            </Collapse>
           </Box>
           <Box>
             <Typography variant="subtitle2" className="mb-4 font-bold">
