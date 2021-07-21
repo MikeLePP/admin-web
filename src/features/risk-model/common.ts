@@ -10,19 +10,19 @@ export interface RiskModelTableRow {
 export const RowsData: RiskModelTableRow[] = [
   // I1
   {
-    name: 'Number consecutive pay...',
+    name: 'Number of recent consecutive pay cycles assessed',
     code: 'I1',
   },
   {
-    name: 'Weekly',
+    name: 'Period Count Weekly',
     parameterPath: 'parameters[0].variables.periodCountWeekly',
   },
   {
-    name: 'Fortnightly',
+    name: 'Period CountFortnightly',
     parameterPath: 'parameters[0].variables.periodCountFortnightly',
   },
   {
-    name: 'Monthly',
+    name: 'Period CountMonthly',
     parameterPath: 'parameters[0].variables.periodCountMonthly',
   },
   {
@@ -39,15 +39,15 @@ export const RowsData: RiskModelTableRow[] = [
     code: 'I2',
   },
   {
-    name: 'Weekly',
+    name: 'Period Count Weekly',
     parameterPath: 'parameters[1].variables.periodCountWeekly',
   },
   {
-    name: 'Fortnightly',
+    name: 'Period Count Fortnightly',
     parameterPath: 'parameters[1].variables.periodCountFortnightly',
   },
   {
-    name: 'Monthly',
+    name: 'Period Count Monthly',
     parameterPath: 'parameters[1].variables.periodCountMonthly',
   },
   {
@@ -60,15 +60,15 @@ export const RowsData: RiskModelTableRow[] = [
     code: 'I6',
   },
   {
-    name: 'Weekly',
+    name: 'Period Count Weekly',
     parameterPath: 'parameters[2].variables.periodCountWeekly',
   },
   {
-    name: 'Fortnightly',
+    name: 'Period Count Fortnightly',
     parameterPath: 'parameters[2].variables.periodCountFortnightly',
   },
   {
-    name: 'Monthly',
+    name: 'Period Count Monthly',
     parameterPath: 'parameters[2].variables.periodCountMonthly',
   },
   {
@@ -81,15 +81,15 @@ export const RowsData: RiskModelTableRow[] = [
     code: 'B1',
   },
   {
-    name: 'Weekly',
+    name: 'Period Count Weekly',
     parameterPath: 'parameters[3].variables.periodCountWeekly',
   },
   {
-    name: 'Fortnightly',
+    name: 'Period Count Fortnightly',
     parameterPath: 'parameters[3].variables.periodCountFortnightly',
   },
   {
-    name: 'Monthly',
+    name: 'Period Count Monthly',
     parameterPath: 'parameters[3].variables.periodCountMonthly',
   },
   {
@@ -114,15 +114,15 @@ export const RowsData: RiskModelTableRow[] = [
     code: 'B2',
   },
   {
-    name: 'Weekly',
+    name: 'Period Count Weekly',
     parameterPath: 'parameters[4].variables.periodCountWeekly',
   },
   {
-    name: 'Fortnightly',
+    name: 'Period Count Fortnightly',
     parameterPath: 'parameters[4].variables.periodCountFortnightly',
   },
   {
-    name: 'Monthly',
+    name: 'Period Count Monthly',
     parameterPath: 'parameters[4].variables.periodCountMonthly',
   },
   {
@@ -154,7 +154,7 @@ export const CellWithRightBorder = withStyles((theme: Theme) =>
 )(TableCell);
 
 const PARAMETER_NAMES = {
-  I1: 'Number consecutive pay cycles assessed',
+  I1: 'Number of recent consecutive pay cycles assessed',
   I2: 'Average income per cycle',
   I3: 'Number income timing variations OR Balance on expected income day greater than',
   I6: 'Government income as % total recent income',
