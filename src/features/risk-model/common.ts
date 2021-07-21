@@ -8,71 +8,126 @@ export interface RiskModelTableRow {
 }
 
 export const RowsData: RiskModelTableRow[] = [
+  // I1
   {
     name: 'Number consecutive pay...',
     code: 'I1',
   },
   {
     name: 'Weekly',
-    parameterPath: 'parameters[0].variables.minCountWeekly',
+    parameterPath: 'parameters[0].variables.periodCountWeekly',
   },
   {
     name: 'Fortnightly',
-    parameterPath: 'parameters[0].variables.minCountFortnightly',
+    parameterPath: 'parameters[0].variables.periodCountFortnightly',
   },
   {
     name: 'Monthly',
-    parameterPath: 'parameters[0].variables.minCountMonthly',
+    parameterPath: 'parameters[0].variables.periodCountMonthly',
   },
+  {
+    name: 'Max Timing Variation Count',
+    parameterPath: 'parameters[0].variables.maxTimingVariationCount',
+  },
+  {
+    name: 'Max Timing Variation Days',
+    parameterPath: 'parameters[0].variables.maxTimingVariationDays',
+  },
+  // I2
   {
     name: 'Average income per cycle',
     code: 'I2',
-    parameterPath: 'parameters[1].variables.minAmount',
   },
-  { name: 'Number income timing...', code: 'I3' },
-  {
-    name: 'Max count',
-    parameterPath: 'parameters[2].variables.maxCount',
-  },
-  {
-    name: 'Min balance',
-    parameterPath: 'parameters[2].variables.minBalance',
-  },
-  {
-    name: 'Government income as %...',
-    code: 'I6',
-    parameterPath: 'parameters[3].variables.maxPercent',
-  },
-  { name: 'Recent income', code: 'I7' },
   {
     name: 'Weekly',
-    parameterPath: 'parameters[4].variables.maxCountWeekly',
+    parameterPath: 'parameters[1].variables.periodCountWeekly',
   },
   {
     name: 'Fortnightly',
-    parameterPath: 'parameters[4].variables.maxCountFortnightly',
+    parameterPath: 'parameters[1].variables.periodCountFortnightly',
   },
   {
     name: 'Monthly',
-    parameterPath: 'parameters[4].variables.maxCountMonthly',
-  },
-  { name: 'Number times day 0 balance is allowed below minimum', code: 'B2' },
-  {
-    name: 'Max count',
-    parameterPath: 'parameters[5].variables.maxCount',
+    parameterPath: 'parameters[1].variables.periodCountMonthly',
   },
   {
-    name: 'Min balance',
-    parameterPath: 'parameters[5].variables.minBalance',
+    name: 'Min Income Average',
+    parameterPath: 'parameters[1].variables.minIncomeAverage',
   },
-  { name: 'Number times day 1 income is allowed below minimum', code: 'B4' },
+  // I6
   {
-    name: 'Max count',
-    parameterPath: 'parameters[6].variables.maxCount',
+    name: 'Government income as % total recent income',
+    code: 'I6',
   },
   {
-    name: 'Min balance',
-    parameterPath: 'parameters[6].variables.minBalance',
+    name: 'Weekly',
+    parameterPath: 'parameters[2].variables.periodCountWeekly',
+  },
+  {
+    name: 'Fortnightly',
+    parameterPath: 'parameters[2].variables.periodCountFortnightly',
+  },
+  {
+    name: 'Monthly',
+    parameterPath: 'parameters[2].variables.periodCountMonthly',
+  },
+  {
+    name: 'Min Income Percentage',
+    parameterPath: 'parameters[2].variables.maxIncomePercentage',
+  },
+  // B1
+  {
+    name: 'Number of times day zero balance is allowed below minimum after income received',
+    code: 'B1',
+  },
+  {
+    name: 'Weekly',
+    parameterPath: 'parameters[3].variables.periodCountWeekly',
+  },
+  {
+    name: 'Fortnightly',
+    parameterPath: 'parameters[3].variables.periodCountFortnightly',
+  },
+  {
+    name: 'Monthly',
+    parameterPath: 'parameters[3].variables.periodCountMonthly',
+  },
+  {
+    name: 'Max Balance Count Weekly',
+    parameterPath: 'parameters[3].variables.maxBalanceCountWeekly',
+  },
+  {
+    name: 'Max Balance Count Fortnightly',
+    parameterPath: 'parameters[3].variables.maxBalanceCountFortnightly',
+  },
+  {
+    name: 'Max Balance Count Monthly',
+    parameterPath: 'parameters[3].variables.maxBalanceCountMonthly',
+  },
+  {
+    name: 'Min Balance Threshold',
+    parameterPath: 'parameters[3].variables.minBalanceThreshold',
+  },
+  // B2
+  {
+    name: 'Number of times day zero balance is allowed negative after income received',
+    code: 'B2',
+  },
+  {
+    name: 'Weekly',
+    parameterPath: 'parameters[4].variables.periodCountWeekly',
+  },
+  {
+    name: 'Fortnightly',
+    parameterPath: 'parameters[4].variables.periodCountFortnightly',
+  },
+  {
+    name: 'Monthly',
+    parameterPath: 'parameters[4].variables.periodCountMonthly',
+  },
+  {
+    name: 'Max Negative Balance Count',
+    parameterPath: 'parameters[4].variables.maxNegativeBalanceCount',
   },
 ];
 
@@ -102,9 +157,10 @@ const PARAMETER_NAMES = {
   I1: 'Number consecutive pay cycles assessed',
   I2: 'Average income per cycle',
   I3: 'Number income timing variations OR Balance on expected income day greater than',
-  I6: 'Government income as % total',
+  I6: 'Government income as % total recent income',
   I7: 'Recent income',
-  B2: 'Number times day 0 balance is allowed below minimum',
+  B1: 'Number of times day zero balance is allowed below minimum after income received',
+  B2: 'Number of times day zero balance is allowed negative after income received',
   B4: 'Number times day 1 income is allowed below minimum',
 };
 
@@ -117,50 +173,59 @@ export const ruleSetDefault = [
         code: 'I1',
         name: PARAMETER_NAMES.I1,
         variables: {
-          minCountWeekly: 0,
-          minCountFortnightly: 0,
-          minCountMonthly: 0,
+          periodCountWeekly: 6,
+          periodCountFortnightly: 4,
+          periodCountMonthly: 2,
+          maxTimingVariationCount: 1,
+          maxTimingVariationDays: 2,
         },
       },
       {
         active: true,
         code: 'I2',
         name: PARAMETER_NAMES.I2,
-        variables: { minAmount: 0 },
-      },
-      {
-        active: true,
-        code: 'I3',
-        name: PARAMETER_NAMES.I3,
-        variables: { maxCount: 0, minBalance: 0 },
+        variables: {
+          periodCountWeekly: 6,
+          periodCountFortnightly: 4,
+          periodCountMonthly: 2,
+          minIncomeAverage: 300,
+        },
       },
       {
         active: true,
         code: 'I6',
         name: PARAMETER_NAMES.I6,
-        variables: { maxPercent: 0 },
+        variables: {
+          periodCountWeekly: 6,
+          periodCountFortnightly: 4,
+          periodCountMonthly: 2,
+          maxIncomePercentage: 50,
+        },
       },
       {
         active: true,
-        code: 'I7',
-        name: PARAMETER_NAMES.I7,
+        code: 'B1',
+        name: PARAMETER_NAMES.B1,
         variables: {
-          maxCountWeekly: 0,
-          maxCountFortnightly: 0,
-          maxCountMonthly: 0,
+          periodCountWeekly: 6,
+          periodCountFortnightly: 4,
+          periodCountMonthly: 2,
+          maxBalanceCountWeekly: 2,
+          maxBalanceCountFortnightly: 1,
+          maxBalanceCountMonthly: 0,
+          minBalanceThreshold: 75,
         },
       },
       {
         active: true,
         code: 'B2',
         name: PARAMETER_NAMES.B2,
-        variables: { maxCount: 0, minBalance: 0 },
-      },
-      {
-        active: true,
-        code: 'B4',
-        name: PARAMETER_NAMES.B4,
-        variables: { maxCount: 0, minBalance: 0 },
+        variables: {
+          periodCountWeekly: 6,
+          periodCountFortnightly: 4,
+          periodCountMonthly: 2,
+          maxNegativeBalanceCount: 1,
+        },
       },
     ],
   },
@@ -171,43 +236,60 @@ export const ruleSetDefault = [
         active: true,
         code: 'I1',
         name: PARAMETER_NAMES.I1,
-        variables: { minCountWeekly: 0, minCountFortnightly: 0, minCountMonthly: 0 },
+        variables: {
+          periodCountWeekly: 6,
+          periodCountFortnightly: 4,
+          periodCountMonthly: 2,
+          maxTimingVariationCount: 1,
+          maxTimingVariationDays: 2,
+        },
       },
       {
         active: true,
         code: 'I2',
         name: PARAMETER_NAMES.I2,
-        variables: { minAmount: 0 },
-      },
-      {
-        active: true,
-        code: 'I3',
-        name: PARAMETER_NAMES.I3,
-        variables: { maxCount: 0, minBalance: 0 },
+        variables: {
+          periodCountWeekly: 6,
+          periodCountFortnightly: 4,
+          periodCountMonthly: 2,
+          minIncomeAverage: 350,
+        },
       },
       {
         active: true,
         code: 'I6',
         name: PARAMETER_NAMES.I6,
-        variables: { maxPercent: 0 },
+        variables: {
+          periodCountWeekly: 6,
+          periodCountFortnightly: 4,
+          periodCountMonthly: 2,
+          maxIncomePercentage: 50,
+        },
       },
       {
         active: true,
-        code: 'I7',
-        name: PARAMETER_NAMES.I7,
-        variables: { maxCountWeekly: 0, maxCountFortnightly: 0, maxCountMonthly: 0 },
+        code: 'B1',
+        name: 'Number of times day zero balance is allowed below minimum after income received',
+        variables: {
+          periodCountWeekly: 6,
+          periodCountFortnightly: 4,
+          periodCountMonthly: 2,
+          maxBalanceCountWeekly: 2,
+          maxBalanceCountFortnightly: 1,
+          maxBalanceCountMonthly: 0,
+          minBalanceThreshold: 90,
+        },
       },
       {
         active: true,
         code: 'B2',
         name: PARAMETER_NAMES.B2,
-        variables: { maxCount: 0, minBalance: 0 },
-      },
-      {
-        active: true,
-        code: 'B4',
-        name: PARAMETER_NAMES.B4,
-        variables: { maxCount: 0, minBalance: 0 },
+        variables: {
+          periodCountWeekly: 6,
+          periodCountFortnightly: 4,
+          periodCountMonthly: 2,
+          maxNegativeBalanceCount: 0,
+        },
       },
     ],
   },
@@ -218,43 +300,60 @@ export const ruleSetDefault = [
         active: true,
         code: 'I1',
         name: PARAMETER_NAMES.I1,
-        variables: { minCountWeekly: 0, minCountFortnightly: 0, minCountMonthly: 0 },
+        variables: {
+          periodCountWeekly: 8,
+          periodCountFortnightly: 4,
+          periodCountMonthly: 2,
+          maxTimingVariationCount: 1,
+          maxTimingVariationDays: 2,
+        },
       },
       {
         active: true,
         code: 'I2',
         name: PARAMETER_NAMES.I2,
-        variables: { minAmount: 0 },
-      },
-      {
-        active: true,
-        code: 'I3',
-        name: PARAMETER_NAMES.I3,
-        variables: { maxCount: 0, minBalance: 0 },
+        variables: {
+          periodCountWeekly: 8,
+          periodCountFortnightly: 4,
+          periodCountMonthly: 2,
+          minIncomeAverage: 450,
+        },
       },
       {
         active: true,
         code: 'I6',
         name: PARAMETER_NAMES.I6,
-        variables: { maxPercent: 0 },
+        variables: {
+          periodCountWeekly: 8,
+          periodCountFortnightly: 4,
+          periodCountMonthly: 2,
+          maxIncomePercentage: 50,
+        },
       },
       {
         active: true,
-        code: 'I7',
-        name: PARAMETER_NAMES.I7,
-        variables: { maxCountWeekly: 0, maxCountFortnightly: 0, maxCountMonthly: 0 },
+        code: 'B1',
+        name: PARAMETER_NAMES.B1,
+        variables: {
+          periodCountWeekly: 8,
+          periodCountFortnightly: 4,
+          periodCountMonthly: 2,
+          maxBalanceCountWeekly: 2,
+          maxBalanceCountFortnightly: 1,
+          maxBalanceCountMonthly: 0,
+          minBalanceThreshold: 120,
+        },
       },
       {
         active: true,
         code: 'B2',
         name: PARAMETER_NAMES.B2,
-        variables: { maxCount: 0, minBalance: 0 },
-      },
-      {
-        active: true,
-        code: 'B4',
-        name: PARAMETER_NAMES.B4,
-        variables: { maxCount: 0, minBalance: 0 },
+        variables: {
+          periodCountWeekly: 8,
+          periodCountFortnightly: 4,
+          periodCountMonthly: 2,
+          maxNegativeBalanceCount: 0,
+        },
       },
     ],
   },

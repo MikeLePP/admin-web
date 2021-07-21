@@ -132,7 +132,7 @@ const RiskCreate = (props: ResourceComponentProps): JSX.Element => {
                 <StyledTableCell>Parameters</StyledTableCell>
                 <StyledTableCell align="right">Code</StyledTableCell>
                 {approvedLimits?.map((approvedLimit) => (
-                  <StyledTableCell align="right">$</StyledTableCell>
+                  <StyledTableCell align="right">${approvedLimit}</StyledTableCell>
                 ))}
               </TableRow>
             </TableHead>

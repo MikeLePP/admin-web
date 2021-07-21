@@ -94,9 +94,7 @@ const RiskModelEdit = (props: ResourceComponentPropsWithId): JSX.Element | null 
   const riskModelId = get(props, 'id', '');
   const { riskModel } = useRiskModel(riskModelId);
   const [value, setValue] = useState<RiskModel | undefined>();
-  const approvedLimits = riskModel?.ruleSets.map((ruleSet) =>
-    ruleSet.approveLimit ? ruleSet.approveLimit : undefined,
-  );
+  const approvedLimits = riskModel?.ruleSets.map((ruleSet) => ruleSet.approveLimit);
   const notify = useNotify();
   useEffect(() => {
     if (riskModel) {
