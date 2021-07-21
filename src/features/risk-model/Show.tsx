@@ -10,7 +10,7 @@ const RiskModelShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const riskModelId = get(props, 'id', '');
   const { riskModel } = useRiskModel(riskModelId);
   const approvedLimits = riskModel?.ruleSets.map((ruleSet) =>
-    ruleSet.approvedLimit ? ruleSet.approvedLimit : undefined,
+    ruleSet.approveLimit ? ruleSet.approveLimit : undefined,
   );
   return (
     <Show {...props} actions={<ShowToolbar deleteCustomLabel="Cancel" />}>
@@ -22,8 +22,8 @@ const RiskModelShow = (props: ResourceComponentPropsWithId): JSX.Element => {
               <TableRow>
                 <StyledTableCell>Parameters</StyledTableCell>
                 <StyledTableCell align="right">Code</StyledTableCell>
-                {approvedLimits?.map((approvedLimit) => (
-                  <StyledTableCell align="right">${approvedLimit}</StyledTableCell>
+                {approvedLimits?.map((approveLimit) => (
+                  <StyledTableCell align="right">${approveLimit}</StyledTableCell>
                 ))}
               </TableRow>
             </TableHead>
@@ -38,7 +38,7 @@ const RiskModelShow = (props: ResourceComponentPropsWithId): JSX.Element => {
                     {row.name}
                   </CellWithRightBorder>
                   <CellWithRightBorder align="right">{row.code}</CellWithRightBorder>
-                  {approvedLimits?.map((approvedLimit, index) => (
+                  {approvedLimits?.map((approveLimit, index) => (
                     <CellWithRightBorder align="right">
                       {row.parameterPath &&
                         get(riskModel, `ruleSets[${index}].${row.parameterPath}`)}

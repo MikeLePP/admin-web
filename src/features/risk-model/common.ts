@@ -1,13 +1,5 @@
 import { withStyles, Theme, createStyles } from '@material-ui/core/styles';
-import { TableCell, Box } from '@material-ui/core';
-import { ArrowBack as BackIcon } from '@material-ui/icons';
-import {
-  useNotify,
-  ResourceComponentPropsWithId,
-  ListButton,
-  ShowButton,
-  TopToolbar,
-} from 'react-admin';
+import { TableCell } from '@material-ui/core';
 
 export interface RiskModelTableRow {
   name: string;

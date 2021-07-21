@@ -1,14 +1,10 @@
 import {
   Datagrid,
   EditButton,
-  Filter,
-  FunctionField,
   List,
-  Record as RaRecord,
   ResourceComponentProps,
   ShowButton,
   TextField,
-  TextInput,
 } from 'react-admin';
 
 const RiskModelList = (props: ResourceComponentProps): JSX.Element => (
