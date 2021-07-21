@@ -421,7 +421,9 @@ const RiskAssessment = ({
                   <Button
                     variant="contained"
                     color="primary"
-                    disabled={riskModelStatus === 'loading' || !selectedRiskModelId}
+                    disabled={
+                      riskModelStatus === 'loading' || status === 'loading' || !selectedRiskModelId
+                    }
                     onClick={handleGenerateRiskModel}
                   >
                     Perform risk assessment
