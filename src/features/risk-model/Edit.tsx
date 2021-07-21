@@ -25,7 +25,7 @@ import { callApi } from '../../helpers/api';
 import { notifyOnFailure } from '../../helpers/notify';
 import { RiskModel } from '../../types/risk-model';
 import { CellWithRightBorder, RowsData, StyledTableCell } from './common';
-import { useRiskModel } from './risk-model-hooks';
+import { useRiskModel } from '../../hooks/risk-model-hook';
 
 type SaveToolbarProps = {
   saveButtonLabel?: string;

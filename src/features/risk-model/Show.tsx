@@ -2,7 +2,7 @@ import { TableContainer, Table, TableHead, TableRow, TableBody, Paper } from '@m
 import { get } from 'lodash';
 import { ResourceComponentPropsWithId, Show, SimpleShowLayout, TextField } from 'react-admin';
 
-import { useRiskModel } from './risk-model-hooks';
+import { useRiskModel } from '../../hooks/risk-model-hook';
 import ShowToolbar from '../../components/ShowToolbar';
 import { RowsData, StyledTableCell, CellWithRightBorder } from './common';
 
