@@ -7,8 +7,13 @@ import {
   TableHead,
   TableRow,
   TextField,
+  Box,
 } from '@material-ui/core';
-import { Add as CreateIcon, SaveOutlined as SaveIcon } from '@material-ui/icons';
+import {
+  Add as CreateIcon,
+  SaveOutlined as SaveIcon,
+  ArrowBack as BackIcon,
+} from '@material-ui/icons';
 import { get, set } from 'lodash';
 import { MouseEvent, useEffect, useState } from 'react';
 import {
@@ -18,9 +23,10 @@ import {
   Toolbar,
   useGetIdentity,
   useNotify,
+  ListButton,
+  TopToolbar,
 } from 'react-admin';
 import { useHistory } from 'react-router-dom';
-import EditToolbar from '../../components/EditToolbar';
 import { callApi } from '../../helpers/api';
 import { notifyOnFailure } from '../../helpers/notify';
 import { RiskModel } from '../../types/risk-model';
@@ -66,7 +72,7 @@ const EditSaveToolbar = ({
             ...currentRiskModel,
             updatedBy: identity?.id,
           });
-          history.goBack();
+          history.push(`/risk-models/${riskModelId}/show`);
         }
       } catch (err) {
         notify('Cannot update risk model', 'error');
@@ -90,6 +96,14 @@ const EditSaveToolbar = ({
     </Toolbar>
   );
 };
+
+const CustomEditToolbar = (): JSX.Element => (
+  <TopToolbar>
+    <ListButton icon={<BackIcon />} />
+    <Box display="flex" flexGrow={1} />
+  </TopToolbar>
+);
+
 const RiskModelEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const riskModelId = get(props, 'id', '');
   const { riskModel } = useRiskModel(riskModelId);
@@ -122,7 +136,7 @@ const RiskModelEdit = (props: ResourceComponentPropsWithId): JSX.Element | null 
       onFailure={notifyOnFailure(notify)}
       // transform={transform}
       mutationMode="pessimistic"
-      actions={<EditToolbar />}
+      actions={<CustomEditToolbar />}
     >
       <SimpleForm
         toolbar={
@@ -145,14 +159,23 @@ const RiskModelEdit = (props: ResourceComponentPropsWithId): JSX.Element | null 
               <TableRow>
                 <StyledTableCell>Parameters</StyledTableCell>
                 <StyledTableCell align="right">Code</StyledTableCell>
-                {approvedLimits?.map((approvedLimit) => (
-                  <StyledTableCell align="right">${approvedLimit}</StyledTableCell>
+                {approvedLimits?.map((approvedLimit, index) => (
+                  <StyledTableCell align="right">
+                    <TextField
+                      type="number"
+                      InputProps={{
+                        className: 'text-white',
+                      }}
+                      defaultValue={approvedLimit}
+                      onChange={onRiskModelParameterChange(`ruleSets[${index}].approveLimit`)}
+                    />
+                  </StyledTableCell>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
               {RowsData.map((row) => (
-                <TableRow key={row.name}>
+                <TableRow key={row.parameterPath || row.name}>
                   <CellWithRightBorder
                     component="th"
                     scope="row"

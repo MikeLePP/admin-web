@@ -44,11 +44,16 @@ const EditSaveToolbar = ({ currentRiskModel, ...rest }: SaveToolbarProps): JSX.E
     async function saveRiskModel() {
       try {
         if (currentRiskModel) {
-          await callApi(`/risk-models`, 'post', {
+          const riskModel = await callApi(`/risk-models`, 'post', {
             ...currentRiskModel,
             createdBy: identity?.id,
           });
-          history.goBack();
+          const riskModelId = get(riskModel, 'json.id') as string | undefined;
+          if (riskModelId) {
+            history.push(`/risk-models/${riskModelId}/show`);
+          } else {
+            history.push(`/risk-models/`);
+          }
         }
       } catch (err) {
         notify('Cannot create risk model', 'error');
@@ -131,14 +136,20 @@ const RiskCreate = (props: ResourceComponentProps): JSX.Element => {
               <TableRow>
                 <StyledTableCell>Parameters</StyledTableCell>
                 <StyledTableCell align="right">Code</StyledTableCell>
-                {approvedLimits?.map((approvedLimit) => (
-                  <StyledTableCell align="right">${approvedLimit}</StyledTableCell>
+                {approvedLimits?.map((approvedLimit, index) => (
+                  <StyledTableCell align="right">
+                    <TextField
+                      type="number"
+                      defaultValue={approvedLimit}
+                      onChange={handleRiskModelParameterChange(`ruleSets[${index}].approveLimit`)}
+                    />
+                  </StyledTableCell>
                 ))}
               </TableRow>
             </TableHead>
             <TableBody>
               {RowsData.map((row) => (
-                <TableRow key={row.name}>
+                <TableRow key={row.parameterPath || row.name}>
                   <CellWithRightBorder
                     component="th"
                     scope="row"

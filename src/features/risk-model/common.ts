@@ -18,11 +18,11 @@ export const RowsData: RiskModelTableRow[] = [
     parameterPath: 'parameters[0].variables.periodCountWeekly',
   },
   {
-    name: 'Period CountFortnightly',
+    name: 'Period Count Fortnightly',
     parameterPath: 'parameters[0].variables.periodCountFortnightly',
   },
   {
-    name: 'Period CountMonthly',
+    name: 'Period Count Monthly',
     parameterPath: 'parameters[0].variables.periodCountMonthly',
   },
   {

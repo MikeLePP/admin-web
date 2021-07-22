@@ -8,18 +8,32 @@ type ShowToolbarProps = {
   data?: Record | undefined;
   resource?: string;
   deleteCustomLabel?: string;
+  deleteButtonRedirectToPage?: 'show' | 'list' | undefined;
 };
 
 const ShowToolbar = (props: ShowToolbarProps): JSX.Element | null => {
   if (!props.data) return null;
 
-  const { basePath, data, resource, deleteCustomLabel = 'Delete' } = props;
+  const {
+    basePath,
+    data,
+    resource,
+    deleteCustomLabel = 'Delete',
+    deleteButtonRedirectToPage = 'show',
+  } = props;
   let listBasePath = basePath;
   let editBasePath = `${String(basePath)}/${String(data.id)}`;
   if (data && data.userId) {
     listBasePath += `?userId=${String(data.userId)}`;
     editBasePath += `?userId=${String(data.userId)}`;
   }
+
+  const getDeleteButtonRedirectUrl = () => {
+    if (deleteButtonRedirectToPage === 'show') {
+      return `${String(basePath)}/${String(data.id)}/show`;
+    }
+    return `${String(basePath)}`;
+  };
 
   return (
     <TopToolbar>
@@ -35,7 +49,7 @@ const ShowToolbar = (props: ShowToolbarProps): JSX.Element | null => {
         record={data}
         resource={resource}
         mutationMode="pessimistic"
-        redirect={`${String(basePath)}/${String(data.id)}/show`}
+        redirect={getDeleteButtonRedirectUrl()}
       />
     </TopToolbar>
   );

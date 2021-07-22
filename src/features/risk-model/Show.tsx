@@ -12,8 +12,12 @@ const RiskModelShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const approvedLimits = riskModel?.ruleSets.map((ruleSet) =>
     ruleSet.approveLimit ? ruleSet.approveLimit : undefined,
   );
+
   return (
-    <Show {...props} actions={<ShowToolbar deleteCustomLabel="Cancel" />}>
+    <Show
+      {...props}
+      actions={<ShowToolbar deleteCustomLabel="Delete" deleteButtonRedirectToPage="list" />}
+    >
       <SimpleShowLayout>
         <TextField source="name" />
         <TableContainer component={Paper}>
@@ -29,7 +33,7 @@ const RiskModelShow = (props: ResourceComponentPropsWithId): JSX.Element => {
             </TableHead>
             <TableBody>
               {RowsData.map((row) => (
-                <TableRow key={row.name}>
+                <TableRow key={row.parameterPath || row.name}>
                   <CellWithRightBorder
                     component="th"
                     scope="row"
