@@ -56,7 +56,8 @@ const EditSaveToolbar = ({ currentRiskModel, ...rest }: SaveToolbarProps): JSX.E
           }
         }
       } catch (err) {
-        notify('Cannot create risk model', 'error');
+        const errTitle = get(err, 'body.errors[0].title', 'Cannot create risk assessment');
+        notify(errTitle, 'error');
       }
     }
     void saveRiskModel();
@@ -139,6 +140,9 @@ const RiskCreate = (props: ResourceComponentProps): JSX.Element => {
                 {approvedLimits?.map((approvedLimit, index) => (
                   <StyledTableCell align="right">
                     <TextField
+                      InputProps={{
+                        className: 'text-white',
+                      }}
                       type="number"
                       defaultValue={approvedLimit}
                       onChange={handleRiskModelParameterChange(`ruleSets[${index}].approveLimit`)}

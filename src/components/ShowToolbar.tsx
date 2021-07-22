@@ -2,6 +2,7 @@ import { Box } from '@material-ui/core';
 import { ArrowBack as BackIcon, Edit as EditIcon } from '@material-ui/icons';
 import { Button, DeleteButton, ListButton, TopToolbar, Record } from 'react-admin';
 import { Link } from 'react-router-dom';
+import { template } from 'lodash';
 
 type ShowToolbarProps = {
   basePath?: string;
@@ -9,6 +10,7 @@ type ShowToolbarProps = {
   resource?: string;
   deleteCustomLabel?: string;
   deleteButtonRedirectToPage?: 'show' | 'list' | undefined;
+  deleteTemplate?: string;
 };
 
 const ShowToolbar = (props: ShowToolbarProps): JSX.Element | null => {
@@ -20,9 +22,11 @@ const ShowToolbar = (props: ShowToolbarProps): JSX.Element | null => {
     resource,
     deleteCustomLabel = 'Delete',
     deleteButtonRedirectToPage = 'show',
+    deleteTemplate,
   } = props;
+  const title = deleteTemplate ? { confirmTitle: template(deleteTemplate)(data) } : {};
   let listBasePath = basePath;
-  let editBasePath = `${String(basePath)}/${String(data.id)}`;
+  let editBasePath = `${String(basePath)}/${String(data?.id)}`;
   if (data && data.userId) {
     listBasePath += `?userId=${String(data.userId)}`;
     editBasePath += `?userId=${String(data.userId)}`;
@@ -50,6 +54,7 @@ const ShowToolbar = (props: ShowToolbarProps): JSX.Element | null => {
         resource={resource}
         mutationMode="pessimistic"
         redirect={getDeleteButtonRedirectUrl()}
+        {...title}
       />
     </TopToolbar>
   );

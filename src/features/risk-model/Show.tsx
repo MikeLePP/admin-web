@@ -16,7 +16,13 @@ const RiskModelShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   return (
     <Show
       {...props}
-      actions={<ShowToolbar deleteCustomLabel="Delete" deleteButtonRedirectToPage="list" />}
+      actions={
+        <ShowToolbar
+          deleteCustomLabel="Delete"
+          deleteButtonRedirectToPage="list"
+          deleteTemplate={`Delete risk-model \${name}`}
+        />
+      }
     >
       <SimpleShowLayout>
         <TextField source="name" />
