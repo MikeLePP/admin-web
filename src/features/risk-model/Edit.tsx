@@ -1,37 +1,37 @@
 import {
+  Box,
   Button,
-  Paper,
   Table,
   TableBody,
   TableContainer,
   TableHead,
   TableRow,
   TextField,
-  Box,
 } from '@material-ui/core';
 import {
   Add as CreateIcon,
-  SaveOutlined as SaveIcon,
   ArrowBack as BackIcon,
+  SaveOutlined as SaveIcon,
 } from '@material-ui/icons';
 import { get, set } from 'lodash';
-import { MouseEvent, useEffect, useState } from 'react';
+import { Fragment, MouseEvent, useEffect, useState } from 'react';
 import {
   Edit,
+  ListButton,
   ResourceComponentPropsWithId,
   SimpleForm,
   Toolbar,
+  TopToolbar,
   useGetIdentity,
   useNotify,
-  ListButton,
-  TopToolbar,
 } from 'react-admin';
 import { useHistory } from 'react-router-dom';
+import Dialog from '../../components/Dialog';
 import { callApi } from '../../helpers/api';
 import { notifyOnFailure } from '../../helpers/notify';
+import { useRiskModel } from '../../hooks/risk-model-hook';
 import { RiskModel } from '../../types/risk-model';
 import { CellWithRightBorder, RowsData, StyledTableCell } from './common';
-import { useRiskModel } from '../../hooks/risk-model-hook';
 
 type SaveToolbarProps = {
   saveButtonLabel?: string;
@@ -97,12 +97,35 @@ const EditSaveToolbar = ({
   );
 };
 
-const CustomEditToolbar = (): JSX.Element => (
-  <TopToolbar>
-    <ListButton icon={<BackIcon />} />
-    <Box display="flex" flexGrow={1} />
-  </TopToolbar>
-);
+const CustomEditToolbar = (): JSX.Element => {
+  const [openConfirmDialog, setOpenConfirmDialog] = useState(false);
+  const handleClickBack = () => {
+    setOpenConfirmDialog(true);
+  };
+  const handleConfirmGoBack = () => {
+    setOpenConfirmDialog(false);
+    document.getElementById('back-button')?.click();
+  };
+  return (
+    <Fragment>
+      <TopToolbar>
+        <Button startIcon={<BackIcon />} onClick={handleClickBack} color="primary">
+          List
+        </Button>
+        <ListButton className="invisible" icon={<BackIcon />} id="back-button" />
+        <Box display="flex" flexGrow={1} />
+      </TopToolbar>
+      <Dialog
+        show={openConfirmDialog}
+        confirmLabel="Confirm"
+        title="Risk Model"
+        body="Your change will not be saved. Are you sure?"
+        onCancelClick={() => setOpenConfirmDialog(false)}
+        onConfirmClick={handleConfirmGoBack}
+      />
+    </Fragment>
+  );
+};
 
 const RiskModelEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const riskModelId = get(props, 'id', '');
@@ -132,7 +155,7 @@ const RiskModelEdit = (props: ResourceComponentPropsWithId): JSX.Element | null 
   return (
     <Edit
       {...props}
-      title="Edit Transaction"
+      title={`Risk model ${riskModel?.name || ''}`}
       onFailure={notifyOnFailure(notify)}
       // transform={transform}
       mutationMode="pessimistic"
@@ -153,7 +176,7 @@ const RiskModelEdit = (props: ResourceComponentPropsWithId): JSX.Element | null 
           }}
           className="pb-4"
         />
-        <TableContainer component={Paper} style={{ width: '100%' }}>
+        <TableContainer className="w-full	overflow-x-hidden	">
           <Table>
             <TableHead>
               <TableRow>

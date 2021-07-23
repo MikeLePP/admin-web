@@ -16,6 +16,7 @@ const RiskModelShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   return (
     <Show
       {...props}
+      title={`Risk model ${riskModel?.name || ''}`}
       actions={
         <ShowToolbar
           deleteCustomLabel="Delete"
@@ -26,7 +27,7 @@ const RiskModelShow = (props: ResourceComponentPropsWithId): JSX.Element => {
     >
       <SimpleShowLayout>
         <TextField source="name" />
-        <TableContainer component={Paper}>
+        <TableContainer className="overflow-x-hidden w-full">
           <Table aria-label="simple table">
             <TableHead>
               <TableRow>

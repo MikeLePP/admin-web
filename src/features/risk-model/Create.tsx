@@ -28,10 +28,15 @@ import { RiskModel } from '../../types/risk-model';
 import { CellWithRightBorder, RowsData, ruleSetDefault, StyledTableCell } from './common';
 
 type SaveToolbarProps = {
+  riskModelName: string;
   currentRiskModel?: RiskModel;
 };
 
-const EditSaveToolbar = ({ currentRiskModel, ...rest }: SaveToolbarProps): JSX.Element => {
+const EditSaveToolbar = ({
+  riskModelName,
+  currentRiskModel,
+  ...rest
+}: SaveToolbarProps): JSX.Element => {
   const history = useHistory();
   const notify = useNotify();
   const { identity } = useGetIdentity();
@@ -39,6 +44,14 @@ const EditSaveToolbar = ({ currentRiskModel, ...rest }: SaveToolbarProps): JSX.E
     history.goBack();
   };
   const handleSave = (e: MouseEvent<HTMLButtonElement>) => {
+    if (!riskModelName) {
+      notify("Risk model's name should not be empty", 'error');
+      return;
+    }
+    if (!currentRiskModel?.modelType) {
+      notify("Risk model's type should not be empty", 'error');
+      return;
+    }
     e.stopPropagation();
     // Call PUT API
     async function saveRiskModel() {
@@ -46,6 +59,7 @@ const EditSaveToolbar = ({ currentRiskModel, ...rest }: SaveToolbarProps): JSX.E
         if (currentRiskModel) {
           const riskModel = await callApi(`/risk-models`, 'post', {
             ...currentRiskModel,
+            name: riskModelName,
             createdBy: identity?.id,
           });
           const riskModelId = get(riskModel, 'json.id') as string | undefined;
@@ -83,6 +97,7 @@ const RiskCreate = (props: ResourceComponentProps): JSX.Element => {
   const [riskModel, setRiskModel] = useState<RiskModel>({
     ruleSets: [...ruleSetDefault],
   } as unknown as RiskModel);
+  const [name, setName] = useState<string>('');
   const handleSelectRiskModel = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const { value } = e.target;
     setRiskModel({
@@ -99,7 +114,7 @@ const RiskCreate = (props: ResourceComponentProps): JSX.Element => {
   const approvedLimits = ruleSetDefault.map((ruleSet) => ruleSet.approveLimit);
   return (
     <Create {...props}>
-      <SimpleForm toolbar={<EditSaveToolbar currentRiskModel={riskModel} />}>
+      <SimpleForm toolbar={<EditSaveToolbar currentRiskModel={riskModel} riskModelName={name} />}>
         <Grid container className="w-full pb-4">
           <Grid item xs={6}>
             <TextField
@@ -108,7 +123,7 @@ const RiskCreate = (props: ResourceComponentProps): JSX.Element => {
               label="Title"
               fullWidth
               variant="outlined"
-              onChange={(e) => setRiskModel({ ...riskModel, name: e.target.value })}
+              onChange={(e) => setName(e.target.value)}
             />
           </Grid>
           <Grid item xs={6}>
