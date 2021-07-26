@@ -14,23 +14,23 @@ export const RowsData: RiskModelTableRow[] = [
     code: 'I1',
   },
   {
-    name: 'Period Count Weekly',
+    name: 'Pay cycles to assess (weekly)',
     parameterPath: 'parameters[0].variables.periodCountWeekly',
   },
   {
-    name: 'Period Count Fortnightly',
+    name: 'Pay cycles to assess (fortnightly)',
     parameterPath: 'parameters[0].variables.periodCountFortnightly',
   },
   {
-    name: 'Period Count Monthly',
+    name: 'Pay cycles to assess (monthly)',
     parameterPath: 'parameters[0].variables.periodCountMonthly',
   },
   {
-    name: 'Max Timing Variation Count',
+    name: 'Max timing variation (count)',
     parameterPath: 'parameters[0].variables.maxTimingVariationCount',
   },
   {
-    name: 'Max Timing Variation Days',
+    name: 'Max timing variation (days excl. weekends)',
     parameterPath: 'parameters[0].variables.maxTimingVariationDays',
   },
   // I2
@@ -39,19 +39,19 @@ export const RowsData: RiskModelTableRow[] = [
     code: 'I2',
   },
   {
-    name: 'Period Count Weekly',
+    name: 'Pay cycles to assess (weekly)',
     parameterPath: 'parameters[1].variables.periodCountWeekly',
   },
   {
-    name: 'Period Count Fortnightly',
+    name: 'Pay cycles to assess (fortnightly)',
     parameterPath: 'parameters[1].variables.periodCountFortnightly',
   },
   {
-    name: 'Period Count Monthly',
+    name: 'Pay cycles to assess (monthly)',
     parameterPath: 'parameters[1].variables.periodCountMonthly',
   },
   {
-    name: 'Min Income Average',
+    name: 'Min income average',
     parameterPath: 'parameters[1].variables.minIncomeAverage',
   },
   // I6
@@ -60,19 +60,19 @@ export const RowsData: RiskModelTableRow[] = [
     code: 'I6',
   },
   {
-    name: 'Period Count Weekly',
+    name: 'Pay cycles to assess (weekly)',
     parameterPath: 'parameters[2].variables.periodCountWeekly',
   },
   {
-    name: 'Period Count Fortnightly',
+    name: 'Pay cycles to assess (fortnightly)',
     parameterPath: 'parameters[2].variables.periodCountFortnightly',
   },
   {
-    name: 'Period Count Monthly',
+    name: 'Pay cycles to assess (monthly)',
     parameterPath: 'parameters[2].variables.periodCountMonthly',
   },
   {
-    name: 'Min Income Percentage',
+    name: 'Min income percentage',
     parameterPath: 'parameters[2].variables.maxIncomePercentage',
   },
   // B1
@@ -81,31 +81,31 @@ export const RowsData: RiskModelTableRow[] = [
     code: 'B1',
   },
   {
-    name: 'Period Count Weekly',
+    name: 'Pay cycles to assess (weekly)',
     parameterPath: 'parameters[3].variables.periodCountWeekly',
   },
   {
-    name: 'Period Count Fortnightly',
+    name: 'Pay cycles to assess (fortnightly)',
     parameterPath: 'parameters[3].variables.periodCountFortnightly',
   },
   {
-    name: 'Period Count Monthly',
+    name: 'Pay cycles to assess (monthly)',
     parameterPath: 'parameters[3].variables.periodCountMonthly',
   },
   {
-    name: 'Max Balance Count Weekly',
+    name: 'Max balance count weekly',
     parameterPath: 'parameters[3].variables.maxBalanceCountWeekly',
   },
   {
-    name: 'Max Balance Count Fortnightly',
+    name: 'Max balance count fortnightly',
     parameterPath: 'parameters[3].variables.maxBalanceCountFortnightly',
   },
   {
-    name: 'Max Balance Count Monthly',
+    name: 'Max balance count monthly',
     parameterPath: 'parameters[3].variables.maxBalanceCountMonthly',
   },
   {
-    name: 'Min Balance Threshold',
+    name: 'Min balance threshold',
     parameterPath: 'parameters[3].variables.minBalanceThreshold',
   },
   // B2
@@ -114,19 +114,19 @@ export const RowsData: RiskModelTableRow[] = [
     code: 'B2',
   },
   {
-    name: 'Period Count Weekly',
+    name: 'Pay cycles to assess (weekly)',
     parameterPath: 'parameters[4].variables.periodCountWeekly',
   },
   {
-    name: 'Period Count Fortnightly',
+    name: 'Pay cycles to assess (fortnightly)',
     parameterPath: 'parameters[4].variables.periodCountFortnightly',
   },
   {
-    name: 'Period Count Monthly',
+    name: 'Pay cycles to assess (monthly)',
     parameterPath: 'parameters[4].variables.periodCountMonthly',
   },
   {
-    name: 'Max Negative Balance Count',
+    name: 'Max negative balance count',
     parameterPath: 'parameters[4].variables.maxNegativeBalanceCount',
   },
 ];

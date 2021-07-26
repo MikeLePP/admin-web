@@ -70,7 +70,7 @@ const EditSaveToolbar = ({
           }
         }
       } catch (err) {
-        const errTitle = get(err, 'body.errors[0].title', 'Cannot create risk assessment');
+        const errTitle = get(err, 'body.errors[0].title', 'Cannot create risk model');
         notify(errTitle, 'error');
       }
     }
@@ -120,7 +120,7 @@ const RiskCreate = (props: ResourceComponentProps): JSX.Element => {
             <TextField
               className="pr-2"
               value={riskModel.name}
-              label="Title"
+              label="Name"
               fullWidth
               variant="outlined"
               onChange={(e) => setName(e.target.value)}
@@ -134,7 +134,7 @@ const RiskCreate = (props: ResourceComponentProps): JSX.Element => {
               fullWidth
               required
               select
-              label="Risk Model"
+              label="Type"
               value={riskModel.modelType}
               onChange={handleSelectRiskModel}
             >

@@ -1,4 +1,4 @@
-import { TableContainer, Table, TableHead, TableRow, TableBody, Paper } from '@material-ui/core';
+import { TableContainer, Table, TableHead, TableRow, TableBody, Box } from '@material-ui/core';
 import { get } from 'lodash';
 import { ResourceComponentPropsWithId, Show, SimpleShowLayout, TextField } from 'react-admin';
 
@@ -21,12 +21,19 @@ const RiskModelShow = (props: ResourceComponentPropsWithId): JSX.Element => {
         <ShowToolbar
           deleteCustomLabel="Delete"
           deleteButtonRedirectToPage="list"
-          deleteTemplate={`Delete risk-model \${name}`}
+          deleteTemplate={`Delete risk model \${name}`}
         />
       }
     >
       <SimpleShowLayout>
-        <TextField source="name" />
+        <Box className="flex my-4">
+          <Box>
+            Name: <TextField source="name" />
+          </Box>
+          <Box className="px-4">
+            Type: <TextField source="modelType" />
+          </Box>
+        </Box>
         <TableContainer className="overflow-x-hidden w-full">
           <Table aria-label="simple table">
             <TableHead>

@@ -1,6 +1,7 @@
 import {
   Box,
   Button,
+  MenuItem,
   Table,
   TableBody,
   TableContainer,
@@ -14,7 +15,7 @@ import {
   SaveOutlined as SaveIcon,
 } from '@material-ui/icons';
 import { get, set } from 'lodash';
-import { Fragment, MouseEvent, useEffect, useState } from 'react';
+import { Fragment, MouseEvent, useState, useEffect } from 'react';
 import {
   Edit,
   ListButton,
@@ -27,6 +28,7 @@ import {
 } from 'react-admin';
 import { useHistory } from 'react-router-dom';
 import Dialog from '../../components/Dialog';
+import { riskModelTypes } from '../../constants/riskModelType';
 import { callApi } from '../../helpers/api';
 import { notifyOnFailure } from '../../helpers/notify';
 import { useRiskModel } from '../../hooks/risk-model-hook';
@@ -75,7 +77,8 @@ const EditSaveToolbar = ({
           history.push(`/risk-models/${riskModelId}/show`);
         }
       } catch (err) {
-        notify('Cannot update risk model', 'error');
+        const errTitle = get(err, 'body.errors[0].title', 'Cannot update risk model');
+        notify(errTitle, 'error');
       }
     }
     void saveRiskModel();
@@ -144,14 +147,16 @@ const RiskModelEdit = (props: ResourceComponentPropsWithId): JSX.Element | null 
       const newValue = set(value || {}, parameterPath, parseFloat(currentValue)) as RiskModel;
       setValue(newValue);
     };
-  const handleChangeName = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { value: nameValue } = e.target;
-    const newValue = {
-      ...value,
-      name: nameValue,
-    } as RiskModel;
-    setValue(newValue);
-  };
+  const handleChange =
+    (type: string) => (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+      const { value: nameValue } = e.target;
+      const newValue = {
+        ...value,
+        [type]: nameValue,
+      } as RiskModel;
+      setValue(newValue);
+    };
+
   return (
     <Edit
       {...props}
@@ -170,12 +175,29 @@ const RiskModelEdit = (props: ResourceComponentPropsWithId): JSX.Element | null 
           variant="standard"
           value={value?.name}
           label="Name"
-          onChange={handleChangeName}
+          onChange={handleChange('name')}
           InputLabelProps={{
             shrink: !!value?.name,
           }}
           className="pb-4"
         />
+        <TextField
+          variant="standard"
+          value={value?.modelType}
+          label="Type"
+          select
+          onChange={handleChange('modelType')}
+          InputLabelProps={{
+            shrink: !!value?.modelType,
+          }}
+          className="pb-4"
+        >
+          {riskModelTypes.map(({ label, value: selectValue }) => (
+            <MenuItem key={selectValue} value={selectValue}>
+              {label}
+            </MenuItem>
+          ))}
+        </TextField>
         <TableContainer className="w-full	overflow-x-hidden	">
           <Table>
             <TableHead>
