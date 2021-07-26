@@ -1,5 +1,5 @@
 export interface RiskRuleSet {
-  approvedLimit: number;
+  approveLimit: number;
   parameters: RiskParameter[];
 }
 
@@ -17,5 +17,7 @@ export interface RiskModel {
   modelType: 'onboarding' | 'continuous';
   name: string;
   createdAt?: string;
+  createdBy?: string;
+  updatedBy?: string;
   ruleSets: RiskRuleSet[];
 }
