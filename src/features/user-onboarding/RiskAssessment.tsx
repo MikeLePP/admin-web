@@ -1,44 +1,50 @@
 import {
+  Box,
   Button,
   Checkbox,
+  Chip,
+  Collapse,
   FormControl,
   Grid,
+  IconButton,
   InputAdornment,
   InputLabel,
-  ListItemText,
-  MenuItem,
-  Select,
-  Typography,
   List,
   ListItem,
+  ListItemText,
+  MenuItem,
   Radio,
-  Chip,
-  IconButton,
+  Select,
+  TextField,
+  Typography,
 } from '@material-ui/core';
-import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
+import { ExpandLess, ExpandMore, OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
 import { useFormik } from 'formik';
-import { map, startCase } from 'lodash';
-import { useEffect, useState } from 'react';
+import { get, map, pick, startCase } from 'lodash';
+import moment from 'moment';
+import React, { useEffect, useMemo, useState } from 'react';
 import { fetchEnd, fetchStart } from 'react-admin';
 import { useDispatch } from 'react-redux';
 import * as yup from 'yup';
 import InputField from '../../components/InputField';
 import TextLabel from '../../components/TextLabel';
+import TransactionDialog from '../../components/TransactionDialog';
 import YesNoButtons from '../../components/YesNoButtons';
 import INCOME_FREQUENCIES from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import { parseBankAccount } from '../../helpers/bankAccount';
 import { toLocalDateString } from '../../helpers/date';
+import { RiskAssessment as IRiskAssessment, useRiskAssessment } from '../../hooks/assessment-hook';
+import { useRiskModels } from '../../hooks/risk-model-hook';
+import { useTransaction } from '../../hooks/transaction-hook';
 import ActionButtons from './ActionButtons';
-import { DECLINE_REASONS, GOVERNMENT_SUPPORT, RISK_MODELS, APPROVED_AMOUNT } from './constants';
+import { APPROVED_AMOUNT, DECLINE_REASONS, GOVERNMENT_SUPPORT, RISK_MODELS } from './constants';
 import {
-  BankAccountData,
   BankAccount,
+  BankAccountData,
   OnboardingComponentProps,
   RiskAssessmentValues,
 } from './OnboardingSteps';
-import { useTransaction } from '../../hooks/transaction-hook';
-import TransactionDialog from '../../components/TransactionDialog';
 
 const validationSchema = yup.object({
   approved: yup.boolean(),
@@ -66,16 +72,73 @@ const RiskAssessment = ({
   riskAssessmentId,
   userDetails,
   values,
+  bankAccounts,
 }: OnboardingComponentProps<RiskAssessmentValues>): JSX.Element => {
   const [loading, setLoading] = useState(false);
+  const [riskAssessmentSectionOpened, setRiskAssessmentSectionOpened] = useState(false);
+  const [selectedRiskModelId, setSelectedRiskModelId] = useState<string | undefined>();
+  const [addNewAssessment, setAddNewAssessment] = useState(false);
   const [dataLastAt, setDataLastAt] = useState<string | undefined>();
   const [showAllTransactions, setShowAllTransactions] = useState(false);
   const transactionData = useTransaction(userDetails?.id);
   const [userBankAccounts, setUserBankAccounts] = useState<BankAccount[]>([]);
+  const { riskAssessment, status } = useRiskAssessment(riskAssessmentId);
+  const { riskModels, status: riskModelStatus } = useRiskModels();
+  const [fixedRiskModels, setFixedRiskModels] = useState<Array<string>>(RISK_MODELS);
   const dispatch = useDispatch();
+  const isAddNewAssessment = useMemo(
+    () => status === 'fail' || addNewAssessment || !riskAssessmentId,
+    [riskAssessmentId, addNewAssessment, status],
+  );
+
+  const riskAssessmentData = useMemo(() => {
+    if (addNewAssessment) {
+      return values;
+    }
+    return {
+      ...riskAssessment,
+      incomeLastDate: riskAssessment
+        ? moment(riskAssessment?.incomeLastDate).format('yyyy-MM-DD')
+        : values.incomeLastDate,
+    };
+  }, [riskAssessment, values, addNewAssessment]);
+
   useEffect(() => {
-    setDataLastAt(transactionData.dataLastAt);
-  }, [transactionData.dataLastAt]);
+    // set time of last transaction data
+    if (transactionData?.dataLastAt) {
+      setDataLastAt(transactionData.dataLastAt);
+    }
+  }, [transactionData]);
+
+  useEffect(() => {
+    const newRiskModels =
+      riskModels
+        ?.filter((riskModel) => !fixedRiskModels.includes(riskModel.name))
+        .map((riskModel) => riskModel.name) || [];
+    setFixedRiskModels([...fixedRiskModels, ...newRiskModels]);
+  }, [riskModels]);
+
+  useEffect(() => {
+    // set existed risk assessment for form
+    if (riskAssessmentData) {
+      for (const key of Object.keys(riskAssessmentData)) {
+        const value = get(riskAssessmentData, [key], '');
+        void formik.setFieldValue(key, value);
+      }
+    }
+  }, [riskAssessmentData]);
+
+  useEffect(() => {
+    // pre-select primary bank account
+    if (userBankAccounts.length > 0 && userDetails?.bankAccountId) {
+      const preAccount = userBankAccounts.find(
+        (account) => account.id === userDetails.bankAccountId,
+      );
+      if (preAccount?.id) {
+        void formik.setFieldValue('primaryAccountId', preAccount.id);
+      }
+    }
+  }, [userDetails, userBankAccounts, riskAssessmentData]);
 
   useEffect(() => {
     // get user bank accounts
@@ -89,8 +152,10 @@ const RiskAssessment = ({
         notify(error, 'error');
       }
     };
-    void getBankAccounts();
-  }, [notify, userDetails.id]);
+    if (userDetails.id) {
+      void getBankAccounts();
+    }
+  }, [notify, userDetails]);
 
   const formik = useFormik({
     initialValues: values,
@@ -112,7 +177,7 @@ const RiskAssessment = ({
 
         // 1. create or update risk assessment
         const incomeSupport = _values.incomeSupport === 'true';
-        if (riskAssessmentId) {
+        if (riskAssessmentId && !isAddNewAssessment) {
           await callApi(`/risk-assessments/${riskAssessmentId}`, 'patch', {
             ..._values,
             incomeSupport,
@@ -148,20 +213,77 @@ const RiskAssessment = ({
     },
   });
 
-  useEffect(() => {
-    // pre-select primary bank account
-    if (userBankAccounts.length > 0 && userDetails.bankAccountId) {
-      const preAccount = userBankAccounts.find(
-        (account) => account.id === userDetails.bankAccountId,
-      );
-      if (preAccount?.id) {
-        void formik.setFieldValue('primaryAccountId', preAccount.id);
-      }
-    }
-  }, [userDetails.bankAccountId, userBankAccounts]);
-
   const handleChange = (type: string) => async (event: React.ChangeEvent<{ value: unknown }>) => {
     await formik.setFieldValue(type, event.target.value as string[]);
+  };
+
+  const handleClickNewRiskAssessment = () => {
+    setAddNewAssessment(true);
+  };
+
+  const handleClickCancelRiskAssessment = () => {
+    setAddNewAssessment(false);
+  };
+
+  const handleSelectRiskModel = (e: React.ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
+    const { value } = e.target;
+    setSelectedRiskModelId(value);
+  };
+
+  const handleGenerateRiskModel = () => {
+    const userBankAccount = userBankAccounts.find(
+      (bankAccountItem) => bankAccountItem.id === formik.values.primaryAccountId,
+    );
+    const bankData = bankAccounts.find(
+      (bankItem) =>
+        bankItem.accountBsb === userBankAccount?.accountBsb &&
+        bankItem.accountNumber === userBankAccount?.accountNumber,
+    );
+    async function generate() {
+      try {
+        const { json } = await callApi<{ data: IRiskAssessment }>(
+          `/automated-risk-assessments`,
+          'post',
+          {
+            riskModelId: selectedRiskModelId,
+            bankAccountDataId: bankData?.dataLastId,
+            userId: userDetails?.id,
+          },
+        );
+        const formData = pick(json, [
+          'id',
+          'approved',
+          'approvedAmount',
+          'incomeAverage',
+          'incomeDay1Min',
+          'incomeFrequency',
+          'incomeLastDate',
+          'incomeSupport',
+          'incomeVariationMax',
+          'rejectedReasons',
+          'userId',
+        ]);
+        for (const key of Object.keys(formData)) {
+          const value = get(formData, [key], '');
+          if (key === 'id') {
+            void formik.setFieldValue('automatedRiskAssessmentId', value);
+          } else if (key === 'incomeLastDate') {
+            const dateString = moment(value).format('yyyy-MM-DD');
+            void formik.setFieldValue('incomeLastDate', dateString);
+          } else {
+            void formik.setFieldValue(key, value);
+          }
+        }
+        void formik.setFieldValue(
+          'riskModelVersion',
+          riskModels?.find((riskModel) => riskModel.id === selectedRiskModelId)?.name,
+        );
+        notify('Risk assessment completed', 'success');
+      } catch (err) {
+        notify('Risk assessment fail', 'error');
+      }
+    }
+    void generate();
   };
 
   return (
@@ -195,7 +317,6 @@ const RiskAssessment = ({
           <Typography variant="h6" className="mb-4">
             Risk assessment
           </Typography>
-
           {userBankAccounts.length && (
             <div className="mb-4">
               <div className="flex items-center justify-between">
@@ -262,110 +383,158 @@ const RiskAssessment = ({
               </List>
             </div>
           )}
-
-          <Typography variant="subtitle2" className="mb-4 font-bold">
-            Employment details
-          </Typography>
-          <Grid container spacing={4}>
-            <Grid item xs={6}>
-              <InputField
-                required
-                select
-                name="incomeFrequency"
-                label={labels.incomeFrequency}
-                formik={formik}
-              >
-                {INCOME_FREQUENCIES.map(({ id, name }) => (
-                  <MenuItem key={id} value={id}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </InputField>
+          <Box>
+            <Box
+              className="flex items-center cursor-pointer select-none"
+              onClick={() => setRiskAssessmentSectionOpened(!riskAssessmentSectionOpened)}
+            >
+              <Typography variant="subtitle2" className="mb-4 font-bold">
+                Automated risk assessment
+              </Typography>
+              {riskAssessmentSectionOpened ? (
+                <ExpandLess className="mb-4" fontSize="small" />
+              ) : (
+                <ExpandMore className="mb-4" fontSize="small" />
+              )}
+            </Box>
+            <Collapse in={riskAssessmentSectionOpened} timeout="auto" unmountOnExit>
+              <Grid container spacing={4} className="mb-4 ">
+                <Grid item xs={6}>
+                  <TextField
+                    variant="outlined"
+                    color="secondary"
+                    fullWidth
+                    required
+                    select
+                    label="Risk Model"
+                    value={selectedRiskModelId}
+                    onChange={handleSelectRiskModel}
+                  >
+                    {riskModels?.map(({ id, name }) => (
+                      <MenuItem key={id} value={id}>
+                        {name}
+                      </MenuItem>
+                    ))}
+                  </TextField>
+                </Grid>
+                <Grid item xs={6} className="flex items-center">
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={
+                      riskModelStatus === 'loading' || status === 'loading' || !selectedRiskModelId
+                    }
+                    onClick={handleGenerateRiskModel}
+                  >
+                    Perform risk assessment
+                  </Button>
+                </Grid>
+              </Grid>
+            </Collapse>
+          </Box>
+          <Box>
+            <Typography variant="subtitle2" className="mb-4 font-bold">
+              Employment details
+            </Typography>
+            <Grid container spacing={4}>
+              <Grid item xs={6}>
+                <InputField
+                  required
+                  select
+                  name="incomeFrequency"
+                  label={labels.incomeFrequency}
+                  formik={formik}
+                >
+                  {INCOME_FREQUENCIES.map(({ id, name }) => (
+                    <MenuItem key={id} value={id}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </InputField>
+              </Grid>
+              <Grid item xs={6}>
+                <InputField
+                  required
+                  name="incomeLastDate"
+                  label={labels.incomeLastDate}
+                  type="date"
+                  formik={formik}
+                  InputLabelProps={{ shrink: true }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <InputField
+                  name="incomeAverage"
+                  label={labels.incomeAverage}
+                  type="number"
+                  formik={formik}
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  }}
+                  inputProps={{
+                    min: 0,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <InputField
+                  select
+                  name="incomeSupport"
+                  label={labels.incomeSupport}
+                  formik={formik}
+                >
+                  {GOVERNMENT_SUPPORT.map(({ id, name }) => (
+                    <MenuItem key={id.toString()} value={id.toString()}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </InputField>
+              </Grid>
+              <Grid item xs={6}>
+                <InputField
+                  name="incomeDay1Min"
+                  label={labels.incomeDay1Min}
+                  type="number"
+                  formik={formik}
+                  InputProps={{
+                    startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  }}
+                  inputProps={{
+                    min: 0,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <InputField
+                  name="incomeVariationMax"
+                  label={labels.incomeVariationMax}
+                  type="number"
+                  formik={formik}
+                  InputProps={{
+                    endAdornment: <InputAdornment position="end">%</InputAdornment>,
+                  }}
+                  inputProps={{
+                    min: 0,
+                  }}
+                />
+              </Grid>
+              <Grid item xs={6}>
+                <InputField
+                  required
+                  select
+                  name="riskModelVersion"
+                  label={labels.riskModelVersion}
+                  formik={formik}
+                >
+                  {fixedRiskModels.map((name) => (
+                    <MenuItem key={name} value={name}>
+                      {name}
+                    </MenuItem>
+                  ))}
+                </InputField>
+              </Grid>
             </Grid>
-            <Grid item xs={6}>
-              <InputField
-                required
-                name="incomeLastDate"
-                label={labels.incomeLastDate}
-                type="date"
-                formik={formik}
-                InputLabelProps={{ shrink: true }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputField
-                required
-                name="incomeAverage"
-                label={labels.incomeAverage}
-                type="number"
-                formik={formik}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                }}
-                inputProps={{
-                  min: 0,
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputField
-                required
-                select
-                name="incomeSupport"
-                label={labels.incomeSupport}
-                formik={formik}
-              >
-                {GOVERNMENT_SUPPORT.map(({ id, name }) => (
-                  <MenuItem key={id.toString()} value={id.toString()}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </InputField>
-            </Grid>
-            <Grid item xs={6}>
-              <InputField
-                name="incomeDay1Min"
-                label={labels.incomeDay1Min}
-                type="number"
-                formik={formik}
-                InputProps={{
-                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                }}
-                inputProps={{
-                  min: 0,
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputField
-                name="incomeVariationMax"
-                label={labels.incomeVariationMax}
-                type="number"
-                formik={formik}
-                InputProps={{
-                  endAdornment: <InputAdornment position="end">%</InputAdornment>,
-                }}
-                inputProps={{
-                  min: 0,
-                }}
-              />
-            </Grid>
-            <Grid item xs={6}>
-              <InputField
-                required
-                select
-                name="riskModelVersion"
-                label={labels.riskModelVersion}
-                formik={formik}
-              >
-                {RISK_MODELS.map((name) => (
-                  <MenuItem key={name} value={name}>
-                    {name}
-                  </MenuItem>
-                ))}
-              </InputField>
-            </Grid>
-          </Grid>
+          </Box>
 
           <div className="mt-8">
             <YesNoButtons
@@ -424,15 +593,41 @@ const RiskAssessment = ({
             </div>
           )}
         </div>
+
         <ActionButtons onBackButtonClick={onPrevStep} loading={loading}>
-          <Button
-            variant="contained"
-            color="primary"
-            type="submit"
-            disabled={loading || formik.values.approved === undefined}
-          >
-            {riskAssessmentId ? 'Update and continue' : 'Create and continue'}
-          </Button>
+          <div className="flex">
+            {!!riskAssessmentId && status !== 'fail' && (
+              <div className="mr-4">
+                {isAddNewAssessment ? (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={loading || status === 'loading'}
+                    onClick={handleClickCancelRiskAssessment}
+                  >
+                    Cancel
+                  </Button>
+                ) : (
+                  <Button
+                    variant="contained"
+                    color="primary"
+                    disabled={loading}
+                    onClick={handleClickNewRiskAssessment}
+                  >
+                    New
+                  </Button>
+                )}
+              </div>
+            )}
+            <Button
+              variant="contained"
+              color="primary"
+              type="submit"
+              disabled={loading || formik.values.approved === undefined}
+            >
+              {isAddNewAssessment ? 'Create and continue' : 'Update and continue'}
+            </Button>
+          </div>
         </ActionButtons>
       </form>
       <TransactionDialog

@@ -35,4 +35,5 @@ export interface User {
     source: string;
   };
   balanceCurrent: number;
+  riskAssessmentId?: string;
 }

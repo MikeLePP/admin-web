@@ -1,8 +1,6 @@
-import { useState, useEffect } from 'react';
-import moment from 'moment';
 import {
-  Button,
   Box,
+  Button,
   CircularProgress,
   Dialog,
   DialogActions,
@@ -13,9 +11,10 @@ import {
   Select,
   Typography,
 } from '@material-ui/core';
-
 import { Close as CloseIcon } from '@material-ui/icons';
-
+import moment from 'moment';
+import { useEffect, useState } from 'react';
+import { useNotify } from 'react-admin';
 import { callApi } from '../helpers/api';
 
 const MINUTES_TO_DISABLE_REFRESH = 15;
@@ -42,6 +41,7 @@ function TransactionDialog({
   setDataLastAt,
   userId,
 }: IProps): JSX.Element {
+  const notify = useNotify();
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [days, setDays] = useState(1);
@@ -72,7 +72,9 @@ function TransactionDialog({
       }>(`/users/${userId}/bank-data?days=${days}`, 'post');
       setUrl(json.data.meta.reportUrl);
       setDataLastAt(json.data.attributes.dataLastAt);
+      notify('Refresh bank data success', 'success');
     } catch (error) {
+      notify('Something wrong. We cannot refresh the bank data', 'error');
       throw new Error(error.message);
     } finally {
       setLoading(false);
