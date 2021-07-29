@@ -9,6 +9,7 @@ import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
+import get from 'lodash/get';
 import React, { ChangeEvent, useEffect } from 'react';
 import { useNotify } from 'react-admin';
 import { APPROVED_AMOUNT } from '../features/user-onboarding/constants';
@@ -45,9 +46,11 @@ export default function UpdateBalanceLimitDialog({ open, setOpen, userId }: IPro
           ...currentUser,
           balanceLimit: limitValue,
         });
+        notify('Update user balance limit success', 'success');
         setOpen(false);
       } catch (err) {
-        notify('Cannot update this user', 'error');
+        const errTitle = get(err, 'body.errors[0].title', 'Cannot update risk model');
+        notify(errTitle, 'error');
       }
     }
     if (user) {
