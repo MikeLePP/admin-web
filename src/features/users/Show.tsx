@@ -2,35 +2,59 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import IconButton from '@material-ui/core/IconButton';
 import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
+import UpdateIcon from '@material-ui/icons/Update';
 import { get } from 'lodash';
 import moment from 'moment';
-import React, { useEffect, useMemo, useState } from 'react';
-import { CardActions, Record, ResourceComponentPropsWithId, useNotify } from 'react-admin';
+import React, { Fragment, useEffect, useMemo, useState } from 'react';
+import { CardActions, Record, ResourceComponentPropsWithId, Title, useNotify } from 'react-admin';
 import ConfirmDialog from '../../components/Dialog';
 import ShowToolbar from '../../components/ShowToolbar';
 import TextLabel from '../../components/TextLabel';
 import TransactionDialog from '../../components/TransactionDialog';
+import UpdateBalanceLimitDialog from '../../components/UpdateBalanceLimitDialog';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
 import { useTransaction } from '../../hooks/transaction-hook';
+import { User } from '../../types/user';
 import { useBankAccount, useUser } from './user-hooks';
 
 interface CustomEditToolbarProps {
   basePath: string;
   id: string;
+  onClickUpdateLimit: () => void;
+  user?: User;
 }
 
-const CustomEditToolbar = ({ basePath, id }: CustomEditToolbarProps): JSX.Element => {
+const CustomEditToolbar = ({
+  basePath,
+  id,
+  onClickUpdateLimit,
+  user,
+}: CustomEditToolbarProps): JSX.Element => {
   const data = {
     id,
   } as Record;
-  return <ShowToolbar basePath={basePath} data={data} />;
+  const UpdateLimitButton: React.FC = () =>
+    user ? (
+      <Button
+        startIcon={<UpdateIcon />}
+        onClick={onClickUpdateLimit}
+        className="p-1"
+        color="primary"
+      >
+        UPDATE LIMIT
+      </Button>
+    ) : (
+      <Fragment />
+    );
+  return <ShowToolbar basePath={basePath} data={data} actions={<UpdateLimitButton />} />;
 };
 
 const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const userId = get(props, 'id', '');
   const [showAllTransactions, setShowAllTransactions] = React.useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = React.useState(false);
+  const [showUpdateBalanceLimit, setShowUpdateBalanceLimit] = React.useState(false);
   const notify = useNotify();
   const transactionData = useTransaction(userId);
   const [dataLastAt, setDataLastAt] = useState<string | undefined>();
@@ -92,9 +116,19 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
     setShowConfirmDialog(true);
   };
 
+  const handleUpdateLimitBalance = () => {
+    setShowUpdateBalanceLimit(true);
+  };
+
   return (
     <>
-      <CustomEditToolbar basePath={props.basePath || ''} id={userId} />
+      <Title title={`User ${user?.firstName || ''} ${user?.lastName || ''}`} />
+      <CustomEditToolbar
+        basePath={props.basePath || ''}
+        id={userId}
+        user={user}
+        onClickUpdateLimit={handleUpdateLimitBalance}
+      />
       <Card className="p-4">
         <div className="text-lg">User Details</div>
         <TextLabel
@@ -232,6 +266,13 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
         confirmLabel="Yes"
         cancelLabel="No"
       />
+      {user && showUpdateBalanceLimit && (
+        <UpdateBalanceLimitDialog
+          open
+          setOpen={(value) => setShowUpdateBalanceLimit(value)}
+          userId={userId}
+        />
+      )}
     </>
   );
 };
