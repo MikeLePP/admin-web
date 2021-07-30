@@ -52,13 +52,14 @@ const CustomEditToolbar = ({
 
 const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const userId = get(props, 'id', '');
+  const [renderTime, setRenderTime] = React.useState(1);
   const [showAllTransactions, setShowAllTransactions] = React.useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = React.useState(false);
   const [showUpdateBalanceLimit, setShowUpdateBalanceLimit] = React.useState(false);
   const notify = useNotify();
   const transactionData = useTransaction(userId);
   const [dataLastAt, setDataLastAt] = useState<string | undefined>();
-  const { user } = useUser(userId);
+  const { user } = useUser(userId, renderTime);
   const { bankAccounts } = useBankAccount(userId);
   const [loading, setLoading] = useState(false);
   const incomeFrequency = user?.incomeFrequency;
@@ -118,6 +119,10 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
 
   const handleUpdateLimitBalance = () => {
     setShowUpdateBalanceLimit(true);
+  };
+
+  const handleReloadData = () => {
+    setRenderTime(renderTime + 1);
   };
 
   return (
@@ -271,6 +276,7 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
           open
           setOpen={(value) => setShowUpdateBalanceLimit(value)}
           userId={userId}
+          onReloadData={handleReloadData}
         />
       )}
     </>

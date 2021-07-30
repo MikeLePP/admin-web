@@ -16,7 +16,8 @@ type IBankAccountHook = {
   status: IStatus;
 };
 
-export function useUser(userId: string): IUserHook {
+export function useUser(userId: string, refreshTime?: number): IUserHook {
+  const time = refreshTime || 1;
   const [user, setUser] = useState<User | undefined>(undefined);
   const [status, setStatus] = useState<IStatus>('idle');
   const notify = useNotify();
@@ -34,7 +35,7 @@ export function useUser(userId: string): IUserHook {
       notify('Cannot get user', 'error');
       setStatus('fail');
     });
-  }, [notify, userId]);
+  }, [notify, userId, time]);
   return {
     user,
     status,

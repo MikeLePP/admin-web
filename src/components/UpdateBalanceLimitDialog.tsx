@@ -21,9 +21,15 @@ interface IProps {
   open: boolean;
   setOpen: (value: boolean) => void;
   userId: string;
+  onReloadData: () => void;
 }
 
-export default function UpdateBalanceLimitDialog({ open, setOpen, userId }: IProps): JSX.Element {
+export default function UpdateBalanceLimitDialog({
+  open,
+  setOpen,
+  userId,
+  onReloadData,
+}: IProps): JSX.Element {
   const notify = useNotify();
   const [limitValue, setLimitValue] = React.useState<number | string>('');
   const { user } = useUser(userId);
@@ -42,11 +48,11 @@ export default function UpdateBalanceLimitDialog({ open, setOpen, userId }: IPro
   const handleUpdate = () => {
     async function updateUser(currentUser: User) {
       try {
-        await callApi(`/users/${currentUser.id}`, 'put', {
-          ...currentUser,
+        await callApi(`/users/${currentUser.id}/balance-limit`, 'patch', {
           balanceLimit: limitValue,
         });
         notify('Update user balance limit success', 'success');
+        onReloadData();
         setOpen(false);
       } catch (err) {
         const errTitle = get(err, 'body.errors[0].title', 'Cannot update risk model');
