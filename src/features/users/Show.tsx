@@ -2,7 +2,7 @@ import Button from '@material-ui/core/Button';
 import Card from '@material-ui/core/Card';
 import IconButton from '@material-ui/core/IconButton';
 import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
-import { get } from 'lodash';
+import { get, startCase, upperFirst } from 'lodash';
 import moment from 'moment';
 import React, { useEffect, useMemo, useState } from 'react';
 import { CardActions, Record, ResourceComponentPropsWithId, useNotify } from 'react-admin';
@@ -145,13 +145,6 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
           containerClass="mt-2 mb-1"
           labelClass="text-xs"
           valueClass="text-sm pt-2 pb-1"
-          label="Identity verified"
-          value={user?.identity?.verified ? 'true' : 'false'}
-        />
-        <TextLabel
-          containerClass="mt-2 mb-1"
-          labelClass="text-xs"
-          valueClass="text-sm pt-2 pb-1"
           label="Pay frequency"
           value={payFrequency}
         />
@@ -163,6 +156,13 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
           value={
             user?.incomeNextDate ? moment(user.incomeNextDate).format('YYYY-MM-DD') : undefined
           }
+        />
+        <TextLabel
+          containerClass="mt-2 mb-1"
+          labelClass="text-xs"
+          valueClass="text-sm pt-2 pb-1"
+          label="Status"
+          value={upperFirst(startCase(user?.status).toLowerCase())}
         />
       </Card>
       <Card className="p-4 my-4">
@@ -194,6 +194,25 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
           label="Current balance"
           value={user?.balanceCurrent}
         />
+        {user && (
+          <>
+            <TextLabel
+              containerClass="mt-2 mb-1"
+              labelClass="text-xs"
+              valueClass="text-sm pt-2 pb-1"
+              label="Available balance"
+              value={user.balanceLimit - user.balanceCurrent}
+            />
+            <TextLabel
+              containerClass="mt-2 mb-1"
+              labelClass="text-xs"
+              valueClass="text-sm pt-2 pb-1"
+              label="Balance limit"
+              value={user.balanceLimit}
+            />
+          </>
+        )}
+
         <CardActions className="justify-start items-center">
           {transactionData.reportUrl && (
             <div className="pr-1.5 py-1.5">
