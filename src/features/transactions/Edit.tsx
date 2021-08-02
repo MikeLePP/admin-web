@@ -50,8 +50,8 @@ interface CustomEditToolbarProps {
 
 const validationSchema = yup.object({
   paymentType: yup.string().required(),
-  amount: yup.string().required(),
-  amountFee: yup.string().required(),
+  amount: yup.number().required(),
+  amountFee: yup.number().required(),
   description: yup.string().required(),
   source: yup.string().required(),
   paymentAccountId: yup.string().required(),
