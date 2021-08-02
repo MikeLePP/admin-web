@@ -16,8 +16,6 @@ const leftPad2 = leftPad(2);
 
 export const convertDateToString = (value: Date): string => {
   if (!(value instanceof Date) || isNaN(value.getDate())) return '';
-  console.log(value);
-  console.log(value.getHours());
   const yyyy = leftPad4(value.getFullYear());
   const MM = leftPad2(value.getMonth() + 1);
   const dd = leftPad2(value.getDate());
