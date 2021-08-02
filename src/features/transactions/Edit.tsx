@@ -102,11 +102,7 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
       };
 
       try {
-        await callApi(
-          `/transactions/${transactionId}`,
-          'put',
-          omitBy(transactionUpdated, identity),
-        );
+        await callApi(`/transactions/${transactionId}`, 'put', transactionUpdated);
         props.history?.push(`${props.basePath || ''}/${transactionId}/show`);
       } catch (err) {
         notify('Cannot update this transaction', 'error');
