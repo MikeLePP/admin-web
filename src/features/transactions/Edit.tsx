@@ -1,42 +1,28 @@
-import React, { ChangeEvent, useEffect, useState } from 'react';
-import { Box, Button, Radio } from '@material-ui/core';
-import moment from 'moment';
-import { capitalize, lowerCase, get, upperCase } from 'lodash';
+import { Box, Button, FormControl, InputLabel, NativeSelect, Radio } from '@material-ui/core';
+import { ArrowBack as BackIcon, Save as SaveIcon } from '@material-ui/icons';
 import { useFormik } from 'formik';
+import { get, lowerCase, omitBy, identity } from 'lodash';
+import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import {
-  DateTimeInput,
-  Edit,
-  FunctionField,
-  maxLength,
-  maxValue,
-  NumberInput,
-  RadioButtonGroupInput,
-  required,
-  ResourceComponentPropsWithId,
-  SimpleForm,
-  TextInput,
-  useEditController,
-  useGetIdentity,
-  useNotify,
   ListButton,
+  ResourceComponentPropsWithId,
   ShowButton,
   TopToolbar,
+  useNotify,
 } from 'react-admin';
-import { ArrowBack as BackIcon, Save as SaveIcon } from '@material-ui/icons';
+import * as yup from 'yup';
 import InputField from '../../components/InputField';
-
 import TextLabel from '../../components/TextLabel';
-import SaveToolbar from '../../components/SaveToolbar';
-import { notifyOnFailure } from '../../helpers/notify';
+import { callApi } from '../../helpers/api';
+import { convertDateToString } from '../../helpers/date';
 import { getFullName } from '../../helpers/string';
 import { getId } from '../../helpers/url';
-import { futureDate } from '../../helpers/validation';
 import { useTransaction } from '../../hooks/transaction-hook';
-import { callApi } from '../../helpers/api';
+import { useBankAccount } from '../users/user-hooks';
 
 interface TransactionRecord extends Record<string, unknown> {
-  amount?: Number;
-  amountFee?: Number;
+  amount?: number;
+  amountFee?: number;
   bankAccountId?: string;
   description?: string;
   destinationId?: string;
@@ -62,6 +48,18 @@ interface CustomEditToolbarProps {
   id: string;
 }
 
+const validationSchema = yup.object({
+  paymentType: yup.string().required(),
+  amount: yup.string().required(),
+  amountFee: yup.string().required(),
+  description: yup.string().required(),
+  source: yup.string().required(),
+  paymentAccountId: yup.string().required(),
+  submitAt: yup.date().min(new Date(), 'Please select a future date').required(),
+  destination: yup.string().required(),
+  destinationId: yup.string().required(),
+});
+
 const CustomEditToolbar = ({ basePath, id }: CustomEditToolbarProps): JSX.Element => {
   const showPath = `${basePath}/${id}/show`;
   return (
@@ -75,28 +73,40 @@ const CustomEditToolbar = ({ basePath, id }: CustomEditToolbarProps): JSX.Elemen
 
 const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | null => {
   const transactionId = get(props, 'id', '');
-  const { identity } = useGetIdentity();
+  const userId = getId(props.location?.search);
   const [transactionRecord, setTransactionRecord] = useState({} as TransactionRecord);
   const notify = useNotify();
+  const { bankAccounts } = useBankAccount(userId);
   const [updating, setUpdating] = useState(false);
-  const { record } = useEditController(props);
-
-  if (!transactionId || !props.basePath) {
-    props.history?.push(props.basePath!);
-    return null;
-  }
   const { attributes: transactionData } = useTransaction(transactionId);
-
+  const bankAccountSelect = useMemo(() => {
+    const select = bankAccounts?.map((account) => ({
+      id: account.bankAccountId,
+      name: `${account.accountName}`,
+      value: account.paymentAccountId,
+    }));
+    return select;
+  }, [bankAccounts]);
   const formik = useFormik({
     enableReinitialize: true,
-    initialValues: transactionRecord,
+    initialValues: {
+      ...transactionRecord,
+      submitAt: convertDateToString(new Date(transactionRecord.submitAt || '')),
+    },
+    validationSchema,
     onSubmit: async (_values) => {
       const transactionUpdated = {
         ...transactionData,
         ..._values,
+        sourceId: _values.paymentType === 'debit' ? _values.paymentAccountId : undefined,
       };
+
       try {
-        await callApi(`/transactions/${transactionId}`, 'put', transactionUpdated);
+        await callApi(
+          `/transactions/${transactionId}`,
+          'put',
+          omitBy(transactionUpdated, identity),
+        );
         props.history?.push(`${props.basePath || ''}/${transactionId}/show`);
       } catch (err) {
         notify('Cannot update this transaction', 'error');
@@ -106,13 +116,13 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
 
   useEffect(() => {
     if (transactionData) {
-      transactionData.submitAt = moment(transactionData.submitAt).format('YYYY-MM-DD');
       setTransactionRecord(transactionData as TransactionRecord);
     }
   }, [transactionData]);
 
   const handleChangeField =
-    (type: string) => async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    (type: string) =>
+    async (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
       const { value } = e.target;
       await formik.setFieldValue(type, value);
       setUpdating(true);
@@ -122,7 +132,10 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
   };
 
   const disabled = transactionData?.status !== 'pending_submission';
-
+  if (!transactionId || !props.basePath) {
+    props.history?.push(props.basePath!);
+    return null;
+  }
   return (
     <div>
       <CustomEditToolbar basePath={props.basePath} id={transactionId} />
@@ -176,6 +189,117 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
             }}
             onChange={handleChangeField('amount')}
           />
+          <InputField
+            className="w-64 my-2.5"
+            required
+            name="amountFee"
+            label="Fee"
+            formik={formik}
+            variant="standard"
+            InputLabelProps={{
+              shrink: !!formik.values.amountFee,
+            }}
+            onChange={handleChangeField('amountFee')}
+          />
+          <InputField
+            className="w-64 my-2.5"
+            required
+            name="description"
+            label="Description"
+            formik={formik}
+            multiline
+            rows={4}
+            variant="standard"
+            helperText="What happened?"
+            InputLabelProps={{
+              shrink: !!formik.values.amountFee,
+            }}
+            onChange={handleChangeField('description')}
+          />
+          <InputField
+            className="w-64 my-2.5"
+            required
+            variant="standard"
+            label="Debit from"
+            name="source"
+            formik={formik}
+            disabled={disabled}
+            InputLabelProps={{
+              shrink: !!formik.values.amountFee,
+            }}
+            onChange={handleChangeField('source')}
+          />
+          {/* <FormControl component="fieldset">
+            <FormLabel component="legend">Bank account</FormLabel>
+            <RadioGroup
+              aria-label="gender"
+              name="gender1"
+              value={formik.values.paymentAccountId || ''}
+              onChange={handleChangeField('paymentAccountId')}
+            >
+              {bankAccountSelect.map(({ id, name, value }) => (
+                <FormControlLabel key={id} value={value} control={<Radio />} label={name} />
+              ))}
+            </RadioGroup>
+          </FormControl> */}
+          <FormControl fullWidth={false} className="w-64 my-2.5">
+            <InputLabel htmlFor="uncontrolled-native" shrink={!!formik.values.paymentAccountId}>
+              Bank account
+            </InputLabel>
+            <NativeSelect
+              value={formik.values.paymentAccountId}
+              inputProps={{
+                name: 'name',
+                id: 'uncontrolled-native',
+              }}
+              onChange={handleChangeField('paymentAccountId')}
+            >
+              {bankAccountSelect.map(({ id, name, value }) => (
+                <option key={id} value={value}>
+                  {name}
+                </option>
+              ))}
+            </NativeSelect>
+          </FormControl>
+          <InputField
+            className="w-64 my-2.5"
+            required
+            type="datetime-local"
+            name="submitAt"
+            label="Submit on"
+            formik={formik}
+            variant="standard"
+            onChange={handleChangeField('submitAt')}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <InputField
+            className="w-64 my-2.5"
+            required
+            disabled
+            name="destination"
+            label="Send to"
+            formik={formik}
+            variant="standard"
+            onChange={handleChangeField('destination')}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
+          <InputField
+            className="w-64 my-2.5"
+            required
+            disabled
+            name="destinationId"
+            label="Send to Id"
+            formik={formik}
+            variant="standard"
+            onChange={handleChangeField('destinationId')}
+            InputLabelProps={{
+              shrink: true,
+            }}
+          />
         </div>
         <Box className="p-4 bg-gray-100 flex relative items-center	">
           <Button
@@ -192,80 +316,6 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
       </form>
     </div>
   );
-
-  // return (
-  //   <Edit
-  //     {...props}
-  //     title="Edit Transaction"
-  //     onFailure={notifyOnFailure(notify)}
-  //     transform={transform}
-  //     mutationMode="pessimistic"
-  //     actions={<EditToolbar />}
-  //   >
-  //     <SimpleForm redirect="show" toolbar={<SaveToolbar />}>
-  //       <FunctionField label="Name" render={getFullName} />
-  //       <TextField label="Email" source="email" />
-  //       <TextField label="Mobile" source="mobileNumber" />
-  //       <Divider />
-  //       <FunctionField
-  //         label="Status"
-  //         render={(r?: Record) => capitalize(lowerCase(r ? r.status : ''))}
-  //       />
-
-  //       <RadioButtonGroupInput
-  //         label="Payment type"
-  //         source="paymentType"
-  //         defaultValue="debit"
-  //         disabled
-  //         choices={[
-  //           { id: 'credit', name: 'Credit' },
-  //           { id: 'debit', name: 'Debit' },
-  //         ]}
-  //       />
-  //       <NumberInput
-  //         type="tel"
-  //         label="Amount"
-  //         source="amount"
-  //         min={0}
-  //         max={100}
-  //         autoFocus
-  //         validate={[required(), maxValue(100)]}
-  //         disabled={disabled}
-  //       />
-  //       <NumberInput
-  //         type="number"
-  //         label="Fee"
-  //         source="amountFee"
-  //         min={0}
-  //         max={100}
-  //         autoFocus
-  //         validate={[required(), maxValue(100)]}
-  //         disabled={disabled}
-  //       />
-  //       <TextInput
-  //         label="Description"
-  //         source="description"
-  //         helperText="What happened?"
-  //         multiline
-  //         rows={4}
-  //         validate={[required(), maxLength(500)]}
-  //         disabled={disabled}
-  //       />
-  //       <TextInput label="Debit from" source="source" validate={[required()]} disabled={disabled} />
-  //       <TextInput label="Debit from ID" source="sourceId" validate={[required()]} disabled />
-  //       <DateTimeInput
-  //         label="Submit on"
-  //         source="submitAt"
-  //         validate={[required(), futureDate()]}
-  //         disabled={disabled}
-  //       />
-  //       <Divider />
-
-  //       <TextInput label="Send to" source="destination" disabled />
-  //       <TextInput label="Send to ID" source="destinationId" disabled />
-  //     </SimpleForm>
-  //   </Edit>
-  // );
 };
 
 export default TransactionEdit;

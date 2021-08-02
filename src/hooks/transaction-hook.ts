@@ -5,8 +5,8 @@ import { callApi } from '../helpers/api';
 type IStatus = 'idle' | 'loading' | 'success' | 'fail';
 
 export interface ITransactionAttributes {
-  amount?: Number;
-  amountFee?: Number;
+  amount?: number;
+  amountFee?: number;
   bankAccountId?: string;
   description?: string;
   destinationId?: string;
@@ -48,7 +48,7 @@ export function useTransaction(transactionId: string): ITransaction {
         setStatus('success');
       } catch (error) {
         setStatus('fail');
-        notify("Cannot get transaction", 'error');
+        notify('Cannot get transaction', 'error');
       }
     };
     void getBankData();
