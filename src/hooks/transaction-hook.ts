@@ -1,48 +1,60 @@
-import moment from 'moment';
 import { useState, useEffect } from 'react';
 import { useNotify } from 'react-admin';
 import { callApi } from '../helpers/api';
 
 type IStatus = 'idle' | 'loading' | 'success' | 'fail';
 
-export interface ITransaction {
-  reportUrl: string;
-  status: IStatus;
-  dataLastAt: string | undefined;
+export interface ITransactionAttributes {
+  amount?: Number;
+  amountFee?: Number;
+  bankAccountId?: string;
+  description?: string;
+  destinationId?: string;
+  email?: string;
+  firstName?: string;
+  id: string;
+  lastName?: string;
+  mobileNumber?: string;
+  paymentAccountId?: string;
+  paymentType?: string;
+  riskAssessmentId?: string;
+  source?: string;
+  sourceId?: string;
+  status?: string;
+  statusReason?: string;
+  submitAt?: string;
+  userId?: string;
+  updatedBy?: string;
 }
 
-export function useTransaction(userId: string): ITransaction {
-  const [reportUrl, setReportUrl] = useState<string>('');
+export interface ITransaction {
+  status: IStatus;
+  attributes?: ITransactionAttributes;
+}
+
+export function useTransaction(transactionId: string): ITransaction {
   const [status, setStatus] = useState<IStatus>('idle');
-  const [dataLastAt, setDataLastAt] = useState<string | undefined>();
+  const [transaction, setTransaction] = useState<ITransactionAttributes | undefined>();
   const notify = useNotify();
   useEffect(() => {
-    if (!userId) {
+    if (!transactionId) {
       return;
     }
     setStatus('loading');
-    const getTransactions = async () => {
+    const getBankData = async () => {
       try {
-        const {
-          json: {
-            data: { meta, attributes },
-          },
-        } = await callApi<{
-          data: { meta: { reportUrl: string }; attributes: { dataLastAt: string } };
-        }>(`/users/${userId}/bank-data`);
-        setReportUrl(meta.reportUrl);
-        if (attributes.dataLastAt) {
-          setDataLastAt(moment(attributes.dataLastAt).toString());
-        }
+        const { json } = await callApi<ITransactionAttributes>(`/transactions/${transactionId}`);
+        setTransaction(json);
+        setStatus('success');
       } catch (error) {
-        notify("Cannot get user's bank data", 'error');
+        setStatus('fail');
+        notify("Cannot get transaction", 'error');
       }
     };
-    void getTransactions();
-  }, [notify, userId]);
+    void getBankData();
+  }, [notify, transactionId]);
   return {
-    reportUrl,
     status,
-    dataLastAt,
+    attributes: transaction,
   };
 }

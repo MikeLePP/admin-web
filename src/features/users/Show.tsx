@@ -12,7 +12,7 @@ import TextLabel from '../../components/TextLabel';
 import TransactionDialog from '../../components/TransactionDialog';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
-import { useTransaction } from '../../hooks/transaction-hook';
+import { useBankData } from '../../hooks/bank-data-hook';
 import { useBankAccount, useUser } from './user-hooks';
 
 interface CustomEditToolbarProps {
@@ -32,7 +32,7 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const [showAllTransactions, setShowAllTransactions] = React.useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = React.useState(false);
   const notify = useNotify();
-  const transactionData = useTransaction(userId);
+  const transactionData = useBankData(userId);
   const [dataLastAt, setDataLastAt] = useState<string | undefined>();
   const { user } = useUser(userId);
   const { bankAccounts } = useBankAccount(userId);
