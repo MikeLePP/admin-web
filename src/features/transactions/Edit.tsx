@@ -180,6 +180,7 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
           <InputField
             className="w-64 my-2.5"
             required
+            disabled={disabled}
             name="amount"
             label="Amount"
             formik={formik}
@@ -194,6 +195,7 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
             required
             name="amountFee"
             label="Fee"
+            disabled={disabled}
             formik={formik}
             variant="standard"
             InputLabelProps={{
@@ -206,6 +208,7 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
             required
             name="description"
             label="Description"
+            disabled={disabled}
             formik={formik}
             multiline
             rows={4}
@@ -229,19 +232,6 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
             }}
             onChange={handleChangeField('source')}
           />
-          {/* <FormControl component="fieldset">
-            <FormLabel component="legend">Bank account</FormLabel>
-            <RadioGroup
-              aria-label="gender"
-              name="gender1"
-              value={formik.values.paymentAccountId || ''}
-              onChange={handleChangeField('paymentAccountId')}
-            >
-              {bankAccountSelect.map(({ id, name, value }) => (
-                <FormControlLabel key={id} value={value} control={<Radio />} label={name} />
-              ))}
-            </RadioGroup>
-          </FormControl> */}
           <FormControl fullWidth={false} className="w-64 my-2.5">
             <InputLabel htmlFor="uncontrolled-native" shrink={!!formik.values.paymentAccountId}>
               Bank account
@@ -267,6 +257,7 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
             type="datetime-local"
             name="submitAt"
             label="Submit on"
+            disabled={disabled}
             formik={formik}
             variant="standard"
             onChange={handleChangeField('submitAt')}
