@@ -21,7 +21,7 @@ interface IProps {
   open: boolean;
   setOpen: (value: boolean) => void;
   userId: string;
-  onBalanceLimitChanged: (limitValue: number | null | undefined) => void;
+  onBalanceLimitChanged: (limitValue: number | undefined) => void;
 }
 
 export default function UpdateBalanceLimitDialog({
@@ -31,10 +31,10 @@ export default function UpdateBalanceLimitDialog({
   onBalanceLimitChanged,
 }: IProps): JSX.Element {
   const notify = useNotify();
-  const [limitValue, setLimitValue] = React.useState<number | null | undefined>(null);
+  const [limitValue, setLimitValue] = React.useState<number | undefined>(undefined);
   const { user } = useUser(userId);
   useEffect(() => {
-    setLimitValue(user?.balanceLimit || null);
+    setLimitValue(user?.balanceLimit);
   }, [user]);
   const handleClose = () => {
     setOpen(false);
