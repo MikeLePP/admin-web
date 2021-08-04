@@ -38,5 +38,4 @@ export interface User {
   balanceLimit: number;
   riskAssessmentId?: string;
   status: string;
-  balanceLimit: number;
 }
