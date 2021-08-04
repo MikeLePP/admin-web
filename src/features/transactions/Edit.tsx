@@ -84,17 +84,13 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
     enableReinitialize: true,
     initialValues: {
       ...transactionRecord,
-      submitAt: moment(transactionRecord.submitAt).format('YYYY-MM-DDThh:mm'),
+      submitAt: moment.utc(transactionRecord.submitAt).format('YYYY-MM-DDThh:mm'),
     },
     validationSchema,
     onSubmit: async (_values) => {
-      const transactionUpdated = merge(
-        transactionData || {},
-        _values as Partial<TransactionRecord>,
-        {
-          sourceId: _values.paymentType === 'debit' ? _values.sourceId : transactionData?.sourceId,
-        } as Partial<TransactionRecord>,
-      );
+      const transactionUpdated = merge(transactionData as Partial<TransactionRecord>, _values, {
+        sourceId: _values.paymentType === 'debit' ? _values.sourceId : transactionData?.sourceId,
+      } as Partial<TransactionRecord>);
       try {
         await callApi(`/transactions/${transactionId}`, 'put', transactionUpdated);
         props.history?.push(`${props.basePath || ''}/${transactionId}/show`);
@@ -226,7 +222,7 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
           {formik.values.paymentType == 'debit' ? (
             <FormControl fullWidth={false} className="w-64 my-2.5">
               <InputLabel htmlFor="uncontrolled-native" shrink={!!formik.values.sourceId}>
-                Bank account
+                Debit from
               </InputLabel>
               <NativeSelect
                 value={formik.values.sourceId}
