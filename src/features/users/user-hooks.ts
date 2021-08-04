@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, SetStateAction, Dispatch } from 'react';
 import { get } from 'lodash';
 import { useNotify } from 'react-admin';
 import { callApi } from '../../helpers/api';
@@ -9,6 +9,7 @@ type IStatus = 'idle' | 'loading' | 'success' | 'fail';
 type IUserHook = {
   user?: User;
   status: IStatus;
+  setUser: Dispatch<SetStateAction<User | undefined>>;
 };
 
 type IBankAccountHook = {
@@ -16,8 +17,7 @@ type IBankAccountHook = {
   status: IStatus;
 };
 
-export function useUser(userId: string, refreshTime?: number): IUserHook {
-  const time = refreshTime || 1;
+export function useUser(userId: string): IUserHook {
   const [user, setUser] = useState<User | undefined>(undefined);
   const [status, setStatus] = useState<IStatus>('idle');
   const notify = useNotify();
@@ -35,10 +35,11 @@ export function useUser(userId: string, refreshTime?: number): IUserHook {
       notify('Cannot get user', 'error');
       setStatus('fail');
     });
-  }, [notify, userId, time]);
+  }, [notify, userId]);
   return {
     user,
     status,
+    setUser,
   };
 }
 

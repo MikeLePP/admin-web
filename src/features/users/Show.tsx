@@ -3,7 +3,7 @@ import Card from '@material-ui/core/Card';
 import IconButton from '@material-ui/core/IconButton';
 import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
 import UpdateIcon from '@material-ui/icons/Update';
-import { get } from 'lodash';
+import { get, isNil } from 'lodash';
 import moment from 'moment';
 import React, { Fragment, useEffect, useMemo, useState } from 'react';
 import { CardActions, Record, ResourceComponentPropsWithId, Title, useNotify } from 'react-admin';
@@ -52,14 +52,13 @@ const CustomEditToolbar = ({
 
 const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const userId = get(props, 'id', '');
-  const [renderTime, setRenderTime] = React.useState(1);
   const [showAllTransactions, setShowAllTransactions] = React.useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = React.useState(false);
   const [showUpdateBalanceLimit, setShowUpdateBalanceLimit] = React.useState(false);
   const notify = useNotify();
   const transactionData = useTransaction(userId);
   const [dataLastAt, setDataLastAt] = useState<string | undefined>();
-  const { user } = useUser(userId, renderTime);
+  const { user, setUser } = useUser(userId);
   const { bankAccounts } = useBankAccount(userId);
   const [loading, setLoading] = useState(false);
   const incomeFrequency = user?.incomeFrequency;
@@ -121,8 +120,10 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
     setShowUpdateBalanceLimit(true);
   };
 
-  const handleReloadData = () => {
-    setRenderTime(renderTime + 1);
+  const handleBalanceLimitChanged = (balanceLimit: number | null | undefined) => {
+    if (!isNil(balanceLimit)) {
+      setUser({ ...user, balanceLimit } as User);
+    }
   };
 
   return (
@@ -276,7 +277,7 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
           open
           setOpen={(value) => setShowUpdateBalanceLimit(value)}
           userId={userId}
-          onReloadData={handleReloadData}
+          onBalanceLimitChanged={handleBalanceLimitChanged}
         />
       )}
     </>

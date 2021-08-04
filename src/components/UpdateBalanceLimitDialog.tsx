@@ -21,20 +21,20 @@ interface IProps {
   open: boolean;
   setOpen: (value: boolean) => void;
   userId: string;
-  onReloadData: () => void;
+  onBalanceLimitChanged: (limitValue: number | null | undefined) => void;
 }
 
 export default function UpdateBalanceLimitDialog({
   open,
   setOpen,
   userId,
-  onReloadData,
+  onBalanceLimitChanged,
 }: IProps): JSX.Element {
   const notify = useNotify();
-  const [limitValue, setLimitValue] = React.useState<number | string>('');
+  const [limitValue, setLimitValue] = React.useState<number | null | undefined>(null);
   const { user } = useUser(userId);
   useEffect(() => {
-    setLimitValue(user?.balanceLimit || '');
+    setLimitValue(user?.balanceLimit || null);
   }, [user]);
   const handleClose = () => {
     setOpen(false);
@@ -52,7 +52,7 @@ export default function UpdateBalanceLimitDialog({
           balanceLimit: limitValue,
         });
         notify('Update user balance limit success', 'success');
-        onReloadData();
+        onBalanceLimitChanged(limitValue);
         setOpen(false);
       } catch (err) {
         const errTitle = get(err, 'body.errors[0].title', 'Cannot update risk model');
