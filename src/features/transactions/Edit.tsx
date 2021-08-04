@@ -15,7 +15,6 @@ import * as yup from 'yup';
 import InputField from '../../components/InputField';
 import TextLabel from '../../components/TextLabel';
 import { callApi } from '../../helpers/api';
-import { convertDateToString } from '../../helpers/date';
 import { getFullName } from '../../helpers/string';
 import { getId } from '../../helpers/url';
 import { useTransaction } from '../../hooks/transaction-hook';
@@ -85,7 +84,7 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
     enableReinitialize: true,
     initialValues: {
       ...transactionRecord,
-      submitAt: moment(transactionRecord.submitAt).format('YYYY-MM-DD'),
+      submitAt: moment(transactionRecord.submitAt).format('YYYY-MM-DDThh:mm'),
     },
     validationSchema,
     onSubmit: async (_values) => {
@@ -207,7 +206,7 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
             variant="standard"
             helperText="What happened?"
             InputLabelProps={{
-              shrink: !!formik.values.amountFee,
+              shrink: !!formik.values.description,
             }}
             onChange={handleChangeField('description')}
           />
@@ -220,7 +219,7 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
             formik={formik}
             disabled={disabled}
             InputLabelProps={{
-              shrink: !!formik.values.amountFee,
+              shrink: !!formik.values.source,
             }}
             onChange={handleChangeField('source')}
           />
@@ -270,7 +269,7 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
             variant="standard"
             onChange={handleChangeField('submitAt')}
             InputLabelProps={{
-              shrink: true,
+              shrink: !!formik.values.submitAt,
             }}
           />
           <InputField
