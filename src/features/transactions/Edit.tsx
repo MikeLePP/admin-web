@@ -1,8 +1,9 @@
 import { Box, Button, FormControl, InputLabel, NativeSelect, Radio } from '@material-ui/core';
 import { ArrowBack as BackIcon, Save as SaveIcon } from '@material-ui/icons';
 import { useFormik } from 'formik';
-import { get, lowerCase, omitBy, identity } from 'lodash';
-import React, { ChangeEvent, useEffect, useMemo, useState } from 'react';
+import moment from 'moment';
+import { get, lowerCase, omitBy, identity, merge } from 'lodash';
+import { ChangeEvent, useEffect, useMemo, useState } from 'react';
 import {
   ListButton,
   ResourceComponentPropsWithId,
@@ -20,18 +21,16 @@ import { getId } from '../../helpers/url';
 import { useTransaction } from '../../hooks/transaction-hook';
 import { useBankAccount } from '../users/user-hooks';
 
-interface TransactionRecord extends Record<string, unknown> {
+interface TransactionRecord {
   amount?: number;
   amountFee?: number;
   bankAccountId?: string;
   description?: string;
   destinationId?: string;
   email?: string;
-  firstName?: string;
   id: string;
   lastName?: string;
   mobileNumber?: string;
-  paymentAccountId?: string;
   paymentType?: string;
   riskAssessmentId?: string;
   source?: string;
@@ -43,24 +42,18 @@ interface TransactionRecord extends Record<string, unknown> {
   updatedBy?: string;
 }
 
-interface CustomEditToolbarProps {
-  basePath: string;
-  id: string;
-}
-
 const validationSchema = yup.object({
   paymentType: yup.string().required(),
   amount: yup.number().required(),
   amountFee: yup.number().required(),
   description: yup.string().required(),
   source: yup.string().required(),
-  paymentAccountId: yup.string().required(),
   submitAt: yup.date().min(new Date(), 'Please select a future date').required(),
   destination: yup.string().required(),
   destinationId: yup.string().required(),
 });
 
-const CustomEditToolbar = ({ basePath, id }: CustomEditToolbarProps): JSX.Element => {
+const CustomEditToolbar = ({ basePath, id }: { basePath: string; id: string }): JSX.Element => {
   const showPath = `${basePath}/${id}/show`;
   return (
     <TopToolbar>
@@ -79,34 +72,36 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
   const { bankAccounts } = useBankAccount(userId);
   const [updating, setUpdating] = useState(false);
   const { attributes: transactionData } = useTransaction(transactionId);
-  const bankAccountSelect = useMemo(() => {
-    const select = bankAccounts?.map((account) => ({
-      id: account.bankAccountId,
-      name: `${account.accountName}`,
-      value: account.paymentAccountId,
-    }));
-    return select;
-  }, [bankAccounts]);
+  const bankAccountOptions = useMemo(
+    () =>
+      bankAccounts?.map((account) => ({
+        id: account.bankAccountId,
+        name: `${account.accountName}`,
+        value: account.paymentAccountId,
+      })),
+    [bankAccounts],
+  );
   const formik = useFormik({
     enableReinitialize: true,
     initialValues: {
       ...transactionRecord,
-      submitAt: convertDateToString(new Date(transactionRecord.submitAt || '')),
+      submitAt: moment(transactionRecord.submitAt).format('YYYY-MM-DD'),
     },
     validationSchema,
     onSubmit: async (_values) => {
-      const transactionUpdated = {
-        ...transactionData,
-        ..._values,
-        sourceId:
-          _values.paymentType === 'debit' ? _values.paymentAccountId : transactionData?.sourceId,
-      };
-      delete transactionUpdated.paymentAccountId;
+      const transactionUpdated = merge(
+        transactionData || {},
+        _values as Partial<TransactionRecord>,
+        {
+          sourceId: _values.paymentType === 'debit' ? _values.sourceId : transactionData?.sourceId,
+        } as Partial<TransactionRecord>,
+      );
       try {
         await callApi(`/transactions/${transactionId}`, 'put', transactionUpdated);
         props.history?.push(`${props.basePath || ''}/${transactionId}/show`);
       } catch (err) {
-        notify('Cannot update this transaction', 'error');
+        const errTitle = get(err, 'body.errors[0].title', 'Cannot update this transaction');
+        notify(errTitle, 'error');
       }
     },
   });
@@ -229,25 +224,41 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
             }}
             onChange={handleChangeField('source')}
           />
-          <FormControl fullWidth={false} className="w-64 my-2.5">
-            <InputLabel htmlFor="uncontrolled-native" shrink={!!formik.values.paymentAccountId}>
-              Bank account
-            </InputLabel>
-            <NativeSelect
-              value={formik.values.paymentAccountId}
-              inputProps={{
-                name: 'name',
-                id: 'uncontrolled-native',
+          {formik.values.paymentType == 'debit' ? (
+            <FormControl fullWidth={false} className="w-64 my-2.5">
+              <InputLabel htmlFor="uncontrolled-native" shrink={!!formik.values.sourceId}>
+                Bank account
+              </InputLabel>
+              <NativeSelect
+                value={formik.values.sourceId}
+                inputProps={{
+                  name: 'name',
+                  id: 'uncontrolled-native',
+                }}
+                onChange={handleChangeField('sourceId')}
+              >
+                {bankAccountOptions.map(({ id, name, value }) => (
+                  <option key={id} value={value}>
+                    {name}
+                  </option>
+                ))}
+              </NativeSelect>
+            </FormControl>
+          ) : (
+            <InputField
+              className="w-64 my-2.5"
+              required
+              variant="standard"
+              label="Debit from"
+              name="sourceId"
+              formik={formik}
+              disabled
+              InputLabelProps={{
+                shrink: !!formik.values.sourceId,
               }}
-              onChange={handleChangeField('paymentAccountId')}
-            >
-              {bankAccountSelect.map(({ id, name, value }) => (
-                <option key={id} value={value}>
-                  {name}
-                </option>
-              ))}
-            </NativeSelect>
-          </FormControl>
+            />
+          )}
+
           <InputField
             className="w-64 my-2.5"
             required
