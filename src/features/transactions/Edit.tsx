@@ -98,9 +98,10 @@ const TransactionEdit = (props: ResourceComponentPropsWithId): JSX.Element | nul
       const transactionUpdated = {
         ...transactionData,
         ..._values,
-        sourceId: _values.paymentType === 'debit' ? _values.paymentAccountId : undefined,
+        sourceId:
+          _values.paymentType === 'debit' ? _values.paymentAccountId : transactionData?.sourceId,
       };
-
+      delete transactionUpdated.paymentAccountId;
       try {
         await callApi(`/transactions/${transactionId}`, 'put', transactionUpdated);
         props.history?.push(`${props.basePath || ''}/${transactionId}/show`);
