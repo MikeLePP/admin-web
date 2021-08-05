@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, SetStateAction, Dispatch } from 'react';
 import { get } from 'lodash';
 import { useNotify } from 'react-admin';
 import { callApi } from '../../helpers/api';
@@ -9,6 +9,7 @@ type IStatus = 'idle' | 'loading' | 'success' | 'fail';
 type IUserHook = {
   user?: User;
   status: IStatus;
+  setUser: Dispatch<SetStateAction<User | undefined>>;
 };
 
 type IBankAccountHook = {
@@ -38,6 +39,7 @@ export function useUser(userId: string): IUserHook {
   return {
     user,
     status,
+    setUser,
   };
 }
 
