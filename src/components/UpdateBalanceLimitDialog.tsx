@@ -55,7 +55,7 @@ export default function UpdateBalanceLimitDialog({
         onBalanceLimitChanged(limitValue);
         setOpen(false);
       } catch (err) {
-        const errTitle = get(err, 'body.errors[0].title', 'Cannot update risk model');
+        const errTitle = get(err, 'body.errors[0].title', 'Cannot update balance limit');
         notify(errTitle, 'error');
       }
     }
