@@ -1,8 +1,9 @@
 import { Box } from '@material-ui/core';
 import { ArrowBack as BackIcon, Edit as EditIcon } from '@material-ui/icons';
-import { Button, DeleteButton, ListButton, TopToolbar, Record } from 'react-admin';
-import { Link } from 'react-router-dom';
 import { template } from 'lodash';
+import React, { Fragment } from 'react';
+import { Button, DeleteButton, ListButton, Record, TopToolbar } from 'react-admin';
+import { Link } from 'react-router-dom';
 
 type ShowToolbarProps = {
   basePath?: string;
@@ -11,6 +12,7 @@ type ShowToolbarProps = {
   deleteCustomLabel?: string;
   deleteButtonRedirectToPage?: 'show' | 'list' | undefined;
   deleteTemplate?: string;
+  actions?: JSX.Element;
 };
 
 const ShowToolbar = (props: ShowToolbarProps): JSX.Element | null => {
@@ -23,6 +25,7 @@ const ShowToolbar = (props: ShowToolbarProps): JSX.Element | null => {
     deleteCustomLabel = 'Delete',
     deleteButtonRedirectToPage = 'show',
     deleteTemplate,
+    actions = <Fragment />,
   } = props;
   const title = deleteTemplate ? { confirmTitle: template(deleteTemplate)(data) } : {};
   let listBasePath = basePath;
@@ -40,10 +43,10 @@ const ShowToolbar = (props: ShowToolbarProps): JSX.Element | null => {
   };
 
   return (
-    <TopToolbar>
+    <TopToolbar className="items-center">
       <ListButton basePath={listBasePath} record={data} icon={<BackIcon />} />
       <Box display="flex" flexGrow={1} />
-
+      {actions}
       <Button {...props} component={Link} label="Edit" to={editBasePath}>
         <EditIcon />
       </Button>
