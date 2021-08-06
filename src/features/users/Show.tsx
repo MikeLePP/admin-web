@@ -14,7 +14,7 @@ import TransactionDialog from '../../components/TransactionDialog';
 import UpdateBalanceLimitDialog from '../../components/UpdateBalanceLimitDialog';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { callApi } from '../../helpers/api';
-import { useTransaction } from '../../hooks/transaction-hook';
+import { useBankData } from '../../hooks/bank-data-hook';
 import { User } from '../../types/user';
 import { useBankAccount, useUser } from './user-hooks';
 
@@ -56,7 +56,7 @@ const UserShow = (props: ResourceComponentPropsWithId): JSX.Element => {
   const [showConfirmDialog, setShowConfirmDialog] = React.useState(false);
   const [showUpdateBalanceLimit, setShowUpdateBalanceLimit] = React.useState(false);
   const notify = useNotify();
-  const transactionData = useTransaction(userId);
+  const transactionData = useBankData(userId);
   const [dataLastAt, setDataLastAt] = useState<string | undefined>();
   const { user, setUser } = useUser(userId);
   const { bankAccounts } = useBankAccount(userId);

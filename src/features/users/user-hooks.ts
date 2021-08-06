@@ -43,7 +43,7 @@ export function useUser(userId: string): IUserHook {
   };
 }
 
-export function useBankAccount(userId: string): IBankAccountHook {
+export function useBankAccount(userId?: string): IBankAccountHook {
   const [bankAccounts, setBankAccounts] = useState([] as BankAccount[]);
   const notify = useNotify();
   const [status, setStatus] = useState<IStatus>('idle');
@@ -64,6 +64,7 @@ export function useBankAccount(userId: string): IBankAccountHook {
         bankName: item.attributes.bankName,
         accountType: item.attributes.accountType,
         accountName: item.attributes.accountName,
+        paymentAccountId: item.attributes.paymentAccountId,
       }));
       setBankAccounts(mappingBankAccounts);
       setStatus('success');

@@ -36,7 +36,7 @@ import { parseBankAccount } from '../../helpers/bankAccount';
 import { toLocalDateString } from '../../helpers/date';
 import { RiskAssessment as IRiskAssessment, useRiskAssessment } from '../../hooks/assessment-hook';
 import { useRiskModels } from '../../hooks/risk-model-hook';
-import { useTransaction } from '../../hooks/transaction-hook';
+import { useBankData } from '../../hooks/bank-data-hook';
 import ActionButtons from './ActionButtons';
 import { APPROVED_AMOUNT, DECLINE_REASONS, GOVERNMENT_SUPPORT, RISK_MODELS } from './constants';
 import {
@@ -80,7 +80,7 @@ const RiskAssessment = ({
   const [addNewAssessment, setAddNewAssessment] = useState(false);
   const [dataLastAt, setDataLastAt] = useState<string | undefined>();
   const [showAllTransactions, setShowAllTransactions] = useState(false);
-  const transactionData = useTransaction(userDetails?.id);
+  const transactionData = useBankData(userDetails?.id);
   const [userBankAccounts, setUserBankAccounts] = useState<BankAccount[]>([]);
   const { riskAssessment, status } = useRiskAssessment(riskAssessmentId);
   const { riskModels, status: riskModelStatus } = useRiskModels();

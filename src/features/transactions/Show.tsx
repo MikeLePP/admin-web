@@ -26,7 +26,7 @@ const TransactionShow = (props: ResourceComponentPropsWithId): JSX.Element => (
         label="Status"
         render={(record?: Record) => record && upperFirst(lowerCase(record.status))}
       />
-      <TextField label="Status message" source="statusReason" />
+      <TextField label="Status reason" source="statusReason" />
       <TextField label="Payment type" source="paymentType" />
       <NumberField label="Amount" source="amount" />
       <NumberField label="Fee" source="amountFee" />

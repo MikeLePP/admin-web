@@ -5,4 +5,5 @@ export interface BankAccount {
   accountNumber: string;
   accountName: string;
   accountType: string;
+  paymentAccountId: string;
 }
