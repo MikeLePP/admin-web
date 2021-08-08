@@ -4,4 +4,5 @@ cdk.out/
 craco.config.js
 jest.config.js
 output/
+src-v1/
 tailwind.config.js
