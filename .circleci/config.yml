@@ -62,7 +62,8 @@ workflows:
             branches:
               only:
                 - develop
-                - /features?\/.*/
+                - /dev\/.*/
+                - v2
           requires:
             - build
   build-deploy-staging:
