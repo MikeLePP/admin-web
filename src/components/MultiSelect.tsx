@@ -1,13 +1,7 @@
 import { useRef, useState } from 'react';
 import type { ChangeEvent, FC } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Button,
-  Checkbox,
-  FormControlLabel,
-  Menu,
-  MenuItem
-} from '@material-ui/core';
+import { Button, Checkbox, FormControlLabel, Menu, MenuItem } from '@material-ui/core';
 import ChevronDownIcon from '../icons/ChevronDown';
 
 interface MultiSelectProps {
@@ -18,13 +12,7 @@ interface MultiSelectProps {
 }
 
 const MultiSelect: FC<MultiSelectProps> = (props) => {
-  const {
-    label,
-    onChange,
-    options,
-    value,
-    ...other
-  } = props;
+  const { label, onChange, options, value, ...other } = props;
   const anchorRef = useRef<HTMLButtonElement | null>(null);
   const [openMenu, setOpenMenu] = useState<boolean>(false);
 
@@ -72,14 +60,14 @@ const MultiSelect: FC<MultiSelectProps> = (props) => {
         {options.map((option) => (
           <MenuItem key={option}>
             <FormControlLabel
-              control={(
+              control={
                 <Checkbox
                   checked={value.indexOf(option) > -1}
                   color="primary"
                   onChange={handleOptionToggle}
                   value={option}
                 />
-              )}
+              }
               label={option}
             />
           </MenuItem>
@@ -93,7 +81,7 @@ MultiSelect.propTypes = {
   label: PropTypes.string.isRequired,
   onChange: PropTypes.func,
   options: PropTypes.array.isRequired,
-  value: PropTypes.array.isRequired
+  value: PropTypes.array.isRequired,
 };
 
 export default MultiSelect;

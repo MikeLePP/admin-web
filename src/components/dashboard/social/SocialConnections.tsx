@@ -14,7 +14,7 @@ import {
   Input,
   Link,
   Paper,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { socialApi } from '../../../__fakeApi__/socialApi';
 import useMounted from '../../../hooks/useMounted';
@@ -25,7 +25,7 @@ import type { Connection } from '../../../types/social';
 const connectStatusMap = {
   connected: 'Connected',
   not_connected: 'Connect',
-  pending: 'Pending'
+  pending: 'Pending',
 };
 
 const SocialConnections: FC = (props) => {
@@ -42,29 +42,28 @@ const SocialConnections: FC = (props) => {
   }, [mounted]);
 
   useEffect(() => {
-    getConnections();
+    void getConnections();
   }, [getConnections]);
 
   const handleConnectToggle = (connectionId: string): void => {
-    setConnections((prevConnections) => prevConnections.map((connection) => {
-      if (connection.id === connectionId) {
-        const updatedConnection = { ...connection };
+    setConnections((prevConnections) =>
+      prevConnections.map((connection) => {
+        if (connection.id === connectionId) {
+          const updatedConnection = { ...connection };
 
-        updatedConnection.status = (
-          connection.status === 'connected' || connection.status === 'pending'
-            ? 'not_connected'
-            : 'pending'
-        );
+          updatedConnection.status =
+            connection.status === 'connected' || connection.status === 'pending' ? 'not_connected' : 'pending';
 
-        if (updatedConnection.status === 'pending') {
-          toast.success('Request sent!');
+          if (updatedConnection.status === 'pending') {
+            toast.success('Request sent!');
+          }
+
+          return updatedConnection;
         }
 
-        return updatedConnection;
-      }
-
-      return connection;
-    }));
+        return connection;
+      }),
+    );
   };
 
   return (
@@ -76,7 +75,7 @@ const SocialConnections: FC = (props) => {
           alignItems: 'center',
           display: 'flex',
           px: 3,
-          py: 2
+          py: 2,
         }}
       >
         <SearchIcon fontSize="small" />
@@ -91,28 +90,17 @@ const SocialConnections: FC = (props) => {
       </Box>
       <Divider />
       <Box sx={{ p: 3 }}>
-        <Grid
-          container
-          spacing={3}
-        >
+        <Grid container spacing={3}>
           {connections
             .filter((connection) => connection.name.toLowerCase().includes(search))
             .map((connection) => (
-              <Grid
-                item
-                key={connection.id}
-                md={6}
-                xs={12}
-              >
-                <Paper
-                  sx={{ height: '100%' }}
-                  variant="outlined"
-                >
+              <Grid item key={connection.id} md={6} xs={12}>
+                <Paper sx={{ height: '100%' }} variant="outlined">
                   <Box
                     sx={{
                       alignItems: 'center',
                       display: 'flex',
-                      p: 2
+                      p: 2,
                     }}
                   >
                     <Avatar
@@ -120,32 +108,21 @@ const SocialConnections: FC = (props) => {
                       src={connection.avatar}
                       sx={{
                         height: 60,
-                        width: 60
+                        width: 60,
                       }}
                       to="#"
                     />
                     <Box
                       sx={{
                         flexGrow: 1,
-                        mx: 2
+                        mx: 2,
                       }}
                     >
-                      <Link
-                        color="textPrimary"
-                        component={RouterLink}
-                        to="#"
-                        variant="h5"
-                      >
+                      <Link color="textPrimary" component={RouterLink} to="#" variant="h5">
                         {connection.name}
                       </Link>
-                      <Typography
-                        color="textSecondary"
-                        gutterBottom
-                        variant="body2"
-                      >
-                        {connection.commonConnections}
-                        {' '}
-                        connections in common
+                      <Typography color="textSecondary" gutterBottom variant="body2">
+                        {connection.commonConnections} connections in common
                       </Typography>
                       {connection.status !== 'rejected' && (
                         <Button

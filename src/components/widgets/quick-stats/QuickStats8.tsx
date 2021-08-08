@@ -24,58 +24,58 @@ const QuickStats8: FC = () => {
     chart: {
       background: 'transparent',
       toolbar: {
-        show: false
-      }
+        show: false,
+      },
     },
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
     grid: {
       yaxis: {
         lines: {
-          show: false
-        }
+          show: false,
+        },
       },
       xaxis: {
         lines: {
-          show: false
-        }
-      }
+          show: false,
+        },
+      },
     },
     legend: {
-      show: false
+      show: false,
     },
     stroke: {
       width: 2,
-      colors: ['#f44336']
+      colors: ['#f44336'],
     },
     theme: {
-      mode: theme.palette.mode
+      mode: theme.palette.mode,
     },
     xaxis: {
       axisBorder: {
-        show: false
+        show: false,
       },
       axisTicks: {
-        show: false
+        show: false,
       },
       categories: getCategories(),
       labels: {
-        show: false
-      }
+        show: false,
+      },
     },
     yaxis: {
       labels: {
-        show: false
-      }
-    }
+        show: false,
+      },
+    },
   };
 
   const chartSeries = [
     {
       data: [14, 43, 98, 68, 155, 18, 8],
-      name: 'Conversions'
-    }
+      name: 'Conversions',
+    },
   ];
 
   return (
@@ -83,7 +83,7 @@ const QuickStats8: FC = () => {
       sx={{
         backgroundColor: 'background.default',
         minHeight: '100%',
-        p: 3
+        p: 3,
       }}
     >
       <Container maxWidth="md">
@@ -93,47 +93,34 @@ const QuickStats8: FC = () => {
               alignItems: 'center',
               display: 'flex',
               justifyContent: 'space-between',
-              flexWrap: 'wrap'
+              flexWrap: 'wrap',
             }}
           >
             <Box
               sx={{
                 alignItems: 'center',
-                display: 'flex'
+                display: 'flex',
               }}
             >
               <Avatar
                 sx={{
                   backgroundColor: 'primary.main',
-                  color: 'primary.contrastText'
+                  color: 'primary.contrastText',
                 }}
               >
                 <RefreshIcon fontSize="small" />
               </Avatar>
               <Box sx={{ ml: 3 }}>
-                <Typography
-                  color="textSecondary"
-                  noWrap
-                  variant="body1"
-                >
+                <Typography color="textSecondary" noWrap variant="body1">
                   Conversions (7 days)
                 </Typography>
-                <Typography
-                  color="textPrimary"
-                  sx={{ fontWeight: 'fontWeightBold' }}
-                  variant="h4"
-                >
+                <Typography color="textPrimary" sx={{ fontWeight: 'fontWeightBold' }} variant="h4">
                   361
                 </Typography>
               </Box>
             </Box>
             <Box sx={{ maxWidth: 200 }}>
-              <Chart
-                height="100"
-                type="line"
-                options={chartOptions}
-                series={chartSeries}
-              />
+              <Chart height="100" type="line" options={chartOptions} series={chartSeries} />
             </Box>
           </Box>
         </Card>

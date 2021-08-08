@@ -15,7 +15,7 @@ import {
   Menu,
   MenuItem,
   Tooltip,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import ArchiveIcon from '../../../icons/Archive';
@@ -32,22 +32,22 @@ const files = [
     mimeType: 'image/png',
     name: 'example-project1.jpg',
     size: 1024 * 1024 * 3,
-    url: '/static/mock-images/projects/project_4.png'
+    url: '/static/mock-images/projects/project_4.png',
   },
   {
     id: '5e8dd0784431995a30eb2586',
     mimeType: 'application/zip',
     name: 'docs.zip',
     size: 1024 * 1024 * 25,
-    url: '#'
+    url: '#',
   },
   {
     id: '5e8dd07cbb62749296ecee1c',
     mimeType: 'image/png',
     name: 'example-project2.jpg',
     size: 1024 * 1024 * 2,
-    url: '/static/mock-images/projects/project_1.png'
-  }
+    url: '/static/mock-images/projects/project_1.png',
+  },
 ];
 
 const GridList3: FC = () => {
@@ -69,72 +69,46 @@ const GridList3: FC = () => {
         display: 'flex',
         justifyContent: 'center',
         minHeight: '100%',
-        p: 3
+        p: 3,
       }}
     >
-      <Grid
-        container
-        spacing={3}
-      >
+      <Grid container spacing={3}>
         {files.map((file) => (
-          <Grid
-            item
-            key={file.id}
-            md={4}
-            xs={12}
-          >
+          <Grid item key={file.id} md={4} xs={12}>
             <Card>
-              {
-                file.mimeType.includes('image/')
-                  ? (
-                    <CardMedia
-                      image={file.url}
-                      sx={{ height: 140 }}
-                    />
-                  )
-                  : (
-                    <Box
-                      sx={{
-                        alignItems: 'center',
-                        backgroundColor: blueGrey['50'],
-                        color: '#000000',
-                        display: 'flex',
-                        height: 140,
-                        justifyContent: 'center'
-                      }}
-                    >
-                      <DocumentTextIcon fontSize="large" />
-                    </Box>
-                  )
-              }
+              {file.mimeType.includes('image/') ? (
+                <CardMedia image={file.url} sx={{ height: 140 }} />
+              ) : (
+                <Box
+                  sx={{
+                    alignItems: 'center',
+                    backgroundColor: blueGrey['50'],
+                    color: '#000000',
+                    display: 'flex',
+                    height: 140,
+                    justifyContent: 'center',
+                  }}
+                >
+                  <DocumentTextIcon fontSize="large" />
+                </Box>
+              )}
               <CardContent
                 sx={{
                   display: 'flex',
-                  justifyContent: 'space-between'
+                  justifyContent: 'space-between',
                 }}
               >
                 <div>
-                  <Typography
-                    color="textPrimary"
-                    variant="subtitle2"
-                  >
+                  <Typography color="textPrimary" variant="subtitle2">
                     {file.name}
                   </Typography>
-                  <Typography
-                    color="textSecondary"
-                    variant="caption"
-                  >
+                  <Typography color="textSecondary" variant="caption">
                     {bytesToSize(file.size)}
                   </Typography>
                 </div>
                 <div>
                   <Tooltip title="More options">
-                    <IconButton
-                      edge="end"
-                      onClick={handleMenuOpen}
-                      ref={moreRef}
-                      size="small"
-                    >
+                    <IconButton edge="end" onClick={handleMenuOpen} ref={moreRef} size="small">
                       <DotsHorizontalIcon fontSize="small" />
                     </IconButton>
                   </Tooltip>
@@ -142,12 +116,7 @@ const GridList3: FC = () => {
               </CardContent>
               <Divider />
               <CardActions>
-                <Button
-                  color="primary"
-                  fullWidth
-                  startIcon={<DownloadIcon fontSize="small" />}
-                  variant="text"
-                >
+                <Button color="primary" fullWidth startIcon={<DownloadIcon fontSize="small" />} variant="text">
                   Download
                 </Button>
               </CardActions>
@@ -155,7 +124,7 @@ const GridList3: FC = () => {
                 anchorEl={moreRef.current}
                 anchorOrigin={{
                   horizontal: 'left',
-                  vertical: 'top'
+                  vertical: 'top',
                 }}
                 elevation={1}
                 onClose={handleMenuClose}
@@ -163,12 +132,12 @@ const GridList3: FC = () => {
                 PaperProps={{
                   sx: {
                     maxWidth: '100%',
-                    width: 250
-                  }
+                    width: 250,
+                  },
                 }}
                 transformOrigin={{
                   horizontal: 'left',
-                  vertical: 'top'
+                  vertical: 'top',
                 }}
               >
                 <MenuItem divider>

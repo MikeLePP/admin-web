@@ -25,7 +25,7 @@ const systemLabelIcons = {
   spam: ExclamationCircle,
   sent: SendIcon,
   starred: StarIcon,
-  important: LabelImportantIcon
+  important: LabelImportantIcon,
 };
 
 const getIcon = (label: any) => {
@@ -40,11 +40,11 @@ const getTo = (label: any): string => {
   const baseUrl = '/dashboard/mail';
 
   if (label.type === 'system_label') {
-    return `${baseUrl}/${label.id}`;
+    return `${baseUrl}/${label.id as string}`;
   }
 
   if (label.type === 'custom_label') {
-    return `${baseUrl}/label/${label.name}`;
+    return `${baseUrl}/label/${label.name as string}`;
   }
 
   return baseUrl;
@@ -67,11 +67,7 @@ const MailLabel: FC<MailLabelProps> = (props) => {
   const displayUnreadCount = Boolean(label.unreadCount && label.unreadCount > 0);
 
   return (
-    <ListItem
-      disableGutters
-      sx={{ py: 1 }}
-      {...other}
-    >
+    <ListItem disableGutters sx={{ py: 1 }} {...other}>
       <ButtonBase
         activeClassName="exactMatch"
         component={RouterLink}
@@ -85,40 +81,34 @@ const MailLabel: FC<MailLabelProps> = (props) => {
           paddingLeft: '32px',
           paddingRight: '18px',
           '&:hover': {
-            backgroundColor: 'action.hover'
+            backgroundColor: 'action.hover',
           },
           '&.exactMatch': {
             backgroundColor: 'action.selected',
-            fontWeight: 'fontWeightMedium'
-          }
+            fontWeight: 'fontWeightMedium',
+          },
         }}
         to={to}
       >
         <Box
           sx={{
             display: 'flex',
-            mr: 1
+            mr: 1,
           }}
         >
-          <Icon
-            color="inherit"
-            style={{ color }}
-          />
+          <Icon color="inherit" style={{ color }} />
         </Box>
         <Typography
           sx={{
             flexGrow: 1,
-            fontWeight: 'inherit'
+            fontWeight: 'inherit',
           }}
           variant="body2"
         >
           {label.name}
         </Typography>
         {displayUnreadCount && (
-          <Typography
-            color="inherit"
-            variant="caption"
-          >
+          <Typography color="inherit" variant="caption">
             {label.unreadCount}
           </Typography>
         )}
@@ -128,8 +118,7 @@ const MailLabel: FC<MailLabelProps> = (props) => {
 };
 
 MailLabel.propTypes = {
-  // @ts-ignore
-  label: PropTypes.object.isRequired
+  label: PropTypes.any.isRequired,
 };
 
 export default MailLabel;

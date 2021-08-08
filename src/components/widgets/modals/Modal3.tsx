@@ -1,13 +1,5 @@
 import type { FC } from 'react';
-import {
-  Box,
-  Button,
-  Container,
-  IconButton,
-  InputAdornment,
-  Paper,
-  TextField
-} from '@material-ui/core';
+import { Box, Button, Container, IconButton, InputAdornment, Paper, TextField } from '@material-ui/core';
 import SearchIcon from '../../../icons/Search';
 import XIcon from '../../../icons/X';
 
@@ -16,7 +8,7 @@ const Modal3: FC = () => (
     sx={{
       backgroundColor: 'background.default',
       minHeight: '100%',
-      p: 3
+      p: 3,
     }}
   >
     <Paper elevation={12}>
@@ -24,7 +16,7 @@ const Modal3: FC = () => (
         <Box
           sx={{
             display: 'flex',
-            justifyContent: 'flex-end'
+            justifyContent: 'flex-end',
           }}
         >
           <IconButton>
@@ -37,7 +29,7 @@ const Modal3: FC = () => (
           <Box
             sx={{
               alignItems: 'center',
-              display: 'flex'
+              display: 'flex',
             }}
           >
             <TextField
@@ -47,16 +39,11 @@ const Modal3: FC = () => (
                   <InputAdornment position="start">
                     <SearchIcon fontSize="small" />
                   </InputAdornment>
-                )
+                ),
               }}
               placeholder="Search..."
             />
-            <Button
-              color="primary"
-              size="large"
-              sx={{ ml: 2 }}
-              variant="contained"
-            >
+            <Button color="primary" size="large" sx={{ ml: 2 }} variant="contained">
               Search
             </Button>
           </Box>

@@ -1,16 +1,7 @@
 import type { FC } from 'react';
 import { format, subDays } from 'date-fns';
 import numeral from 'numeral';
-import {
-  Box,
-  Card,
-  CardHeader,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow,
-  Typography
-} from '@material-ui/core';
+import { Box, Card, CardHeader, Table, TableBody, TableCell, TableRow, Typography } from '@material-ui/core';
 
 const transactions = [
   {
@@ -19,7 +10,7 @@ const transactions = [
     currency: 'usd',
     date: new Date(),
     sender: 'Devias',
-    type: 'receive'
+    type: 'receive',
   },
   {
     id: 'b4b19b21656e44b487441c50',
@@ -27,7 +18,7 @@ const transactions = [
     currency: 'usd',
     date: subDays(new Date(), 1),
     sender: 'Zimbru',
-    type: 'send'
+    type: 'send',
   },
   {
     id: '56c09ad91f6d44cb313397db',
@@ -35,7 +26,7 @@ const transactions = [
     currency: 'usd',
     date: subDays(new Date(), 1),
     sender: 'Vertical Jelly',
-    type: 'send'
+    type: 'send',
   },
   {
     id: 'aaeb96c5a131a55d9623f44d',
@@ -43,15 +34,15 @@ const transactions = [
     currency: 'usd',
     date: subDays(new Date(), 3),
     sender: 'Devias',
-    type: 'receive'
-  }
+    type: 'receive',
+  },
 ];
 
 const GroupedList6: FC = () => (
   <Box
     sx={{
       backgroundColor: 'background.default',
-      p: 3
+      p: 3,
     }}
   >
     <Card>
@@ -63,65 +54,35 @@ const GroupedList6: FC = () => (
               key={transaction.id}
               sx={{
                 '&:last-child td': {
-                  border: 0
-                }
+                  border: 0,
+                },
               }}
             >
               <TableCell width={100}>
                 <Box sx={{ p: 1 }}>
-                  <Typography
-                    align="center"
-                    color="textSecondary"
-                    variant="subtitle2"
-                  >
+                  <Typography align="center" color="textSecondary" variant="subtitle2">
                     {format(transaction.date, 'LLL').toUpperCase()}
                   </Typography>
-                  <Typography
-                    align="center"
-                    color="textSecondary"
-                    variant="h6"
-                  >
+                  <Typography align="center" color="textSecondary" variant="h6">
                     {format(transaction.date, 'd')}
                   </Typography>
                 </Box>
               </TableCell>
               <TableCell>
                 <Box>
-                  <Typography
-                    color="textPrimary"
-                    variant="subtitle2"
-                  >
+                  <Typography color="textPrimary" variant="subtitle2">
                     {transaction.sender}
                   </Typography>
-                  <Typography
-                    color="textSecondary"
-                    variant="body2"
-                  >
-                    {
-                      transaction.type === 'receive'
-                        ? 'Payment received'
-                        : 'Payment sent'
-                    }
+                  <Typography color="textSecondary" variant="body2">
+                    {transaction.type === 'receive' ? 'Payment received' : 'Payment sent'}
                   </Typography>
                 </Box>
               </TableCell>
               <TableCell align="right">
-                <Typography
-                  color={
-                    transaction.type === 'receive'
-                      ? 'success.main'
-                      : 'error.main'
-                  }
-                  variant="subtitle2"
-                >
-                  {transaction.type === 'receive' ? '+' : '-'}
-                  {' '}
-                  {numeral(transaction.amount).format('$0,0.00')}
+                <Typography color={transaction.type === 'receive' ? 'success.main' : 'error.main'} variant="subtitle2">
+                  {transaction.type === 'receive' ? '+' : '-'} {numeral(transaction.amount).format('$0,0.00')}
                 </Typography>
-                <Typography
-                  color="textSecondary"
-                  variant="body2"
-                >
+                <Typography color="textSecondary" variant="body2">
                   {transaction.currency.toUpperCase()}
                 </Typography>
               </TableCell>

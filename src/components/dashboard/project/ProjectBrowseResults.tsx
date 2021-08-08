@@ -11,7 +11,7 @@ import {
   Pagination,
   ToggleButton,
   ToggleButtonGroup,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import ViewModuleIcon from '@material-ui/icons/ViewModule';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
@@ -54,7 +54,7 @@ const ProjectBrowseResults: FC<ProjectBrowseResultsProps> = (props) => {
           display: 'flex',
           flexWrap: 'wrap',
           justifyContent: 'space-between',
-          mb: 2
+          mb: 2,
         }}
       >
         <Typography
@@ -68,21 +68,17 @@ const ProjectBrowseResults: FC<ProjectBrowseResultsProps> = (props) => {
               height: '3px',
               left: 0,
               position: 'absolute',
-              width: '48px'
-            }
+              width: '48px',
+            },
           }}
           variant="h5"
         >
-          Showing
-          {' '}
-          {projects.length}
-          {' '}
-          projects
+          Showing {projects.length} projects
         </Typography>
         <Box
           sx={{
             alignItems: 'center',
-            display: 'flex'
+            display: 'flex',
           }}
         >
           <Button
@@ -92,37 +88,23 @@ const ProjectBrowseResults: FC<ProjectBrowseResultsProps> = (props) => {
             sx={{
               textTransform: 'none',
               letterSpacing: 0,
-              mr: 2
+              mr: 2,
             }}
             variant="text"
           >
             {selectedSort}
             <ArrowDropDownIcon fontSize="small" />
           </Button>
-          <ToggleButtonGroup
-            exclusive
-            onChange={handleModeChange}
-            size="small"
-            value={mode}
-          >
+          <ToggleButtonGroup exclusive onChange={handleModeChange} size="small" value={mode}>
             <ToggleButton value="grid">
               <ViewModuleIcon fontSize="small" />
             </ToggleButton>
           </ToggleButtonGroup>
         </Box>
       </Box>
-      <Grid
-        container
-        spacing={3}
-      >
+      <Grid container spacing={3}>
         {projects.map((project) => (
-          <Grid
-            item
-            key={project.id}
-            md={mode === 'grid' ? 4 : 12}
-            sm={mode === 'grid' ? 6 : 12}
-            xs={12}
-          >
+          <Grid item key={project.id} md={mode === 'grid' ? 4 : 12} sm={mode === 'grid' ? 6 : 12} xs={12}>
             <ProjectCard project={project} />
           </Grid>
         ))}
@@ -131,40 +113,24 @@ const ProjectBrowseResults: FC<ProjectBrowseResultsProps> = (props) => {
         sx={{
           display: 'flex',
           justifyContent: 'center',
-          mt: 6
+          mt: 6,
         }}
       >
         <Pagination count={3} />
       </Box>
-      <Menu
-        anchorEl={sortRef.current}
-        elevation={1}
-        onClose={handleSortClose}
-        open={openSort}
-      >
-        {[
-          'Most recent',
-          'Popular',
-          'Price high',
-          'Price low',
-          'On sale'
-        ].map(
-          (option) => (
-            <MenuItem
-              key={option}
-              onClick={(): void => handleSortSelect(option)}
-            >
-              <ListItemText primary={option} />
-            </MenuItem>
-          )
-        )}
+      <Menu anchorEl={sortRef.current} elevation={1} onClose={handleSortClose} open={openSort}>
+        {['Most recent', 'Popular', 'Price high', 'Price low', 'On sale'].map((option) => (
+          <MenuItem key={option} onClick={(): void => handleSortSelect(option)}>
+            <ListItemText primary={option} />
+          </MenuItem>
+        ))}
       </Menu>
     </div>
   );
 };
 
 ProjectBrowseResults.propTypes = {
-  projects: PropTypes.array.isRequired
+  projects: PropTypes.array.isRequired,
 };
 
 export default ProjectBrowseResults;

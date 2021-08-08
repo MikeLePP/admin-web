@@ -1,16 +1,7 @@
 import type { FC } from 'react';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-import {
-  Box,
-  Button,
-  Checkbox,
-  Divider,
-  FormHelperText,
-  Link,
-  TextField,
-  Typography
-} from '@material-ui/core';
+import { Box, Button, Checkbox, Divider, FormHelperText, Link, TextField, Typography } from '@material-ui/core';
 import useAuth from '../../../hooks/useAuth';
 import useMounted from '../../../hooks/useMounted';
 
@@ -37,34 +28,25 @@ const RegisterFirebase: FC = (props) => {
           color: 'common.black',
           '&:hover': {
             backgroundColor: 'common.white',
-            color: 'common.black'
-          }
+            color: 'common.black',
+          },
         }}
         variant="contained"
       >
-        <Box
-          alt="Google"
-          component="img"
-          src="/static/icons/google.svg"
-          sx={{ mr: 1 }}
-        />
+        <Box alt="Google" component="img" src="/static/icons/google.svg" sx={{ mr: 1 }} />
         Google
       </Button>
       <Box
         sx={{
           alignItems: 'center',
           display: 'flex',
-          mt: 2
+          mt: 2,
         }}
       >
         <Box sx={{ flexGrow: 1 }}>
           <Divider orientation="horizontal" />
         </Box>
-        <Typography
-          color="textSecondary"
-          sx={{ m: 2 }}
-          variant="body1"
-        >
+        <Typography color="textSecondary" sx={{ m: 2 }} variant="body1">
           OR
         </Typography>
         <Box sx={{ flexGrow: 1 }}>
@@ -76,32 +58,14 @@ const RegisterFirebase: FC = (props) => {
           email: '',
           password: '',
           policy: true,
-          submit: null
+          submit: null,
         }}
-        validationSchema={
-          Yup
-            .object()
-            .shape({
-              email: Yup
-                .string()
-                .email('Must be a valid email')
-                .max(255)
-                .required('Email is required'),
-              password: Yup
-                .string()
-                .min(7)
-                .max(255)
-                .required('Password is required'),
-              policy: Yup
-                .boolean()
-                .oneOf([true], 'This field must be checked')
-            })
-        }
-        onSubmit={async (values, {
-          setErrors,
-          setStatus,
-          setSubmitting
-        }): Promise<void> => {
+        validationSchema={Yup.object().shape({
+          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+          password: Yup.string().min(7).max(255).required('Password is required'),
+          policy: Yup.boolean().oneOf([true], 'This field must be checked'),
+        })}
+        onSubmit={async (values, { setErrors, setStatus, setSubmitting }): Promise<void> => {
           try {
             await createUserWithEmailAndPassword(values.email, values.password);
 
@@ -119,20 +83,8 @@ const RegisterFirebase: FC = (props) => {
           }
         }}
       >
-        {({
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          touched,
-          values
-        }): JSX.Element => (
-          <form
-            noValidate
-            onSubmit={handleSubmit}
-            {...props}
-          >
+        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }): JSX.Element => (
+          <form noValidate onSubmit={handleSubmit} {...props}>
             <TextField
               error={Boolean(touched.email && errors.email)}
               fullWidth
@@ -164,51 +116,25 @@ const RegisterFirebase: FC = (props) => {
                 alignItems: 'center',
                 display: 'flex',
                 ml: -1,
-                mt: 2
+                mt: 2,
               }}
             >
-              <Checkbox
-                checked={values.policy}
-                color="primary"
-                name="policy"
-                onChange={handleChange}
-              />
-              <Typography
-                color="textSecondary"
-                variant="body2"
-              >
-                I have read the
-                {' '}
-                <Link
-                  color="primary"
-                  component="a"
-                  href="#"
-                >
+              <Checkbox checked={values.policy} color="primary" name="policy" onChange={handleChange} />
+              <Typography color="textSecondary" variant="body2">
+                I have read the{' '}
+                <Link color="primary" component="a" href="#">
                   Terms and Conditions
                 </Link>
               </Typography>
             </Box>
-            {Boolean(touched.policy && errors.policy) && (
-              <FormHelperText error>
-                {errors.policy}
-              </FormHelperText>
-            )}
+            {Boolean(touched.policy && errors.policy) && <FormHelperText error>{errors.policy}</FormHelperText>}
             {errors.submit && (
               <Box sx={{ mt: 3 }}>
-                <FormHelperText error>
-                  {errors.submit}
-                </FormHelperText>
+                <FormHelperText error>{errors.submit}</FormHelperText>
               </Box>
             )}
             <Box sx={{ mt: 2 }}>
-              <Button
-                color="primary"
-                disabled={isSubmitting}
-                fullWidth
-                size="large"
-                type="submit"
-                variant="contained"
-              >
+              <Button color="primary" disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained">
                 Register
               </Button>
             </Box>

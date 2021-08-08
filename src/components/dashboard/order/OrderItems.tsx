@@ -12,7 +12,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import type { OrderItem } from '../../../types/order';
 import Scrollbar from '../../Scrollbar';
@@ -33,39 +33,21 @@ const OrderItems: FC<OrderItemsProps> = (props) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>
-                  Description
-                </TableCell>
-                <TableCell>
-                  Billing Cycle
-                </TableCell>
-                <TableCell>
-                  Amount
-                </TableCell>
+                <TableCell>Description</TableCell>
+                <TableCell>Billing Cycle</TableCell>
+                <TableCell>Amount</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {orderItems.map((item) => (
                 <TableRow key={item.id}>
                   <TableCell>
-                    <Typography
-                      color="textPrimary"
-                      variant="subtitle2"
-                    >
-                      {item.quantity}
-                      {' '}
-                      x
-                      {' '}
-                      {item.name}
+                    <Typography color="textPrimary" variant="subtitle2">
+                      {item.quantity} x {item.name}
                     </Typography>
                   </TableCell>
-                  <TableCell>
-                    {item.billingCycle}
-                  </TableCell>
-                  <TableCell>
-                    {numeral(item.unitAmount)
-                      .format(`${item.currency}0,0.00`)}
-                  </TableCell>
+                  <TableCell>{item.billingCycle}</TableCell>
+                  <TableCell>{numeral(item.unitAmount).format(`${item.currency}0,0.00`)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -86,7 +68,7 @@ const OrderItems: FC<OrderItemsProps> = (props) => {
 };
 
 OrderItems.propTypes = {
-  orderItems: PropTypes.array.isRequired
+  orderItems: PropTypes.array.isRequired,
 };
 
 export default OrderItems;

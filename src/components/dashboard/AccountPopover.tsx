@@ -12,7 +12,7 @@ import {
   ListItemText,
   MenuItem,
   Popover,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import useAuth from '../../hooks/useAuth';
 import CogIcon from '../../icons/Cog';
@@ -51,14 +51,14 @@ const AccountPopover: FC = () => {
         ref={anchorRef}
         sx={{
           alignItems: 'center',
-          display: 'flex'
+          display: 'flex',
         }}
       >
         <Avatar
           src={user.avatar}
           sx={{
             height: 32,
-            width: 32
+            width: 32,
           }}
         />
       </Box>
@@ -66,75 +66,52 @@ const AccountPopover: FC = () => {
         anchorEl={anchorRef.current}
         anchorOrigin={{
           horizontal: 'center',
-          vertical: 'bottom'
+          vertical: 'bottom',
         }}
         keepMounted
         onClose={handleClose}
         open={open}
         PaperProps={{
-          sx: { width: 240 }
+          sx: { width: 240 },
         }}
       >
         <Box sx={{ p: 2 }}>
-          <Typography
-            color="textPrimary"
-            variant="subtitle2"
-          >
+          <Typography color="textPrimary" variant="subtitle2">
             {user.name}
           </Typography>
-          <Typography
-            color="textSecondary"
-            variant="subtitle2"
-          >
+          <Typography color="textSecondary" variant="subtitle2">
             Devias
           </Typography>
         </Box>
         <Divider />
         <Box sx={{ mt: 2 }}>
-          <MenuItem
-            component={RouterLink}
-            to="/dashboard/social/profile"
-          >
+          <MenuItem component={RouterLink} to="/dashboard/social/profile">
             <ListItemIcon>
               <UserIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText
-              primary={(
-                <Typography
-                  color="textPrimary"
-                  variant="subtitle2"
-                >
+              primary={
+                <Typography color="textPrimary" variant="subtitle2">
                   Profile
                 </Typography>
-              )}
+              }
             />
           </MenuItem>
-          <MenuItem
-            component={RouterLink}
-            to="/dashboard/account"
-          >
+          <MenuItem component={RouterLink} to="/dashboard/account">
             <ListItemIcon>
               <CogIcon fontSize="small" />
             </ListItemIcon>
             <ListItemText
-              primary={(
-                <Typography
-                  color="textPrimary"
-                  variant="subtitle2"
-                >
+              primary={
+                <Typography color="textPrimary" variant="subtitle2">
                   Settings
                 </Typography>
-              )}
+              }
             />
           </MenuItem>
         </Box>
         <Box sx={{ p: 2 }}>
-          <Button
-            color="primary"
-            fullWidth
-            onClick={handleLogout}
-            variant="outlined"
-          >
+          <Button color="primary" fullWidth onClick={handleLogout} variant="outlined">
             Logout
           </Button>
         </Box>

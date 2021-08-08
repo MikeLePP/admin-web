@@ -15,7 +15,7 @@ import {
   IconButton,
   Link,
   Tooltip,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import red from '@material-ui/core/colors/red';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -67,58 +67,35 @@ const SocialPostCard: FC<SocialPostCardProps> = (props) => {
     <>
       <Card {...other}>
         <CardHeader
-          avatar={(
-            <Avatar
-              component={RouterLink}
-              src={authorAvatar}
-              to="#"
-            />
-          )}
+          avatar={<Avatar component={RouterLink} src={authorAvatar} to="#" />}
           disableTypography
-          subheader={(
+          subheader={
             <Box
               sx={{
                 alignItems: 'center',
                 display: 'flex',
-                mt: 1
+                mt: 1,
               }}
             >
-              <ClockIcon
-                fontSize="small"
-                sx={{ color: 'text.secondary' }}
-              />
-              <Typography
-                color="textSecondary"
-                sx={{ ml: '6px' }}
-                variant="caption"
-              >
-                {formatDistanceToNowStrict(createdAt)}
-                {' '}
-                ago
+              <ClockIcon fontSize="small" sx={{ color: 'text.secondary' }} />
+              <Typography color="textSecondary" sx={{ ml: '6px' }} variant="caption">
+                {formatDistanceToNowStrict(createdAt)} ago
               </Typography>
             </Box>
-          )}
-          title={(
-            <Link
-              color="textPrimary"
-              component={RouterLink}
-              to="#"
-              variant="subtitle2"
-            >
+          }
+          title={
+            <Link color="textPrimary" component={RouterLink} to="#" variant="subtitle2">
               {authorName}
             </Link>
-          )}
+          }
         />
         <Box
           sx={{
             pb: 2,
-            px: 3
+            px: 3,
           }}
         >
-          <Typography
-            color="textPrimary"
-            variant="body1"
-          >
+          <Typography color="textPrimary" variant="body1">
             {message}
           </Typography>
           {media && (
@@ -128,7 +105,7 @@ const SocialPostCard: FC<SocialPostCardProps> = (props) => {
                   image={media}
                   sx={{
                     backgroundPosition: 'top',
-                    height: 500
+                    height: 500,
                   }}
                 />
               </CardActionArea>
@@ -138,33 +115,23 @@ const SocialPostCard: FC<SocialPostCardProps> = (props) => {
             sx={{
               alignItems: 'center',
               display: 'flex',
-              mt: 2
+              mt: 2,
             }}
           >
-            {
-              isLiked
-                ? (
-                  <Tooltip title="Unlike">
-                    <IconButton
-                      onClick={handleUnlike}
-                      sx={{ color: red['600'] }}
-                    >
-                      <FavoriteIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                )
-                : (
-                  <Tooltip title="Like">
-                    <IconButton onClick={handleLike}>
-                      <FavoriteBorderIcon fontSize="small" />
-                    </IconButton>
-                  </Tooltip>
-                )
-            }
-            <Typography
-              color="textSecondary"
-              variant="subtitle2"
-            >
+            {isLiked ? (
+              <Tooltip title="Unlike">
+                <IconButton onClick={handleUnlike} sx={{ color: red['600'] }}>
+                  <FavoriteIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            ) : (
+              <Tooltip title="Like">
+                <IconButton onClick={handleLike}>
+                  <FavoriteBorderIcon fontSize="small" />
+                </IconButton>
+              </Tooltip>
+            )}
+            <Typography color="textSecondary" variant="subtitle2">
               {likes}
             </Typography>
             <Box sx={{ flexGrow: 1 }} />
@@ -186,12 +153,7 @@ const SocialPostCard: FC<SocialPostCardProps> = (props) => {
           <SocialPostCommentAdd />
         </Box>
       </Card>
-      {expandMedia && (
-        <Lightbox
-          large={media}
-          onClose={(): void => setExpandMedia(false)}
-        />
-      )}
+      {expandMedia && <Lightbox large={media} onClose={(): void => setExpandMedia(false)} />}
     </>
   );
 };
@@ -204,7 +166,7 @@ SocialPostCard.propTypes = {
   isLiked: PropTypes.bool.isRequired,
   likes: PropTypes.number.isRequired,
   media: PropTypes.string,
-  message: PropTypes.string
+  message: PropTypes.string,
 };
 
 export default SocialPostCard;

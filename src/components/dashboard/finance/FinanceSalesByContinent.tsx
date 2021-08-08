@@ -14,63 +14,49 @@ const FinanceSalesByContinent: FC = (props) => {
       background: 'transparent',
       stacked: false,
       toolbar: {
-        show: false
-      }
+        show: false,
+      },
     },
-    colors: [
-      '#7F94FF',
-      '#6B7ED9',
-      '#5B6BB8',
-      '#45528D',
-      '#323C67',
-      '#2A3356'
-    ],
+    colors: ['#7F94FF', '#6B7ED9', '#5B6BB8', '#45528D', '#323C67', '#2A3356'],
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
     grid: {
-      borderColor: theme.palette.divider
+      borderColor: theme.palette.divider,
     },
     plotOptions: {
       bar: {
         barHeight: '45',
         distributed: true,
-        horizontal: true
-      }
+        horizontal: true,
+      },
     },
     theme: {
-      mode: theme.palette.mode
+      mode: theme.palette.mode,
     },
     tooltip: {
       y: {
-        formatter: (value: number): string => numeral(value).format('$0,0.00')
-      }
+        formatter: (value: number): string => numeral(value).format('$0,0.00'),
+      },
     },
     xaxis: {
       axisBorder: {
         color: theme.palette.divider,
-        show: true
+        show: true,
       },
       axisTicks: {
         color: theme.palette.divider,
-        show: true
+        show: true,
       },
-      categories: [
-        'North America',
-        'South America',
-        'Europe',
-        'Australia',
-        'Asia',
-        'Africa'
-      ]
-    }
+      categories: ['North America', 'South America', 'Europe', 'Australia', 'Asia', 'Africa'],
+    },
   };
 
   const chartSeries = [
     {
       name: 'Sales',
-      data: [470, 440, 410, 380, 300, 187]
-    }
+      data: [470, 440, 410, 380, 300, 187],
+    },
   ];
 
   return (
@@ -80,7 +66,7 @@ const FinanceSalesByContinent: FC = (props) => {
         <Box
           sx={{
             display: 'flex',
-            justifyContent: 'center'
+            justifyContent: 'center',
           }}
         >
           <WorldMap
@@ -90,16 +76,11 @@ const FinanceSalesByContinent: FC = (props) => {
               au: '#45528D',
               eu: '#5B6BB8',
               na: '#7F94FF',
-              sa: '#6B7ED9'
+              sa: '#6B7ED9',
             }}
           />
         </Box>
-        <Chart
-          height="350"
-          options={chartOptions}
-          series={chartSeries}
-          type="bar"
-        />
+        <Chart height="350" options={chartOptions} series={chartSeries} type="bar" />
       </CardContent>
     </Card>
   );

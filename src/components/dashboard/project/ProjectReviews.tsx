@@ -12,22 +12,13 @@ interface ProjectReviewsProps {
 const ProjectReviews: FC<ProjectReviewsProps> = (props) => {
   const { reviews, ...other } = props;
 
-  const rating = reviews.reduce((
-    acc,
-    review
-  ) => acc + review.value, 0) / reviews.length;
+  const rating = reviews.reduce((acc, review) => acc + review.value, 0) / reviews.length;
 
   return (
     <div {...other}>
-      <ProjectReviewsSummary
-        rating={rating}
-        reviewsCount={reviews.length}
-      />
+      <ProjectReviewsSummary rating={rating} reviewsCount={reviews.length} />
       {reviews.map((review) => (
-        <Box
-          key={review.id}
-          sx={{ mt: 2 }}
-        >
+        <Box key={review.id} sx={{ mt: 2 }}>
           <ProjectReviewCard
             authorAvatar={review.author.avatar}
             authorName={review.author.name}
@@ -42,7 +33,7 @@ const ProjectReviews: FC<ProjectReviewsProps> = (props) => {
 };
 
 ProjectReviews.propTypes = {
-  reviews: PropTypes.array
+  reviews: PropTypes.array,
 };
 
 export default ProjectReviews;

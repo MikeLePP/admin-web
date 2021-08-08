@@ -8,20 +8,7 @@ import DotsHorizontalIcon from '../../../icons/DotsHorizontal';
 
 const data = {
   series: [{ data: [10, 5, 11, 20, 13, 28, 18, 4, 13, 12, 13, 5] }],
-  categories: [
-    'Jan',
-    'Feb',
-    'Mar',
-    'Apr',
-    'May',
-    'Jun',
-    'Jul',
-    'Aug',
-    'Sep',
-    'Oct',
-    'Nov',
-    'Dec'
-  ]
+  categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
 };
 
 const Chart4: FC = () => {
@@ -32,12 +19,12 @@ const Chart4: FC = () => {
       background: 'transparent',
       stacked: false,
       toolbar: {
-        show: false
-      }
+        show: false,
+      },
     },
     colors: ['#00ab57'],
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
     fill: {
       gradient: {
@@ -45,52 +32,51 @@ const Chart4: FC = () => {
         opacityTo: 0.1,
         shadeIntensity: 1,
         stops: [0, 100],
-        type: 'vertical'
+        type: 'vertical',
       },
-      type: 'gradient'
+      type: 'gradient',
     },
     grid: {
       borderColor: theme.palette.divider,
-      strokeDashArray: 2
+      strokeDashArray: 2,
     },
     markers: {
       size: 6,
       strokeColors: theme.palette.background.default,
-      strokeWidth: 3
+      strokeWidth: 3,
     },
     stroke: {
-      curve: 'smooth'
+      curve: 'smooth',
     },
     theme: {
-      mode: theme.palette.mode
+      mode: theme.palette.mode,
     },
     xaxis: {
       axisBorder: {
         color: theme.palette.divider,
-        show: true
+        show: true,
       },
       axisTicks: {
         color: theme.palette.divider,
-        show: true
+        show: true,
       },
       categories: data.categories,
       labels: {
         offsetY: 5,
         style: {
-          colors: theme.palette.text.secondary
-        }
-      }
+          colors: theme.palette.text.secondary,
+        },
+      },
     },
     yaxis: {
       labels: {
-        // @ts-ignore
-        formatter: (value) => (value > 0 ? `${value}K` : value),
+        formatter: (value) => (value > 0 ? `${value.toString()}K` : value.toString()),
         offsetX: -10,
         style: {
-          colors: theme.palette.text.secondary
-        }
-      }
-    }
+          colors: theme.palette.text.secondary,
+        },
+      },
+    },
   };
 
   const chartSeries = data.series;
@@ -99,16 +85,16 @@ const Chart4: FC = () => {
     <Box
       sx={{
         backgroundColor: 'background.default',
-        p: 3
+        p: 3,
       }}
     >
       <Card>
         <CardHeader
-          action={(
+          action={
             <IconButton>
               <DotsHorizontalIcon fontSize="small" />
             </IconButton>
-          )}
+          }
           title="Performance Over Time"
         />
         <Divider />
@@ -118,15 +104,10 @@ const Chart4: FC = () => {
               sx={{
                 height: 375,
                 minWidth: 500,
-                position: 'relative'
+                position: 'relative',
               }}
             >
-              <Chart
-                height="350"
-                options={chartOptions}
-                series={chartSeries}
-                type="area"
-              />
+              <Chart height="350" options={chartOptions} series={chartSeries} type="area" />
             </Box>
           </Scrollbar>
         </CardContent>

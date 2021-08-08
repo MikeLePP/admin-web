@@ -46,16 +46,12 @@ type RegisterAction = {
   type: 'REGISTER';
 };
 
-type Action =
-  | InitializeAction
-  | LoginAction
-  | LogoutAction
-  | RegisterAction;
+type Action = InitializeAction | LoginAction | LogoutAction | RegisterAction;
 
 const initialState: State = {
   isAuthenticated: false,
   isInitialized: false,
-  user: null
+  user: null,
 };
 
 const handlers: Record<string, (state: State, action: Action) => State> = {
@@ -66,7 +62,7 @@ const handlers: Record<string, (state: State, action: Action) => State> = {
       ...state,
       isAuthenticated,
       isInitialized: true,
-      user
+      user,
     };
   },
   LOGIN: (state: State, action: LoginAction): State => {
@@ -75,25 +71,24 @@ const handlers: Record<string, (state: State, action: Action) => State> = {
     return {
       ...state,
       isAuthenticated: true,
-      user
+      user,
     };
   },
   LOGOUT: (state: State): State => ({
     ...state,
     isAuthenticated: false,
-    user: null
-  })
+    user: null,
+  }),
 };
 
-const reducer = (state: State, action: Action): State => (
-  handlers[action.type] ? handlers[action.type](state, action) : state
-);
+const reducer = (state: State, action: Action): State =>
+  handlers[action.type] ? handlers[action.type](state, action) : state;
 
 const AuthContext = createContext<AuthContextValue>({
   ...initialState,
   platform: 'Auth0',
   loginWithPopup: () => Promise.resolve(),
-  logout: () => Promise.resolve()
+  logout: () => Promise.resolve(),
 });
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
@@ -105,7 +100,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       try {
         auth0Client = new Auth0Client({
           redirect_uri: window.location.origin,
-          ...auth0Config
+          ...auth0Config,
         });
 
         await auth0Client.checkSession();
@@ -128,17 +123,17 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
                 avatar: user.picture,
                 email: user.email,
                 name: 'Jane Rotanson',
-                plan: 'Premium'
-              }
-            }
+                plan: 'Premium',
+              },
+            },
           });
         } else {
           dispatch({
             type: 'INITIALIZE',
             payload: {
               isAuthenticated,
-              user: null
-            }
+              user: null,
+            },
           });
         }
       } catch (err) {
@@ -147,13 +142,13 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
           type: 'INITIALIZE',
           payload: {
             isAuthenticated: false,
-            user: null
-          }
+            user: null,
+          },
         });
       }
     };
 
-    initialize();
+    void initialize();
   }, []);
 
   const loginWithPopup = async (options): Promise<void> => {
@@ -175,17 +170,17 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
             avatar: user.picture,
             email: user.email,
             name: 'Jane Rotanson',
-            plan: 'Premium'
-          }
-        }
+            plan: 'Premium',
+          },
+        },
       });
     }
   };
 
   const logout = (): void => {
-    auth0Client.logout();
+    void auth0Client.logout();
     dispatch({
-      type: 'LOGOUT'
+      type: 'LOGOUT',
     });
   };
 
@@ -195,7 +190,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         ...state,
         platform: 'Auth0',
         loginWithPopup,
-        logout
+        logout,
       }}
     >
       {children}
@@ -204,7 +199,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
 };
 
 AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 export default AuthContext;

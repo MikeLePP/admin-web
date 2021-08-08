@@ -1,14 +1,6 @@
 import type { ChangeEvent, FC } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Box,
-  Checkbox,
-  IconButton,
-  InputAdornment,
-  TextField,
-  Tooltip,
-  Typography
-} from '@material-ui/core';
+import { Box, Checkbox, IconButton, InputAdornment, TextField, Tooltip, Typography } from '@material-ui/core';
 import ChevronLeftIcon from '../../../icons/ChevronLeft';
 import ChevronRightIcon from '../../../icons/ChevronRight';
 import DotsHorizontalIcon from '../../../icons/DotsHorizontal';
@@ -26,13 +18,7 @@ interface MailListToolbarProps {
 }
 
 const MailListToolbar: FC<MailListToolbarProps> = (props) => {
-  const {
-    emails,
-    onDeselectAll,
-    onSelectAll,
-    selectedEmails,
-    ...other
-  } = props;
+  const { emails, onDeselectAll, onSelectAll, selectedEmails, ...other } = props;
   const dispatch = useDispatch();
 
   const handleOpenSidebar = (): void => {
@@ -61,7 +47,7 @@ const MailListToolbar: FC<MailListToolbarProps> = (props) => {
         backgroundColor: 'background.paper',
         display: 'flex',
         height: '68px',
-        p: 2
+        p: 2,
       }}
       {...other}
     >
@@ -69,8 +55,8 @@ const MailListToolbar: FC<MailListToolbarProps> = (props) => {
         onClick={handleOpenSidebar}
         sx={{
           display: {
-            md: 'none'
-          }
+            md: 'none',
+          },
         }}
       >
         <MenuIcon fontSize="small" />
@@ -80,8 +66,8 @@ const MailListToolbar: FC<MailListToolbarProps> = (props) => {
           alignItems: 'center',
           display: {
             xs: 'none',
-            md: 'flex'
-          }
+            md: 'flex',
+          },
         }}
       >
         <Checkbox
@@ -90,10 +76,7 @@ const MailListToolbar: FC<MailListToolbarProps> = (props) => {
           indeterminate={selectedSomeMails}
           onChange={handleCheckboxChange}
         />
-        <Typography
-          color="textPrimary"
-          variant="subtitle2"
-        >
+        <Typography color="textPrimary" variant="subtitle2">
           Select all
         </Typography>
       </Box>
@@ -103,8 +86,8 @@ const MailListToolbar: FC<MailListToolbarProps> = (props) => {
           alignItems: 'center',
           display: {
             sm: 'flex',
-            xs: 'none'
-          }
+            xs: 'none',
+          },
         }}
       >
         <Box sx={{ width: 200 }}>
@@ -115,7 +98,7 @@ const MailListToolbar: FC<MailListToolbarProps> = (props) => {
                 <InputAdornment position="start">
                   <SearchIcon fontSize="small" />
                 </InputAdornment>
-              )
+              ),
             }}
             placeholder="Search email"
             size="small"
@@ -139,18 +122,8 @@ const MailListToolbar: FC<MailListToolbarProps> = (props) => {
         </Tooltip>
         {emails > 0 && (
           <>
-            <Typography
-              color="textSecondary"
-              noWrap
-              variant="body2"
-            >
-              1 -
-              {' '}
-              {emails}
-              {' '}
-              of
-              {' '}
-              {emails}
+            <Typography color="textSecondary" noWrap variant="body2">
+              1 - {emails} of {emails}
             </Typography>
             <Tooltip title="Previous page">
               <IconButton>
@@ -168,7 +141,7 @@ MailListToolbar.propTypes = {
   emails: PropTypes.number.isRequired,
   onDeselectAll: PropTypes.func,
   onSelectAll: PropTypes.func,
-  selectedEmails: PropTypes.number.isRequired
+  selectedEmails: PropTypes.number.isRequired,
 };
 
 export default MailListToolbar;

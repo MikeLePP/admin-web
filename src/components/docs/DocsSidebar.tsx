@@ -32,139 +32,139 @@ const sections: Section[] = [
     items: [
       {
         title: 'Welcome',
-        path: '/docs/overview/welcome'
+        path: '/docs/overview/welcome',
       },
       {
         title: 'Getting Started',
-        path: '/docs/overview/getting-started'
+        path: '/docs/overview/getting-started',
       },
       {
         title: 'Dependencies',
-        path: '/docs/overview/dependencies'
+        path: '/docs/overview/dependencies',
       },
       {
         title: 'Environment Variables',
-        path: '/docs/overview/environment-variables'
+        path: '/docs/overview/environment-variables',
       },
       {
         title: 'Theming',
-        path: '/docs/overview/theming'
+        path: '/docs/overview/theming',
       },
       {
         title: 'Redux',
-        path: '/docs/overview/redux'
+        path: '/docs/overview/redux',
       },
       {
         title: 'Server Calls',
-        path: '/docs/overview/server-calls'
+        path: '/docs/overview/server-calls',
       },
       {
         title: 'Settings',
-        path: '/docs/overview/settings'
+        path: '/docs/overview/settings',
       },
       {
         title: 'RTL',
-        path: '/docs/overview/rtl'
+        path: '/docs/overview/rtl',
       },
       {
         title: 'Internationalization',
-        path: '/docs/overview/internationalization'
+        path: '/docs/overview/internationalization',
       },
       {
         title: 'Deployment',
-        path: '/docs/overview/deployment'
+        path: '/docs/overview/deployment',
       },
       {
         title: 'Migrating to Next.js',
-        path: '/docs/overview/migrating-to-nextjs'
-      }
-    ]
+        path: '/docs/overview/migrating-to-nextjs',
+      },
+    ],
   },
   {
     title: 'Routing',
     items: [
       {
         title: 'Implementation',
-        path: '/docs/routing/implementation'
+        path: '/docs/routing/implementation',
       },
       {
         title: 'Code Splitting',
-        path: '/docs/routing/code-splitting'
-      }
-    ]
+        path: '/docs/routing/code-splitting',
+      },
+    ],
   },
   {
     title: 'Authentication',
     items: [
       {
         title: 'Amplify',
-        path: '/docs/authentication/amplify'
+        path: '/docs/authentication/amplify',
       },
       {
         title: 'Auth0',
-        path: '/docs/authentication/auth0'
+        path: '/docs/authentication/auth0',
       },
       {
         title: 'Firebase',
-        path: '/docs/authentication/firebase'
+        path: '/docs/authentication/firebase',
       },
       {
         title: 'JWT',
-        path: '/docs/authentication/jwt'
-      }
-    ]
+        path: '/docs/authentication/jwt',
+      },
+    ],
   },
   {
     title: 'Guards',
     items: [
       {
         title: 'Guest Guard',
-        path: '/docs/guards/guest-guard'
+        path: '/docs/guards/guest-guard',
       },
       {
         title: 'Auth Guard',
-        path: '/docs/guards/auth-guard'
+        path: '/docs/guards/auth-guard',
       },
       {
         title: 'Role Based Guard',
-        path: '/docs/guards/role-based-guard'
-      }
-    ]
+        path: '/docs/guards/role-based-guard',
+      },
+    ],
   },
   {
     title: 'Analytics',
     items: [
       {
         title: 'Introduction',
-        path: '/docs/analytics/introduction'
+        path: '/docs/analytics/introduction',
       },
       {
         title: 'Configuration',
-        path: '/docs/analytics/configuration'
+        path: '/docs/analytics/configuration',
       },
       {
         title: 'Event Tracking',
-        path: '/docs/analytics/event-tracking'
-      }
-    ]
+        path: '/docs/analytics/event-tracking',
+      },
+    ],
   },
   {
     title: 'Support',
     items: [
       {
         title: 'Changelog',
-        path: '/docs/support/changelog'
+        path: '/docs/support/changelog',
       },
       {
         title: 'Contact',
-        path: '/docs/support/contact'
+        path: '/docs/support/contact',
       },
       {
         title: 'Further Support',
-        path: '/docs/support/further-support'
-      }
-    ]
-  }
+        path: '/docs/support/further-support',
+      },
+    ],
+  },
 ];
 
 const DocsSidebar: FC<DocsSidebarProps> = (props) => {
@@ -179,17 +179,13 @@ const DocsSidebar: FC<DocsSidebarProps> = (props) => {
   }, [location.pathname]);
 
   const content = (
-    <Box
-      height="100%"
-      display="flex"
-      flexDirection="column"
-    >
+    <Box height="100%" display="flex" flexDirection="column">
       <Box
         sx={{
           display: {
-            lg: 'none'
+            lg: 'none',
           },
-          p: 2
+          p: 2,
         }}
       >
         <RouterLink to="/">
@@ -203,8 +199,8 @@ const DocsSidebar: FC<DocsSidebarProps> = (props) => {
             pathname={location.pathname}
             sx={{
               '& + &': {
-                mt: 3
-              }
+                mt: 3,
+              },
             }}
             {...section}
           />
@@ -224,8 +220,8 @@ const DocsSidebar: FC<DocsSidebarProps> = (props) => {
             backgroundColor: 'background.paper',
             height: 'calc(100% - 64px) !important',
             top: '64px !important',
-            width: 256
-          }
+            width: 256,
+          },
         }}
       >
         {content}
@@ -242,8 +238,8 @@ const DocsSidebar: FC<DocsSidebarProps> = (props) => {
       PaperProps={{
         sx: {
           backgroundColor: 'background.default',
-          width: 256
-        }
+          width: 256,
+        },
       }}
     >
       {content}
@@ -253,7 +249,7 @@ const DocsSidebar: FC<DocsSidebarProps> = (props) => {
 
 DocsSidebar.propTypes = {
   onMobileClose: PropTypes.func,
-  openMobile: PropTypes.bool
+  openMobile: PropTypes.bool,
 };
 
 export default DocsSidebar;

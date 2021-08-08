@@ -6,7 +6,7 @@ const HomeOverview: FC = (props) => (
   <Box
     sx={{
       backgroundColor: 'primary.main',
-      py: 6
+      py: 6,
     }}
     {...props}
   >
@@ -17,8 +17,8 @@ const HomeOverview: FC = (props) => (
         display: 'flex',
         flexDirection: {
           xs: 'column',
-          md: 'row'
-        }
+          md: 'row',
+        },
       }}
     >
       <div>
@@ -27,17 +27,14 @@ const HomeOverview: FC = (props) => (
             color: 'primary.contrastText',
             textAlign: {
               md: 'left',
-              xs: 'center'
-            }
+              xs: 'center',
+            },
           }}
           variant="h3"
         >
           5000+
         </Typography>
-        <Typography
-          sx={{ color: 'primary.contrastText' }}
-          variant="overline"
-        >
+        <Typography sx={{ color: 'primary.contrastText' }} variant="overline">
           Very* happy customers
         </Typography>
       </div>
@@ -46,7 +43,7 @@ const HomeOverview: FC = (props) => (
           display: 'flex',
           flex: 1,
           justifyContent: 'flex-end',
-          pr: 4
+          pr: 4,
         }}
       >
         <ChevronRightIcon
@@ -55,8 +52,8 @@ const HomeOverview: FC = (props) => (
             color: 'primary.contrastText',
             display: {
               md: 'inline',
-              xs: 'none'
-            }
+              xs: 'none',
+            },
           }}
         />
       </Box>
@@ -66,17 +63,14 @@ const HomeOverview: FC = (props) => (
             color: 'primary.contrastText',
             textAlign: {
               md: 'left',
-              xs: 'center'
-            }
+              xs: 'center',
+            },
           }}
           variant="h3"
         >
           4.9/5
         </Typography>
-        <Typography
-          sx={{ color: 'primary.contrastText' }}
-          variant="overline"
-        >
+        <Typography sx={{ color: 'primary.contrastText' }} variant="overline">
           Customer Rating
         </Typography>
       </div>
@@ -85,7 +79,7 @@ const HomeOverview: FC = (props) => (
           display: 'flex',
           flex: 1,
           justifyContent: 'flex-end',
-          pr: 4
+          pr: 4,
         }}
       >
         <ChevronRightIcon
@@ -94,8 +88,8 @@ const HomeOverview: FC = (props) => (
             color: 'primary.contrastText',
             display: {
               md: 'inline',
-              xs: 'none'
-            }
+              xs: 'none',
+            },
           }}
         />
       </Box>
@@ -105,17 +99,14 @@ const HomeOverview: FC = (props) => (
             color: 'primary.contrastText',
             textAlign: {
               md: 'left',
-              xs: 'center'
-            }
+              xs: 'center',
+            },
           }}
           variant="h3"
         >
           UX
         </Typography>
-        <Typography
-          sx={{ color: 'primary.contrastText' }}
-          variant="overline"
-        >
+        <Typography sx={{ color: 'primary.contrastText' }} variant="overline">
           Complete flows
         </Typography>
       </div>
@@ -124,7 +115,7 @@ const HomeOverview: FC = (props) => (
           display: 'flex',
           flex: 1,
           justifyContent: 'flex-end',
-          pr: 4
+          pr: 4,
         }}
       >
         <ChevronRightIcon
@@ -133,8 +124,8 @@ const HomeOverview: FC = (props) => (
             color: 'primary.contrastText',
             display: {
               md: 'inline',
-              xs: 'none'
-            }
+              xs: 'none',
+            },
           }}
         />
       </Box>
@@ -144,17 +135,14 @@ const HomeOverview: FC = (props) => (
             color: 'primary.contrastText',
             textAlign: {
               md: 'left',
-              xs: 'center'
-            }
+              xs: 'center',
+            },
           }}
           variant="h3"
         >
           $10k+
         </Typography>
-        <Typography
-          sx={{ color: 'primary.contrastText' }}
-          variant="overline"
-        >
+        <Typography sx={{ color: 'primary.contrastText' }} variant="overline">
           In people hours saved
         </Typography>
       </div>

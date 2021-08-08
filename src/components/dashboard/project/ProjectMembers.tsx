@@ -12,7 +12,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import type { ProjectMember } from '../../../types/project';
 import getInitials from '../../../utils/getInitials';
@@ -26,40 +26,25 @@ const ProjectMembers: FC<ProjectMembersProps> = (props) => {
 
   return (
     <Card {...other}>
-      <CardHeader
-        sx={{ pb: 0 }}
-        title="Project members"
-        titleTypographyProps={{ variant: 'overline' }}
-      />
+      <CardHeader sx={{ pb: 0 }} title="Project members" titleTypographyProps={{ variant: 'overline' }} />
       <CardContent sx={{ pt: 0 }}>
         <List>
           {members.map((member) => (
-            <ListItem
-              disableGutters
-              key={member.id}
-            >
+            <ListItem disableGutters key={member.id}>
               <ListItemAvatar>
-                <Avatar src={member.avatar}>
-                  {getInitials(member.name)}
-                </Avatar>
+                <Avatar src={member.avatar}>{getInitials(member.name)}</Avatar>
               </ListItemAvatar>
               <ListItemText
-                primary={(
-                  <Typography
-                    color="textPrimary"
-                    variant="subtitle2"
-                  >
+                primary={
+                  <Typography color="textPrimary" variant="subtitle2">
                     {member.name}
                   </Typography>
-                )}
-                secondary={(
-                  <Typography
-                    color="textSecondary"
-                    variant="body2"
-                  >
+                }
+                secondary={
+                  <Typography color="textSecondary" variant="body2">
                     {member.job}
                   </Typography>
-                )}
+                }
               />
             </ListItem>
           ))}
@@ -67,11 +52,7 @@ const ProjectMembers: FC<ProjectMembersProps> = (props) => {
       </CardContent>
       <Divider />
       <CardActions>
-        <Button
-          color="primary"
-          fullWidth
-          variant="text"
-        >
+        <Button color="primary" fullWidth variant="text">
           Manage members
         </Button>
       </CardActions>
@@ -80,7 +61,7 @@ const ProjectMembers: FC<ProjectMembersProps> = (props) => {
 };
 
 ProjectMembers.propTypes = {
-  members: PropTypes.array.isRequired
+  members: PropTypes.array.isRequired,
 };
 
 export default ProjectMembers;

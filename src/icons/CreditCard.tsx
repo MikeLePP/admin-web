@@ -1,11 +1,7 @@
 import createSvgIcon from '@material-ui/core/utils/createSvgIcon';
 
 const CreditCard = createSvgIcon(
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 20 20"
-    fill="currentColor"
-  >
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
     <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4z" />
     <path
       fillRule="evenodd"
@@ -13,7 +9,7 @@ const CreditCard = createSvgIcon(
       clipRule="evenodd"
     />
   </svg>,
-  'CreditCard'
+  'CreditCard',
 );
 
 export default CreditCard;

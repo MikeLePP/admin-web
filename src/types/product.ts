@@ -1,7 +1,4 @@
-export type InventoryType =
-  | 'in_stock'
-  | 'limited'
-  | 'out_of_stock';
+export type InventoryType = 'in_stock' | 'limited' | 'out_of_stock';
 
 export interface Product {
   id: string;

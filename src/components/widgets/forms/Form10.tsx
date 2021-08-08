@@ -7,42 +7,30 @@ const Form10: FC = () => (
     sx={{
       backgroundColor: 'background.paper',
       minHeight: '100%',
-      p: 3
+      p: 3,
     }}
   >
     <form onSubmit={(event) => event.preventDefault()}>
-      <TextField
-        fullWidth
-        label="Product Name"
-        name="name"
-        variant="outlined"
-      />
+      <TextField fullWidth label="Product Name" name="name" variant="outlined" />
       <Typography
         color="textSecondary"
         sx={{
           mt: 3,
-          mb: 2
+          mb: 2,
         }}
         variant="subtitle2"
       >
         Description
       </Typography>
-      <QuillEditor
-        placeholder="Write something"
-        sx={{ height: 400 }}
-      />
+      <QuillEditor placeholder="Write something" sx={{ height: 400 }} />
       <Box
         sx={{
           display: 'flex',
           justifyContent: 'flex-end',
-          mt: 3
+          mt: 3,
         }}
       >
-        <Button
-          color="primary"
-          type="submit"
-          variant="contained"
-        >
+        <Button color="primary" type="submit" variant="contained">
           Update
         </Button>
       </Box>

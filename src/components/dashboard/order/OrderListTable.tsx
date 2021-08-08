@@ -10,14 +10,15 @@ import {
   CardHeader,
   Checkbox,
   Divider,
-  IconButton, Link,
+  IconButton,
+  Link,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TablePagination,
   TableRow,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import ArrowRightIcon from '../../../icons/ArrowRight';
 import PencilAltIcon from '../../../icons/PencilAlt';
@@ -35,37 +36,29 @@ const getStatusLabel = (paymentStatus: OrderStatus): JSX.Element => {
   const map = {
     canceled: {
       color: 'error',
-      text: 'Canceled'
+      text: 'Canceled',
     },
     completed: {
       color: 'success',
-      text: 'Completed'
+      text: 'Completed',
     },
     pending: {
       color: 'warning',
-      text: 'Pending'
+      text: 'Pending',
     },
     rejected: {
       color: 'error',
-      text: 'Rejected'
-    }
+      text: 'Rejected',
+    },
   };
 
   const { text, color }: any = map[paymentStatus];
 
-  return (
-    <Label color={color}>
-      {text}
-    </Label>
-  );
+  return <Label color={color}>{text}</Label>;
 };
 
-const applyPagination = (
-  orders: Order[],
-  page: number,
-  limit: number
-): Order[] => orders
-  .slice(page * limit, page * limit + limit);
+const applyPagination = (orders: Order[], page: number, limit: number): Order[] =>
+  orders.slice(page * limit, page * limit + limit);
 
 const OrderListTable: FC<OrderListTableProps> = (props) => {
   const { orders, ...other } = props;
@@ -74,15 +67,10 @@ const OrderListTable: FC<OrderListTableProps> = (props) => {
   const [limit, setLimit] = useState<number>(5);
 
   const handleSelectAllOrders = (event: ChangeEvent<HTMLInputElement>): void => {
-    setSelectedOrders(event.target.checked
-      ? orders.map((order) => order.id)
-      : []);
+    setSelectedOrders(event.target.checked ? orders.map((order) => order.id) : []);
   };
 
-  const handleSelectOneOrder = (
-    event: ChangeEvent<HTMLInputElement>,
-    orderId: string
-  ): void => {
+  const handleSelectOneOrder = (event: ChangeEvent<HTMLInputElement>, orderId: string): void => {
     if (!selectedOrders.includes(orderId)) {
       setSelectedOrders((prevSelected) => [...prevSelected, orderId]);
     } else {
@@ -106,10 +94,7 @@ const OrderListTable: FC<OrderListTableProps> = (props) => {
   return (
     <>
       <Card {...other}>
-        <CardHeader
-          action={<MoreMenu />}
-          title="Orders"
-        />
+        <CardHeader action={<MoreMenu />} title="Orders" />
         <Divider />
         <Scrollbar>
           <Box sx={{ minWidth: 1150 }}>
@@ -124,24 +109,12 @@ const OrderListTable: FC<OrderListTableProps> = (props) => {
                       onChange={handleSelectAllOrders}
                     />
                   </TableCell>
-                  <TableCell>
-                    Number
-                  </TableCell>
-                  <TableCell>
-                    Customer
-                  </TableCell>
-                  <TableCell>
-                    Method
-                  </TableCell>
-                  <TableCell>
-                    Total
-                  </TableCell>
-                  <TableCell>
-                    Status
-                  </TableCell>
-                  <TableCell align="right">
-                    Actions
-                  </TableCell>
+                  <TableCell>Number</TableCell>
+                  <TableCell>Customer</TableCell>
+                  <TableCell>Method</TableCell>
+                  <TableCell>Total</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell align="right">Actions</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -149,11 +122,7 @@ const OrderListTable: FC<OrderListTableProps> = (props) => {
                   const isOrderSelected = selectedOrders.includes(order.id);
 
                   return (
-                    <TableRow
-                      hover
-                      key={order.id}
-                      selected={selectedOrders.indexOf(order.id) !== -1}
-                    >
+                    <TableRow hover key={order.id} selected={selectedOrders.indexOf(order.id) !== -1}>
                       <TableCell padding="checkbox">
                         <Checkbox
                           checked={isOrderSelected}
@@ -172,44 +141,26 @@ const OrderListTable: FC<OrderListTableProps> = (props) => {
                         >
                           {order.number}
                         </Link>
-                        <Typography
-                          color="textSecondary"
-                          variant="body2"
-                        >
+                        <Typography color="textSecondary" variant="body2">
                           {format(order.createdAt, 'dd MMM yyyy | HH:mm')}
                         </Typography>
                       </TableCell>
                       <TableCell>
-                        <Typography
-                          color="textPrimary"
-                          variant="subtitle2"
-                        >
+                        <Typography color="textPrimary" variant="subtitle2">
                           {order.customer.name}
                         </Typography>
-                        <Typography
-                          color="textSecondary"
-                          variant="body2"
-                        >
+                        <Typography color="textSecondary" variant="body2">
                           {order.customer.email}
                         </Typography>
                       </TableCell>
-                      <TableCell>
-                        {order.paymentMethod}
-                      </TableCell>
-                      <TableCell>
-                        {numeral(order.totalAmount).format(`${order.currency}0,0.00`)}
-                      </TableCell>
-                      <TableCell>
-                        {getStatusLabel(order.status)}
-                      </TableCell>
+                      <TableCell>{order.paymentMethod}</TableCell>
+                      <TableCell>{numeral(order.totalAmount).format(`${order.currency}0,0.00`)}</TableCell>
+                      <TableCell>{getStatusLabel(order.status)}</TableCell>
                       <TableCell align="right">
                         <IconButton>
                           <PencilAltIcon fontSize="small" />
                         </IconButton>
-                        <IconButton
-                          component={RouterLink}
-                          to="/dashboard/orders/1"
-                        >
+                        <IconButton component={RouterLink} to="/dashboard/orders/1">
                           <ArrowRightIcon fontSize="small" />
                         </IconButton>
                       </TableCell>
@@ -230,16 +181,13 @@ const OrderListTable: FC<OrderListTableProps> = (props) => {
           rowsPerPageOptions={[5, 10, 25]}
         />
       </Card>
-      <OrderListBulkActions
-        open={enableBulkActions}
-        selected={selectedOrders}
-      />
+      <OrderListBulkActions open={enableBulkActions} selected={selectedOrders} />
     </>
   );
 };
 
 OrderListTable.propTypes = {
-  orders: PropTypes.array.isRequired
+  orders: PropTypes.array.isRequired,
 };
 
 export default OrderListTable;

@@ -20,7 +20,7 @@ class ProductsApi {
         price: 23.99,
         quantity: 85,
         updatedAt: subHours(now, 6).getTime(),
-        variants: 2
+        variants: 2,
       },
       {
         id: '5ece2c0d16f70bff2cf86cd8',
@@ -33,10 +33,10 @@ class ProductsApi {
         isAvailable: false,
         isShippable: true,
         name: 'Kate Leopard Dress',
-        price: 95.00,
+        price: 95.0,
         quantity: 0,
         updatedAt: subDays(subHours(now, 8), 2).getTime(),
-        variants: 1
+        variants: 1,
       },
       {
         id: '5ece2c123fad30cbbff8d060',
@@ -49,10 +49,10 @@ class ProductsApi {
         isAvailable: true,
         isShippable: false,
         name: 'Layering Bracelets Collection',
-        price: 155.00,
+        price: 155.0,
         quantity: 48,
         updatedAt: subDays(subHours(now, 2), 1).getTime(),
-        variants: 5
+        variants: 5,
       },
       {
         id: '5ece2c1be7996d1549d94e34',
@@ -68,8 +68,8 @@ class ProductsApi {
         price: 17.99,
         quantity: 5,
         updatedAt: subDays(subHours(now, 7), 1).getTime(),
-        variants: 1
-      }
+        variants: 1,
+      },
     ];
 
     return Promise.resolve(products);

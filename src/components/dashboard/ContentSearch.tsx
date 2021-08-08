@@ -13,7 +13,7 @@ import {
   Link,
   TextField,
   Tooltip,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import SearchIcon from '../../icons/Search';
 import XIcon from '../../icons/X';
@@ -27,17 +27,20 @@ interface Result {
 
 const results: Result[] = [
   {
-    description: 'Algolia broadly consists of two parts: search implementation and search analytics. We provide tools that make it easy for your developers...',
-    title: 'What does Algolia do?'
+    description:
+      'Algolia broadly consists of two parts: search implementation and search analytics. We provide tools that make it easy for your developers...',
+    title: 'What does Algolia do?',
   },
   {
-    description: 'To be clear, search doesn’t know the direction that your business should take. However, it can help you gather information on what your customers want...',
-    title: 'Search as a feedback loop'
+    description:
+      'To be clear, search doesn’t know the direction that your business should take. However, it can help you gather information on what your customers want...',
+    title: 'Search as a feedback loop',
   },
   {
-    description: 'Algolia provides your users with a fast and rich search experience. Your Algolia search interface can contain a search bar, filters, infinite scrolling...',
-    title: 'What can Algolia do for my users?'
-  }
+    description:
+      'Algolia provides your users with a fast and rich search experience. Your Algolia search interface can contain a search bar, filters, infinite scrolling...',
+    title: 'What can Algolia do for my users?',
+  },
 ];
 
 const ContentSearch: FC = () => {
@@ -64,22 +67,19 @@ const ContentSearch: FC = () => {
   };
 
   const handleClick = (): void => {
-    search();
+    void search();
   };
 
   const handleKeyUp = (event: KeyboardEvent<HTMLInputElement>): void => {
     if (event.code === 'ENTER') {
-      search();
+      void search();
     }
   };
 
   return (
     <>
       <Tooltip title="Search">
-        <IconButton
-          color="inherit"
-          onClick={handleOpen}
-        >
+        <IconButton color="inherit" onClick={handleOpen}>
           <SearchIcon fontSize="small" />
         </IconButton>
       </Tooltip>
@@ -89,7 +89,7 @@ const ContentSearch: FC = () => {
         onClose={handleClose}
         open={open}
         PaperProps={{
-          sx: { width: '100%' }
+          sx: { width: '100%' },
         }}
         variant="temporary"
       >
@@ -97,7 +97,7 @@ const ContentSearch: FC = () => {
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'flex-end'
+              justifyContent: 'flex-end',
             }}
           >
             <IconButton onClick={handleClose}>
@@ -110,7 +110,7 @@ const ContentSearch: FC = () => {
             <Box
               sx={{
                 alignItems: 'center',
-                display: 'flex'
+                display: 'flex',
               }}
             >
               <TextField
@@ -120,67 +120,46 @@ const ContentSearch: FC = () => {
                     <InputAdornment position="start">
                       <SearchIcon fontSize="small" />
                     </InputAdornment>
-                  )
+                  ),
                 }}
                 onChange={(event): void => setValue(event.target.value)}
                 onKeyUp={handleKeyUp}
                 placeholder="Search..."
                 value={value}
               />
-              <Button
-                color="primary"
-                onClick={handleClick}
-                size="large"
-                sx={{ ml: 2 }}
-                variant="contained"
-              >
+              <Button color="primary" onClick={handleClick} size="large" sx={{ ml: 2 }} variant="contained">
                 Search
               </Button>
             </Box>
             <Box sx={{ mt: 3 }}>
               <Scrollbar options={{ suppressScrollX: true }}>
-                {
-                  isLoading
-                    ? (
-                      <Box
-                        sx={{
-                          display: 'flex',
-                          justifyContent: 'center'
-                        }}
-                      >
-                        <CircularProgress />
-                      </Box>
-                    )
-                    : (
+                {isLoading ? (
+                  <Box
+                    sx={{
+                      display: 'flex',
+                      justifyContent: 'center',
+                    }}
+                  >
+                    <CircularProgress />
+                  </Box>
+                ) : (
+                  <>
+                    {showResults && (
                       <>
-                        {showResults && (
-                          <>
-                            {results.map((result, i) => (
-                              <Box
-                                key={i}
-                                sx={{ mb: 2 }}
-                              >
-                                <Link
-                                  color="textPrimary"
-                                  component={RouterLink}
-                                  to="/dashboard"
-                                  variant="h5"
-                                >
-                                  {result.title}
-                                </Link>
-                                <Typography
-                                  color="textPrimary"
-                                  variant="body2"
-                                >
-                                  {result.description}
-                                </Typography>
-                              </Box>
-                            ))}
-                          </>
-                        )}
+                        {results.map((result, i) => (
+                          <Box key={i} sx={{ mb: 2 }}>
+                            <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="h5">
+                              {result.title}
+                            </Link>
+                            <Typography color="textPrimary" variant="body2">
+                              {result.description}
+                            </Typography>
+                          </Box>
+                        ))}
                       </>
-                    )
-                }
+                    )}
+                  </>
+                )}
               </Scrollbar>
             </Box>
           </Container>

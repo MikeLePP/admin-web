@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import type { FC } from 'react';
 import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
@@ -29,18 +30,12 @@ interface KanbanCardModalProps {
 }
 
 const KanbanCardModal: FC<KanbanCardModalProps> = (props) => {
-  const {
-    card,
-    column,
-    onClose,
-    open,
-    ...other
-  } = props;
+  const { card, column, onClose, open, ...other } = props;
   const dispatch = useDispatch();
 
   const handleDetailsUpdate = debounce(async (update) => {
     try {
-      await dispatch(updateCard(card.id, update));
+      dispatch(updateCard(card.id, update));
       toast.success('Card updated!');
     } catch (err) {
       console.error(err);
@@ -50,7 +45,7 @@ const KanbanCardModal: FC<KanbanCardModalProps> = (props) => {
 
   const handleSubscribe = async (): Promise<void> => {
     try {
-      await dispatch(updateCard(card.id, { isSubscribed: true }));
+      dispatch(updateCard(card.id, { isSubscribed: true }));
       toast.success('Unsubscribed!');
     } catch (err) {
       console.error(err);
@@ -60,7 +55,7 @@ const KanbanCardModal: FC<KanbanCardModalProps> = (props) => {
 
   const handleUnsubscribe = async (): Promise<void> => {
     try {
-      await dispatch(updateCard(card.id, { isSubscribed: false }));
+      dispatch(updateCard(card.id, { isSubscribed: false }));
       toast.success('Subscribed!');
     } catch (err) {
       console.error(err);
@@ -70,7 +65,7 @@ const KanbanCardModal: FC<KanbanCardModalProps> = (props) => {
 
   const handleDelete = async (): Promise<void> => {
     try {
-      await dispatch(deleteCard(card.id));
+      dispatch(deleteCard(card.id));
       toast.success('Card archived!');
     } catch (err) {
       console.error(err);
@@ -80,7 +75,7 @@ const KanbanCardModal: FC<KanbanCardModalProps> = (props) => {
 
   const handleAddChecklist = async (): Promise<void> => {
     try {
-      await dispatch(addChecklist(card.id, 'Untitled Checklist'));
+      dispatch(addChecklist(card.id, 'Untitled Checklist'));
       toast.success('Checklist added!');
     } catch (err) {
       console.error(err);
@@ -89,23 +84,10 @@ const KanbanCardModal: FC<KanbanCardModalProps> = (props) => {
   };
 
   return (
-    <Dialog
-      fullWidth
-      maxWidth="md"
-      onClose={onClose}
-      open={open}
-      {...other}
-    >
+    <Dialog fullWidth maxWidth="md" onClose={onClose} open={open} {...other}>
       <Box sx={{ p: 3 }}>
-        <Grid
-          container
-          spacing={5}
-        >
-          <Grid
-            item
-            sm={8}
-            xs={12}
-          >
+        <Grid container spacing={5}>
+          <Grid item sm={8} xs={12}>
             <TextField
               defaultValue={card.name}
               fullWidth
@@ -128,20 +110,12 @@ const KanbanCardModal: FC<KanbanCardModalProps> = (props) => {
             {card.checklists.length > 0 && (
               <Box sx={{ mt: 5 }}>
                 {card.checklists.map((checklist) => (
-                  <KanbanChecklist
-                    card={card}
-                    checklist={checklist}
-                    key={checklist.id}
-                    sx={{ mb: 3 }}
-                  />
+                  <KanbanChecklist card={card} checklist={checklist} key={checklist.id} sx={{ mb: 3 }} />
                 ))}
               </Box>
             )}
             <Box sx={{ mt: 3 }}>
-              <Typography
-                color="textPrimary"
-                variant="h6"
-              >
+              <Typography color="textPrimary" variant="h6">
                 Activity
               </Typography>
               <Box sx={{ mt: 2 }}>
@@ -161,44 +135,28 @@ const KanbanCardModal: FC<KanbanCardModalProps> = (props) => {
               </Box>
             </Box>
           </Grid>
-          <Grid
-            item
-            xs={12}
-            sm={4}
-          >
+          <Grid item xs={12} sm={4}>
             <Typography
               color="textPrimary"
               component="h4"
               sx={{
                 fontWeight: 600,
-                mb: 2
+                mb: 2,
               }}
               variant="overline"
             >
               Add to card
             </Typography>
-            <KanbanCardAction
-              icon={<CheckIcon fontSize="small" />}
-              onClick={handleAddChecklist}
-            >
+            <KanbanCardAction icon={<CheckIcon fontSize="small" />} onClick={handleAddChecklist}>
               Checklist
             </KanbanCardAction>
-            <KanbanCardAction
-              disabled
-              icon={<UsersIcon fontSize="small" />}
-            >
+            <KanbanCardAction disabled icon={<UsersIcon fontSize="small" />}>
               Members
             </KanbanCardAction>
-            <KanbanCardAction
-              disabled
-              icon={<LabelIcon fontSize="small" />}
-            >
+            <KanbanCardAction disabled icon={<LabelIcon fontSize="small" />}>
               Labels
             </KanbanCardAction>
-            <KanbanCardAction
-              disabled
-              icon={<DocumentTextIcon fontSize="small" />}
-            >
+            <KanbanCardAction disabled icon={<DocumentTextIcon fontSize="small" />}>
               Attachments
             </KanbanCardAction>
             <Box sx={{ mt: 3 }}>
@@ -207,54 +165,32 @@ const KanbanCardModal: FC<KanbanCardModalProps> = (props) => {
                 component="h4"
                 sx={{
                   fontWeight: 600,
-                  mb: 2
+                  mb: 2,
                 }}
                 variant="overline"
               >
                 Actions
               </Typography>
-              <KanbanCardAction
-                disabled
-                icon={<ArrowRightIcon fontSize="small" />}
-              >
+              <KanbanCardAction disabled icon={<ArrowRightIcon fontSize="small" />}>
                 Move
               </KanbanCardAction>
-              <KanbanCardAction
-                disabled
-                icon={<DuplicateIcon fontSize="small" />}
-              >
+              <KanbanCardAction disabled icon={<DuplicateIcon fontSize="small" />}>
                 Copy
               </KanbanCardAction>
-              <KanbanCardAction
-                disabled
-                icon={<TemplateIcon fontSize="small" />}
-              >
+              <KanbanCardAction disabled icon={<TemplateIcon fontSize="small" />}>
                 Make Template
               </KanbanCardAction>
               <Divider sx={{ my: 2 }} />
-              {
-                card.isSubscribed
-                  ? (
-                    <KanbanCardAction
-                      icon={<EyeOffIcon fontSize="small" />}
-                      onClick={handleUnsubscribe}
-                    >
-                      Unwatch
-                    </KanbanCardAction>
-                  )
-                  : (
-                    <KanbanCardAction
-                      icon={<EyeIcon fontSize="small" />}
-                      onClick={handleSubscribe}
-                    >
-                      Watch
-                    </KanbanCardAction>
-                  )
-              }
-              <KanbanCardAction
-                icon={<ArchiveIcon fontSize="small" />}
-                onClick={handleDelete}
-              >
+              {card.isSubscribed ? (
+                <KanbanCardAction icon={<EyeOffIcon fontSize="small" />} onClick={handleUnsubscribe}>
+                  Unwatch
+                </KanbanCardAction>
+              ) : (
+                <KanbanCardAction icon={<EyeIcon fontSize="small" />} onClick={handleSubscribe}>
+                  Watch
+                </KanbanCardAction>
+              )}
+              <KanbanCardAction icon={<ArchiveIcon fontSize="small" />} onClick={handleDelete}>
                 Archive
               </KanbanCardAction>
             </Box>
@@ -266,16 +202,14 @@ const KanbanCardModal: FC<KanbanCardModalProps> = (props) => {
 };
 
 KanbanCardModal.propTypes = {
-  // @ts-ignore
-  card: PropTypes.object.isRequired,
-  // @ts-ignore
-  column: PropTypes.object.isRequired,
+  card: PropTypes.any.isRequired,
+  column: PropTypes.any.isRequired,
   onClose: PropTypes.func,
-  open: PropTypes.bool
+  open: PropTypes.bool,
 };
 
 KanbanCardModal.defaultProps = {
-  open: false
+  open: false,
 };
 
 export default KanbanCardModal;

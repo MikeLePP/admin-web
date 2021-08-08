@@ -1,17 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import type { FC } from 'react';
 import { format } from 'date-fns';
-import {
-  Box,
-  Card,
-  CardHeader,
-  Divider,
-  Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableRow
-} from '@material-ui/core';
+import { Box, Card, CardHeader, Divider, Typography, Table, TableBody, TableCell, TableRow } from '@material-ui/core';
 import { customerApi } from '../../../__fakeApi__/customerApi';
 import useMounted from '../../../hooks/useMounted';
 import type { CustomerLog } from '../../../types/customer';
@@ -36,15 +26,12 @@ const CustomerLogs: FC = (props) => {
   }, [mounted]);
 
   useEffect(() => {
-    getLogs();
+    void getLogs();
   }, [getLogs]);
 
   return (
     <Card {...props}>
-      <CardHeader
-        action={<MoreMenu />}
-        title="Logs"
-      />
+      <CardHeader action={<MoreMenu />} title="Logs" />
       <Divider />
       <Scrollbar>
         <Box sx={{ minWidth: 1150 }}>
@@ -53,34 +40,17 @@ const CustomerLogs: FC = (props) => {
               {logs.map((log) => (
                 <TableRow key={log.id}>
                   <TableCell width="100">
-                    <Typography
-                      color="textPrimary"
-                      variant="subtitle2"
-                    >
+                    <Typography color="textPrimary" variant="subtitle2">
                       {log.method}
                     </Typography>
                   </TableCell>
                   <TableCell width="64">
-                    <Label
-                      color={log.status === 200
-                        ? 'success'
-                        : 'error'}
-                    >
-                      {log.status}
-                    </Label>
+                    <Label color={log.status === 200 ? 'success' : 'error'}>{log.status}</Label>
                   </TableCell>
-                  <TableCell>
-                    {log.route}
-                  </TableCell>
-                  <TableCell>
-                    {log.description}
-                  </TableCell>
-                  <TableCell align="right">
-                    {log.ip}
-                  </TableCell>
-                  <TableCell align="right">
-                    {format(log.createdAt, 'yyyy/MM/dd | HH:mm:ss')}
-                  </TableCell>
+                  <TableCell>{log.route}</TableCell>
+                  <TableCell>{log.description}</TableCell>
+                  <TableCell align="right">{log.ip}</TableCell>
+                  <TableCell align="right">{format(log.createdAt, 'yyyy/MM/dd | HH:mm:ss')}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

@@ -9,63 +9,41 @@ import {
   Select,
   Switch,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core';
 
 const InputMixed: FC = () => (
   <Box
     sx={{
       backgroundColor: 'background.paper',
-      p: 3
+      p: 3,
     }}
   >
     <Box
       sx={{
         alignItems: 'center',
-        display: 'flex'
+        display: 'flex',
       }}
     >
       <Switch color="primary" />
-      <Typography
-        color="textPrimary"
-        variant="body1"
-      >
+      <Typography color="textPrimary" variant="body1">
         Schedule Publish
       </Typography>
     </Box>
     <Box sx={{ mt: 3 }}>
       <MobileDateTimePicker
         label="Start date"
-        onChange={() => {
-        }}
-        renderInput={(inputProps) => (
-          <TextField
-            fullWidth
-            variant="outlined"
-            {...inputProps}
-          />
-        )}
+        onChange={() => {}}
+        renderInput={(inputProps) => <TextField fullWidth variant="outlined" {...inputProps} />}
         value={new Date()}
       />
     </Box>
     <Box sx={{ mt: 3 }}>
-      <FormControl
-        fullWidth
-        variant="outlined"
-      >
-        <InputLabel>
-          Category
-        </InputLabel>
-        <Select
-          defaultValue="programming"
-          label="Category"
-        >
-          <MenuItem value="programming">
-            Programming
-          </MenuItem>
-          <MenuItem value="design">
-            Design
-          </MenuItem>
+      <FormControl fullWidth variant="outlined">
+        <InputLabel>Category</InputLabel>
+        <Select defaultValue="programming" label="Category">
+          <MenuItem value="programming">Programming</MenuItem>
+          <MenuItem value="design">Design</MenuItem>
         </Select>
       </FormControl>
     </Box>
@@ -73,17 +51,11 @@ const InputMixed: FC = () => (
       sx={{
         alignItems: 'center',
         display: 'flex',
-        mt: 3
+        mt: 3,
       }}
     >
-      <Checkbox
-        color="primary"
-        defaultChecked
-      />
-      <Typography
-        color="textPrimary"
-        variant="body1"
-      >
+      <Checkbox color="primary" defaultChecked />
+      <Typography color="textPrimary" variant="body1">
         Published Globally
       </Typography>
     </Box>
@@ -91,17 +63,11 @@ const InputMixed: FC = () => (
       sx={{
         alignItems: 'center',
         display: 'flex',
-        mt: 3
+        mt: 3,
       }}
     >
-      <Checkbox
-        defaultChecked
-        color="primary"
-      />
-      <Typography
-        color="textPrimary"
-        variant="body1"
-      >
+      <Checkbox defaultChecked color="primary" />
+      <Typography color="textPrimary" variant="body1">
         Enable Contents
       </Typography>
     </Box>

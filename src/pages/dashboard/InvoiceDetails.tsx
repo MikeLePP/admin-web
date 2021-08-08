@@ -3,17 +3,7 @@ import type { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { PDFDownloadLink, PDFViewer } from '@react-pdf/renderer';
-import {
-  Box,
-  Breadcrumbs,
-  Button,
-  Container,
-  Dialog,
-  Divider,
-  Grid,
-  Link,
-  Typography
-} from '@material-ui/core';
+import { Box, Breadcrumbs, Button, Container, Dialog, Divider, Grid, Link, Typography } from '@material-ui/core';
 import { invoiceApi } from '../../__fakeApi__/invoiceApi';
 import { InvoicePDF, InvoicePreview } from '../../components/dashboard/invoice';
 import useMounted from '../../hooks/useMounted';
@@ -46,7 +36,7 @@ const InvoiceDetails: FC = () => {
   }, [mounted]);
 
   useEffect(() => {
-    getInvoice();
+    void getInvoice();
   }, [getInvoice]);
 
   if (!invoice) {
@@ -62,59 +52,30 @@ const InvoiceDetails: FC = () => {
         sx={{
           backgroundColor: 'background.default',
           minHeight: '100%',
-          py: 8
+          py: 8,
         }}
       >
         <Container maxWidth={settings.compact ? 'xl' : false}>
-          <Grid
-            container
-            justifyContent="space-between"
-            spacing={3}
-          >
+          <Grid container justifyContent="space-between" spacing={3}>
             <Grid item>
-              <Typography
-                color="textPrimary"
-                variant="h5"
-              >
+              <Typography color="textPrimary" variant="h5">
                 Invoice Details
               </Typography>
-              <Breadcrumbs
-                aria-label="breadcrumb"
-                separator={<ChevronRightIcon fontSize="small" />}
-                sx={{ mt: 1 }}
-              >
-                <Link
-                  color="textPrimary"
-                  component={RouterLink}
-                  to="/dashboard"
-                  variant="subtitle2"
-                >
+              <Breadcrumbs aria-label="breadcrumb" separator={<ChevronRightIcon fontSize="small" />} sx={{ mt: 1 }}>
+                <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
                   Dashboard
                 </Link>
-                <Link
-                  color="textPrimary"
-                  component={RouterLink}
-                  to="/dashboard"
-                  variant="subtitle2"
-                >
+                <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
                   Management
                 </Link>
-                <Typography
-                  color="textSecondary"
-                  variant="subtitle2"
-                >
+                <Typography color="textSecondary" variant="subtitle2">
                   Invoices
                 </Typography>
               </Breadcrumbs>
             </Grid>
             <Grid item>
               <Box sx={{ m: -1 }}>
-                <Button
-                  color="primary"
-                  onClick={(): void => setViewPDF(true)}
-                  sx={{ m: 1 }}
-                  variant="outlined"
-                >
+                <Button color="primary" onClick={(): void => setViewPDF(true)} sx={{ m: 1 }} variant="outlined">
                   Preview PDF
                 </Button>
                 <PDFDownloadLink
@@ -122,11 +83,7 @@ const InvoiceDetails: FC = () => {
                   fileName="invoice"
                   style={{ textDecoration: 'none' }}
                 >
-                  <Button
-                    color="primary"
-                    sx={{ m: 1 }}
-                    variant="contained"
-                  >
+                  <Button color="primary" sx={{ m: 1 }} variant="contained">
                     Download PDF
                   </Button>
                 </PDFDownloadLink>
@@ -137,21 +94,18 @@ const InvoiceDetails: FC = () => {
           <InvoicePreview invoice={invoice} />
         </Container>
       </Box>
-      <Dialog
-        fullScreen
-        open={viewPDF}
-      >
+      <Dialog fullScreen open={viewPDF}>
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            height: '100%'
+            height: '100%',
           }}
         >
           <Box
             sx={{
               backgroundColor: 'background.default',
-              p: 2
+              p: 2,
             }}
           >
             <Button
@@ -164,11 +118,7 @@ const InvoiceDetails: FC = () => {
             </Button>
           </Box>
           <Box sx={{ flexGrow: 1 }}>
-            <PDFViewer
-              height="100%"
-              style={{ border: 'none' }}
-              width="100%"
-            >
+            <PDFViewer height="100%" style={{ border: 'none' }} width="100%">
               <InvoicePDF invoice={invoice} />
             </PDFViewer>
           </Box>

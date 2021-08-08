@@ -2,15 +2,7 @@ import { useState } from 'react';
 import type { FC } from 'react';
 import type { ApexOptions } from 'apexcharts';
 import Chart from 'react-apexcharts';
-import {
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Checkbox,
-  Tooltip,
-  Typography
-} from '@material-ui/core';
+import { Box, Card, CardContent, CardHeader, Checkbox, Tooltip, Typography } from '@material-ui/core';
 import { useTheme } from '@material-ui/core/styles';
 import InformationCircleIcon from '../../../icons/InformationCircle';
 
@@ -18,32 +10,19 @@ const data = {
   series: [
     {
       color: '#4CAF50',
-      data: [
-        3350,
-        1840,
-        2254,
-        5780,
-        9349,
-        5241,
-        2770,
-        2051,
-        3764,
-        2385,
-        5912,
-        8323
-      ],
-      name: 'Organic'
+      data: [3350, 1840, 2254, 5780, 9349, 5241, 2770, 2051, 3764, 2385, 5912, 8323],
+      name: 'Organic',
     },
     {
       color: '#FF9800',
       data: [35, 41, 62, 42, 13, 18, 29, 37, 36, 51, 32, 35],
-      name: 'Referral'
+      name: 'Referral',
     },
     {
       color: '#F44336',
       data: [100, 122, 50, 300, 250, 400, 312, 200, 10, 60, 90, 400],
-      name: 'Social Media'
-    }
+      name: 'Social Media',
+    },
   ],
   xaxis: {
     dataPoints: [
@@ -58,18 +37,14 @@ const data = {
       '09 Jan',
       '10 Jan',
       '11 Jan',
-      '12 Jan'
-    ]
-  }
+      '12 Jan',
+    ],
+  },
 };
 
 const Chart7: FC = () => {
   const theme = useTheme();
-  const [selectedSeries, setSelectedSeries] = useState([
-    'Organic',
-    'Referral',
-    'Social Media'
-  ]);
+  const [selectedSeries, setSelectedSeries] = useState(['Organic', 'Referral', 'Social Media']);
 
   const handleChange = (event, name: string) => {
     if (!event.target.checked) {
@@ -86,128 +61,125 @@ const Chart7: FC = () => {
       background: 'transparent',
       stacked: false,
       toolbar: {
-        show: false
-      }
+        show: false,
+      },
     },
     colors: chartSeries.map((item) => item.color),
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
     grid: {
       borderColor: theme.palette.divider,
       yaxis: {
         lines: {
-          show: false
-        }
-      }
+          show: false,
+        },
+      },
     },
     legend: {
-      show: false
+      show: false,
     },
     markers: {
       hover: {
         size: undefined,
-        sizeOffset: 2
+        sizeOffset: 2,
       },
       radius: 2,
       shape: 'circle',
       size: 4,
-      strokeWidth: 0
+      strokeWidth: 0,
     },
     stroke: {
       curve: 'smooth',
       lineCap: 'butt',
-      width: 3
+      width: 3,
     },
     theme: {
-      mode: theme.palette.mode
+      mode: theme.palette.mode,
     },
     xaxis: {
       axisBorder: {
-        color: theme.palette.divider
+        color: theme.palette.divider,
       },
       axisTicks: {
         color: theme.palette.divider,
-        show: true
+        show: true,
       },
       categories: data.xaxis.dataPoints,
       labels: {
         style: {
-          colors: theme.palette.text.secondary
-        }
-      }
+          colors: theme.palette.text.secondary,
+        },
+      },
     },
     yaxis: [
       {
         axisBorder: {
           color: theme.palette.divider,
-          show: true
+          show: true,
         },
         axisTicks: {
           color: theme.palette.divider,
-          show: true
+          show: true,
         },
         labels: {
           style: {
-            colors: theme.palette.text.secondary
-          }
-        }
+            colors: theme.palette.text.secondary,
+          },
+        },
       },
       {
         axisTicks: {
           color: theme.palette.divider,
-          show: true
+          show: true,
         },
         axisBorder: {
           color: theme.palette.divider,
-          show: true
+          show: true,
         },
         labels: {
           style: {
-            colors: theme.palette.text.secondary
-          }
+            colors: theme.palette.text.secondary,
+          },
         },
-        opposite: true
-      }
-    ]
+        opposite: true,
+      },
+    ],
   };
 
   return (
     <Box
       sx={{
         backgroundColor: 'background.default',
-        p: 3
+        p: 3,
       }}
     >
       <Card>
         <CardHeader
           disableTypography
-          title={(
+          title={
             <Box
               sx={{
                 alignItems: 'center',
                 display: 'flex',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
               }}
             >
-              <Typography
-                color="textPrimary"
-                variant="h6"
-              >
+              <Typography color="textPrimary" variant="h6">
                 Traffic Sources
               </Typography>
               <Tooltip title="Chart 7 Source by channel">
                 <InformationCircleIcon fontSize="small" />
               </Tooltip>
             </Box>
-          )}
+          }
         />
         <CardContent>
           <Box
             sx={{
               alignItems: 'center',
               display: 'flex',
-              flexWrap: 'wrap'
+              flexWrap: 'wrap',
             }}
           >
             {data.series.map((item) => (
@@ -216,7 +188,7 @@ const Chart7: FC = () => {
                 sx={{
                   alignItems: 'center',
                   display: 'flex',
-                  mr: 2
+                  mr: 2,
                 }}
               >
                 <Checkbox
@@ -231,24 +203,16 @@ const Chart7: FC = () => {
                     height: 8,
                     ml: 1,
                     mr: 2,
-                    width: 8
+                    width: 8,
                   }}
                 />
-                <Typography
-                  color="textPrimary"
-                  variant="subtitle2"
-                >
+                <Typography color="textPrimary" variant="subtitle2">
                   {item.name}
                 </Typography>
               </Box>
             ))}
           </Box>
-          <Chart
-            height="350"
-            options={chartOptions}
-            series={chartSeries}
-            type="line"
-          />
+          <Chart height="350" options={chartOptions} series={chartSeries} type="line" />
         </CardContent>
       </Card>
     </Box>

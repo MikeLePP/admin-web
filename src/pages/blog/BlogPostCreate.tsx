@@ -2,16 +2,7 @@ import { useEffect } from 'react';
 import type { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Grid,
-  Toolbar,
-  Typography,
-  IconButton
-} from '@material-ui/core';
+import { Box, Button, Container, Divider, Grid, Toolbar, Typography, IconButton } from '@material-ui/core';
 import { BlogPostCreateForm } from '../../components/blog';
 import SaveIcon from '../../icons/Save';
 import DotsVertical from '../../icons/DotsVertical';
@@ -30,37 +21,20 @@ const BlogPostCreate: FC = () => {
       <Box
         sx={{
           backgroundColor: 'background.paper',
-          minHeight: '100%'
+          minHeight: '100%',
         }}
       >
         <div>
           <Container maxWidth="lg">
-            <Toolbar
-              disableGutters
-              sx={{ py: 2 }}
-            >
-              <Grid
-                alignItems="center"
-                container
-                justifyContent="space-between"
-                spacing={3}
-              >
+            <Toolbar disableGutters sx={{ py: 2 }}>
+              <Grid alignItems="center" container justifyContent="space-between" spacing={3}>
                 <Grid item>
-                  <Typography
-                    color="textPrimary"
-                    variant="body2"
-                  >
+                  <Typography color="textPrimary" variant="body2">
                     Hello, Jane Rotanson
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <Button
-                    color="primary"
-                    component={RouterLink}
-                    size="large"
-                    to="/blog"
-                    variant="outlined"
-                  >
+                  <Button color="primary" component={RouterLink} size="large" to="/blog" variant="outlined">
                     Cancel
                   </Button>
                   <Button

@@ -10,19 +10,19 @@ const data = {
     {
       color: '#FFB547',
       data: 14859,
-      label: 'Strategy'
+      label: 'Strategy',
     },
     {
       color: '#7BC67E',
       data: 35690,
-      label: 'Outsourcing'
+      label: 'Outsourcing',
     },
     {
       color: '#7783DB',
       data: 45120,
-      label: 'Marketing'
-    }
-  ]
+      label: 'Marketing',
+    },
+  ],
 };
 
 const Chart10: FC = () => {
@@ -33,24 +33,24 @@ const Chart10: FC = () => {
       background: 'transparent',
       stacked: false,
       toolbar: {
-        show: false
-      }
+        show: false,
+      },
     },
     colors: data.series.map((item) => item.color),
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
     labels: data.series.map((item) => item.label),
     legend: {
-      show: false
+      show: false,
     },
     stroke: {
       colors: [theme.palette.background.paper],
-      width: 1
+      width: 1,
     },
     theme: {
-      mode: theme.palette.mode
-    }
+      mode: theme.palette.mode,
+    },
   };
 
   const chartSeries = data.series.map((item) => item.data);
@@ -59,26 +59,21 @@ const Chart10: FC = () => {
     <Box
       sx={{
         backgroundColor: 'background.default',
-        p: 3
+        p: 3,
       }}
     >
       <Container maxWidth="md">
         <Card>
           <CardHeader title="Cost Breakdown" />
           <CardContent>
-            <Chart
-              height="260"
-              options={chartOptions}
-              series={chartSeries}
-              type="pie"
-            />
+            <Chart height="260" options={chartOptions} series={chartSeries} type="pie" />
             {data.series.map((item) => (
               <Box
                 key={item.label}
                 sx={{
                   alignItems: 'center',
                   display: 'flex',
-                  p: 1
+                  p: 1,
                 }}
               >
                 <Box
@@ -86,21 +81,14 @@ const Chart10: FC = () => {
                     backgroundColor: item.color,
                     borderRadius: '50%',
                     height: 8,
-                    width: 8
+                    width: 8,
                   }}
                 />
-                <Typography
-                  color="textPrimary"
-                  sx={{ ml: 2 }}
-                  variant="subtitle2"
-                >
+                <Typography color="textPrimary" sx={{ ml: 2 }} variant="subtitle2">
                   {item.label}
                 </Typography>
                 <Box sx={{ flexGrow: 1 }} />
-                <Typography
-                  color="textSecondary"
-                  variant="subtitle2"
-                >
+                <Typography color="textSecondary" variant="subtitle2">
                   {numeral(item.data).format('$0,0.00')}
                 </Typography>
               </Box>

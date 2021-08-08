@@ -14,14 +14,7 @@ interface ProjectApplicationModalProps {
 }
 
 const ProjectApplicationModal: FC<ProjectApplicationModalProps> = (props) => {
-  const {
-    authorAvatar,
-    authorName,
-    onApply,
-    onClose,
-    open,
-    ...other
-  } = props;
+  const { authorAvatar, authorName, onApply, onClose, open, ...other } = props;
   const [value, setValue] = useState<string>('');
 
   const handleChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -37,28 +30,14 @@ const ProjectApplicationModal: FC<ProjectApplicationModalProps> = (props) => {
   };
 
   return (
-    <Dialog
-      maxWidth="lg"
-      onClose={onClose}
-      open={open}
-      {...other}
-    >
+    <Dialog maxWidth="lg" onClose={onClose} open={open} {...other}>
       <Box sx={{ p: 3 }}>
-        <Typography
-          align="center"
-          color="textPrimary"
-          gutterBottom
-          variant="h4"
-        >
+        <Typography align="center" color="textPrimary" gutterBottom variant="h4">
           The project requires an introduction
         </Typography>
-        <Typography
-          align="center"
-          color="textSecondary"
-          variant="subtitle2"
-        >
-          Write down a short note with your application regarding why you
-          think you&apos;d be a good fit for this position.
+        <Typography align="center" color="textSecondary" variant="subtitle2">
+          Write down a short note with your application regarding why you think you&apos;d be a good fit for this
+          position.
         </Typography>
         <Box sx={{ mt: 3 }}>
           <TextField
@@ -66,8 +45,8 @@ const ProjectApplicationModal: FC<ProjectApplicationModalProps> = (props) => {
             FormHelperTextProps={{
               sx: {
                 textAlign: 'right',
-                mr: 0
-              }
+                mr: 0,
+              },
             }}
             fullWidth
             helperText={`${200 - value.length} characters left`}
@@ -83,23 +62,15 @@ const ProjectApplicationModal: FC<ProjectApplicationModalProps> = (props) => {
             sx={{
               alignItems: 'center',
               display: 'flex',
-              mt: 6
+              mt: 6,
             }}
           >
-            <Avatar src={authorAvatar}>
-              {getInitials(authorName)}
-            </Avatar>
+            <Avatar src={authorAvatar}>{getInitials(authorName)}</Avatar>
             <Box sx={{ ml: 2 }}>
-              <Typography
-                color="textPrimary"
-                variant="subtitle2"
-              >
+              <Typography color="textPrimary" variant="subtitle2">
                 {authorName}
               </Typography>
-              <Typography
-                color="textSecondary"
-                variant="body2"
-              >
+              <Typography color="textSecondary" variant="body2">
                 Author note: Please remember to include your soft skills.
               </Typography>
             </Box>
@@ -108,15 +79,10 @@ const ProjectApplicationModal: FC<ProjectApplicationModalProps> = (props) => {
         <Box
           sx={{
             mt: 3,
-            p: 3
+            p: 3,
           }}
         >
-          <Button
-            color="primary"
-            fullWidth
-            onClick={handleApply}
-            variant="contained"
-          >
+          <Button color="primary" fullWidth onClick={handleApply} variant="contained">
             Apply for a role
           </Button>
         </Box>
@@ -130,7 +96,7 @@ ProjectApplicationModal.propTypes = {
   authorName: PropTypes.string.isRequired,
   onApply: PropTypes.func,
   onClose: PropTypes.func,
-  open: PropTypes.bool.isRequired
+  open: PropTypes.bool.isRequired,
 };
 
 export default ProjectApplicationModal;

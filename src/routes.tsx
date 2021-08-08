@@ -3,7 +3,7 @@ import type { PartialRouteObject } from 'react-router';
 import { Navigate } from 'react-router-dom';
 import AuthGuard from './components/AuthGuard';
 import BlogLayout from './components/blog/BlogLayout';
-import BrowseLayout from './components/BrowseLayout';
+// import BrowseLayout from './components/BrowseLayout';
 import DashboardLayout from './components/dashboard/DashboardLayout';
 import DocsLayout from './components/docs/DocsLayout';
 import GuestGuard from './components/GuestGuard';
@@ -19,19 +19,19 @@ const Loadable = (Component) => (props) =>
 
 // Browse pages
 
-const Browse = Loadable(lazy(() => import('./pages/browse/Browse')));
-const BrowseButtons = Loadable(lazy(() => import('./pages/browse/BrowseButtons')));
-const BrowseCharts = Loadable(lazy(() => import('./pages/browse/BrowseCharts')));
-const BrowseColors = Loadable(lazy(() => import('./pages/browse/BrowseColors')));
-const BrowseDetailLists = Loadable(lazy(() => import('./pages/browse/BrowseDetailLists')));
-const BrowseForms = Loadable(lazy(() => import('./pages/browse/BrowseForms')));
-const BrowseGridLists = Loadable(lazy(() => import('./pages/browse/BrowseGridLists')));
-const BrowseGroupedLists = Loadable(lazy(() => import('./pages/browse/BrowseGroupedLists')));
-const BrowseInputs = Loadable(lazy(() => import('./pages/browse/BrowseInputs')));
-const BrowseModals = Loadable(lazy(() => import('./pages/browse/BrowseModals')));
-const BrowseQuickStats = Loadable(lazy(() => import('./pages/browse/BrowseQuickStats')));
-const BrowseTables = Loadable(lazy(() => import('./pages/browse/BrowseTables')));
-const BrowseTypography = Loadable(lazy(() => import('./pages/browse/BrowseTypography')));
+// const Browse = Loadable(lazy(() => import('./pages/browse/Browse')));
+// const BrowseButtons = Loadable(lazy(() => import('./pages/browse/BrowseButtons')));
+// const BrowseCharts = Loadable(lazy(() => import('./pages/browse/BrowseCharts')));
+// const BrowseColors = Loadable(lazy(() => import('./pages/browse/BrowseColors')));
+// const BrowseDetailLists = Loadable(lazy(() => import('./pages/browse/BrowseDetailLists')));
+// const BrowseForms = Loadable(lazy(() => import('./pages/browse/BrowseForms')));
+// const BrowseGridLists = Loadable(lazy(() => import('./pages/browse/BrowseGridLists')));
+// const BrowseGroupedLists = Loadable(lazy(() => import('./pages/browse/BrowseGroupedLists')));
+// const BrowseInputs = Loadable(lazy(() => import('./pages/browse/BrowseInputs')));
+// const BrowseModals = Loadable(lazy(() => import('./pages/browse/BrowseModals')));
+// const BrowseQuickStats = Loadable(lazy(() => import('./pages/browse/BrowseQuickStats')));
+// const BrowseTables = Loadable(lazy(() => import('./pages/browse/BrowseTables')));
+// const BrowseTypography = Loadable(lazy(() => import('./pages/browse/BrowseTypography')));
 
 // Authentication pages
 
@@ -333,64 +333,6 @@ const routes: PartialRouteObject[] = [
       {
         path: '/',
         element: <Overview />,
-      },
-      {
-        path: 'browse',
-        element: <BrowseLayout />,
-        children: [
-          {
-            path: '/',
-            element: <Browse />,
-          },
-          {
-            path: '/buttons',
-            element: <BrowseButtons />,
-          },
-          {
-            path: '/inputs',
-            element: <BrowseInputs />,
-          },
-          {
-            path: '/charts',
-            element: <BrowseCharts />,
-          },
-          {
-            path: '/colors',
-            element: <BrowseColors />,
-          },
-          {
-            path: '/data-display/detail-lists',
-            element: <BrowseDetailLists />,
-          },
-          {
-            path: '/data-display/quick-stats',
-            element: <BrowseQuickStats />,
-          },
-          {
-            path: '/data-display/tables',
-            element: <BrowseTables />,
-          },
-          {
-            path: '/forms',
-            element: <BrowseForms />,
-          },
-          {
-            path: '/modals',
-            element: <BrowseModals />,
-          },
-          {
-            path: '/lists/grouped-lists',
-            element: <BrowseGroupedLists />,
-          },
-          {
-            path: '/lists/grid-lists',
-            element: <BrowseGridLists />,
-          },
-          {
-            path: '/typography',
-            element: <BrowseTypography />,
-          },
-        ],
       },
       {
         path: 'checkout',

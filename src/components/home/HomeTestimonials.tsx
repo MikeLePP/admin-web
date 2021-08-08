@@ -5,7 +5,7 @@ const HomeTestimonials: FC = (props) => (
   <Box
     sx={{
       backgroundColor: 'background.paper',
-      py: 15
+      py: 15,
     }}
     {...props}
   >
@@ -14,33 +14,21 @@ const HomeTestimonials: FC = (props) => (
       sx={{
         alignItems: 'center',
         display: 'flex',
-        flexDirection: 'column'
+        flexDirection: 'column',
       }}
     >
-      <Typography
-        align="center"
-        color="textPrimary"
-        variant="h3"
-      >
-        &quot;Devias builds some of the best templates you can find for
-        React.
-        They will save you time.&quot;
+      <Typography align="center" color="textPrimary" variant="h3">
+        &quot;Devias builds some of the best templates you can find for React. They will save you time.&quot;
       </Typography>
       <Box
         sx={{
           alignItems: 'center',
           display: 'flex',
-          mt: 3
+          mt: 3,
         }}
       >
-        <Avatar
-          src="/static/home/olivier.jpeg"
-          sx={{ mr: 2 }}
-        />
-        <Typography
-          color="textSecondary"
-          variant="body2"
-        >
+        <Avatar src="/static/home/olivier.jpeg" sx={{ mr: 2 }} />
+        <Typography color="textSecondary" variant="body2">
           Olivier Tassinari,
           <br />
           co-creator of @MaterialUI

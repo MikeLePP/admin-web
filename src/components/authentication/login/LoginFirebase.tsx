@@ -1,15 +1,7 @@
 import type { FC } from 'react';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
-import {
-  Alert,
-  Box,
-  Button,
-  Divider,
-  FormHelperText,
-  TextField,
-  Typography
-} from '@material-ui/core';
+import { Alert, Box, Button, Divider, FormHelperText, TextField, Typography } from '@material-ui/core';
 import useAuth from '../../../hooks/useAuth';
 import useMounted from '../../../hooks/useMounted';
 
@@ -36,34 +28,25 @@ const LoginFirebase: FC = (props) => {
           color: 'common.black',
           '&:hover': {
             backgroundColor: 'common.white',
-            color: 'common.black'
-          }
+            color: 'common.black',
+          },
         }}
         variant="contained"
       >
-        <Box
-          alt="Google"
-          component="img"
-          src="/static/icons/google.svg"
-          sx={{ mr: 1 }}
-        />
+        <Box alt="Google" component="img" src="/static/icons/google.svg" sx={{ mr: 1 }} />
         Google
       </Button>
       <Box
         sx={{
           alignItems: 'center',
           display: 'flex',
-          mt: 2
+          mt: 2,
         }}
       >
         <Box sx={{ flexGrow: 1 }}>
           <Divider orientation="horizontal" />
         </Box>
-        <Typography
-          color="textSecondary"
-          sx={{ m: 2 }}
-          variant="body1"
-        >
+        <Typography color="textSecondary" sx={{ m: 2 }} variant="body1">
           OR
         </Typography>
         <Box sx={{ flexGrow: 1 }}>
@@ -74,28 +57,13 @@ const LoginFirebase: FC = (props) => {
         initialValues={{
           email: 'demo@devias.io',
           password: 'Password123!',
-          submit: null
+          submit: null,
         }}
-        validationSchema={
-          Yup
-            .object()
-            .shape({
-              email: Yup
-                .string()
-                .email('Must be a valid email')
-                .max(255)
-                .required('Email is required'),
-              password: Yup
-                .string()
-                .max(255)
-                .required('Password is required')
-            })
-        }
-        onSubmit={async (values, {
-          setErrors,
-          setStatus,
-          setSubmitting
-        }): Promise<void> => {
+        validationSchema={Yup.object().shape({
+          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+          password: Yup.string().max(255).required('Password is required'),
+        })}
+        onSubmit={async (values, { setErrors, setStatus, setSubmitting }): Promise<void> => {
           try {
             await signInWithEmailAndPassword(values.email, values.password);
 
@@ -113,20 +81,8 @@ const LoginFirebase: FC = (props) => {
           }
         }}
       >
-        {({
-          errors,
-          handleBlur,
-          handleChange,
-          handleSubmit,
-          isSubmitting,
-          touched,
-          values
-        }): JSX.Element => (
-          <form
-            noValidate
-            onSubmit={handleSubmit}
-            {...props}
-          >
+        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }): JSX.Element => (
+          <form noValidate onSubmit={handleSubmit} {...props}>
             <TextField
               error={Boolean(touched.email && errors.email)}
               fullWidth
@@ -155,33 +111,18 @@ const LoginFirebase: FC = (props) => {
             />
             {errors.submit && (
               <Box sx={{ mt: 3 }}>
-                <FormHelperText error>
-                  {errors.submit}
-                </FormHelperText>
+                <FormHelperText error>{errors.submit}</FormHelperText>
               </Box>
             )}
             <Box sx={{ mt: 2 }}>
-              <Button
-                color="primary"
-                disabled={isSubmitting}
-                fullWidth
-                size="large"
-                type="submit"
-                variant="contained"
-              >
+              <Button color="primary" disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained">
                 Log In
               </Button>
             </Box>
             <Box sx={{ mt: 2 }}>
               <Alert severity="info">
                 <div>
-                  You can use
-                  {' '}
-                  <b>demo@devias.io</b>
-                  {' '}
-                  and password
-                  {' '}
-                  <b>Password123!</b>
+                  You can use <b>demo@devias.io</b> and password <b>Password123!</b>
                 </div>
               </Alert>
             </Box>

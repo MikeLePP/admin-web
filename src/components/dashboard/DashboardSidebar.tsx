@@ -36,24 +36,24 @@ const sections = [
       {
         title: 'Overview',
         path: '/dashboard',
-        icon: <ChartSquareBarIcon fontSize="small" />
+        icon: <ChartSquareBarIcon fontSize="small" />,
       },
       {
         title: 'Analytics',
         path: '/dashboard/analytics',
-        icon: <ChartPieIcon fontSize="small" />
+        icon: <ChartPieIcon fontSize="small" />,
       },
       {
         title: 'Finance',
         path: '/dashboard/finance',
-        icon: <ShoppingBagIcon fontSize="small" />
+        icon: <ShoppingBagIcon fontSize="small" />,
       },
       {
         title: 'Account',
         path: '/dashboard/account',
-        icon: <UserIcon fontSize="small" />
-      }
-    ]
+        icon: <UserIcon fontSize="small" />,
+      },
+    ],
   },
   {
     title: 'Management',
@@ -65,17 +65,17 @@ const sections = [
         children: [
           {
             title: 'List',
-            path: '/dashboard/customers'
+            path: '/dashboard/customers',
           },
           {
             title: 'Details',
-            path: '/dashboard/customers/1'
+            path: '/dashboard/customers/1',
           },
           {
             title: 'Edit',
-            path: '/dashboard/customers/1/edit'
-          }
-        ]
+            path: '/dashboard/customers/1/edit',
+          },
+        ],
       },
       {
         title: 'Products',
@@ -84,13 +84,13 @@ const sections = [
         children: [
           {
             title: 'List',
-            path: '/dashboard/products'
+            path: '/dashboard/products',
           },
           {
             title: 'Create',
-            path: '/dashboard/products/new'
-          }
-        ]
+            path: '/dashboard/products/new',
+          },
+        ],
       },
       {
         title: 'Orders',
@@ -99,13 +99,13 @@ const sections = [
         children: [
           {
             title: 'List',
-            path: '/dashboard/orders'
+            path: '/dashboard/orders',
           },
           {
             title: 'Details',
-            path: '/dashboard/orders/1'
-          }
-        ]
+            path: '/dashboard/orders/1',
+          },
+        ],
       },
       {
         title: 'Invoices',
@@ -114,15 +114,15 @@ const sections = [
         children: [
           {
             title: 'List',
-            path: '/dashboard/invoices'
+            path: '/dashboard/invoices',
           },
           {
             title: 'Details',
-            path: '/dashboard/invoices/1'
-          }
-        ]
-      }
-    ]
+            path: '/dashboard/invoices/1',
+          },
+        ],
+      },
+    ],
   },
   {
     title: 'Platforms',
@@ -134,17 +134,17 @@ const sections = [
         children: [
           {
             title: 'Browse',
-            path: '/dashboard/projects/browse'
+            path: '/dashboard/projects/browse',
           },
           {
             title: 'Details',
-            path: '/dashboard/projects/1'
+            path: '/dashboard/projects/1',
           },
           {
             title: 'Create',
-            path: '/dashboard/projects/new'
-          }
-        ]
+            path: '/dashboard/projects/new',
+          },
+        ],
       },
       {
         title: 'Social',
@@ -153,15 +153,15 @@ const sections = [
         children: [
           {
             title: 'Profile',
-            path: '/dashboard/social/profile'
+            path: '/dashboard/social/profile',
           },
           {
             title: 'Feed',
-            path: '/dashboard/social/feed'
-          }
-        ]
-      }
-    ]
+            path: '/dashboard/social/feed',
+          },
+        ],
+      },
+    ],
   },
   {
     title: 'Apps',
@@ -169,25 +169,25 @@ const sections = [
       {
         title: 'Kanban',
         path: '/dashboard/kanban',
-        icon: <ClipboardListIcon fontSize="small" />
+        icon: <ClipboardListIcon fontSize="small" />,
       },
       {
         title: 'Mail',
         path: '/dashboard/mail',
-        icon: <MailIcon fontSize="small" />
+        icon: <MailIcon fontSize="small" />,
       },
       {
         title: 'Chat',
         path: '/dashboard/chat',
-        icon: <ChatAltIcon fontSize="small" />
+        icon: <ChatAltIcon fontSize="small" />,
       },
       {
         title: 'Calendar',
         path: '/dashboard/calendar',
-        icon: <CalendarIcon fontSize="small" />
-      }
-    ]
-  }
+        icon: <CalendarIcon fontSize="small" />,
+      },
+    ],
+  },
 ];
 
 const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
@@ -207,7 +207,7 @@ const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        height: '100%'
+        height: '100%',
       }}
     >
       <Scrollbar options={{ suppressScrollX: true }}>
@@ -215,17 +215,17 @@ const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
           sx={{
             display: {
               lg: 'none',
-              xs: 'flex'
+              xs: 'flex',
             },
             justifyContent: 'center',
-            p: 2
+            p: 2,
           }}
         >
           <RouterLink to="/">
             <Logo
               sx={{
                 height: 40,
-                width: 40
+                width: 40,
               }}
             />
           </RouterLink>
@@ -238,7 +238,7 @@ const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
               borderRadius: 1,
               display: 'flex',
               overflow: 'hidden',
-              p: 2
+              p: 2,
             }}
           >
             <RouterLink to="/dashboard/account">
@@ -247,28 +247,17 @@ const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
                 sx={{
                   cursor: 'pointer',
                   height: 48,
-                  width: 48
+                  width: 48,
                 }}
               />
             </RouterLink>
             <Box sx={{ ml: 2 }}>
-              <Typography
-                color="textPrimary"
-                variant="subtitle2"
-              >
+              <Typography color="textPrimary" variant="subtitle2">
                 {user.name}
               </Typography>
-              <Typography
-                color="textSecondary"
-                variant="body2"
-              >
-                Your plan:
-                {' '}
-                <Link
-                  color="primary"
-                  component={RouterLink}
-                  to="/pricing"
-                >
+              <Typography color="textSecondary" variant="body2">
+                Your plan:{' '}
+                <Link color="primary" component={RouterLink} to="/pricing">
                   {user.plan}
                 </Link>
               </Typography>
@@ -283,8 +272,8 @@ const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
               pathname={location.pathname}
               sx={{
                 '& + &': {
-                  mt: 3
-                }
+                  mt: 3,
+                },
               }}
               {...section}
             />
@@ -292,26 +281,13 @@ const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
         </Box>
         <Divider />
         <Box sx={{ p: 2 }}>
-          <Typography
-            color="textPrimary"
-            variant="subtitle2"
-          >
+          <Typography color="textPrimary" variant="subtitle2">
             Need Help?
           </Typography>
-          <Typography
-            color="textSecondary"
-            variant="body2"
-          >
+          <Typography color="textSecondary" variant="body2">
             Check our docs
           </Typography>
-          <Button
-            color="primary"
-            component={RouterLink}
-            fullWidth
-            sx={{ mt: 2 }}
-            to="/docs"
-            variant="contained"
-          >
+          <Button color="primary" component={RouterLink} fullWidth sx={{ mt: 2 }} to="/docs" variant="contained">
             Documentation
           </Button>
         </Box>
@@ -329,8 +305,8 @@ const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
             backgroundColor: 'background.paper',
             height: 'calc(100% - 64px) !important',
             top: '64px !Important',
-            width: 280
-          }
+            width: 280,
+          },
         }}
         variant="permanent"
       >
@@ -347,8 +323,8 @@ const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
       PaperProps={{
         sx: {
           backgroundColor: 'background.paper',
-          width: 280
-        }
+          width: 280,
+        },
       }}
       variant="temporary"
     >
@@ -359,7 +335,7 @@ const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
 
 DashboardSidebar.propTypes = {
   onMobileClose: PropTypes.func,
-  openMobile: PropTypes.bool
+  openMobile: PropTypes.bool,
 };
 
 export default DashboardSidebar;

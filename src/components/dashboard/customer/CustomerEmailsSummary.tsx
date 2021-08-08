@@ -13,18 +13,14 @@ import {
   TableCell,
   TableRow,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { customerApi } from '../../../__fakeApi__/customerApi';
 import useMounted from '../../../hooks/useMounted';
 import MailIcon from '../../../icons/Mail';
 import type { CustomerEmail } from '../../../types/customer';
 
-const emailOptions = [
-  'Resend last invoice',
-  'Send password reset',
-  'Send verification'
-];
+const emailOptions = ['Resend last invoice', 'Send password reset', 'Send verification'];
 
 const CustomerEmailsSummary: FC = (props) => {
   const mounted = useMounted();
@@ -44,7 +40,7 @@ const CustomerEmailsSummary: FC = (props) => {
   }, [mounted]);
 
   useEffect(() => {
-    getEmails();
+    void getEmails();
   }, []);
 
   return (
@@ -62,20 +58,13 @@ const CustomerEmailsSummary: FC = (props) => {
           variant="outlined"
         >
           {emailOptions.map((option) => (
-            <option
-              key={option}
-              value={option}
-            >
+            <option key={option} value={option}>
               {option}
             </option>
           ))}
         </TextField>
         <Box sx={{ mt: 2 }}>
-          <Button
-            color="primary"
-            startIcon={<MailIcon fontSize="small" />}
-            variant="contained"
-          >
+          <Button color="primary" startIcon={<MailIcon fontSize="small" />} variant="contained">
             Send email
           </Button>
         </Box>
@@ -85,16 +74,11 @@ const CustomerEmailsSummary: FC = (props) => {
               {emails.map((email) => (
                 <TableRow key={email.id}>
                   <TableCell>
-                    <Typography
-                      color="textPrimary"
-                      variant="subtitle2"
-                    >
+                    <Typography color="textPrimary" variant="subtitle2">
                       {email.description}
                     </Typography>
                   </TableCell>
-                  <TableCell>
-                    {format(email.createdAt, 'dd/MM/yyyy | HH:mm')}
-                  </TableCell>
+                  <TableCell>{format(email.createdAt, 'dd/MM/yyyy | HH:mm')}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

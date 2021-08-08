@@ -12,7 +12,7 @@ const contacts: Contact[] = [
     isActive: true,
     lastActivity: now.getTime(),
     name: 'Alcides Antonio',
-    username: 'alcides.antonio'
+    username: 'alcides.antonio',
   },
   {
     id: '5e887a62195cc5aef7e8ca5d',
@@ -20,7 +20,7 @@ const contacts: Contact[] = [
     isActive: false,
     lastActivity: subHours(now, 2).getTime(),
     name: 'Marcus Finn',
-    username: 'marcus.finn'
+    username: 'marcus.finn',
   },
   {
     id: '5e887ac47eed253091be10cb',
@@ -28,7 +28,7 @@ const contacts: Contact[] = [
     isActive: false,
     lastActivity: subMinutes(now, 15).getTime(),
     name: 'Carson Darrin',
-    username: 'carson.darrin'
+    username: 'carson.darrin',
   },
   {
     id: '5e887b209c28ac3dd97f6db5',
@@ -36,7 +36,7 @@ const contacts: Contact[] = [
     isActive: true,
     lastActivity: now.getTime(),
     name: 'Fran Perez',
-    username: 'fran.perez'
+    username: 'fran.perez',
   },
   {
     id: '5e887b7602bdbc4dbb234b27',
@@ -44,7 +44,7 @@ const contacts: Contact[] = [
     isActive: true,
     lastActivity: now.getTime(),
     name: 'Jie Yan Song',
-    username: 'jie.yan.song'
+    username: 'jie.yan.song',
   },
   {
     id: '5e86805e2bafd54f66cc95c3',
@@ -52,7 +52,7 @@ const contacts: Contact[] = [
     isActive: false,
     lastActivity: subDays(now, 2).getTime(),
     name: 'Miron Vitold',
-    username: 'miron.vitold'
+    username: 'miron.vitold',
   },
   {
     id: '5e887a1fbefd7938eea9c981',
@@ -60,7 +60,7 @@ const contacts: Contact[] = [
     isActive: false,
     lastActivity: subHours(now, 6).getTime(),
     name: 'Penjani Inyene',
-    username: 'penjani.inyene'
+    username: 'penjani.inyene',
   },
   {
     id: '5e887d0b3d090c1b8f162003',
@@ -68,7 +68,7 @@ const contacts: Contact[] = [
     isActive: true,
     lastActivity: now.getTime(),
     name: 'Omar Darobe',
-    username: 'omar.darobe'
+    username: 'omar.darobe',
   },
   {
     id: '5e88792be2d4cfb4bf0971d9',
@@ -76,7 +76,7 @@ const contacts: Contact[] = [
     isActive: true,
     lastActivity: now.getTime(),
     name: 'Siegbert Gottfried',
-    username: 'siegbert.gottfried'
+    username: 'siegbert.gottfried',
   },
   {
     id: '5e8877da9a65442b11551975',
@@ -84,7 +84,7 @@ const contacts: Contact[] = [
     isActive: true,
     lastActivity: now.getTime(),
     name: 'Iulia Albu',
-    username: 'iulia.albu'
+    username: 'iulia.albu',
   },
   {
     id: '5e8680e60cba5019c5ca6fda',
@@ -92,8 +92,8 @@ const contacts: Contact[] = [
     isActive: true,
     lastActivity: now.getTime(),
     name: 'Nasimiyu Danai',
-    username: 'nasimiyu.danai'
-  }
+    username: 'nasimiyu.danai',
+  },
 ];
 
 const threads: Thread[] = [
@@ -103,10 +103,10 @@ const threads: Thread[] = [
       {
         id: '5e867f0a5bc0ff2bfa07bfa6',
         attachments: [],
-        body: 'Hey, nice projects! I really liked the one in react. What\'s your quote on kinda similar project?',
+        body: "Hey, nice projects! I really liked the one in react. What's your quote on kinda similar project?",
         contentType: 'text',
         createdAt: subHours(now, 10).getTime(),
-        senderId: '5e86805e2bafd54f66cc95c3'
+        senderId: '5e86805e2bafd54f66cc95c3',
       },
       {
         id: '5e867f167d5f78109ae9f2a4',
@@ -114,23 +114,23 @@ const threads: Thread[] = [
         body: 'I would need to know more details, but my hourly rate stats at $35/hour. Thanks!',
         contentType: 'text',
         createdAt: subHours(now, 2).getTime(),
-        senderId: '5e86809283e28b96d2d38537'
+        senderId: '5e86809283e28b96d2d38537',
       },
       {
         id: '5e867f1c9ca72084693528f4',
         attachments: [],
-        body: 'Well it\'s a really easy one, I\'m sure we can make it half of the price.',
+        body: "Well it's a really easy one, I'm sure we can make it half of the price.",
         contentType: 'text',
         createdAt: subMinutes(now, 5).getTime(),
-        senderId: '5e86805e2bafd54f66cc95c3'
+        senderId: '5e86805e2bafd54f66cc95c3',
       },
       {
         id: '5e867f22fd2e27a09849b4db',
         attachments: [],
-        body: 'Then why don\'t you make it if it\'s that easy? Sorry I\'m not interetes, have fantastic day Adam!',
+        body: "Then why don't you make it if it's that easy? Sorry I'm not interetes, have fantastic day Adam!",
         contentType: 'text',
         createdAt: subMinutes(now, 3).getTime(),
-        senderId: '5e86809283e28b96d2d38537'
+        senderId: '5e86809283e28b96d2d38537',
       },
       {
         id: '5e867f28a34d45ac6eb5c41f',
@@ -138,7 +138,7 @@ const threads: Thread[] = [
         body: 'Last offer, $25 per hour',
         contentType: 'text',
         createdAt: subMinutes(now, 1).getTime(),
-        senderId: '5e86805e2bafd54f66cc95c3'
+        senderId: '5e86805e2bafd54f66cc95c3',
       },
       {
         id: '5e867f2dba984a3f78b33526',
@@ -146,25 +146,25 @@ const threads: Thread[] = [
         body: '/static/mock-images/projects/project_4.png',
         contentType: 'image',
         createdAt: subMinutes(now, 1).getTime(),
-        senderId: '5e86805e2bafd54f66cc95c3'
-      }
+        senderId: '5e86805e2bafd54f66cc95c3',
+      },
     ],
     participants: [
       {
         id: '5e86809283e28b96d2d38537',
         avatar: '/static/mock-images/avatars/avatar-jane_rotanson.png',
         name: 'Jane Rotanson',
-        username: 'jane.rotanson'
+        username: 'jane.rotanson',
       },
       {
         id: '5e86805e2bafd54f66cc95c3',
         avatar: '/static/mock-images/avatars/avatar-miron_vitold.png',
         name: 'Miron Vitold',
-        username: 'miron.vitold'
-      }
+        username: 'miron.vitold',
+      },
     ],
     type: 'ONE_TO_ONE',
-    unreadCount: 2
+    unreadCount: 2,
   },
   {
     id: '5e867fa7082c3c5921403a26',
@@ -175,7 +175,7 @@ const threads: Thread[] = [
         body: 'Hey, would you like to collaborate?',
         contentType: 'text',
         createdAt: subMinutes(now, 6).getTime(),
-        senderId: '5e8680e60cba5019c5ca6fda'
+        senderId: '5e8680e60cba5019c5ca6fda',
       },
       {
         id: '5e8d6fb695df7971237fc173',
@@ -183,7 +183,7 @@ const threads: Thread[] = [
         body: 'Hi, Merrile!',
         contentType: 'text',
         createdAt: subMinutes(now, 5).getTime(),
-        senderId: '5e86809283e28b96d2d38537'
+        senderId: '5e86809283e28b96d2d38537',
       },
       {
         id: '58825a290eb4d4271a54f188',
@@ -191,32 +191,32 @@ const threads: Thread[] = [
         body: 'Hello everyone 😀',
         contentType: 'text',
         createdAt: subMinutes(now, 2).getTime(),
-        senderId: '5e8891ab188cd2855e6029b7'
-      }
+        senderId: '5e8891ab188cd2855e6029b7',
+      },
     ],
     participants: [
       {
         id: '5e86809283e28b96d2d38537',
         avatar: '/static/mock-images/avatars/avatar-jane_rotanson.png',
         name: 'Jane Rotanson',
-        username: 'jane.rotanson'
+        username: 'jane.rotanson',
       },
       {
         id: '5e8680e60cba5019c5ca6fda',
         avatar: '/static/mock-images/avatars/avatar-nasimiyu_danai.png',
         name: 'Nasimiyu Danai',
-        username: 'nasimiyu.danai'
+        username: 'nasimiyu.danai',
       },
       {
         id: '5e8891ab188cd2855e6029b7',
         avatar: '/static/mock-images/avatars/avatar-alcides_antonio.png',
         name: 'Alcides Antonio',
-        username: 'alcides.antonio'
-      }
+        username: 'alcides.antonio',
+      },
     ],
     type: 'GROUP',
-    unreadCount: 0
-  }
+    unreadCount: 0,
+  },
 ];
 
 const findContactByUsername = (username: string): Contact | null => {
@@ -238,9 +238,7 @@ const findThreadByOtherParticipantId = (participantId: string): Thread | null =>
       return false;
     }
 
-    const participant = _thread.participants.find((_participant) => (
-      _participant.id === participantId
-    ));
+    const participant = _thread.participants.find((_participant) => _participant.id === participantId);
 
     return !!participant;
   });
@@ -278,9 +276,7 @@ class ChatApi {
 
         if (query) {
           const cleanQuery = query.toLowerCase().trim();
-          foundContacts = foundContacts.filter((contact) => (
-            contact.name.toLowerCase().includes(cleanQuery)
-          ));
+          foundContacts = foundContacts.filter((contact) => contact.name.toLowerCase().includes(cleanQuery));
         }
 
         resolve(deepCopy(foundContacts));
@@ -310,7 +306,7 @@ class ChatApi {
               id: contact.id,
               avatar: contact.avatar,
               name: contact.name,
-              username: contact.username
+              username: contact.username,
             });
           }
         }
@@ -390,7 +386,7 @@ class ChatApi {
           id: '5e86809283e28b96d2d38537',
           avatar: '/static/mock-images/avatars/avatar-jane_rotanson.png',
           name: 'Jane Rotanson',
-          username: 'jane.rotanson'
+          username: 'jane.rotanson',
         };
 
         let thread = null;
@@ -418,7 +414,7 @@ class ChatApi {
           body,
           contentType: 'text',
           createdAt: now.getTime(),
-          senderId: user.id
+          senderId: user.id,
         };
 
         // If thread exists, add the message
@@ -440,7 +436,7 @@ class ChatApi {
               id: contact.id,
               avatar: contact.avatar,
               name: contact.name,
-              username: contact.username
+              username: contact.username,
             });
           });
 
@@ -449,13 +445,13 @@ class ChatApi {
             messages: [message],
             participants,
             type: participants.length === 2 ? 'ONE_TO_ONE' : 'GROUP',
-            unreadCount: 0
+            unreadCount: 0,
           };
         }
 
         resolve({
           threadId: thread.id,
-          message
+          message,
         });
       } catch (err) {
         console.error('[Chat Api]: ', err);

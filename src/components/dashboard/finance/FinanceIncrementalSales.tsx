@@ -10,29 +10,29 @@ const data = {
     {
       color: '#7783DB',
       category: 'Email',
-      data: 37530
+      data: 37530,
     },
     {
       color: '#7BC67E',
       category: 'GDN',
-      data: 52717
+      data: 52717,
     },
     {
       color: '#FFB547',
       category: 'Instagram',
-      data: 62935
+      data: 62935,
     },
     {
       color: '#F06191',
       category: 'Facebook',
-      data: 90590
+      data: 90590,
     },
     {
       color: '#64B6F7',
       category: 'Google Ads Search',
-      data: 13219
-    }
-  ]
+      data: 13219,
+    },
+  ],
 };
 
 const FinanceIncrementalSales: FC = (props) => {
@@ -43,62 +43,62 @@ const FinanceIncrementalSales: FC = (props) => {
       background: 'transparent',
       stacked: false,
       toolbar: {
-        show: false
-      }
+        show: false,
+      },
     },
     colors: data.series.map((item) => item.color),
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
     grid: {
       borderColor: theme.palette.divider,
       yaxis: {
         lines: {
-          show: false
-        }
-      }
+          show: false,
+        },
+      },
     },
     legend: {
-      show: false
+      show: false,
     },
     plotOptions: {
       bar: {
         horizontal: true,
         barHeight: '45',
-        distributed: true
-      }
+        distributed: true,
+      },
     },
     theme: {
-      mode: theme.palette.mode
+      mode: theme.palette.mode,
     },
     tooltip: {
       y: {
-        formatter: (value: number): string => numeral(value).format('$0,0.00')
-      }
+        formatter: (value: number): string => numeral(value).format('$0,0.00'),
+      },
     },
     xaxis: {
       axisBorder: {
         color: theme.palette.divider,
-        show: true
+        show: true,
       },
       axisTicks: {
         color: theme.palette.divider,
-        show: true
+        show: true,
       },
-      categories: data.series.map((item) => item.category)
+      categories: data.series.map((item) => item.category),
     },
     yaxis: {
       labels: {
-        show: false
-      }
-    }
+        show: false,
+      },
+    },
   };
 
   const chartSeries = [
     {
       data: data.series.map((item) => item.data),
-      name: 'Sales'
-    }
+      name: 'Sales',
+    },
   ];
 
   return (
@@ -111,7 +111,7 @@ const FinanceIncrementalSales: FC = (props) => {
             sx={{
               alignItems: 'center',
               display: 'flex',
-              p: 1
+              p: 1,
             }}
           >
             <Box
@@ -119,24 +119,15 @@ const FinanceIncrementalSales: FC = (props) => {
                 backgroundColor: item.color,
                 borderRadius: '50%',
                 height: 8,
-                width: 8
+                width: 8,
               }}
             />
-            <Typography
-              color="textPrimary"
-              sx={{ ml: 2 }}
-              variant="subtitle2"
-            >
+            <Typography color="textPrimary" sx={{ ml: 2 }} variant="subtitle2">
               {item.category}
             </Typography>
           </Box>
         ))}
-        <Chart
-          height="350"
-          options={chartOptions}
-          series={chartSeries}
-          type="bar"
-        />
+        <Chart height="350" options={chartOptions} series={chartSeries} type="bar" />
       </CardContent>
     </Card>
   );

@@ -10,7 +10,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import SearchIcon from '../../../icons/Search';
 
@@ -24,20 +24,8 @@ interface ChatContactSearchProps {
   results: any[];
 }
 
-const ChatContactSearch = forwardRef<HTMLDivElement, ChatContactSearchProps>((
-  props,
-  ref
-) => {
-  const {
-    isFocused,
-    onChange,
-    onClickAway,
-    onFocus,
-    onSelect,
-    query,
-    results,
-    ...other
-  } = props;
+const ChatContactSearch = forwardRef<HTMLDivElement, ChatContactSearchProps>((props, ref) => {
+  const { isFocused, onChange, onClickAway, onFocus, onSelect, query, results, ...other } = props;
 
   const handleSelect = (result: any): void => {
     if (onSelect) {
@@ -49,11 +37,7 @@ const ChatContactSearch = forwardRef<HTMLDivElement, ChatContactSearchProps>((
 
   return (
     <ClickAwayListener onClickAway={onClickAway}>
-      <Box
-        ref={ref}
-        sx={{ px: 1 }}
-        {...other}
-      >
+      <Box ref={ref} sx={{ px: 1 }} {...other}>
         <Box
           sx={{
             alignItems: 'center',
@@ -61,17 +45,14 @@ const ChatContactSearch = forwardRef<HTMLDivElement, ChatContactSearchProps>((
             borderRadius: 22,
             display: 'flex',
             height: 44,
-            px: 2
+            px: 2,
           }}
         >
-          <SearchIcon
-            color="action"
-            fontSize="small"
-          />
+          <SearchIcon color="action" fontSize="small" />
           <Box
             sx={{
               flexGrow: 1,
-              ml: 2
+              ml: 2,
             }}
           >
             <Input
@@ -86,25 +67,18 @@ const ChatContactSearch = forwardRef<HTMLDivElement, ChatContactSearchProps>((
         </Box>
         {displayResults && (
           <Box sx={{ mt: 2 }}>
-            <Typography
-              color="textSecondary"
-              variant="subtitle2"
-            >
+            <Typography color="textSecondary" variant="subtitle2">
               Contacts
             </Typography>
             <List>
               {results.map((result) => (
-                <ListItem
-                  button
-                  key={result.id}
-                  onClick={(): void => handleSelect(result)}
-                >
+                <ListItem button key={result.id} onClick={(): void => handleSelect(result)}>
                   <ListItemAvatar>
                     <Avatar
                       src={result.avatar}
                       sx={{
                         height: 32,
-                        width: 32
+                        width: 32,
                       }}
                     />
                   </ListItemAvatar>
@@ -113,7 +87,7 @@ const ChatContactSearch = forwardRef<HTMLDivElement, ChatContactSearchProps>((
                     primaryTypographyProps={{
                       color: 'textPrimary',
                       noWrap: true,
-                      variant: 'subtitle2'
+                      variant: 'subtitle2',
                     }}
                   />
                 </ListItem>
@@ -133,13 +107,13 @@ ChatContactSearch.propTypes = {
   onFocus: PropTypes.func,
   onSelect: PropTypes.func,
   query: PropTypes.string,
-  results: PropTypes.array
+  results: PropTypes.array,
 };
 
 ChatContactSearch.defaultProps = {
   isFocused: false,
   query: '',
-  results: []
+  results: [],
 };
 
 export default ChatContactSearch;

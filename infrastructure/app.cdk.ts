@@ -6,8 +6,6 @@ import { config } from './shared';
 
 const app = new App();
 
-loadTags(config.get('paths.tagsOutputFile')!).forEach(([key, value]) =>
-  Tags.of(app).add(key, value),
-);
+loadTags(config.get('paths.tagsOutputFile')!).forEach(([key, value]) => Tags.of(app).add(key, value));
 
 new CoreStack(app, config.get('stackNames.core'), config.get('stackParameters'));

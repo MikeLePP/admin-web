@@ -1,14 +1,7 @@
 import { useState } from 'react';
 import type { FC } from 'react';
 import MobileDateTimePicker from '@material-ui/lab/MobileDateTimePicker';
-import {
-  Box,
-  Button,
-  Divider,
-  FormControlLabel,
-  Switch,
-  TextField
-} from '@material-ui/core';
+import { Box, Button, Divider, FormControlLabel, Switch, TextField } from '@material-ui/core';
 
 const Form6: FC = () => {
   const [startDate, setStartDate] = useState(new Date());
@@ -19,46 +12,22 @@ const Form6: FC = () => {
       sx={{
         backgroundColor: 'background.paper',
         minHeight: '100%',
-        p: 3
+        p: 3,
       }}
     >
       <form onSubmit={(event) => event.preventDefault()}>
-        <TextField
-          fullWidth
-          label="Title"
-          name="title"
-          variant="outlined"
-        />
+        <TextField fullWidth label="Title" name="title" variant="outlined" />
         <Box sx={{ mt: 2 }}>
-          <TextField
-            fullWidth
-            label="Description"
-            name="description"
-            variant="outlined"
-          />
+          <TextField fullWidth label="Description" name="description" variant="outlined" />
         </Box>
         <Box sx={{ mt: 2 }}>
-          <FormControlLabel
-            control={(
-              <Switch
-                color="primary"
-                name="allDay"
-              />
-            )}
-            label="All day"
-          />
+          <FormControlLabel control={<Switch color="primary" name="allDay" />} label="All day" />
         </Box>
         <Box sx={{ mt: 2 }}>
           <MobileDateTimePicker
             onChange={(newDate) => setStartDate(newDate)}
             label="Start date"
-            renderInput={(inputProps) => (
-              <TextField
-                fullWidth
-                variant="outlined"
-                {...inputProps}
-              />
-            )}
+            renderInput={(inputProps) => <TextField fullWidth variant="outlined" {...inputProps} />}
             value={startDate}
           />
         </Box>
@@ -66,13 +35,7 @@ const Form6: FC = () => {
           <MobileDateTimePicker
             onChange={(newDate) => setEndDate(newDate)}
             label="End date"
-            renderInput={(inputProps) => (
-              <TextField
-                fullWidth
-                variant="outlined"
-                {...inputProps}
-              />
-            )}
+            renderInput={(inputProps) => <TextField fullWidth variant="outlined" {...inputProps} />}
             value={endDate}
           />
         </Box>
@@ -80,22 +43,14 @@ const Form6: FC = () => {
         <Box
           sx={{
             alignItems: 'center',
-            display: 'flex'
+            display: 'flex',
           }}
         >
           <Box sx={{ flexGrow: 1 }} />
-          <Button
-            color="primary"
-            variant="text"
-          >
+          <Button color="primary" variant="text">
             Cancel
           </Button>
-          <Button
-            color="primary"
-            sx={{ ml: 1 }}
-            type="submit"
-            variant="contained"
-          >
+          <Button color="primary" sx={{ ml: 1 }} type="submit" variant="contained">
             Confirm
           </Button>
         </Box>

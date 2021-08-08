@@ -52,7 +52,7 @@ const countries = [
   { text: 'Congo, The Democratic Republic of the', value: 'CD' },
   { text: 'Cook Islands', value: 'CK' },
   { text: 'Costa Rica', value: 'CR' },
-  { text: 'Cote D\'Ivoire', value: 'CI' },
+  { text: "Cote D'Ivoire", value: 'CI' },
   { text: 'Croatia', value: 'HR' },
   { text: 'Cuba', value: 'CU' },
   { text: 'Cyprus', value: 'CY' },
@@ -114,11 +114,11 @@ const countries = [
   { text: 'Kazakhstan', value: 'KZ' },
   { text: 'Kenya', value: 'KE' },
   { text: 'Kiribati', value: 'KI' },
-  { text: 'Korea, Democratic People\'S Republic of', value: 'KP' },
+  { text: "Korea, Democratic People'S Republic of", value: 'KP' },
   { text: 'Korea, Republic of', value: 'KR' },
   { text: 'Kuwait', value: 'KW' },
   { text: 'Kyrgyzstan', value: 'KG' },
-  { text: 'Lao People\'S Democratic Republic', value: 'LA' },
+  { text: "Lao People'S Democratic Republic", value: 'LA' },
   { text: 'Latvia', value: 'LV' },
   { text: 'Lebanon', value: 'LB' },
   { text: 'Lesotho', value: 'LS' },
@@ -241,7 +241,7 @@ const countries = [
   { text: 'Western Sahara', value: 'EH' },
   { text: 'Yemen', value: 'YE' },
   { text: 'Zambia', value: 'ZM' },
-  { text: 'Zimbabwe', value: 'ZW' }
+  { text: 'Zimbabwe', value: 'ZW' },
 ];
 
 export default countries;

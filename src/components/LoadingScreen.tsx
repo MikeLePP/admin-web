@@ -16,7 +16,7 @@ const LoadingScreen: FC = () => {
     <Box
       sx={{
         backgroundColor: 'background.paper',
-        minHeight: '100%'
+        minHeight: '100%',
       }}
     />
   );

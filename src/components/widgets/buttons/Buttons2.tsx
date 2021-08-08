@@ -7,7 +7,7 @@ const IconButtonsPreview: FC = () => (
   <Box
     sx={{
       backgroundColor: 'background.paper',
-      p: 3
+      p: 3,
     }}
   >
     <Button
@@ -15,8 +15,8 @@ const IconButtonsPreview: FC = () => (
         backgroundColor: 'error.main',
         mr: 3,
         '&:hover': {
-          backgroundColor: 'error.dark'
-        }
+          backgroundColor: 'error.dark',
+        },
       }}
       size="small"
       startIcon={<TrashIcon />}
@@ -24,12 +24,7 @@ const IconButtonsPreview: FC = () => (
     >
       Delete Account
     </Button>
-    <Button
-      color="primary"
-      endIcon={<ArrowRightIcon />}
-      size="small"
-      variant="contained"
-    >
+    <Button color="primary" endIcon={<ArrowRightIcon />} size="small" variant="contained">
       Next Page
     </Button>
   </Box>

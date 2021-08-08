@@ -16,22 +16,9 @@ const ProjectOverview: FC<OverviewProps> = (props) => {
   const { project, ...other } = props;
 
   return (
-    <Grid
-      container
-      spacing={3}
-      {...other}
-    >
-      <Grid
-        item
-        lg={8}
-        xl={9}
-        xs={12}
-      >
-        <ProjectBrief
-          description={project.description}
-          tags={project.tags}
-          title={project.title}
-        />
+    <Grid container spacing={3} {...other}>
+      <Grid item lg={8} xl={9} xs={12}>
+        <ProjectBrief description={project.description} tags={project.tags} title={project.title} />
         <Box sx={{ mt: 3 }}>
           <Card>
             <CardContent>
@@ -44,7 +31,7 @@ const ProjectOverview: FC<OverviewProps> = (props) => {
               flexWrap: 'wrap',
               mb: -1,
               mt: 2,
-              mx: -1
+              mx: -1,
             }}
           >
             {project.files.map((file) => (
@@ -52,26 +39,16 @@ const ProjectOverview: FC<OverviewProps> = (props) => {
                 key={file.url}
                 sx={{
                   m: 1,
-                  width: 240
+                  width: 240,
                 }}
               >
-                <ProjectFileCard
-                  mimeType={file.mimeType}
-                  name={file.name}
-                  size={file.size}
-                  url={file.url}
-                />
+                <ProjectFileCard mimeType={file.mimeType} name={file.name} size={file.size} url={file.url} />
               </Box>
             ))}
           </Box>
         </Box>
       </Grid>
-      <Grid
-        item
-        lg={4}
-        xl={3}
-        xs={12}
-      >
+      <Grid item lg={4} xl={3} xs={12}>
         <ProjectMetadata
           authorAvatar={project.author.avatar}
           authorName={project.author.name}
@@ -89,8 +66,7 @@ const ProjectOverview: FC<OverviewProps> = (props) => {
 };
 
 ProjectOverview.propTypes = {
-  // @ts-ignore
-  project: PropTypes.object.isRequired
+  project: PropTypes.any.isRequired,
 };
 
 export default ProjectOverview;

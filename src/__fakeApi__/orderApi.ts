@@ -12,12 +12,12 @@ class OrderApi {
         currency: '$',
         customer: {
           email: 'carson.darrin@devias.io',
-          name: 'Carson Darrin'
+          name: 'Carson Darrin',
         },
         number: 'DEV-102',
         paymentMethod: 'CreditCard',
         status: 'pending',
-        totalAmount: 500.00
+        totalAmount: 500.0,
       },
       {
         id: '5ecb8a738aa6f3e577c2b3ec',
@@ -25,12 +25,12 @@ class OrderApi {
         currency: '$',
         customer: {
           email: 'fran.perez@devias.io',
-          name: 'Fran Perez'
+          name: 'Fran Perez',
         },
         number: 'DEV-101',
         paymentMethod: 'PayPal',
         status: 'completed',
-        totalAmount: 500.00
+        totalAmount: 500.0,
       },
       {
         id: '5ecb8a795e53f134013eba3b',
@@ -38,12 +38,12 @@ class OrderApi {
         currency: '$',
         customer: {
           email: 'jie.yan.song@devias.io',
-          name: 'Jie Yan Song'
+          name: 'Jie Yan Song',
         },
         number: 'DEV-100',
         paymentMethod: 'CreditCard',
         status: 'pending',
-        totalAmount: 500.00
+        totalAmount: 500.0,
       },
       {
         id: '5ecb8a7f738cc572a9ce0277',
@@ -51,12 +51,12 @@ class OrderApi {
         currency: '$',
         customer: {
           email: 'clarke.gillebert@devias.io',
-          name: 'Clarke Gillebert'
+          name: 'Clarke Gillebert',
         },
         number: 'DEV-99',
         paymentMethod: 'PayPal',
         status: 'completed',
-        totalAmount: 500.00
+        totalAmount: 500.0,
       },
       {
         id: '5e86805e2bafd54f66cc95c3',
@@ -64,12 +64,12 @@ class OrderApi {
         currency: '$',
         customer: {
           email: 'miron.vitold@devias.io',
-          name: 'Miron Vitold'
+          name: 'Miron Vitold',
         },
         number: 'DEV-98',
         paymentMethod: 'PayPal',
         status: 'completed',
-        totalAmount: 500.00
+        totalAmount: 500.0,
       },
       {
         id: '5ecb8a85a850c16fa413849c',
@@ -77,12 +77,12 @@ class OrderApi {
         currency: '$',
         customer: {
           name: 'Penjani Inyene',
-          email: 'penjani.inyene@devias.io'
+          email: 'penjani.inyene@devias.io',
         },
         status: 'pending',
         number: 'DEV-97',
         paymentMethod: 'CreditCard',
-        totalAmount: 500.00
+        totalAmount: 500.0,
       },
       {
         id: '5ecb8a8e69ba2e409ea0168f',
@@ -90,12 +90,12 @@ class OrderApi {
         currency: '$',
         customer: {
           email: 'omar.darobe@devias.io',
-          name: 'Omar Darobe'
+          name: 'Omar Darobe',
         },
         number: 'DEV-96',
         paymentMethod: 'CreditCard',
         status: 'completed',
-        totalAmount: 500.00
+        totalAmount: 500.0,
       },
       {
         id: '5ecb8a9341c68839d387e1c4',
@@ -103,12 +103,12 @@ class OrderApi {
         currency: '$',
         customer: {
           email: 'siegbert.gottfried@devias.io',
-          name: 'Siegbert Gottfried'
+          name: 'Siegbert Gottfried',
         },
         number: 'DEV-95',
         paymentMethod: 'PayPal',
         status: 'rejected',
-        totalAmount: 500.00
+        totalAmount: 500.0,
       },
       {
         id: '5ecb8a984bfbb97c9ae458e8',
@@ -116,12 +116,12 @@ class OrderApi {
         currency: '$',
         customer: {
           email: 'iulia.albu@devias.io',
-          name: 'Iulia Albu'
+          name: 'Iulia Albu',
         },
         number: 'DEV-94',
         paymentMethod: 'CreditCard',
         status: 'canceled',
-        totalAmount: 500.00
+        totalAmount: 500.0,
       },
       {
         id: '5ecb8aa08d9127dba654ce7a',
@@ -129,13 +129,13 @@ class OrderApi {
         currency: '$',
         customer: {
           email: 'nasimiyu.danai@devias.io',
-          name: 'Nasimiyu Danai'
+          name: 'Nasimiyu Danai',
         },
         number: 'DEV-93',
         paymentMethod: 'PayPal',
         status: 'canceled',
-        totalAmount: 500.00
-      }
+        totalAmount: 500.0,
+      },
     ];
 
     return Promise.resolve(orders);
@@ -153,7 +153,7 @@ class OrderApi {
         city: 'San Diego',
         country: 'USA',
         email: 'miron.vitold@devias.io',
-        name: 'Miron Vitold'
+        name: 'Miron Vitold',
       },
       items: [
         {
@@ -162,7 +162,7 @@ class OrderApi {
           currency: '$',
           name: 'Project Points',
           quantity: 25,
-          unitAmount: 50.25
+          unitAmount: 50.25,
         },
         {
           id: '5ecb8ac10f116d04bed990eb',
@@ -170,13 +170,13 @@ class OrderApi {
           currency: '$',
           name: 'Freelancer Subscription',
           quantity: 1,
-          unitAmount: 5.00
-        }
+          unitAmount: 5.0,
+        },
       ],
       number: 'DEV-103',
       paymentMethod: 'CreditCard',
       status: 'pending',
-      totalAmount: 500.00
+      totalAmount: 500.0,
     };
 
     return Promise.resolve(order);

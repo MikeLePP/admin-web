@@ -9,36 +9,28 @@ interface DashboardLayoutProps {
   children?: ReactNode;
 }
 
-const DashboardLayoutRoot = experimentalStyled('div')(
-  ({ theme }) => (
-    {
-      backgroundColor: theme.palette.background.default,
-      display: 'flex',
-      height: '100%',
-      overflow: 'hidden',
-      width: '100%'
-    }
-  )
-);
+const DashboardLayoutRoot = experimentalStyled('div')(({ theme }) => ({
+  backgroundColor: theme.palette.background.default,
+  display: 'flex',
+  height: '100%',
+  overflow: 'hidden',
+  width: '100%',
+}));
 
-const DashboardLayoutWrapper = experimentalStyled('div')(
-  ({ theme }) => (
-    {
-      display: 'flex',
-      flex: '1 1 auto',
-      overflow: 'hidden',
-      paddingTop: '64px',
-      [theme.breakpoints.up('lg')]: {
-        paddingLeft: '280px'
-      }
-    }
-  )
-);
+const DashboardLayoutWrapper = experimentalStyled('div')(({ theme }) => ({
+  display: 'flex',
+  flex: '1 1 auto',
+  overflow: 'hidden',
+  paddingTop: '64px',
+  [theme.breakpoints.up('lg')]: {
+    paddingLeft: '280px',
+  },
+}));
 
 const DashboardLayoutContainer = experimentalStyled('div')({
   display: 'flex',
   flex: '1 1 auto',
-  overflow: 'hidden'
+  overflow: 'hidden',
 });
 
 const DashboardLayoutContent = experimentalStyled('div')({
@@ -46,7 +38,7 @@ const DashboardLayoutContent = experimentalStyled('div')({
   height: '100%',
   overflow: 'auto',
   position: 'relative',
-  WebkitOverflowScrolling: 'touch'
+  WebkitOverflowScrolling: 'touch',
 });
 
 const DashboardLayout: FC<DashboardLayoutProps> = () => {
@@ -54,13 +46,8 @@ const DashboardLayout: FC<DashboardLayoutProps> = () => {
 
   return (
     <DashboardLayoutRoot>
-      <DashboardNavbar
-        onSidebarMobileOpen={(): void => setIsSidebarMobileOpen(true)}
-      />
-      <DashboardSidebar
-        onMobileClose={(): void => setIsSidebarMobileOpen(false)}
-        openMobile={isSidebarMobileOpen}
-      />
+      <DashboardNavbar onSidebarMobileOpen={(): void => setIsSidebarMobileOpen(true)} />
+      <DashboardSidebar onMobileClose={(): void => setIsSidebarMobileOpen(false)} openMobile={isSidebarMobileOpen} />
       <DashboardLayoutWrapper>
         <DashboardLayoutContainer>
           <DashboardLayoutContent>

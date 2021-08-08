@@ -19,7 +19,7 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-  TextField
+  TextField,
 } from '@material-ui/core';
 import ArrowRightIcon from '../../../icons/ArrowRight';
 import ImageIcon from '../../../icons/Image';
@@ -43,91 +43,83 @@ interface Filters {
 const categoryOptions = [
   {
     label: 'All',
-    value: 'all'
+    value: 'all',
   },
   {
     label: 'Dress',
-    value: 'dress'
+    value: 'dress',
   },
   {
     label: 'Jewelry',
-    value: 'jewelry'
+    value: 'jewelry',
   },
   {
     label: 'Blouse',
-    value: 'blouse'
+    value: 'blouse',
   },
   {
     label: 'Beauty',
-    value: 'beauty'
-  }
+    value: 'beauty',
+  },
 ];
 
 const availabilityOptions = [
   {
     label: 'All',
-    value: 'all'
+    value: 'all',
   },
   {
     label: 'Available',
-    value: 'available'
+    value: 'available',
   },
   {
     label: 'Unavailable',
-    value: 'unavailable'
-  }
+    value: 'unavailable',
+  },
 ];
 
 const sortOptions = [
   {
     label: 'Last update (newest first)',
-    value: 'updatedAt|desc'
+    value: 'updatedAt|desc',
   },
   {
     label: 'Last update (oldest first)',
-    value: 'updatedAt|asc'
+    value: 'updatedAt|asc',
   },
   {
     label: 'Creation date (newest first)',
-    value: 'createdAt|desc'
+    value: 'createdAt|desc',
   },
   {
     label: 'Creation date (oldest first)',
-    value: 'createdAt|asc'
-  }
+    value: 'createdAt|asc',
+  },
 ];
 
 const getInventoryLabel = (inventoryType: InventoryType): JSX.Element => {
   const map = {
     in_stock: {
       text: 'In Stock',
-      color: 'success'
+      color: 'success',
     },
     limited: {
       text: 'Limited',
-      color: 'warning'
+      color: 'warning',
     },
     out_of_stock: {
       text: 'Out of Stock',
-      color: 'error'
-    }
+      color: 'error',
+    },
   };
 
   const { text, color }: any = map[inventoryType];
 
-  return (
-    <Label color={color}>
-      {text}
-    </Label>
-  );
+  return <Label color={color}>{text}</Label>;
 };
 
-const applyFilters = (
-  products: Product[],
-  query: string,
-  filters: Filters
-): Product[] => products
-  .filter((product) => {
+const applyFilters = (products: Product[], query: string, filters: Filters): Product[] =>
+  products.filter((product) => {
     let matches = true;
 
     if (query && !product.name.toLowerCase().includes(query.toLowerCase())) {
@@ -148,10 +140,7 @@ const applyFilters = (
       }
     }
 
-    if (filters.inStock && ![
-      'in_stock',
-      'limited'
-    ].includes(product.inventoryType)) {
+    if (filters.inStock && !['in_stock', 'limited'].includes(product.inventoryType)) {
       matches = false;
     }
 
@@ -162,12 +151,8 @@ const applyFilters = (
     return matches;
   });
 
-const applyPagination = (
-  products: Product[],
-  page: number,
-  limit: number
-): Product[] => products
-  .slice(page * limit, page * limit + limit);
+const applyPagination = (products: Product[], page: number, limit: number): Product[] =>
+  products.slice(page * limit, page * limit + limit);
 
 const ProductListTable: FC<ProductListTableProps> = (props) => {
   const { products, ...other } = props;
@@ -180,7 +165,7 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
     category: null,
     availability: null,
     inStock: null,
-    isShippable: null
+    isShippable: null,
   });
 
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -194,12 +179,10 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
       value = event.target.value;
     }
 
-    setFilters((prevFilters) => (
-      {
-        ...prevFilters,
-        category: value
-      }
-    ));
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      category: value,
+    }));
   };
 
   const handleAvailabilityChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -209,12 +192,10 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
       value = event.target.value;
     }
 
-    setFilters((prevFilters) => (
-      {
-        ...prevFilters,
-        availability: value
-      }
-    ));
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      availability: value,
+    }));
   };
 
   const handleStockChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -224,12 +205,10 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
       value = true;
     }
 
-    setFilters((prevFilters) => (
-      {
-        ...prevFilters,
-        inStock: value
-      }
-    ));
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      inStock: value,
+    }));
   };
 
   const handleShippableChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -239,12 +218,10 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
       value = true;
     }
 
-    setFilters((prevFilters) => (
-      {
-        ...prevFilters,
-        isShippable: value
-      }
-    ));
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      isShippable: value,
+    }));
   };
 
   const handleSortChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -252,15 +229,10 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
   };
 
   const handleSelectAllProducts = (event: ChangeEvent<HTMLInputElement>): void => {
-    setSelectedProducts(event.target.checked
-      ? products.map((product) => product.id)
-      : []);
+    setSelectedProducts(event.target.checked ? products.map((product) => product.id) : []);
   };
 
-  const handleSelectOneProduct = (
-    event: ChangeEvent<HTMLInputElement>,
-    productId: string
-  ): void => {
+  const handleSelectOneProduct = (event: ChangeEvent<HTMLInputElement>, productId: string): void => {
     if (!selectedProducts.includes(productId)) {
       setSelectedProducts((prevSelected) => [...prevSelected, productId]);
     } else {
@@ -280,8 +252,7 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
   const filteredProducts = applyFilters(products, query, filters);
   const paginatedProducts = applyPagination(filteredProducts, page, limit);
   const enableBulkActions = selectedProducts.length > 0;
-  const selectedSomeProducts = selectedProducts.length > 0
-    && selectedProducts.length < products.length;
+  const selectedSomeProducts = selectedProducts.length > 0 && selectedProducts.length < products.length;
   const selectedAllProducts = selectedProducts.length === products.length;
 
   return (
@@ -292,14 +263,14 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
           display: 'flex',
           flexWrap: 'wrap',
           m: -1,
-          p: 2
+          p: 2,
         }}
       >
         <Box
           sx={{
             m: 1,
             maxWidth: '100%',
-            width: 500
+            width: 500,
           }}
         >
           <TextField
@@ -309,7 +280,7 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
                 <InputAdornment position="start">
                   <SearchIcon fontSize="small" />
                 </InputAdornment>
-              )
+              ),
             }}
             onChange={handleQueryChange}
             placeholder="Search products"
@@ -321,7 +292,7 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
           sx={{
             m: 1,
             maxWidth: '100%',
-            width: 240
+            width: 240,
           }}
         >
           <TextField
@@ -334,10 +305,7 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
             variant="outlined"
           >
             {sortOptions.map((option) => (
-              <option
-                key={option.value}
-                value={option.value}
-              >
+              <option key={option.value} value={option.value}>
                 {option.label}
               </option>
             ))}
@@ -347,7 +315,7 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
           sx={{
             m: 1,
             maxWidth: '100%',
-            width: 240
+            width: 240,
           }}
         >
           <TextField
@@ -361,10 +329,7 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
             variant="outlined"
           >
             {categoryOptions.map((categoryOption) => (
-              <option
-                key={categoryOption.value}
-                value={categoryOption.value}
-              >
+              <option key={categoryOption.value} value={categoryOption.value}>
                 {categoryOption.label}
               </option>
             ))}
@@ -374,7 +339,7 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
           sx={{
             m: 1,
             maxWidth: '100%',
-            width: 240
+            width: 240,
           }}
         >
           <TextField
@@ -388,10 +353,7 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
             variant="outlined"
           >
             {availabilityOptions.map((availabilityOption) => (
-              <option
-                key={availabilityOption.value}
-                value={availabilityOption.value}
-              >
+              <option key={availabilityOption.value} value={availabilityOption.value}>
                 {availabilityOption.label}
               </option>
             ))}
@@ -399,27 +361,20 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
         </Box>
         <Box sx={{ m: 2 }}>
           <FormControlLabel
-            control={(
-              <Switch
-                checked={!!filters.inStock}
-                color="primary"
-                name="inStock"
-                onChange={handleStockChange}
-              />
-            )}
+            control={<Switch checked={!!filters.inStock} color="primary" name="inStock" onChange={handleStockChange} />}
             label="In Stock"
           />
         </Box>
         <Box sx={{ m: 2 }}>
           <FormControlLabel
-            control={(
+            control={
               <Switch
                 checked={!!filters.isShippable}
                 color="primary"
                 name="Shippable"
                 onChange={handleShippableChange}
               />
-            )}
+            }
             label="Shippable"
           />
         </Box>
@@ -434,7 +389,7 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
               position: 'absolute',
               pr: '4px',
               width: '100%',
-              zIndex: 2
+              zIndex: 2,
             }}
           >
             <Checkbox
@@ -443,18 +398,10 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
               indeterminate={selectedSomeProducts}
               onChange={handleSelectAllProducts}
             />
-            <Button
-              color="primary"
-              sx={{ ml: 2 }}
-              variant="outlined"
-            >
+            <Button color="primary" sx={{ ml: 2 }} variant="outlined">
               Delete
             </Button>
-            <Button
-              color="primary"
-              sx={{ ml: 2 }}
-              variant="outlined"
-            >
+            <Button color="primary" sx={{ ml: 2 }} variant="outlined">
               Edit
             </Button>
           </Box>
@@ -473,24 +420,12 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
                     onChange={handleSelectAllProducts}
                   />
                 </TableCell>
-                <TableCell>
-                  Name
-                </TableCell>
-                <TableCell>
-                  Inventory
-                </TableCell>
-                <TableCell>
-                  Details
-                </TableCell>
-                <TableCell>
-                  Attributes
-                </TableCell>
-                <TableCell>
-                  Price
-                </TableCell>
-                <TableCell align="right">
-                  Actions
-                </TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Inventory</TableCell>
+                <TableCell>Details</TableCell>
+                <TableCell>Attributes</TableCell>
+                <TableCell>Price</TableCell>
+                <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -498,19 +433,12 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
                 const isProductSelected = selectedProducts.includes(product.id);
 
                 return (
-                  <TableRow
-                    hover
-                    key={product.id}
-                    selected={isProductSelected}
-                  >
+                  <TableRow hover key={product.id} selected={isProductSelected}>
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={isProductSelected}
                         color="primary"
-                        onChange={(event): void => handleSelectOneProduct(
-                          event,
-                          product.id
-                        )}
+                        onChange={(event): void => handleSelectOneProduct(event, product.id)}
                         value={isProductSelected}
                       />
                     </TableCell>
@@ -518,48 +446,41 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
                       <Box
                         sx={{
                           alignItems: 'center',
-                          display: 'flex'
+                          display: 'flex',
                         }}
                       >
-                        {
-                          product.image
-                            ? (
-                              <Box
-                                sx={{
-                                  alignItems: 'center',
-                                  backgroundColor: 'background.default',
-                                  display: 'flex',
-                                  height: 100,
-                                  justifyContent: 'center',
-                                  overflow: 'hidden',
-                                  width: 100,
-                                  '& img': {
-                                    height: 'auto',
-                                    width: '100%'
-                                  }
-                                }}
-                              >
-                                <img
-                                  alt="Product"
-                                  src={product.image}
-                                />
-                              </Box>
-                            )
-                            : (
-                              <Box
-                                sx={{
-                                  alignItems: 'center',
-                                  backgroundColor: 'background.default',
-                                  display: 'flex',
-                                  height: 100,
-                                  justifyContent: 'center',
-                                  width: 100
-                                }}
-                              >
-                                <ImageIcon fontSize="small" />
-                              </Box>
-                            )
-                        }
+                        {product.image ? (
+                          <Box
+                            sx={{
+                              alignItems: 'center',
+                              backgroundColor: 'background.default',
+                              display: 'flex',
+                              height: 100,
+                              justifyContent: 'center',
+                              overflow: 'hidden',
+                              width: 100,
+                              '& img': {
+                                height: 'auto',
+                                width: '100%',
+                              },
+                            }}
+                          >
+                            <img alt="Product" src={product.image} />
+                          </Box>
+                        ) : (
+                          <Box
+                            sx={{
+                              alignItems: 'center',
+                              backgroundColor: 'background.default',
+                              display: 'flex',
+                              height: 100,
+                              justifyContent: 'center',
+                              width: 100,
+                            }}
+                          >
+                            <ImageIcon fontSize="small" />
+                          </Box>
+                        )}
                         <Link
                           color="textPrimary"
                           component={RouterLink}
@@ -572,22 +493,13 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
                         </Link>
                       </Box>
                     </TableCell>
+                    <TableCell>{getInventoryLabel(product.inventoryType)}</TableCell>
                     <TableCell>
-                      {getInventoryLabel(product.inventoryType)}
-                    </TableCell>
-                    <TableCell>
-                      {product.quantity}
-                      {' '}
-                      in stock
+                      {product.quantity} in stock
                       {product.variants > 1 && ` in ${product.variants} variants`}
                     </TableCell>
-                    <TableCell>
-                      {product.attributes.map((attr) => attr)}
-                    </TableCell>
-                    <TableCell>
-                      {numeral(product.price)
-                        .format(`${product.currency}0,0.00`)}
-                    </TableCell>
+                    <TableCell>{product.attributes.map((attr) => attr)}</TableCell>
+                    <TableCell>{numeral(product.price).format(`${product.currency}0,0.00`)}</TableCell>
                     <TableCell align="right">
                       <IconButton>
                         <PencilAltIcon fontSize="small" />
@@ -617,7 +529,7 @@ const ProductListTable: FC<ProductListTableProps> = (props) => {
 };
 
 ProductListTable.propTypes = {
-  products: PropTypes.array.isRequired
+  products: PropTypes.array.isRequired,
 };
 
 export default ProductListTable;

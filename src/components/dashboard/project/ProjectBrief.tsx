@@ -10,75 +10,42 @@ interface ProjectBriefProps {
   title: string;
 }
 
-const MarkdownWrapper = experimentalStyled('div')(
-  ({ theme }) => (
-    {
-      color: theme.palette.text.primary,
-      fontFamily: theme.typography.fontFamily,
-      '& p': {
-        marginBottom: theme.spacing(2)
-      }
-    }
-  )
-);
+const MarkdownWrapper = experimentalStyled('div')(({ theme }) => ({
+  color: theme.palette.text.primary,
+  fontFamily: theme.typography.fontFamily,
+  '& p': {
+    marginBottom: theme.spacing(2),
+  },
+}));
 
 const ProjectBrief: FC<ProjectBriefProps> = (props) => {
-  const {
-    description,
-    tags,
-    title,
-    ...other
-  } = props;
+  const { description, tags, title, ...other } = props;
 
   return (
     <Card {...other}>
       <CardContent>
-        <Grid
-          container
-          spacing={3}
-        >
-          <Grid
-            item
-            md={6}
-            xs={12}
-          >
-            <Typography
-              color="textSecondary"
-              variant="overline"
-            >
+        <Grid container spacing={3}>
+          <Grid item md={6} xs={12}>
+            <Typography color="textSecondary" variant="overline">
               Project Name
             </Typography>
-            <Typography
-              color="textPrimary"
-              variant="subtitle2"
-            >
+            <Typography color="textPrimary" variant="subtitle2">
               {title}
             </Typography>
             <Box sx={{ mt: 3 }}>
-              <Typography
-                color="textSecondary"
-                variant="overline"
-              >
+              <Typography color="textSecondary" variant="overline">
                 Tags
               </Typography>
               <Box sx={{ mt: 1 }}>
                 {tags.map((tag) => (
-                  <Chip
-                    key={tag}
-                    label={tag}
-                    variant="outlined"
-                  />
+                  <Chip key={tag} label={tag} variant="outlined" />
                 ))}
               </Box>
             </Box>
           </Grid>
         </Grid>
         <Box sx={{ mt: 3 }}>
-          <Typography
-            color="textSecondary"
-            sx={{ mb: 2 }}
-            variant="overline"
-          >
+          <Typography color="textSecondary" sx={{ mb: 2 }} variant="overline">
             Description
           </Typography>
           <MarkdownWrapper>
@@ -93,7 +60,7 @@ const ProjectBrief: FC<ProjectBriefProps> = (props) => {
 ProjectBrief.propTypes = {
   description: PropTypes.string.isRequired,
   tags: PropTypes.arrayOf(PropTypes.string).isRequired,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
 };
 
 export default ProjectBrief;

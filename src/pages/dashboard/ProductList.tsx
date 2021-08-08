@@ -36,7 +36,7 @@ const ProductList: FC = () => {
   }, [mounted]);
 
   useEffect(() => {
-    getProducts();
+    void getProducts();
   }, [getProducts]);
 
   return (
@@ -48,47 +48,23 @@ const ProductList: FC = () => {
         sx={{
           backgroundColor: 'background.default',
           minHeight: '100%',
-          py: 8
+          py: 8,
         }}
       >
         <Container maxWidth={settings.compact ? 'xl' : false}>
-          <Grid
-            container
-            justifyContent="space-between"
-            spacing={3}
-          >
+          <Grid container justifyContent="space-between" spacing={3}>
             <Grid item>
-              <Typography
-                color="textPrimary"
-                variant="h5"
-              >
+              <Typography color="textPrimary" variant="h5">
                 Product List
               </Typography>
-              <Breadcrumbs
-                aria-label="breadcrumb"
-                separator={<ChevronRightIcon fontSize="small" />}
-                sx={{ mt: 1 }}
-              >
-                <Link
-                  color="textPrimary"
-                  component={RouterLink}
-                  to="/dashboard"
-                  variant="subtitle2"
-                >
+              <Breadcrumbs aria-label="breadcrumb" separator={<ChevronRightIcon fontSize="small" />} sx={{ mt: 1 }}>
+                <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
                   Dashboard
                 </Link>
-                <Link
-                  color="textPrimary"
-                  component={RouterLink}
-                  to="/dashboard"
-                  variant="subtitle2"
-                >
+                <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
                   Management
                 </Link>
-                <Typography
-                  color="textSecondary"
-                  variant="subtitle2"
-                >
+                <Typography color="textSecondary" variant="subtitle2">
                   Products
                 </Typography>
               </Breadcrumbs>
@@ -96,23 +72,13 @@ const ProductList: FC = () => {
                 sx={{
                   mb: -1,
                   mx: -1,
-                  mt: 1
+                  mt: 1,
                 }}
               >
-                <Button
-                  color="primary"
-                  startIcon={<UploadIcon fontSize="small" />}
-                  sx={{ m: 1 }}
-                  variant="text"
-                >
+                <Button color="primary" startIcon={<UploadIcon fontSize="small" />} sx={{ m: 1 }} variant="text">
                   Import
                 </Button>
-                <Button
-                  color="primary"
-                  startIcon={<DownloadIcon fontSize="small" />}
-                  sx={{ m: 1 }}
-                  variant="text"
-                >
+                <Button color="primary" startIcon={<DownloadIcon fontSize="small" />} sx={{ m: 1 }} variant="text">
                   Export
                 </Button>
               </Box>

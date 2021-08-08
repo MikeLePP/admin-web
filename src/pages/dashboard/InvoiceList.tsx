@@ -2,15 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import type { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import {
-  Box,
-  Breadcrumbs,
-  Button,
-  Container,
-  Grid,
-  Link,
-  Typography
-} from '@material-ui/core';
+import { Box, Breadcrumbs, Button, Container, Grid, Link, Typography } from '@material-ui/core';
 import { invoiceApi } from '../../__fakeApi__/invoiceApi';
 import { InvoiceListTable } from '../../components/dashboard/invoice';
 import useMounted from '../../hooks/useMounted';
@@ -44,7 +36,7 @@ const InvoiceList: FC = () => {
   }, [mounted]);
 
   useEffect(() => {
-    getInvoices();
+    void getInvoices();
   }, [getInvoices]);
 
   return (
@@ -56,47 +48,23 @@ const InvoiceList: FC = () => {
         sx={{
           backgroundColor: 'background.default',
           minHeight: '100%',
-          py: 8
+          py: 8,
         }}
       >
         <Container maxWidth={settings.compact ? 'xl' : false}>
-          <Grid
-            container
-            justifyContent="space-between"
-            spacing={3}
-          >
+          <Grid container justifyContent="space-between" spacing={3}>
             <Grid item>
-              <Typography
-                color="textPrimary"
-                variant="h5"
-              >
+              <Typography color="textPrimary" variant="h5">
                 Invoice List
               </Typography>
-              <Breadcrumbs
-                aria-label="breadcrumb"
-                separator={<ChevronRightIcon fontSize="small" />}
-                sx={{ mt: 1 }}
-              >
-                <Link
-                  color="textPrimary"
-                  component={RouterLink}
-                  to="/dashboard"
-                  variant="subtitle2"
-                >
+              <Breadcrumbs aria-label="breadcrumb" separator={<ChevronRightIcon fontSize="small" />} sx={{ mt: 1 }}>
+                <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
                   Dashboard
                 </Link>
-                <Link
-                  color="textPrimary"
-                  component={RouterLink}
-                  to="/dashboard"
-                  variant="subtitle2"
-                >
+                <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
                   Management
                 </Link>
-                <Typography
-                  color="textSecondary"
-                  variant="subtitle2"
-                >
+                <Typography color="textSecondary" variant="subtitle2">
                   Invoices
                 </Typography>
               </Breadcrumbs>
@@ -104,35 +72,20 @@ const InvoiceList: FC = () => {
                 sx={{
                   mb: -1,
                   mx: -1,
-                  mt: 1
+                  mt: 1,
                 }}
               >
-                <Button
-                  color="primary"
-                  startIcon={<UploadIcon fontSize="small" />}
-                  sx={{ m: 1 }}
-                  variant="text"
-                >
+                <Button color="primary" startIcon={<UploadIcon fontSize="small" />} sx={{ m: 1 }} variant="text">
                   Import
                 </Button>
-                <Button
-                  color="primary"
-                  startIcon={<DownloadIcon fontSize="small" />}
-                  sx={{ m: 1 }}
-                  variant="text"
-                >
+                <Button color="primary" startIcon={<DownloadIcon fontSize="small" />} sx={{ m: 1 }} variant="text">
                   Export
                 </Button>
               </Box>
             </Grid>
             <Grid item>
               <Box sx={{ m: -1 }}>
-                <Button
-                  color="primary"
-                  startIcon={<PlusIcon fontSize="small" />}
-                  sx={{ m: 1 }}
-                  variant="contained"
-                >
+                <Button color="primary" startIcon={<PlusIcon fontSize="small" />} sx={{ m: 1 }} variant="contained">
                   New Invoice
                 </Button>
               </Box>

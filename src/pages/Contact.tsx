@@ -23,33 +23,30 @@ const Contact: FC = () => {
           display: 'grid',
           gridTemplateColumns: {
             lg: 'repeat(2, 1fr)',
-            xs: 'repeat(1, 1fr)'
+            xs: 'repeat(1, 1fr)',
           },
-          minHeight: '100%'
+          minHeight: '100%',
         }}
       >
         <Box
           sx={{
             backgroundColor: 'background.default',
-            pt: 8
+            pt: 8,
           }}
         >
           <Container
             maxWidth="md"
             sx={{
               pl: {
-                lg: 15
-              }
+                lg: 15,
+              },
             }}
           >
-            <Link
-              component={BrowserLink}
-              to="/"
-            >
+            <Link component={BrowserLink} to="/">
               <Logo
                 sx={{
                   height: 33,
-                  width: 42
+                  width: 42,
                 }}
               />
             </Link>
@@ -57,75 +54,53 @@ const Contact: FC = () => {
               sx={{
                 alignItems: 'center',
                 display: 'flex',
-                py: 3
+                py: 3,
               }}
             >
               <Avatar
                 sx={{
                   backgroundColor: 'primary.main',
                   color: 'primary.contrastText',
-                  mr: 2
+                  mr: 2,
                 }}
                 variant="rounded"
               >
                 <MailIcon />
               </Avatar>
-              <Typography
-                color="textPrimary"
-                variant="overline"
-              >
+              <Typography color="textPrimary" variant="overline">
                 Contact sales
               </Typography>
             </Box>
-            <Typography
-              color="textPrimary"
-              sx={{ fontWeight: 'fontWeightBold' }}
-              variant="h1"
-            >
+            <Typography color="textPrimary" sx={{ fontWeight: 'fontWeightBold' }} variant="h1">
               Talk to our account expert
             </Typography>
-            <Typography
-              color="textPrimary"
-              sx={{ py: 3 }}
-              variant="body1"
-            >
-              Have questions about integrating our APIs? Fill out the form
-              and a senior web expert will be in touch shortly.
+            <Typography color="textPrimary" sx={{ py: 3 }} variant="body1">
+              Have questions about integrating our APIs? Fill out the form and a senior web expert will be in touch
+              shortly.
             </Typography>
-            <Typography
-              sx={{ color: 'primary.main' }}
-              variant="h6"
-            >
+            <Typography sx={{ color: 'primary.main' }} variant="h6">
               Join 3,000+ forward-thinking companies:
             </Typography>
             <Box sx={{ pt: 2 }}>
-              <img
-                alt="logoipsum1"
-                src="/static/contact/contact_logos.svg"
-                style={{ maxWidth: '100%' }}
-              />
+              <img alt="logoipsum1" src="/static/contact/contact_logos.svg" style={{ maxWidth: '100%' }} />
             </Box>
           </Container>
         </Box>
         <Box
           sx={{
             backgroundColor: 'background.paper',
-            pt: 8
+            pt: 8,
           }}
         >
           <Container
             maxWidth="md"
             sx={{
               pr: {
-                lg: 15
-              }
+                lg: 15,
+              },
             }}
           >
-            <Typography
-              color="textPrimary"
-              variant="h6"
-              sx={{ pb: 3 }}
-            >
+            <Typography color="textPrimary" variant="h6" sx={{ pb: 3 }}>
               Fill the form below
             </Typography>
             <Box sx={{}}>

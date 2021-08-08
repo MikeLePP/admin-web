@@ -19,7 +19,7 @@ import {
   TableRow,
   Tabs,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import Scrollbar from '../../Scrollbar';
 import ArrowRightIcon from '../../../icons/ArrowRight';
@@ -41,9 +41,9 @@ const customers = [
     isReturning: true,
     name: 'Carson Darrin',
     state: 'Ohio',
-    totalAmountSpent: 300.00,
+    totalAmountSpent: 300.0,
     totalOrders: 3,
-    updatedAt: subDays(subHours(now, 7), 1).getTime()
+    updatedAt: subDays(subHours(now, 7), 1).getTime(),
   },
   {
     id: '5e887b209c28ac3dd97f6db5',
@@ -57,9 +57,9 @@ const customers = [
     isReturning: false,
     name: 'Fran Perez',
     state: 'Georgia',
-    totalAmountSpent: 0.00,
+    totalAmountSpent: 0.0,
     totalOrders: 0,
-    updatedAt: subDays(subHours(now, 1), 2).getTime()
+    updatedAt: subDays(subHours(now, 1), 2).getTime(),
   },
   {
     id: '5e887b7602bdbc4dbb234b27',
@@ -73,9 +73,9 @@ const customers = [
     isReturning: false,
     name: 'Jie Yan Song',
     state: 'Ohio',
-    totalAmountSpent: 5600.00,
+    totalAmountSpent: 5600.0,
     totalOrders: 6,
-    updatedAt: subDays(subHours(now, 4), 2).getTime()
+    updatedAt: subDays(subHours(now, 4), 2).getTime(),
   },
   {
     id: '5e86809283e28b96d2d38537',
@@ -89,9 +89,9 @@ const customers = [
     isReturning: true,
     name: 'Jane Rotanson',
     state: 'Madrid',
-    totalAmountSpent: 500.00,
+    totalAmountSpent: 500.0,
     totalOrders: 1,
-    updatedAt: subDays(subHours(now, 11), 2).getTime()
+    updatedAt: subDays(subHours(now, 11), 2).getTime(),
   },
   {
     id: '5e86805e2bafd54f66cc95c3',
@@ -104,72 +104,62 @@ const customers = [
     isProspect: true,
     isReturning: false,
     name: 'Miron Vitold',
-    totalAmountSpent: 0.00,
+    totalAmountSpent: 0.0,
     totalOrders: 0,
     state: 'California',
-    updatedAt: subDays(subHours(now, 7), 3).getTime()
-  }
+    updatedAt: subDays(subHours(now, 7), 3).getTime(),
+  },
 ];
 
 const tabs = [
   {
     label: 'All',
-    value: 'all'
+    value: 'all',
   },
   {
     label: 'Accepts Marketing',
-    value: 'hasAcceptedMarketing'
+    value: 'hasAcceptedMarketing',
   },
   {
     label: 'Prospect',
-    value: 'isProspect'
+    value: 'isProspect',
   },
   {
     label: 'Returning',
-    value: 'isReturning'
-  }
+    value: 'isReturning',
+  },
 ];
 
 const sortOptions = [
   {
     label: 'Last update (newest)',
-    value: 'updatedAt|desc'
+    value: 'updatedAt|desc',
   },
   {
     label: 'Last update (oldest)',
-    value: 'updatedAt|asc'
+    value: 'updatedAt|asc',
   },
   {
     label: 'Total orders (highest)',
-    value: 'orders|desc'
+    value: 'orders|desc',
   },
   {
     label: 'Total orders (lowest)',
-    value: 'orders|asc'
-  }
+    value: 'orders|asc',
+  },
 ];
 
 const Widget22: FC = () => (
   <Box
     sx={{
       backgroundColor: 'background.default',
-      p: 3
+      p: 3,
     }}
   >
     <Card>
-      <Tabs
-        indicatorColor="primary"
-        scrollButtons="auto"
-        textColor="primary"
-        value="all"
-        variant="scrollable"
-      >
+      <Tabs indicatorColor="primary" scrollButtons="auto" textColor="primary" value="all" variant="scrollable">
         {tabs.map((tab) => (
-          <Tab
-            key={tab.value}
-            label={tab.label}
-            value={tab.value}
-          />
+          <Tab key={tab.value} label={tab.label} value={tab.value} />
         ))}
       </Tabs>
       <Divider />
@@ -179,14 +169,14 @@ const Widget22: FC = () => (
           display: 'flex',
           flexWrap: 'wrap',
           m: -1,
-          p: 2
+          p: 2,
         }}
       >
         <Box
           sx={{
             m: 1,
             maxWidth: '100%',
-            width: 500
+            width: 500,
           }}
         >
           <TextField
@@ -196,7 +186,7 @@ const Widget22: FC = () => (
                 <InputAdornment position="start">
                   <SearchIcon fontSize="small" />
                 </InputAdornment>
-              )
+              ),
             }}
             placeholder="Search customers"
             variant="outlined"
@@ -205,21 +195,12 @@ const Widget22: FC = () => (
         <Box
           sx={{
             m: 1,
-            width: 240
+            width: 240,
           }}
         >
-          <TextField
-            label="Sort By"
-            name="sort"
-            select
-            SelectProps={{ native: true }}
-            variant="outlined"
-          >
+          <TextField label="Sort By" name="sort" select SelectProps={{ native: true }} variant="outlined">
             {sortOptions.map((option) => (
-              <option
-                key={option.value}
-                value={option.value}
-              >
+              <option key={option.value} value={option.value}>
                 {option.label}
               </option>
             ))}
@@ -234,29 +215,16 @@ const Widget22: FC = () => (
                 <TableCell padding="checkbox">
                   <Checkbox color="primary" />
                 </TableCell>
-                <TableCell>
-                  Name
-                </TableCell>
-                <TableCell>
-                  Location
-                </TableCell>
-                <TableCell>
-                  Orders
-                </TableCell>
-                <TableCell>
-                  Spent
-                </TableCell>
-                <TableCell align="right">
-                  Actions
-                </TableCell>
+                <TableCell>Name</TableCell>
+                <TableCell>Location</TableCell>
+                <TableCell>Orders</TableCell>
+                <TableCell>Spent</TableCell>
+                <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {customers.map((customer) => (
-                <TableRow
-                  hover
-                  key={customer.id}
-                >
+                <TableRow hover key={customer.id}>
                   <TableCell padding="checkbox">
                     <Checkbox color="primary" />
                   </TableCell>
@@ -264,42 +232,29 @@ const Widget22: FC = () => (
                     <Box
                       sx={{
                         alignItems: 'center',
-                        display: 'flex'
+                        display: 'flex',
                       }}
                     >
                       <Avatar
                         src={customer.avatar}
                         sx={{
                           height: 42,
-                          width: 42
+                          width: 42,
                         }}
                       />
                       <Box sx={{ ml: 1 }}>
-                        <Link
-                          color="inherit"
-                          variant="subtitle2"
-                        >
+                        <Link color="inherit" variant="subtitle2">
                           {customer.name}
                         </Link>
-                        <Typography
-                          color="textSecondary"
-                          variant="body2"
-                        >
+                        <Typography color="textSecondary" variant="body2">
                           {customer.email}
                         </Typography>
                       </Box>
                     </Box>
                   </TableCell>
-                  <TableCell>
-                    {`${customer.city}, ${customer.state}, ${customer.country}`}
-                  </TableCell>
-                  <TableCell>
-                    {customer.totalOrders}
-                  </TableCell>
-                  <TableCell>
-                    {numeral(customer.totalAmountSpent)
-                      .format(`${customer.currency}0,0.00`)}
-                  </TableCell>
+                  <TableCell>{`${customer.city}, ${customer.state}, ${customer.country}`}</TableCell>
+                  <TableCell>{customer.totalOrders}</TableCell>
+                  <TableCell>{numeral(customer.totalAmountSpent).format(`${customer.currency}0,0.00`)}</TableCell>
                   <TableCell align="right">
                     <IconButton>
                       <PencilAltIcon fontSize="small" />
@@ -317,10 +272,8 @@ const Widget22: FC = () => (
       <TablePagination
         component="div"
         count={customers.length}
-        onPageChange={() => {
-        }}
-        onRowsPerPageChange={() => {
-        }}
+        onPageChange={() => {}}
+        onRowsPerPageChange={() => {}}
         page={0}
         rowsPerPage={5}
         rowsPerPageOptions={[5, 10, 25]}

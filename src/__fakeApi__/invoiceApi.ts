@@ -11,45 +11,45 @@ class InvoiceApi {
         currency: '$',
         customer: {
           email: 'contact@anahenisky.io',
-          name: 'Ana Henisky'
+          name: 'Ana Henisky',
         },
         issueDate: subHours(now, 1).getTime(),
         status: 'paid',
-        totalAmount: 55.50
+        totalAmount: 55.5,
       },
       {
         id: '5ecb868ada8deedee0638502',
         currency: '$',
         customer: {
           email: 'sales@matt-jason.com',
-          name: 'Matt Jason'
+          name: 'Matt Jason',
         },
         issueDate: subDays(subHours(now, 5), 2).getTime(),
         status: 'pending',
-        totalAmount: 253.76
+        totalAmount: 253.76,
       },
       {
         id: '5ecb868700aba84d0f1c0e48',
         currency: '$',
         customer: {
           email: 'support@terrythomas.io',
-          name: 'Terry Thomas'
+          name: 'Terry Thomas',
         },
         issueDate: subDays(subHours(now, 4), 6).getTime(),
         status: 'canceled',
-        totalAmount: 781.50
+        totalAmount: 781.5,
       },
       {
         id: '5ecb8682038e1ddf4e868764',
         currency: '$',
         customer: {
           email: 'contact@triv-shopper.co.uk',
-          name: 'Triv Shopper'
+          name: 'Triv Shopper',
         },
         issueDate: subDays(subHours(now, 2), 15).getTime(),
         status: 'paid',
-        totalAmount: 96.64
-      }
+        totalAmount: 96.64,
+      },
     ];
 
     return Promise.resolve(invoices);
@@ -64,7 +64,7 @@ class InvoiceApi {
         company: 'Countdown Grey Lynn',
         email: 'contact@anahenisky.io',
         name: 'Ana Henisky',
-        taxId: '6934656584231'
+        taxId: '6934656584231',
       },
       dueDate: now.getTime(),
       issueDate: subHours(now, 1).getTime(),
@@ -73,14 +73,14 @@ class InvoiceApi {
           id: '5ecb8694db1760a701dfbf74',
           currency: '$',
           description: 'Freelancer Subscription (12/05/2019 - 11/06/2019)',
-          unitAmount: 55.50
-        }
+          unitAmount: 55.5,
+        },
       ],
       number: 'DEV-9483',
       status: 'paid',
-      subtotalAmount: 50.00,
-      taxAmount: 5.50,
-      totalAmount: 55.50
+      subtotalAmount: 50.0,
+      taxAmount: 5.5,
+      totalAmount: 55.5,
     };
 
     return Promise.resolve(invoice);

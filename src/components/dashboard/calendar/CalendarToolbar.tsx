@@ -29,35 +29,27 @@ const viewOptions: ViewOption[] = [
   {
     icon: ViewConfigIcon,
     label: 'Month',
-    value: 'dayGridMonth'
+    value: 'dayGridMonth',
   },
   {
     icon: ViewWeekIcon,
     label: 'Week',
-    value: 'timeGridWeek'
+    value: 'timeGridWeek',
   },
   {
     icon: ViewDayIcon,
     label: 'Day',
-    value: 'timeGridDay'
+    value: 'timeGridDay',
   },
   {
     icon: ViewAgendaIcon,
     label: 'Agenda',
-    value: 'listWeek'
-  }
+    value: 'listWeek',
+  },
 ];
 
 const CalendarToolbar: FC<CalendarToolbarProps> = (props) => {
-  const {
-    date,
-    onDateNext,
-    onDatePrev,
-    onDateToday,
-    onViewChange,
-    view,
-    ...other
-  } = props;
+  const { date, onDateNext, onDatePrev, onDateToday, onViewChange, view, ...other } = props;
 
   const handleViewChange = (newView: CalendarView): void => {
     if (onViewChange) {
@@ -66,31 +58,16 @@ const CalendarToolbar: FC<CalendarToolbarProps> = (props) => {
   };
 
   return (
-    <Grid
-      alignItems="center"
-      container
-      justifyContent="space-between"
-      spacing={3}
-      {...other}
-    >
+    <Grid alignItems="center" container justifyContent="space-between" spacing={3} {...other}>
       <Grid item>
         <ButtonGroup size="small">
-          <Button onClick={onDatePrev}>
-            Prev
-          </Button>
-          <Button onClick={onDateToday}>
-            Today
-          </Button>
-          <Button onClick={onDateNext}>
-            Next
-          </Button>
+          <Button onClick={onDatePrev}>Prev</Button>
+          <Button onClick={onDateToday}>Today</Button>
+          <Button onClick={onDateNext}>Next</Button>
         </ButtonGroup>
       </Grid>
       <Grid item>
-        <Typography
-          color="textPrimary"
-          variant="h3"
-        >
+        <Typography color="textPrimary" variant="h3">
           {format(date, 'MMMM y')}
         </Typography>
       </Grid>
@@ -100,16 +77,9 @@ const CalendarToolbar: FC<CalendarToolbarProps> = (props) => {
             const Icon = viewOption.icon;
 
             return (
-              <Tooltip
-                key={viewOption.value}
-                title={viewOption.label}
-              >
+              <Tooltip key={viewOption.value} title={viewOption.label}>
                 <IconButton
-                  color={
-                    viewOption.value === view
-                      ? 'primary'
-                      : 'inherit'
-                  }
+                  color={viewOption.value === view ? 'primary' : 'inherit'}
                   onClick={() => handleViewChange(viewOption.value)}
                 >
                   <Icon fontSize="small" />
@@ -131,12 +101,7 @@ CalendarToolbar.propTypes = {
   onDatePrev: PropTypes.func,
   onDateToday: PropTypes.func,
   onViewChange: PropTypes.func,
-  view: PropTypes.oneOf([
-    'dayGridMonth',
-    'timeGridWeek',
-    'timeGridDay',
-    'listWeek'
-  ])
+  view: PropTypes.oneOf(['dayGridMonth', 'timeGridWeek', 'timeGridDay', 'listWeek']),
 };
 
 export default CalendarToolbar;

@@ -32,8 +32,8 @@ const MainSidebar: FC<MainSidebarProps> = (props) => {
       PaperProps={{
         sx: {
           backgroundColor: 'background.default',
-          width: 256
-        }
+          width: 256,
+        },
       }}
     >
       <Box
@@ -42,7 +42,7 @@ const MainSidebar: FC<MainSidebarProps> = (props) => {
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
-          p: 2
+          p: 2,
         }}
       >
         <RouterLink to="/">
@@ -52,16 +52,10 @@ const MainSidebar: FC<MainSidebarProps> = (props) => {
           sx={{
             display: 'flex',
             pb: 2,
-            pt: 3
+            pt: 3,
           }}
         >
-          <Link
-            color="textSecondary"
-            component={RouterLink}
-            to="/browse"
-            underline="none"
-            variant="body1"
-          >
+          <Link color="textSecondary" component={RouterLink} to="/browse" underline="none" variant="body1">
             Browse Components
           </Link>
           <Chip
@@ -71,17 +65,11 @@ const MainSidebar: FC<MainSidebarProps> = (props) => {
             sx={{
               maxHeight: 20,
               ml: 1,
-              mr: 2
+              mr: 2,
             }}
           />
         </Box>
-        <Link
-          color="textSecondary"
-          component={RouterLink}
-          to="/docs"
-          underline="none"
-          variant="body1"
-        >
+        <Link color="textSecondary" component={RouterLink} to="/docs" underline="none" variant="body1">
           Documentation
         </Link>
         <Button
@@ -102,7 +90,7 @@ const MainSidebar: FC<MainSidebarProps> = (props) => {
 
 MainSidebar.propTypes = {
   onMobileClose: PropTypes.func,
-  openMobile: PropTypes.bool
+  openMobile: PropTypes.bool,
 };
 
 export default MainSidebar;

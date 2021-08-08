@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { useState } from 'react';
 import type { FC, FormEvent } from 'react';
 import PropTypes from 'prop-types';
@@ -39,65 +40,35 @@ const ProjectDescriptionForm: FC<ProjectDescriptionFormProps> = (props) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      {...other}
-    >
+    <form onSubmit={handleSubmit} {...other}>
       <Card sx={{ p: 3 }}>
-        <Typography
-          color="textPrimary"
-          variant="h6"
-        >
+        <Typography color="textPrimary" variant="h6">
           Please select one option
         </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body1"
-        >
-          Proin tincidunt lacus sed ante efficitur efficitur.
-          Quisque aliquam fringilla velit sit amet euismod.
+        <Typography color="textSecondary" variant="body1">
+          Proin tincidunt lacus sed ante efficitur efficitur. Quisque aliquam fringilla velit sit amet euismod.
         </Typography>
-        <Paper
-          sx={{ mt: 3 }}
-          variant="outlined"
-        >
-          <QuillEditor
-            handleChange={handleChange}
-            placeholder="Write something"
-            sx={{ height: 400 }}
-            value={content}
-          />
+        <Paper sx={{ mt: 3 }} variant="outlined">
+          <QuillEditor handleChange={handleChange} placeholder="Write something" sx={{ height: 400 }} value={content} />
         </Paper>
         {error && (
           <Box sx={{ mt: 2 }}>
-            <FormHelperText error>
-              {FormHelperText}
-            </FormHelperText>
+            <FormHelperText error>{FormHelperText}</FormHelperText>
           </Box>
         )}
         <Box
           sx={{
             display: 'flex',
-            mt: 6
+            mt: 6,
           }}
         >
           {onBack && (
-            <Button
-              color="primary"
-              onClick={onBack}
-              size="large"
-              variant="text"
-            >
+            <Button color="primary" onClick={onBack} size="large" variant="text">
               Previous
             </Button>
           )}
           <Box sx={{ flexGrow: 1 }} />
-          <Button
-            color="primary"
-            disabled={isSubmitting}
-            type="submit"
-            variant="contained"
-          >
+          <Button color="primary" disabled={isSubmitting} type="submit" variant="contained">
             Complete
           </Button>
         </Box>
@@ -108,7 +79,7 @@ const ProjectDescriptionForm: FC<ProjectDescriptionFormProps> = (props) => {
 
 ProjectDescriptionForm.propTypes = {
   onBack: PropTypes.func,
-  onComplete: PropTypes.func
+  onComplete: PropTypes.func,
 };
 
 export default ProjectDescriptionForm;

@@ -12,84 +12,66 @@ const Chart9: FC = () => {
       background: 'transparent',
       stacked: false,
       toolbar: {
-        show: false
-      }
+        show: false,
+      },
     },
     colors: ['#ffb547', '#7783DB'],
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
     fill: {
       type: 'solid',
-      opacity: 0
+      opacity: 0,
     },
     grid: {
-      borderColor: theme.palette.divider
+      borderColor: theme.palette.divider,
     },
     markers: {
       strokeColors: theme.palette.background.paper,
-      size: 6
+      size: 6,
     },
     stroke: {
       curve: 'straight',
-      width: 2
+      width: 2,
     },
     theme: {
-      mode: theme.palette.mode
+      mode: theme.palette.mode,
     },
     xaxis: {
       axisBorder: {
         color: theme.palette.divider,
-        show: true
+        show: true,
       },
       axisTicks: {
         color: theme.palette.divider,
-        show: true
+        show: true,
       },
-      categories: [
-        'Jan',
-        'Feb',
-        'Mar',
-        'Apr',
-        'May',
-        'Jun',
-        'Jul',
-        'Aug',
-        'Sep',
-        'Oct',
-        'Nov',
-        'Dec'
-      ]
-    }
+      categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+    },
   };
 
   const chartSeries = [
     {
       name: 'New Customers',
-      data: [31, 40, 28, 51, 42, 109, 100, 120, 80, 42, 90, 140]
+      data: [31, 40, 28, 51, 42, 109, 100, 120, 80, 42, 90, 140],
     },
     {
       name: 'Up/Cross-Selling',
-      data: [11, 32, 45, 32, 34, 52, 41, 80, 96, 140, 30, 100]
-    }
+      data: [11, 32, 45, 32, 34, 52, 41, 80, 96, 140, 30, 100],
+    },
   ];
 
   return (
     <Box
       sx={{
         backgroundColor: 'background.default',
-        p: 3
+        p: 3,
       }}
     >
       <Card>
         <CardHeader title="Sales Revenue" />
         <CardContent>
-          <Chart
-            height="360"
-            options={chartOptions}
-            series={chartSeries}
-            type="area"
-          />
+          <Chart height="360" options={chartOptions} series={chartSeries} type="area" />
         </CardContent>
       </Card>
     </Box>

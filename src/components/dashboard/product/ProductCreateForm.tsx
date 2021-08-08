@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { useState } from 'react';
 import type { FC } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +16,7 @@ import {
   FormHelperText,
   Grid,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import FileDropzone from '../../FileDropzone';
 import QuillEditor from '../../QuillEditor';
@@ -23,16 +24,16 @@ import QuillEditor from '../../QuillEditor';
 const categoryOptions = [
   {
     value: 'shirts',
-    label: 'Shirts'
+    label: 'Shirts',
   },
   {
     label: 'Phones',
-    value: 'phones'
+    value: 'phones',
   },
   {
     label: 'Cars',
-    value: 'cars'
-  }
+    value: 'cars',
+  },
 ];
 
 const ProductCreateForm: FC = (props) => {
@@ -44,8 +45,7 @@ const ProductCreateForm: FC = (props) => {
   };
 
   const handleRemove = (file): void => {
-    setFiles((prevFiles) => prevFiles.filter((_file) => _file.path
-      !== file.path));
+    setFiles((prevFiles) => prevFiles.filter((_file) => _file.path !== file.path));
   };
 
   const handleRemoveAll = (): void => {
@@ -65,29 +65,21 @@ const ProductCreateForm: FC = (props) => {
         productCode: '',
         productSku: '',
         salePrice: '',
-        submit: null
+        submit: null,
       }}
-      validationSchema={
-        Yup
-          .object()
-          .shape({
-            category: Yup.string().max(255),
-            description: Yup.string().max(5000),
-            images: Yup.array(),
-            includesTaxes: Yup.bool().required(),
-            isTaxable: Yup.bool().required(),
-            name: Yup.string().max(255).required(),
-            price: Yup.number().min(0).required(),
-            productCode: Yup.string().max(255),
-            productSku: Yup.string().max(255),
-            salePrice: Yup.number().min(0)
-          })
-      }
-      onSubmit={async (values, {
-        setErrors,
-        setStatus,
-        setSubmitting
-      }): Promise<void> => {
+      validationSchema={Yup.object().shape({
+        category: Yup.string().max(255),
+        description: Yup.string().max(5000),
+        images: Yup.array(),
+        includesTaxes: Yup.bool().required(),
+        isTaxable: Yup.bool().required(),
+        name: Yup.string().max(255).required(),
+        price: Yup.number().min(0).required(),
+        productCode: Yup.string().max(255),
+        productSku: Yup.string().max(255),
+        salePrice: Yup.number().min(0),
+      })}
+      onSubmit={async (values, { setErrors, setStatus, setSubmitting }): Promise<void> => {
         try {
           // NOTE: Make API request
           setStatus({ success: true });
@@ -111,22 +103,11 @@ const ProductCreateForm: FC = (props) => {
         isSubmitting,
         setFieldValue,
         touched,
-        values
+        values,
       }): JSX.Element => (
-        <form
-          onSubmit={handleSubmit}
-          {...props}
-        >
-          <Grid
-            container
-            spacing={3}
-          >
-            <Grid
-              item
-              lg={8}
-              md={6}
-              xs={12}
-            >
+        <form onSubmit={handleSubmit} {...props}>
+          <Grid container spacing={3}>
+            <Grid item lg={8} md={6} xs={12}>
               <Card>
                 <CardContent>
                   <TextField
@@ -144,26 +125,21 @@ const ProductCreateForm: FC = (props) => {
                     color="textSecondary"
                     sx={{
                       mb: 2,
-                      mt: 3
+                      mt: 3,
                     }}
                     variant="subtitle2"
                   >
                     Description
                   </Typography>
                   <QuillEditor
-                    onChange={(value: string): void => setFieldValue(
-                      'description',
-                      value
-                    )}
+                    onChange={(value: string): void => setFieldValue('description', value)}
                     placeholder="Write something"
                     sx={{ height: 400 }}
                     value={values.description}
                   />
-                  {(touched.description && errors.description) && (
+                  {touched.description && errors.description && (
                     <Box sx={{ mt: 2 }}>
-                      <FormHelperText error>
-                        {errors.description}
-                      </FormHelperText>
+                      <FormHelperText error>{errors.description}</FormHelperText>
                     </Box>
                   )}
                 </CardContent>
@@ -186,15 +162,8 @@ const ProductCreateForm: FC = (props) => {
                 <Card>
                   <CardHeader title="Prices" />
                   <CardContent>
-                    <Grid
-                      container
-                      spacing={3}
-                    >
-                      <Grid
-                        item
-                        md={6}
-                        xs={12}
-                      >
+                    <Grid container spacing={3}>
+                      <Grid item md={6} xs={12}>
                         <TextField
                           error={Boolean(touched.price && errors.price)}
                           fullWidth
@@ -212,11 +181,7 @@ const ProductCreateForm: FC = (props) => {
                           variant="outlined"
                         />
                       </Grid>
-                      <Grid
-                        item
-                        md={6}
-                        xs={12}
-                      >
+                      <Grid item md={6} xs={12}>
                         <TextField
                           error={Boolean(touched.salePrice && errors.salePrice)}
                           fullWidth
@@ -233,7 +198,7 @@ const ProductCreateForm: FC = (props) => {
                     </Grid>
                     <Box sx={{ mt: 2 }}>
                       <FormControlLabel
-                        control={(
+                        control={
                           <Checkbox
                             checked={values.isTaxable}
                             color="primary"
@@ -241,13 +206,13 @@ const ProductCreateForm: FC = (props) => {
                             onChange={handleChange}
                             value={values.isTaxable}
                           />
-                        )}
+                        }
                         label="Product is taxable"
                       />
                     </Box>
                     <Box sx={{ mt: 2 }}>
                       <FormControlLabel
-                        control={(
+                        control={
                           <Checkbox
                             checked={values.includesTaxes}
                             color="primary"
@@ -255,7 +220,7 @@ const ProductCreateForm: FC = (props) => {
                             onChange={handleChange}
                             value={values.includesTaxes}
                           />
-                        )}
+                        }
                         label="Price includes taxes"
                       />
                     </Box>
@@ -263,12 +228,7 @@ const ProductCreateForm: FC = (props) => {
                 </Card>
               </Box>
             </Grid>
-            <Grid
-              item
-              lg={4}
-              md={6}
-              xs={12}
-            >
+            <Grid item lg={4} md={6} xs={12}>
               <Card>
                 <CardHeader title="Organize" />
                 <CardContent>
@@ -283,10 +243,7 @@ const ProductCreateForm: FC = (props) => {
                     variant="outlined"
                   >
                     {categoryOptions.map((category) => (
-                      <option
-                        key={category.value}
-                        value={category.value}
-                      >
+                      <option key={category.value} value={category.value}>
                         {category.label}
                       </option>
                     ))}
@@ -321,24 +278,17 @@ const ProductCreateForm: FC = (props) => {
               </Card>
               {errors.submit && (
                 <Box sx={{ mt: 3 }}>
-                  <FormHelperText error>
-                    {errors.submit}
-                  </FormHelperText>
+                  <FormHelperText error>{errors.submit}</FormHelperText>
                 </Box>
               )}
               <Box
                 sx={{
                   display: 'flex',
                   justifyContent: 'flex-end',
-                  mt: 3
+                  mt: 3,
                 }}
               >
-                <Button
-                  color="primary"
-                  disabled={isSubmitting}
-                  type="submit"
-                  variant="contained"
-                >
+                <Button color="primary" disabled={isSubmitting} type="submit" variant="contained">
                   Create Product
                 </Button>
               </Box>

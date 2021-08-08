@@ -31,21 +31,13 @@ const SocialTimeline: FC<SocialProfileTimelineProps> = (props) => {
   }, [mounted]);
 
   useEffect(() => {
-    getPosts();
+    void getPosts();
   }, [getPosts]);
 
   return (
     <div {...other}>
-      <Grid
-        container
-        spacing={3}
-      >
-        <Grid
-          item
-          lg={4}
-          md={6}
-          xs={12}
-        >
+      <Grid container spacing={3}>
+        <Grid item lg={4} md={6} xs={12}>
           <SocialProfileAbout
             currentCity={profile.currentCity}
             currentJobCompany={profile.currentJobCompany}
@@ -58,18 +50,10 @@ const SocialTimeline: FC<SocialProfileTimelineProps> = (props) => {
             quote={profile.quote}
           />
         </Grid>
-        <Grid
-          item
-          lg={8}
-          md={6}
-          xs={12}
-        >
+        <Grid item lg={8} md={6} xs={12}>
           <SocialPostAdd />
           {posts.map((post) => (
-            <Box
-              key={post.id}
-              sx={{ mt: 3 }}
-            >
+            <Box key={post.id} sx={{ mt: 3 }}>
               <SocialPostCard
                 authorAvatar={post.author.avatar}
                 authorName={post.author.name}
@@ -89,8 +73,7 @@ const SocialTimeline: FC<SocialProfileTimelineProps> = (props) => {
 };
 
 SocialTimeline.propTypes = {
-  // @ts-ignore
-  profile: PropTypes.object.isRequired
+  profile: PropTypes.any.isRequired,
 };
 
 export default SocialTimeline;

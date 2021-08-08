@@ -16,7 +16,7 @@ const DocsNavbar: FC<DocsNavbarProps> = ({ onSidebarMobileOpen }) => (
       color: 'text.primary',
       boxShadow: 'none',
       borderBottom: (theme) => `1px solid ${theme.palette.divider}`,
-      zIndex: (theme) => theme.zIndex.drawer + 100
+      zIndex: (theme) => theme.zIndex.drawer + 100,
     }}
   >
     <Toolbar sx={{ height: 64 }}>
@@ -25,8 +25,8 @@ const DocsNavbar: FC<DocsNavbarProps> = ({ onSidebarMobileOpen }) => (
         onClick={onSidebarMobileOpen}
         sx={{
           display: {
-            lg: 'none'
-          }
+            lg: 'none',
+          },
         }}
       >
         <MenuIcon fontSize="small" />
@@ -38,8 +38,8 @@ const DocsNavbar: FC<DocsNavbarProps> = ({ onSidebarMobileOpen }) => (
             width: 40,
             display: {
               lg: 'inline',
-              xs: 'none'
-            }
+              xs: 'none',
+            },
           }}
         />
       </RouterLink>
@@ -48,7 +48,7 @@ const DocsNavbar: FC<DocsNavbarProps> = ({ onSidebarMobileOpen }) => (
 );
 
 DocsNavbar.propTypes = {
-  onSidebarMobileOpen: PropTypes.func
+  onSidebarMobileOpen: PropTypes.func,
 };
 
 export default DocsNavbar;

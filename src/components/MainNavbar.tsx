@@ -17,7 +17,7 @@ const MainNavbar: FC<MainNavbarProps> = (props) => {
       elevation={0}
       sx={{
         backgroundColor: 'background.paper',
-        color: 'text.secondary'
+        color: 'text.secondary',
       }}
     >
       <Toolbar sx={{ minHeight: 64 }}>
@@ -26,8 +26,8 @@ const MainNavbar: FC<MainNavbarProps> = (props) => {
           onClick={onSidebarMobileOpen}
           sx={{
             display: {
-              md: 'none'
-            }
+              md: 'none',
+            },
           }}
         >
           <MenuIcon fontSize="small" />
@@ -37,10 +37,10 @@ const MainNavbar: FC<MainNavbarProps> = (props) => {
             sx={{
               display: {
                 md: 'inline',
-                xs: 'none'
+                xs: 'none',
               },
               height: 40,
-              width: 40
+              width: 40,
             }}
           />
         </RouterLink>
@@ -50,17 +50,11 @@ const MainNavbar: FC<MainNavbarProps> = (props) => {
             alignItems: 'center',
             display: {
               md: 'flex',
-              xs: 'none'
-            }
+              xs: 'none',
+            },
           }}
         >
-          <Link
-            color="textSecondary"
-            component={RouterLink}
-            to="/browse"
-            underline="none"
-            variant="body1"
-          >
+          <Link color="textSecondary" component={RouterLink} to="/browse" underline="none" variant="body1">
             Browse Components
           </Link>
           <Chip
@@ -70,23 +64,17 @@ const MainNavbar: FC<MainNavbarProps> = (props) => {
             sx={{
               maxHeight: 20,
               ml: 1,
-              mr: 2
+              mr: 2,
             }}
           />
-          <Link
-            color="textSecondary"
-            component={RouterLink}
-            to="/docs"
-            underline="none"
-            variant="body1"
-          >
+          <Link color="textSecondary" component={RouterLink} to="/docs" underline="none" variant="body1">
             Documentation
           </Link>
           <Divider
             orientation="vertical"
             sx={{
               height: 32,
-              mx: 2
+              mx: 2,
             }}
           />
           <Button
@@ -107,7 +95,7 @@ const MainNavbar: FC<MainNavbarProps> = (props) => {
 };
 
 MainNavbar.propTypes = {
-  onSidebarMobileOpen: PropTypes.func
+  onSidebarMobileOpen: PropTypes.func,
 };
 
 export default MainNavbar;

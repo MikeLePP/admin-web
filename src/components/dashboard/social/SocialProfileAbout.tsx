@@ -12,7 +12,7 @@ import {
   ListItem,
   ListItemAvatar,
   ListItemText,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import AcademicCapIcon from '../../../icons/AcademicCap';
 import BriefcaseIcon from '../../../icons/Briefcase';
@@ -51,15 +51,9 @@ const SocialProfileAbout: FC<SocialProfileAboutProps> = (props) => {
         <CardHeader title="Profile Progress" />
         <Divider />
         <CardContent>
-          <LinearProgress
-            value={profileProgress}
-            variant="determinate"
-          />
+          <LinearProgress value={profileProgress} variant="determinate" />
           <Box sx={{ mt: 2 }}>
-            <Typography
-              color="textSecondary"
-              variant="subtitle2"
-            >
+            <Typography color="textSecondary" variant="subtitle2">
               50% Set Up Complete
             </Typography>
           </Box>
@@ -70,139 +64,83 @@ const SocialProfileAbout: FC<SocialProfileAboutProps> = (props) => {
           <CardHeader title="About" />
           <Divider />
           <CardContent>
-            <Typography
-              color="textSecondary"
-              variant="subtitle2"
-            >
+            <Typography color="textSecondary" variant="subtitle2">
               &quot;
               {quote}
               &quot;
             </Typography>
             <List>
-              <ListItem
-                disableGutters
-                divider
-              >
+              <ListItem disableGutters divider>
                 <ListItemAvatar>
                   <BriefcaseIcon fontFamily="small" />
                 </ListItemAvatar>
                 <ListItemText
                   disableTypography
-                  primary={(
-                    <Typography
-                      color="textPrimary"
-                      variant="subtitle2"
-                    >
-                      {currentJobTitle}
-                      {' '}
-                      at
-                      {' '}
-                      <Link
-                        color="textPrimary"
-                        href="#"
-                        variant="subtitle2"
-                      >
+                  primary={
+                    <Typography color="textPrimary" variant="subtitle2">
+                      {currentJobTitle} at{' '}
+                      <Link color="textPrimary" href="#" variant="subtitle2">
                         {currentJobCompany}
                       </Link>
                     </Typography>
-                  )}
-                  secondary={(
-                    <Typography
-                      color="textSecondary"
-                      variant="caption"
-                    >
+                  }
+                  secondary={
+                    <Typography color="textSecondary" variant="caption">
                       Past:
-                      {previousJobTitle}
-                      {' '}
-                      <Link
-                        color="textSecondary"
-                        href="#"
-                        variant="caption"
-                      >
+                      {previousJobTitle}{' '}
+                      <Link color="textSecondary" href="#" variant="caption">
                         {previousJobCompany}
                       </Link>
                     </Typography>
-                  )}
+                  }
                 />
               </ListItem>
-              <ListItem
-                disableGutters
-                divider
-              >
+              <ListItem disableGutters divider>
                 <ListItemAvatar>
                   <AcademicCapIcon fontSize="small" />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={(
-                    <Link
-                      color="textSecondary"
-                      sx={{ cursor: 'pointer' }}
-                      variant="body2"
-                    >
+                  primary={
+                    <Link color="textSecondary" sx={{ cursor: 'pointer' }} variant="body2">
                       Add school or collage
                     </Link>
-                  )}
+                  }
                 />
               </ListItem>
-              <ListItem
-                disableGutters
-                divider
-              >
+              <ListItem disableGutters divider>
                 <ListItemAvatar>
                   <HomeIcon fontFamily="small" />
                 </ListItemAvatar>
                 <ListItemText
                   disableTypography
-                  primary={(
-                    <Typography
-                      color="textPrimary"
-                      variant="subtitle2"
-                    >
-                      Lives in
-                      {' '}
-                      <Link
-                        color="textPrimary"
-                        href="#"
-                        variant="subtitle2"
-                      >
+                  primary={
+                    <Typography color="textPrimary" variant="subtitle2">
+                      Lives in{' '}
+                      <Link color="textPrimary" href="#" variant="subtitle2">
                         {currentCity}
                       </Link>
                     </Typography>
-                  )}
-                  secondary={(
-                    <Typography
-                      color="textSecondary"
-                      variant="caption"
-                    >
-                      Originally from
-                      {' '}
-                      <Link
-                        color="textSecondary"
-                        href="#"
-                        variant="caption"
-                      >
+                  }
+                  secondary={
+                    <Typography color="textSecondary" variant="caption">
+                      Originally from{' '}
+                      <Link color="textSecondary" href="#" variant="caption">
                         {originCity}
                       </Link>
                     </Typography>
-                  )}
+                  }
                 />
               </ListItem>
-              <ListItem
-                disableGutters
-                divider
-              >
+              <ListItem disableGutters divider>
                 <ListItemAvatar>
                   <MailIcon fontFamily="small" />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={(
-                    <Typography
-                      color="textPrimary"
-                      variant="subtitle2"
-                    >
+                  primary={
+                    <Typography color="textPrimary" variant="subtitle2">
                       {email}
                     </Typography>
-                  )}
+                  }
                 />
               </ListItem>
             </List>
@@ -222,7 +160,7 @@ SocialProfileAbout.propTypes = {
   previousJobCompany: PropTypes.string.isRequired,
   previousJobTitle: PropTypes.string.isRequired,
   profileProgress: PropTypes.number.isRequired,
-  quote: PropTypes.string.isRequired
+  quote: PropTypes.string.isRequired,
 };
 
 export default SocialProfileAbout;

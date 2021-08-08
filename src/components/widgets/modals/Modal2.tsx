@@ -1,26 +1,19 @@
 import type { FC } from 'react';
-import {
-  Box,
-  ListItemIcon,
-  ListItemText,
-  MenuItem,
-  Paper,
-  Typography
-} from '@material-ui/core';
+import { Box, ListItemIcon, ListItemText, MenuItem, Paper, Typography } from '@material-ui/core';
 
 const languageOptions = [
   {
     icon: '/static/icons/uk_flag.svg',
-    label: 'English'
+    label: 'English',
   },
   {
     icon: '/static/icons/de_flag.svg',
-    label: 'German'
+    label: 'German',
   },
   {
     icon: '/static/icons/es_flag.svg',
-    label: 'Spanish'
-  }
+    label: 'Spanish',
+  },
 ];
 
 const Modal2: FC = () => (
@@ -28,14 +21,14 @@ const Modal2: FC = () => (
     sx={{
       backgroundColor: 'background.default',
       minHeight: '100%',
-      p: 3
+      p: 3,
     }}
   >
     <Paper
       elevation={12}
       sx={{
         width: 240,
-        mx: 'auto'
+        mx: 'auto',
       }}
     >
       {Object.keys(languageOptions).map((language) => (
@@ -47,25 +40,19 @@ const Modal2: FC = () => (
                 height: 20,
                 width: 20,
                 '& img': {
-                  width: '100%'
-                }
+                  width: '100%',
+                },
               }}
             >
-              <img
-                alt={languageOptions[language].label}
-                src={languageOptions[language].icon}
-              />
+              <img alt={languageOptions[language].label} src={languageOptions[language].icon} />
             </Box>
           </ListItemIcon>
           <ListItemText
-            primary={(
-              <Typography
-                color="textPrimary"
-                variant="subtitle2"
-              >
+            primary={
+              <Typography color="textPrimary" variant="subtitle2">
                 {languageOptions[language].label}
               </Typography>
-            )}
+            }
           />
         </MenuItem>
       ))}

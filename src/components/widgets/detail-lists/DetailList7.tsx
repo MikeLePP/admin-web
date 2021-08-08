@@ -1,49 +1,31 @@
 import type { FC } from 'react';
 import { format, addDays, subMinutes } from 'date-fns';
 import numeral from 'numeral';
-import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  CardHeader,
-  Link,
-  List,
-  ListItem,
-  Typography
-} from '@material-ui/core';
+import { Avatar, Box, Card, CardContent, CardHeader, Link, List, ListItem, Typography } from '@material-ui/core';
 
 const DetailsList7: FC = () => (
   <Box
     sx={{
       backgroundColor: 'background.default',
       minHeight: '100%',
-      p: 3
+      p: 3,
     }}
   >
     <Card>
       <CardHeader
         avatar={<Avatar src="/static/mock-images/avatars/avatar-omar_darobe.png" />}
         disableTypography
-        subheader={(
-          <Link
-            color="textPrimary"
-            underline="none"
-            variant="subtitle2"
-          >
+        subheader={
+          <Link color="textPrimary" underline="none" variant="subtitle2">
             Omar Darobe
           </Link>
-        )}
+        }
         style={{ paddingBottom: 0 }}
-        title={(
-          <Typography
-            color="textSecondary"
-            display="block"
-            variant="overline"
-          >
+        title={
+          <Typography color="textSecondary" display="block" variant="overline">
             Contest holder
           </Typography>
-        )}
+        }
       />
       <CardContent sx={{ pt: 0 }}>
         <List>
@@ -52,19 +34,13 @@ const DetailsList7: FC = () => (
             divider
             sx={{
               justifyContent: 'space-between',
-              padding: 2
+              padding: 2,
             }}
           >
-            <Typography
-              color="textPrimary"
-              variant="subtitle2"
-            >
+            <Typography color="textPrimary" variant="subtitle2">
               Deadline
             </Typography>
-            <Typography
-              color="textSecondary"
-              variant="body2"
-            >
+            <Typography color="textSecondary" variant="body2">
               {format(addDays(new Date(), 14).getTime(), 'dd MMM yyyy')}
             </Typography>
           </ListItem>
@@ -73,39 +49,27 @@ const DetailsList7: FC = () => (
             divider
             sx={{
               justifyContent: 'space-between',
-              padding: 2
+              padding: 2,
             }}
           >
-            <Typography
-              color="textPrimary"
-              variant="subtitle2"
-            >
+            <Typography color="textPrimary" variant="subtitle2">
               Budget
             </Typography>
-            <Typography
-              color="textSecondary"
-              variant="body2"
-            >
-              {numeral(12500.00).format('$0,0.00')}
+            <Typography color="textSecondary" variant="body2">
+              {numeral(12500.0).format('$0,0.00')}
             </Typography>
           </ListItem>
           <ListItem
             disableGutters
             sx={{
               justifyContent: 'space-between',
-              padding: 2
+              padding: 2,
             }}
           >
-            <Typography
-              color="textPrimary"
-              variant="subtitle2"
-            >
+            <Typography color="textPrimary" variant="subtitle2">
               Last Update
             </Typography>
-            <Typography
-              color="textSecondary"
-              variant="body2"
-            >
+            <Typography color="textSecondary" variant="body2">
               {format(subMinutes(new Date(), 23).getTime(), 'dd MMM yyyy')}
             </Typography>
           </ListItem>

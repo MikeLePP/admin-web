@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { useRef, useState } from 'react';
 import type { ChangeEvent, FC } from 'react';
 import PropTypes from 'prop-types';
@@ -12,7 +13,7 @@ import {
   MenuItem,
   Paper,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import DotsHorizontalIcon from '../../../icons/DotsHorizontal';
 import { clearColumn, deleteColumn, updateColumn } from '../../../slices/kanban';
@@ -69,7 +70,7 @@ const KanbanColumn: FC<KanbanColumnProps> = (props) => {
       const update = { name };
 
       setIsRenaming(false);
-      await dispatch(updateColumn(column.id, update));
+      dispatch(updateColumn(column.id, update));
       toast.success('Column updated!');
     } catch (err) {
       console.error(err);
@@ -80,7 +81,7 @@ const KanbanColumn: FC<KanbanColumnProps> = (props) => {
   const handleDelete = async (): Promise<void> => {
     try {
       setOpenMenu(false);
-      await dispatch(deleteColumn(column.id));
+      dispatch(deleteColumn(column.id));
       toast.success('Column deleted!');
     } catch (err) {
       console.error(err);
@@ -91,7 +92,7 @@ const KanbanColumn: FC<KanbanColumnProps> = (props) => {
   const handleClear = async (): Promise<void> => {
     try {
       setOpenMenu(false);
-      await dispatch(clearColumn(column.id));
+      dispatch(clearColumn(column.id));
       toast.success('Column cleared!');
     } catch (err) {
       console.error(err);
@@ -111,8 +112,8 @@ const KanbanColumn: FC<KanbanColumnProps> = (props) => {
           overflowY: 'hidden',
           width: {
             xs: 300,
-            sm: 380
-          }
+            sm: 380,
+          },
         }}
       >
         <Box
@@ -120,64 +121,38 @@ const KanbanColumn: FC<KanbanColumnProps> = (props) => {
             alignItems: 'center',
             display: 'flex',
             px: 2,
-            py: 1
+            py: 1,
           }}
         >
-          {
-            isRenaming
-              ? (
-                <ClickAwayListener onClickAway={handleRename}>
-                  <TextField
-                    margin="dense"
-                    onBlur={handleRename}
-                    onChange={handleChange}
-                    value={name}
-                    variant="outlined"
-                  />
-                </ClickAwayListener>
-              )
-              : (
-                <Typography
-                  color="inherit"
-                  onClick={handleRenameInit}
-                  variant="h6"
-                >
-                  {column.name}
-                </Typography>
-              )
-          }
+          {isRenaming ? (
+            <ClickAwayListener onClickAway={handleRename}>
+              <TextField margin="dense" onBlur={handleRename} onChange={handleChange} value={name} variant="outlined" />
+            </ClickAwayListener>
+          ) : (
+            <Typography color="inherit" onClick={handleRenameInit} variant="h6">
+              {column.name}
+            </Typography>
+          )}
           <Box sx={{ flexGrow: 1 }} />
-          <IconButton
-            color="inherit"
-            edge="end"
-            onClick={handleMenuOpen}
-            ref={moreRef}
-          >
+          <IconButton color="inherit" edge="end" onClick={handleMenuOpen} ref={moreRef}>
             <DotsHorizontalIcon fontSize="small" />
           </IconButton>
         </Box>
         <Divider />
-        <Droppable
-          droppableId={column.id}
-          type="card"
-        >
+        <Droppable droppableId={column.id} type="card">
           {(provided): JSX.Element => (
             <Box
-              ref={provided.innerRef}
+              ref={(e: HTMLElement) => provided.innerRef(e)}
               sx={{
                 flexGrow: 1,
                 minHeight: 80,
                 overflowY: 'auto',
                 px: 2,
-                py: 1
+                py: 1,
               }}
             >
               {column.cardIds.map((cardId, index) => (
-                <Draggable
-                  draggableId={cardId}
-                  index={index}
-                  key={cardId}
-                >
+                <Draggable draggableId={cardId} index={index} key={cardId}>
                   {(_provided, snapshot): JSX.Element => (
                     <KanbanCard
                       cardId={cardId}
@@ -185,7 +160,7 @@ const KanbanColumn: FC<KanbanColumnProps> = (props) => {
                       index={index}
                       key={cardId}
                       column={column}
-                      ref={_provided.innerRef}
+                      ref={(e) => _provided.innerRef(e)}
                       style={{ ..._provided.draggableProps.style }}
                       {..._provided.draggableProps}
                       {..._provided.dragHandleProps}
@@ -205,21 +180,15 @@ const KanbanColumn: FC<KanbanColumnProps> = (props) => {
           anchorEl={moreRef.current}
           anchorOrigin={{
             horizontal: 'center',
-            vertical: 'bottom'
+            vertical: 'bottom',
           }}
           keepMounted
           onClose={handleMenuClose}
           open={openMenu}
         >
-          <MenuItem onClick={handleRenameInit}>
-            Rename
-          </MenuItem>
-          <MenuItem onClick={handleClear}>
-            Clear
-          </MenuItem>
-          <MenuItem onClick={handleDelete}>
-            Delete
-          </MenuItem>
+          <MenuItem onClick={handleRenameInit}>Rename</MenuItem>
+          <MenuItem onClick={handleClear}>Clear</MenuItem>
+          <MenuItem onClick={handleDelete}>Delete</MenuItem>
         </Menu>
       </Paper>
     </div>
@@ -227,7 +196,7 @@ const KanbanColumn: FC<KanbanColumnProps> = (props) => {
 };
 
 KanbanColumn.propTypes = {
-  columnId: PropTypes.string.isRequired
+  columnId: PropTypes.string.isRequired,
 };
 
 export default KanbanColumn;

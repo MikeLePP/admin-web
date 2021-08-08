@@ -23,14 +23,14 @@ const initialState: ChatState = {
   activeThreadId: null,
   contacts: {
     byId: {},
-    allIds: []
+    allIds: [],
   },
   threads: {
     byId: {},
-    allIds: []
+    allIds: [],
   },
   participants: [],
-  recipients: []
+  recipients: [],
 };
 
 const slice = createSlice({
@@ -90,52 +90,68 @@ const slice = createSlice({
       const recipientId = action.payload;
 
       state.recipients = state.recipients.filter((recipient) => recipient.id !== recipientId);
-    }
-  }
+    },
+  },
 });
 
 export const { reducer } = slice;
 
-export const getContacts = (): AppThunk => async (dispatch): Promise<void> => {
-  const data = await chatApi.getContacts();
+export const getContacts =
+  (): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const data = await chatApi.getContacts();
 
-  dispatch(slice.actions.getContacts(data));
-};
+    dispatch(slice.actions.getContacts(data));
+  };
 
-export const getThreads = (): AppThunk => async (dispatch): Promise<void> => {
-  const data = await chatApi.getThreads();
+export const getThreads =
+  (): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const data = await chatApi.getThreads();
 
-  dispatch(slice.actions.getThreads(data));
-};
+    dispatch(slice.actions.getThreads(data));
+  };
 
-export const getThread = (threadKey: string): AppThunk => async (dispatch): Promise<void> => {
-  const data = await chatApi.getThread(threadKey);
+export const getThread =
+  (threadKey: string): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const data = await chatApi.getThread(threadKey);
 
-  dispatch(slice.actions.getThread(data));
-};
+    dispatch(slice.actions.getThread(data));
+  };
 
-export const markThreadAsSeen = (threadId: string): AppThunk => async (dispatch): Promise<void> => {
-  await chatApi.markThreadAsSeen(threadId);
+export const markThreadAsSeen =
+  (threadId: string): AppThunk =>
+  async (dispatch): Promise<void> => {
+    await chatApi.markThreadAsSeen(threadId);
 
-  dispatch(slice.actions.markThreadAsSeen(threadId));
-};
+    dispatch(slice.actions.markThreadAsSeen(threadId));
+  };
 
-export const resetActiveThread = () => (dispatch): void => {
-  dispatch(slice.actions.resetActiveThread());
-};
+export const resetActiveThread =
+  () =>
+  (dispatch): void => {
+    dispatch(slice.actions.resetActiveThread());
+  };
 
-export const getParticipants = (threadKey: string): AppThunk => async (dispatch): Promise<void> => {
-  const data = await chatApi.getParticipants(threadKey);
+export const getParticipants =
+  (threadKey: string): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const data = await chatApi.getParticipants(threadKey);
 
-  dispatch(slice.actions.getParticipants(data));
-};
+    dispatch(slice.actions.getParticipants(data));
+  };
 
-export const addRecipient = (recipient: any): AppThunk => (dispatch): void => {
-  dispatch(slice.actions.addRecipient(recipient));
-};
+export const addRecipient =
+  (recipient: any): AppThunk =>
+  (dispatch): void => {
+    dispatch(slice.actions.addRecipient(recipient));
+  };
 
-export const removeRecipient = (recipientId: string): AppThunk => (dispatch): void => {
-  dispatch(slice.actions.removeRecipient(recipientId));
-};
+export const removeRecipient =
+  (recipientId: string): AppThunk =>
+  (dispatch): void => {
+    dispatch(slice.actions.removeRecipient(recipientId));
+  };
 
 export default slice;

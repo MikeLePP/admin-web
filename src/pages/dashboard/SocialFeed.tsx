@@ -29,7 +29,7 @@ const SocialFeed: FC = () => {
   }, [mounted]);
 
   useEffect(() => {
-    getPosts();
+    void getPosts();
   }, [getPosts]);
 
   return (
@@ -41,21 +41,15 @@ const SocialFeed: FC = () => {
         sx={{
           backgroundColor: 'background.default',
           minHeight: '100%',
-          py: 8
+          py: 8,
         }}
       >
         <Container maxWidth="lg">
           <div>
-            <Typography
-              color="textSecondary"
-              variant="overline"
-            >
+            <Typography color="textSecondary" variant="overline">
               Social Feed
             </Typography>
-            <Typography
-              color="textPrimary"
-              variant="h5"
-            >
+            <Typography color="textPrimary" variant="h5">
               Here&apos;s what your connections posted
             </Typography>
           </div>
@@ -63,10 +57,7 @@ const SocialFeed: FC = () => {
             <SocialPostAdd />
           </Box>
           {posts.map((post) => (
-            <Box
-              key={post.id}
-              sx={{ mt: 3 }}
-            >
+            <Box key={post.id} sx={{ mt: 3 }}>
               <SocialPostCard
                 authorAvatar={post.author.avatar}
                 authorName={post.author.name}

@@ -1,17 +1,7 @@
 import type { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
-import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  Chip,
-  Divider,
-  Link,
-  Typography
-} from '@material-ui/core';
+import { Avatar, Box, Card, CardContent, CardMedia, Chip, Divider, Link, Typography } from '@material-ui/core';
 
 interface ProjectApplicantCardProps {
   avatar: string;
@@ -21,27 +11,18 @@ interface ProjectApplicantCardProps {
 }
 
 const ProjectApplicantCard: FC<ProjectApplicantCardProps> = (props) => {
-  const {
-    avatar,
-    cover,
-    name,
-    skills,
-    ...other
-  } = props;
+  const { avatar, cover, name, skills, ...other } = props;
 
   return (
     <Card {...other}>
-      <CardMedia
-        image={cover}
-        sx={{ height: 200 }}
-      />
+      <CardMedia image={cover} sx={{ height: 200 }} />
       <CardContent sx={{ pt: 0 }}>
         <Box
           sx={{
             display: 'flex',
             justifyContent: 'center',
             mb: 2,
-            mt: '-50px'
+            mt: '-50px',
           }}
         >
           <Avatar
@@ -51,7 +32,7 @@ const ProjectApplicantCard: FC<ProjectApplicantCardProps> = (props) => {
             sx={{
               border: '3px solid #FFFFFF',
               height: 100,
-              width: 100
+              width: 100,
             }}
             to="#"
           />
@@ -67,24 +48,13 @@ const ProjectApplicantCard: FC<ProjectApplicantCardProps> = (props) => {
         >
           {name}
         </Link>
-        <Typography
-          align="center"
-          variant="body2"
-          color="textSecondary"
-        >
-          {6}
-          {' '}
-          contacts in common
+        <Typography align="center" variant="body2" color="textSecondary">
+          {6} contacts in common
         </Typography>
         <Divider sx={{ my: 2 }} />
         <Box sx={{ m: -0.5 }}>
           {skills.map((skill) => (
-            <Chip
-              key={skill}
-              label={skill}
-              sx={{ m: 0.5 }}
-              variant="outlined"
-            />
+            <Chip key={skill} label={skill} sx={{ m: 0.5 }} variant="outlined" />
           ))}
         </Box>
       </CardContent>
@@ -96,7 +66,7 @@ ProjectApplicantCard.propTypes = {
   avatar: PropTypes.string.isRequired,
   cover: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  skills: PropTypes.arrayOf(PropTypes.string).isRequired
+  skills: PropTypes.arrayOf(PropTypes.string).isRequired,
 };
 
 export default ProjectApplicantCard;

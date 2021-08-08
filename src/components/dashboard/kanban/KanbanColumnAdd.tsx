@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { useState } from 'react';
 import type { ChangeEvent, FC } from 'react';
 import toast from 'react-hot-toast';
@@ -25,7 +26,7 @@ const KanbanColumnAdd: FC = (props) => {
 
   const handleAddConfirm = async (): Promise<void> => {
     try {
-      await dispatch(createColumn(name || 'Untitled column'));
+      dispatch(createColumn(name || 'Untitled column'));
       setIsExpanded(false);
       setName('');
       toast.success('Column created!');
@@ -42,64 +43,48 @@ const KanbanColumnAdd: FC = (props) => {
           mx: 1,
           width: {
             sm: 380,
-            xs: 300
-          }
+            xs: 300,
+          },
         }}
       >
         <Box sx={{ p: 2 }}>
-          {
-            isExpanded
-              ? (
-                <>
-                  <TextField
-                    fullWidth
-                    label="Name"
-                    name="listName"
-                    onChange={handleChange}
-                    value={name}
-                    variant="outlined"
-                  />
-                  <Box
-                    sx={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      mt: 2
-                    }}
-                  >
-                    <Button
-                      color="primary"
-                      onClick={handleAddCancel}
-                      variant="text"
-                    >
-                      Cancel
-                    </Button>
-                    <Button
-                      color="primary"
-                      onClick={handleAddConfirm}
-                      variant="contained"
-                    >
-                      Add
-                    </Button>
-                  </Box>
-                </>
-              )
-              : (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    justifyContent: 'center'
-                  }}
-                >
-                  <Button
-                    color="primary"
-                    onClick={handleAddInit}
-                    variant="text"
-                  >
-                    Add Column
-                  </Button>
-                </Box>
-              )
-          }
+          {isExpanded ? (
+            <>
+              <TextField
+                fullWidth
+                label="Name"
+                name="listName"
+                onChange={handleChange}
+                value={name}
+                variant="outlined"
+              />
+              <Box
+                sx={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  mt: 2,
+                }}
+              >
+                <Button color="primary" onClick={handleAddCancel} variant="text">
+                  Cancel
+                </Button>
+                <Button color="primary" onClick={handleAddConfirm} variant="contained">
+                  Add
+                </Button>
+              </Box>
+            </>
+          ) : (
+            <Box
+              sx={{
+                display: 'flex',
+                justifyContent: 'center',
+              }}
+            >
+              <Button color="primary" onClick={handleAddInit} variant="text">
+                Add Column
+              </Button>
+            </Box>
+          )}
         </Box>
       </Card>
     </div>

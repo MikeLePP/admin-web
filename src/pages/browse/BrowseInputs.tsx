@@ -24,30 +24,15 @@ const BrowseInputs: FC = () => {
         sx={{
           backgroundColor: 'background.paper',
           pb: 15,
-          pt: 8
+          pt: 8,
         }}
       >
         <Container maxWidth="lg">
-          <WidgetPreviewer
-            element={<InputCheckbox />}
-            name="Checkbox with additional text"
-          />
-          <WidgetPreviewer
-            element={<InputRadio />}
-            name="Radio button with additional text"
-          />
-          <WidgetPreviewer
-            element={<InputSwitch />}
-            name="Switch with top description"
-          />
-          <WidgetPreviewer
-            element={<InputTextField />}
-            name="Text fields integrated in a form"
-          />
-          <WidgetPreviewer
-            element={<InputMixed />}
-            name="Mixed input form"
-          />
+          <WidgetPreviewer element={<InputCheckbox />} name="Checkbox with additional text" />
+          <WidgetPreviewer element={<InputRadio />} name="Radio button with additional text" />
+          <WidgetPreviewer element={<InputSwitch />} name="Switch with top description" />
+          <WidgetPreviewer element={<InputTextField />} name="Text fields integrated in a form" />
+          <WidgetPreviewer element={<InputMixed />} name="Mixed input form" />
         </Container>
       </Box>
     </>

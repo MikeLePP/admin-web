@@ -1,16 +1,5 @@
 import type { FC } from 'react';
-import {
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  Grid,
-  Chip,
-  Divider,
-  Link,
-  Typography
-} from '@material-ui/core';
+import { Avatar, Box, Card, CardContent, CardMedia, Grid, Chip, Divider, Link, Typography } from '@material-ui/core';
 
 const applicants = [
   {
@@ -19,13 +8,7 @@ const applicants = [
     commonConnections: 12,
     cover: '/static/mock-images/covers/cover_2.jpg',
     name: 'Marcus Finn',
-    skills: [
-      'User Experience',
-      'FrontEnd development',
-      'HTML5',
-      'VueJS',
-      'ReactJS'
-    ]
+    skills: ['User Experience', 'FrontEnd development', 'HTML5', 'VueJS', 'ReactJS'],
   },
   {
     id: '5e887ac47eed253091be10cb',
@@ -33,12 +16,7 @@ const applicants = [
     commonConnections: 5,
     cover: '/static/mock-images/covers/cover_3.jpg',
     name: 'Carson Darrin',
-    skills: [
-      'User Interface',
-      'FullStack development',
-      'Angular',
-      'ExpressJS'
-    ]
+    skills: ['User Interface', 'FullStack development', 'Angular', 'ExpressJS'],
   },
   {
     id: '5e86809283e28b96d2d38537',
@@ -46,13 +24,8 @@ const applicants = [
     commonConnections: 17,
     cover: '/static/mock-images/covers/cover_1.jpg',
     name: 'Jane Rotanson',
-    skills: [
-      'BackEnd development',
-      'Firebase',
-      'MongoDB',
-      'ExpressJS'
-    ]
-  }
+    skills: ['BackEnd development', 'Firebase', 'MongoDB', 'ExpressJS'],
+  },
 ];
 
 const GridList4: FC = () => (
@@ -60,32 +33,21 @@ const GridList4: FC = () => (
     sx={{
       backgroundColor: 'background.default',
       minHeight: '100%',
-      p: 3
+      p: 3,
     }}
   >
-    <Grid
-      container
-      spacing={3}
-    >
+    <Grid container spacing={3}>
       {applicants.map((applicant) => (
-        <Grid
-          item
-          key={applicant.id}
-          md={4}
-          xs={12}
-        >
+        <Grid item key={applicant.id} md={4} xs={12}>
           <Card>
-            <CardMedia
-              image={applicant.cover}
-              sx={{ height: 200 }}
-            />
+            <CardMedia image={applicant.cover} sx={{ height: 200 }} />
             <CardContent sx={{ pt: 0 }}>
               <Box
                 sx={{
                   display: 'flex',
                   justifyContent: 'center',
                   mb: 2,
-                  mt: '-50px'
+                  mt: '-50px',
                 }}
               >
                 <Avatar
@@ -94,37 +56,20 @@ const GridList4: FC = () => (
                   sx={{
                     border: '3px solid #FFFFFF',
                     height: 100,
-                    width: 100
+                    width: 100,
                   }}
                 />
               </Box>
-              <Link
-                align="center"
-                color="textPrimary"
-                display="block"
-                underline="none"
-                variant="h6"
-              >
+              <Link align="center" color="textPrimary" display="block" underline="none" variant="h6">
                 {applicant.name}
               </Link>
-              <Typography
-                align="center"
-                variant="body2"
-                color="textSecondary"
-              >
-                {applicant.commonConnections}
-                {' '}
-                contacts in common
+              <Typography align="center" variant="body2" color="textSecondary">
+                {applicant.commonConnections} contacts in common
               </Typography>
               <Divider sx={{ my: 2 }} />
               <Box sx={{ m: -0.5 }}>
                 {applicant.skills.map((skill) => (
-                  <Chip
-                    key={skill}
-                    label={skill}
-                    sx={{ m: 0.5 }}
-                    variant="outlined"
-                  />
+                  <Chip key={skill} label={skill} sx={{ m: 0.5 }} variant="outlined" />
                 ))}
               </Box>
             </CardContent>

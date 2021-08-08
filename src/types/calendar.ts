@@ -8,8 +8,4 @@ export interface CalendarEvent {
   title: string;
 }
 
-export type CalendarView =
-  | 'dayGridMonth'
-  | 'timeGridWeek'
-  | 'timeGridDay'
-  | 'listWeek';
+export type CalendarView = 'dayGridMonth' | 'timeGridWeek' | 'timeGridDay' | 'listWeek';

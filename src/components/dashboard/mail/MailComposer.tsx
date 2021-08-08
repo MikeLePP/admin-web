@@ -10,7 +10,7 @@ import {
   Paper,
   Portal,
   Tooltip,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import AddPhotoIcon from '@material-ui/icons/AddPhotoAlternate';
 import AttachFileIcon from '@material-ui/icons/AttachFile';
@@ -64,12 +64,10 @@ const MailComposer: FC = () => {
           right: 0,
           width: 600,
           zIndex: 2000,
-          ...(
-            isFullScreen && {
-              height: '100%',
-              width: '100%'
-            }
-          )
+          ...(isFullScreen && {
+            height: '100%',
+            width: '100%',
+          }),
         }}
         elevation={12}
       >
@@ -78,29 +76,22 @@ const MailComposer: FC = () => {
             alignItems: 'center',
             display: 'flex',
             px: 2,
-            py: 1
+            py: 1,
           }}
         >
-          <Typography
-            variant="h6"
-            color="textPrimary"
-          >
+          <Typography variant="h6" color="textPrimary">
             New Message
           </Typography>
           <Box sx={{ flexGrow: 1 }} />
-          {
-            isFullScreen
-              ? (
-                <IconButton onClick={handleExitFullScreen}>
-                  <MinimizeIcon fontSize="small" />
-                </IconButton>
-              )
-              : (
-                <IconButton onClick={handleEnterFullScreen}>
-                  <ArrowsExpandIcon fontSize="small" />
-                </IconButton>
-              )
-          }
+          {isFullScreen ? (
+            <IconButton onClick={handleExitFullScreen}>
+              <MinimizeIcon fontSize="small" />
+            </IconButton>
+          ) : (
+            <IconButton onClick={handleEnterFullScreen}>
+              <ArrowsExpandIcon fontSize="small" />
+            </IconButton>
+          )}
           <IconButton onClick={handleClose}>
             <XIcon fontSize="small" />
           </IconButton>
@@ -112,7 +103,7 @@ const MailComposer: FC = () => {
           sx={{
             p: 1,
             borderBottom: 1,
-            borderColor: 'divider'
+            borderColor: 'divider',
           }}
         />
         <Input
@@ -122,7 +113,7 @@ const MailComposer: FC = () => {
           sx={{
             p: 1,
             borderBottom: 1,
-            borderColor: 'divider'
+            borderColor: 'divider',
           }}
         />
         <QuillEditor
@@ -130,7 +121,7 @@ const MailComposer: FC = () => {
           placeholder="Leave a message"
           sx={{
             border: 'none',
-            flexGrow: 1
+            flexGrow: 1,
           }}
           value={messageBody}
         />
@@ -140,28 +131,19 @@ const MailComposer: FC = () => {
             alignItems: 'center',
             display: 'flex',
             justifyContent: 'flex-end',
-            p: 2
+            p: 2,
           }}
         >
-          <Button
-            color="primary"
-            variant="contained"
-          >
+          <Button color="primary" variant="contained">
             Send
           </Button>
           <Tooltip title="Attach image">
-            <IconButton
-              size="small"
-              sx={{ ml: 1 }}
-            >
+            <IconButton size="small" sx={{ ml: 1 }}>
               <AddPhotoIcon fontSize="small" />
             </IconButton>
           </Tooltip>
           <Tooltip title="Attach file">
-            <IconButton
-              size="small"
-              sx={{ ml: 1 }}
-            >
+            <IconButton size="small" sx={{ ml: 1 }}>
               <AttachFileIcon fontSize="small" />
             </IconButton>
           </Tooltip>

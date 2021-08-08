@@ -1,13 +1,6 @@
 import { useRef, useState, memo } from 'react';
 import type { FC } from 'react';
-import {
-  ListItemIcon,
-  ListItemText,
-  Tooltip,
-  IconButton,
-  Menu,
-  MenuItem
-} from '@material-ui/core';
+import { ListItemIcon, ListItemText, Tooltip, IconButton, Menu, MenuItem } from '@material-ui/core';
 import ArchiveIcon from '../icons/Archive';
 import DocumentTextIcon from '../icons/DocumentText';
 import DotsHorizontalIcon from '../icons/DotsHorizontal';
@@ -29,11 +22,7 @@ const MoreMenu: FC = (props) => {
   return (
     <>
       <Tooltip title="More options">
-        <IconButton
-          onClick={handleMenuOpen}
-          ref={anchorRef}
-          {...props}
-        >
+        <IconButton onClick={handleMenuOpen} ref={anchorRef} {...props}>
           <DotsHorizontalIcon fontSize="small" />
         </IconButton>
       </Tooltip>
@@ -41,19 +30,19 @@ const MoreMenu: FC = (props) => {
         anchorEl={anchorRef.current}
         anchorOrigin={{
           horizontal: 'left',
-          vertical: 'top'
+          vertical: 'top',
         }}
         onClose={handleMenuClose}
         open={openMenu}
         PaperProps={{
           sx: {
             maxWidth: '100%',
-            width: 256
-          }
+            width: 256,
+          },
         }}
         transformOrigin={{
           horizontal: 'left',
-          vertical: 'top'
+          vertical: 'top',
         }}
       >
         <MenuItem>

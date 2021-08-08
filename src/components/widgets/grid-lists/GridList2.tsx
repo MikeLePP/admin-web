@@ -12,7 +12,7 @@ import {
   Link,
   Rating,
   Tooltip,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import red from '@material-ui/core/colors/red';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -26,10 +26,11 @@ const projects = [
     author: {
       id: '5e887b7602bdbc4dbb234b27',
       avatar: '/static/mock-images/avatars/avatar-jie_yan_song.png',
-      name: 'Jie Yan Song'
+      name: 'Jie Yan Song',
     },
-    budget: 6125.00,
-    caption: 'We\'re looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.',
+    budget: 6125.0,
+    caption:
+      "We're looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.",
     currency: '$',
     isLiked: true,
     likes: 7,
@@ -39,17 +40,18 @@ const projects = [
     membersCount: 2,
     title: 'Mella Full Screen Slider',
     type: 'Full-Time',
-    updatedAt: subMinutes(now, 24).getTime()
+    updatedAt: subMinutes(now, 24).getTime(),
   },
   {
     id: '5e8dcf076c50b9d8e756a5a2',
     author: {
       id: '5e887d0b3d090c1b8f162003',
       avatar: '/static/mock-images/avatars/avatar-omar_darobe.png',
-      name: 'Omar Darobe'
+      name: 'Omar Darobe',
     },
-    budget: 4205.00,
-    caption: 'We\'re looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.',
+    budget: 4205.0,
+    caption:
+      "We're looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.",
     currency: '$',
     isLiked: true,
     likes: 12,
@@ -59,17 +61,18 @@ const projects = [
     membersCount: 3,
     title: 'Overview Design',
     type: 'Full-Time',
-    updatedAt: subHours(now, 1).getTime()
+    updatedAt: subHours(now, 1).getTime(),
   },
   {
     id: '5e8dcf105a6732b3ed82cf7a',
     author: {
       id: '5e88792be2d4cfb4bf0971d9',
       avatar: '/static/mock-images/avatars/avatar-siegbert_gottfried.png',
-      name: 'Siegbert Gottfried'
+      name: 'Siegbert Gottfried',
     },
-    budget: 2394.00,
-    caption: 'We\'re looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.',
+    budget: 2394.0,
+    caption:
+      "We're looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.",
     currency: '$',
     isLiked: true,
     likes: 18,
@@ -79,8 +82,8 @@ const projects = [
     membersCount: 8,
     title: 'Ten80 Web Design',
     type: 'Full-Time',
-    updatedAt: subHours(now, 16).getTime()
-  }
+    updatedAt: subHours(now, 16).getTime(),
+  },
 ];
 
 const GridList2: FC = () => (
@@ -88,62 +91,39 @@ const GridList2: FC = () => (
     sx={{
       backgroundColor: 'background.default',
       minHeight: '100%',
-      p: 3
+      p: 3,
     }}
   >
-    <Grid
-      container
-      spacing={3}
-    >
+    <Grid container spacing={3}>
       {projects.map((project) => (
-        <Grid
-          item
-          key={project.id}
-          md={4}
-          xs={12}
-        >
+        <Grid item key={project.id} md={4} xs={12}>
           <Card>
             <Box sx={{ p: 2 }}>
               <CardMedia
                 image={project.image}
                 sx={{
                   backgroundColor: 'background.default',
-                  height: 200
+                  height: 200,
                 }}
               />
               <Box
                 sx={{
                   alignItems: 'center',
                   display: 'flex',
-                  mt: 2
+                  mt: 2,
                 }}
               >
                 <Avatar src={project.author.avatar} />
                 <Box sx={{ ml: 2 }}>
-                  <Link
-                    color="textPrimary"
-                    variant="h6"
-                  >
+                  <Link color="textPrimary" variant="h6">
                     {project.title}
                   </Link>
-                  <Typography
-                    color="textSecondary"
-                    variant="body2"
-                  >
-                    by
-                    {' '}
-                    <Link
-                      color="textPrimary"
-                      variant="subtitle2"
-                    >
+                  <Typography color="textSecondary" variant="body2">
+                    by{' '}
+                    <Link color="textPrimary" variant="subtitle2">
                       {project.author.name}
-                    </Link>
-                    {' '}
-                    | Updated
-                    {' '}
-                    {formatDistanceToNowStrict(project.updatedAt)}
-                    {' '}
-                    ago
+                    </Link>{' '}
+                    | Updated {formatDistanceToNowStrict(project.updatedAt)} ago
                   </Typography>
                 </Box>
               </Box>
@@ -151,68 +131,41 @@ const GridList2: FC = () => (
             <Box
               sx={{
                 pb: 2,
-                px: 3
+                px: 3,
               }}
             >
-              <Typography
-                color="textSecondary"
-                variant="body2"
-              >
+              <Typography color="textSecondary" variant="body2">
                 {project.caption}
               </Typography>
             </Box>
             <Box
               sx={{
                 px: 3,
-                py: 2
+                py: 2,
               }}
             >
-              <Grid
-                alignItems="center"
-                container
-                justifyContent="space-between"
-                spacing={3}
-              >
+              <Grid alignItems="center" container justifyContent="space-between" spacing={3}>
                 <Grid item>
-                  <Typography
-                    color="textPrimary"
-                    variant="subtitle2"
-                  >
-                    {numeral(project.budget)
-                      .format(`${project.currency}0,0.00`)}
+                  <Typography color="textPrimary" variant="subtitle2">
+                    {numeral(project.budget).format(`${project.currency}0,0.00`)}
                   </Typography>
-                  <Typography
-                    color="textSecondary"
-                    variant="body2"
-                  >
+                  <Typography color="textSecondary" variant="body2">
                     Budget
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <Typography
-                    color="textPrimary"
-                    variant="subtitle2"
-                  >
+                  <Typography color="textPrimary" variant="subtitle2">
                     {project.location}
                   </Typography>
-                  <Typography
-                    color="textSecondary"
-                    variant="body2"
-                  >
+                  <Typography color="textSecondary" variant="body2">
                     Location
                   </Typography>
                 </Grid>
                 <Grid item>
-                  <Typography
-                    color="textPrimary"
-                    variant="subtitle2"
-                  >
+                  <Typography color="textPrimary" variant="subtitle2">
                     {project.type}
                   </Typography>
-                  <Typography
-                    color="textSecondary"
-                    variant="body2"
-                  >
+                  <Typography color="textSecondary" variant="body2">
                     Type
                   </Typography>
                 </Grid>
@@ -225,13 +178,13 @@ const GridList2: FC = () => (
                 display: 'flex',
                 pl: 2,
                 pr: 3,
-                py: 2
+                py: 2,
               }}
             >
               <Box
                 sx={{
                   alignItems: 'center',
-                  display: 'flex'
+                  display: 'flex',
                 }}
               >
                 <Tooltip title="Unlike">
@@ -239,10 +192,7 @@ const GridList2: FC = () => (
                     <FavoriteIcon fontSize="small" />
                   </IconButton>
                 </Tooltip>
-                <Typography
-                  color="textSecondary"
-                  variant="subtitle2"
-                >
+                <Typography color="textSecondary" variant="subtitle2">
                   {project.likes}
                 </Typography>
               </Box>
@@ -250,24 +200,16 @@ const GridList2: FC = () => (
                 sx={{
                   alignItems: 'center',
                   display: 'flex',
-                  ml: 2
+                  ml: 2,
                 }}
               >
                 <UsersIcon fontSize="small" />
-                <Typography
-                  color="textSecondary"
-                  sx={{ ml: 1 }}
-                  variant="subtitle2"
-                >
+                <Typography color="textSecondary" sx={{ ml: 1 }} variant="subtitle2">
                   {project.membersCount}
                 </Typography>
               </Box>
               <Box sx={{ flexGrow: 1 }} />
-              <Rating
-                readOnly
-                size="small"
-                value={project.rating}
-              />
+              <Rating readOnly size="small" value={project.rating} />
             </Box>
           </Card>
         </Grid>

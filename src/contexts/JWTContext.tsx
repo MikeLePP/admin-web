@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { createContext, useEffect, useReducer } from 'react';
 import type { FC, ReactNode } from 'react';
 import PropTypes from 'prop-types';
@@ -47,16 +48,12 @@ type RegisterAction = {
   };
 };
 
-type Action =
-  | InitializeAction
-  | LoginAction
-  | LogoutAction
-  | RegisterAction;
+type Action = InitializeAction | LoginAction | LogoutAction | RegisterAction;
 
 const initialState: State = {
   isAuthenticated: false,
   isInitialized: false,
-  user: null
+  user: null,
 };
 
 const handlers: Record<string, (state: State, action: Action) => State> = {
@@ -67,7 +64,7 @@ const handlers: Record<string, (state: State, action: Action) => State> = {
       ...state,
       isAuthenticated,
       isInitialized: true,
-      user
+      user,
     };
   },
   LOGIN: (state: State, action: LoginAction): State => {
@@ -76,13 +73,13 @@ const handlers: Record<string, (state: State, action: Action) => State> = {
     return {
       ...state,
       isAuthenticated: true,
-      user
+      user,
     };
   },
   LOGOUT: (state: State): State => ({
     ...state,
     isAuthenticated: false,
-    user: null
+    user: null,
   }),
   REGISTER: (state: State, action: RegisterAction): State => {
     const { user } = action.payload;
@@ -90,21 +87,20 @@ const handlers: Record<string, (state: State, action: Action) => State> = {
     return {
       ...state,
       isAuthenticated: true,
-      user
+      user,
     };
-  }
+  },
 };
 
-const reducer = (state: State, action: Action): State => (
-  handlers[action.type] ? handlers[action.type](state, action) : state
-);
+const reducer = (state: State, action: Action): State =>
+  handlers[action.type] ? handlers[action.type](state, action) : state;
 
 const AuthContext = createContext<AuthContextValue>({
   ...initialState,
   platform: 'JWT',
   login: () => Promise.resolve(),
   logout: () => Promise.resolve(),
-  register: () => Promise.resolve()
+  register: () => Promise.resolve(),
 });
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
@@ -123,16 +119,16 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
             type: 'INITIALIZE',
             payload: {
               isAuthenticated: true,
-              user
-            }
+              user,
+            },
           });
         } else {
           dispatch({
             type: 'INITIALIZE',
             payload: {
               isAuthenticated: false,
-              user: null
-            }
+              user: null,
+            },
           });
         }
       } catch (err) {
@@ -141,13 +137,13 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
           type: 'INITIALIZE',
           payload: {
             isAuthenticated: false,
-            user: null
-          }
+            user: null,
+          },
         });
       }
     };
 
-    initialize();
+    void initialize();
   }, []);
 
   const login = async (email: string, password: string): Promise<void> => {
@@ -159,8 +155,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     dispatch({
       type: 'LOGIN',
       payload: {
-        user
-      }
+        user,
+      },
     });
   };
 
@@ -169,11 +165,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     dispatch({ type: 'LOGOUT' });
   };
 
-  const register = async (
-    email: string,
-    name: string,
-    password: string
-  ): Promise<void> => {
+  const register = async (email: string, name: string, password: string): Promise<void> => {
     const accessToken = await authApi.register({ email, name, password });
     const user = await authApi.me(accessToken);
 
@@ -182,8 +174,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     dispatch({
       type: 'REGISTER',
       payload: {
-        user
-      }
+        user,
+      },
     });
   };
 
@@ -194,7 +186,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         platform: 'JWT',
         login,
         logout,
-        register
+        register,
       }}
     >
       {children}
@@ -203,7 +195,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
 };
 
 AuthProvider.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 export default AuthContext;

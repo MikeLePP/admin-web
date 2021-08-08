@@ -14,7 +14,7 @@ import {
   TableCell,
   TableRow,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import ReceiptIcon from '@material-ui/icons/Receipt';
 
@@ -29,7 +29,7 @@ const order = {
     city: 'San Diego',
     country: 'USA',
     email: 'miron.vitold@devias.io',
-    name: 'Miron Vitold'
+    name: 'Miron Vitold',
   },
   items: [
     {
@@ -38,7 +38,7 @@ const order = {
       currency: '$',
       name: 'Project Points',
       quantity: 25,
-      unitAmount: 50.25
+      unitAmount: 50.25,
     },
     {
       id: '5ecb8ac10f116d04bed990eb',
@@ -46,13 +46,13 @@ const order = {
       currency: '$',
       name: 'Freelancer Subscription',
       quantity: 1,
-      unitAmount: 5.00
-    }
+      unitAmount: 5.0,
+    },
   ],
   number: 'DEV-103',
   paymentMethod: 'CreditCard',
   status: 'pending',
-  totalAmount: 500.00
+  totalAmount: 500.0,
 };
 
 const statusOptions = ['Canceled', 'Completed', 'Rejected'];
@@ -69,7 +69,7 @@ const DetailsList5: FC = () => {
       sx={{
         backgroundColor: 'background.default',
         minHeight: '100%',
-        p: 3
+        p: 3,
       }}
     >
       <Card>
@@ -79,101 +79,60 @@ const DetailsList5: FC = () => {
           <TableBody>
             <TableRow>
               <TableCell>
-                <Typography
-                  color="textPrimary"
-                  variant="subtitle2"
-                >
+                <Typography color="textPrimary" variant="subtitle2">
                   Customer
                 </Typography>
               </TableCell>
               <TableCell>
-                <div>
-                  {order.customer.name}
-                </div>
-                <div>
-                  {order.customer.address1}
-                </div>
-                <div>
-                  {order.customer.city}
-                </div>
-                <div>
-                  {order.customer.country}
-                </div>
+                <div>{order.customer.name}</div>
+                <div>{order.customer.address1}</div>
+                <div>{order.customer.city}</div>
+                <div>{order.customer.country}</div>
               </TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
-                <Typography
-                  color="textPrimary"
-                  variant="subtitle2"
-                >
+                <Typography color="textPrimary" variant="subtitle2">
                   ID
                 </Typography>
               </TableCell>
-              <TableCell>
-                #
-                {order.id}
-              </TableCell>
+              <TableCell>#{order.id}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
-                <Typography
-                  color="textPrimary"
-                  variant="subtitle2"
-                >
+                <Typography color="textPrimary" variant="subtitle2">
                   Number
                 </Typography>
               </TableCell>
-              <TableCell>
-                {order.number}
-              </TableCell>
+              <TableCell>{order.number}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
-                <Typography
-                  color="textPrimary"
-                  variant="subtitle2"
-                >
+                <Typography color="textPrimary" variant="subtitle2">
                   Date
                 </Typography>
               </TableCell>
-              <TableCell>
-                {format(order.createdAt, 'dd/MM/yyyy HH:mm')}
-              </TableCell>
+              <TableCell>{format(order.createdAt, 'dd/MM/yyyy HH:mm')}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
-                <Typography
-                  color="textPrimary"
-                  variant="subtitle2"
-                >
+                <Typography color="textPrimary" variant="subtitle2">
                   Promotion Code
                 </Typography>
               </TableCell>
-              <TableCell>
-                {order.coupon ? order.coupon : 'N/A'}
-              </TableCell>
+              <TableCell>{order.coupon ? order.coupon : 'N/A'}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
-                <Typography
-                  color="textPrimary"
-                  variant="subtitle2"
-                >
+                <Typography color="textPrimary" variant="subtitle2">
                   Total Amount
                 </Typography>
               </TableCell>
-              <TableCell>
-                {numeral(order.totalAmount)
-                  .format(`${order.currency}0,0.00`)}
-              </TableCell>
+              <TableCell>{numeral(order.totalAmount).format(`${order.currency}0,0.00`)}</TableCell>
             </TableRow>
             <TableRow>
               <TableCell>
-                <Typography
-                  color="textPrimary"
-                  variant="subtitle2"
-                >
+                <Typography color="textPrimary" variant="subtitle2">
                   Status
                 </Typography>
               </TableCell>
@@ -188,10 +147,7 @@ const DetailsList5: FC = () => {
                   variant="outlined"
                 >
                   {statusOptions.map((option) => (
-                    <option
-                      key={option}
-                      value={option}
-                    >
+                    <option key={option} value={option}>
                       {option}
                     </option>
                   ))}
@@ -201,11 +157,7 @@ const DetailsList5: FC = () => {
           </TableBody>
         </Table>
         <CardActions>
-          <Button
-            color="primary"
-            startIcon={<ReceiptIcon fontSize="small" />}
-            variant="text"
-          >
+          <Button color="primary" startIcon={<ReceiptIcon fontSize="small" />} variant="text">
             Resend Invoice
           </Button>
         </CardActions>

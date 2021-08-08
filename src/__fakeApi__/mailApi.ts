@@ -7,56 +7,56 @@ const labels: Label[] = [
   {
     id: 'all',
     name: 'All Mail',
-    type: 'system_label'
+    type: 'system_label',
   },
   {
     id: 'inbox',
     name: 'Inbox',
     totalCount: 0,
     type: 'system_label',
-    unreadCount: 1
+    unreadCount: 1,
   },
   {
     id: 'sent',
     name: 'Sent',
     totalCount: 0,
     type: 'system_label',
-    unreadCount: 0
+    unreadCount: 0,
   },
   {
     id: 'drafts',
     name: 'Drafts',
     totalCount: 0,
     type: 'system_label',
-    unreadCount: 0
+    unreadCount: 0,
   },
   {
     id: 'trash',
     name: 'Trash',
     totalCount: 1,
     type: 'system_label',
-    unreadCount: 0
+    unreadCount: 0,
   },
   {
     id: 'spam',
     name: 'Spam',
     totalCount: 1,
     type: 'system_label',
-    unreadCount: 1
+    unreadCount: 1,
   },
   {
     id: 'important',
     name: 'Important',
     totalCount: 1,
     type: 'system_label',
-    unreadCount: 0
+    unreadCount: 0,
   },
   {
     id: 'starred',
     name: 'Starred',
     totalCount: 1,
     type: 'system_label',
-    unreadCount: 1
+    unreadCount: 1,
   },
   {
     id: '5e892628d4bc60b4514d5d36',
@@ -64,7 +64,7 @@ const labels: Label[] = [
     name: 'Work',
     totalCount: 1,
     type: 'custom_label',
-    unreadCount: 1
+    unreadCount: 1,
   },
   {
     id: '5e8926820cf9ec6c834114ec',
@@ -72,7 +72,7 @@ const labels: Label[] = [
     name: 'Business',
     totalCount: 2,
     type: 'custom_label',
-    unreadCount: 0
+    unreadCount: 0,
   },
   {
     id: '5e892696db60f561c43c6f81',
@@ -80,8 +80,8 @@ const labels: Label[] = [
     name: 'Personal',
     totalCount: 1,
     type: 'custom_label',
-    unreadCount: 0
-  }
+    unreadCount: 0,
+  },
 ];
 
 const emails: Email[] = [
@@ -108,16 +108,16 @@ Marcus Finn
     from: {
       avatar: '/static/mock-images/avatars/avatar-marcus_finn.png',
       email: 'marcus.finn@devias.io',
-      name: 'Marcus Finn'
+      name: 'Marcus Finn',
     },
     to: [
       {
         avatar: '/static/mock-images/avatars/avatar-jane_rotanson.png',
         email: 'jane.rotanson@devias.io',
-        name: 'Jane Rotanson'
-      }
+        name: 'Jane Rotanson',
+      },
     ],
-    createdAt: now.getTime()
+    createdAt: now.getTime(),
   },
   {
     id: '5e86bcbd8406cd3055f2b6c8',
@@ -133,16 +133,16 @@ Hey, nice projects! I really liked the one in react. What's your quote on kinda 
     from: {
       avatar: '/static/mock-images/avatars/avatar-miron_vitold.png',
       email: 'miron.vitold@devias.io',
-      name: 'Miron Vitold'
+      name: 'Miron Vitold',
     },
     to: [
       {
         avatar: '/static/mock-images/avatars/avatar-jane_rotanson.png',
         email: 'jane.rotanson@devias.io',
-        name: 'Jane Rotanson'
-      }
+        name: 'Jane Rotanson',
+      },
     ],
-    createdAt: now.getTime()
+    createdAt: now.getTime(),
   },
   {
     id: '5e86bcb9fee1ec12453fa13b',
@@ -158,16 +158,16 @@ Dear Jane, Your flight is coming up soon. Please don’t forget to check in for 
     from: {
       avatar: '/static/mock-images/avatars/avatar-penjani_inyene.png',
       email: 'penjani.inyene@devias.io',
-      name: 'Penjani Inyene'
+      name: 'Penjani Inyene',
     },
     to: [
       {
         avatar: '/static/mock-images/avatars/avatar-jane_rotanson.png',
         email: 'jane.rotanson@devias.io',
-        name: 'Jane Rotanson'
-      }
+        name: 'Jane Rotanson',
+      },
     ],
-    createdAt: now.getTime()
+    createdAt: now.getTime(),
   },
   {
     id: '5e86bcb5575181a5e527e24f',
@@ -183,17 +183,17 @@ My market leading client has another fantastic opportunity for an experienced So
     from: {
       avatar: '/static/mock-images/avatars/avatar-carson_darrin.png',
       email: 'carson.darrin@devias.io',
-      name: 'Carson Darrin'
+      name: 'Carson Darrin',
     },
     to: [
       {
         avatar: '/static/mock-images/avatars/avatar-jane_rotanson.png',
         email: 'jane.rotanson@devias.io',
-        name: 'Jane Rotanson'
-      }
+        name: 'Jane Rotanson',
+      },
     ],
-    createdAt: now.getTime()
-  }
+    createdAt: now.getTime(),
+  },
 ];
 
 class MailApi {

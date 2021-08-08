@@ -18,9 +18,7 @@ const MailList: FC = (props) => {
   }, [customLabel, systemLabel]);
 
   const handleSelectAllEmails = (): void => {
-    setSelectedEmails(emails.allIds.map((
-      (emailId) => emailId
-    )));
+    setSelectedEmails(emails.allIds.map((emailId) => emailId));
   };
 
   const handleDeselectAllEmails = (): void => {
@@ -46,7 +44,7 @@ const MailList: FC = (props) => {
       sx={{
         backgroundColor: 'background.default',
         flexGrow: 1,
-        overflow: 'hidden'
+        overflow: 'hidden',
       }}
       {...props}
     >

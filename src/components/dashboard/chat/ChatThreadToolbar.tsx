@@ -11,7 +11,7 @@ import {
   Menu,
   MenuItem,
   Tooltip,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { experimentalStyled } from '@material-ui/core/styles';
 import ArchiveIcon from '../../../icons/Archive';
@@ -33,8 +33,8 @@ const ParticipantAvatar = experimentalStyled(Avatar)(({ styleProps }) => {
       height: 30,
       width: 30,
       '&:nth-of-type(2)': {
-        mt: '10px'
-      }
+        mt: '10px',
+      },
     };
   }
 
@@ -48,13 +48,8 @@ const ChatThreadToolbar: FC<ChatThreadToolbarProps> = (props) => {
 
   // We hardcode the current user ID because the mocked that is not in sync with the auth provider.
   // When implementing this app with a real database, replace this ID with the ID from Auth Context.
-  const otherParticipants = participants.filter((participant) => (
-    participant.id !== '5e86809283e28b96d2d38537'
-  ));
-  const displayNames = otherParticipants.reduce((
-    names,
-    participant
-  ) => [...names, participant.name], []).join(', ');
+  const otherParticipants = participants.filter((participant) => participant.id !== '5e86809283e28b96d2d38537');
+  const displayNames = otherParticipants.reduce((names, participant) => [...names, participant.name], []).join(', ');
 
   const handleMenuOpen = (): void => {
     setOpenMenu(true);
@@ -74,7 +69,7 @@ const ChatThreadToolbar: FC<ChatThreadToolbarProps> = (props) => {
         flexShrink: 0,
         minHeight: 64,
         px: 2,
-        py: 1
+        py: 1,
       }}
       {...other}
     >
@@ -86,9 +81,9 @@ const ChatThreadToolbar: FC<ChatThreadToolbarProps> = (props) => {
             height: 30,
             width: 30,
             '&:nth-of-type(2)': {
-              mt: '10px'
-            }
-          }
+              mt: '10px',
+            },
+          },
         }}
       >
         <AvatarGroup max={2}>
@@ -100,11 +95,7 @@ const ChatThreadToolbar: FC<ChatThreadToolbarProps> = (props) => {
             />
           ))}
         </AvatarGroup>
-        <Typography
-          color="textPrimary"
-          sx={{ ml: 2 }}
-          variant="subtitle2"
-        >
+        <Typography color="textPrimary" sx={{ ml: 2 }} variant="subtitle2">
           {displayNames}
         </Typography>
       </Box>
@@ -116,20 +107,11 @@ const ChatThreadToolbar: FC<ChatThreadToolbarProps> = (props) => {
         <CameraIcon fontSize="small" />
       </IconButton>
       <Tooltip title="More options">
-        <IconButton
-          onClick={handleMenuOpen}
-          ref={moreRef}
-        >
+        <IconButton onClick={handleMenuOpen} ref={moreRef}>
           <DotsHorizontalIcon fontSize="small" />
         </IconButton>
       </Tooltip>
-      <Menu
-        anchorEl={moreRef.current}
-        keepMounted
-        elevation={1}
-        onClose={handleMenuClose}
-        open={openMenu}
-      >
+      <Menu anchorEl={moreRef.current} keepMounted elevation={1} onClose={handleMenuClose} open={openMenu}>
         <MenuItem>
           <ListItemIcon>
             <BanIcon fontSize="small" />
@@ -160,11 +142,11 @@ const ChatThreadToolbar: FC<ChatThreadToolbarProps> = (props) => {
 };
 
 ChatThreadToolbar.propTypes = {
-  participants: PropTypes.array
+  participants: PropTypes.array,
 };
 
 ChatThreadToolbar.defaultProps = {
-  participants: []
+  participants: [],
 };
 
 export default ChatThreadToolbar;

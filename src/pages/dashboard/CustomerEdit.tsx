@@ -33,7 +33,7 @@ const CustomerEdit: FC = () => {
   }, [mounted]);
 
   useEffect(() => {
-    getCustomer();
+    void getCustomer();
   }, [getCustomer]);
 
   if (!customer) {
@@ -49,47 +49,23 @@ const CustomerEdit: FC = () => {
         sx={{
           backgroundColor: 'background.default',
           minHeight: '100%',
-          py: 8
+          py: 8,
         }}
       >
         <Container maxWidth={settings.compact ? 'xl' : false}>
-          <Grid
-            container
-            justifyContent="space-between"
-            spacing={3}
-          >
+          <Grid container justifyContent="space-between" spacing={3}>
             <Grid item>
-              <Typography
-                color="textPrimary"
-                variant="h5"
-              >
+              <Typography color="textPrimary" variant="h5">
                 Customer Edit
               </Typography>
-              <Breadcrumbs
-                aria-label="breadcrumb"
-                separator={<ChevronRightIcon fontSize="small" />}
-                sx={{ mt: 1 }}
-              >
-                <Link
-                  color="textPrimary"
-                  component={RouterLink}
-                  to="/dashboard"
-                  variant="subtitle2"
-                >
+              <Breadcrumbs aria-label="breadcrumb" separator={<ChevronRightIcon fontSize="small" />} sx={{ mt: 1 }}>
+                <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
                   Dashboard
                 </Link>
-                <Link
-                  color="textPrimary"
-                  component={RouterLink}
-                  to="/dashboard"
-                  variant="subtitle2"
-                >
+                <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
                   Management
                 </Link>
-                <Typography
-                  color="textSecondary"
-                  variant="subtitle2"
-                >
+                <Typography color="textSecondary" variant="subtitle2">
                   Customers
                 </Typography>
               </Breadcrumbs>

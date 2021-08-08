@@ -12,8 +12,8 @@ const Chart3: FC = () => {
       background: 'transparent',
       stacked: false,
       toolbar: {
-        show: false
-      }
+        show: false,
+      },
     },
     colors: ['#27c6db'],
     labels: ['System Health'],
@@ -22,23 +22,23 @@ const Chart3: FC = () => {
         dataLabels: {
           name: {
             color: theme.palette.text.primary,
-            fontFamily: theme.typography.fontFamily
+            fontFamily: theme.typography.fontFamily,
           },
           value: {
-            color: theme.palette.text.secondary
-          }
+            color: theme.palette.text.secondary,
+          },
         },
         hollow: {
-          size: '60%'
+          size: '60%',
         },
         track: {
-          background: theme.palette.background.default
-        }
-      }
+          background: theme.palette.background.default,
+        },
+      },
     },
     theme: {
-      mode: theme.palette.mode
-    }
+      mode: theme.palette.mode,
+    },
   };
 
   const chartSeries = [83];
@@ -47,24 +47,14 @@ const Chart3: FC = () => {
     <Box
       sx={{
         backgroundColor: 'background.default',
-        p: 3
+        p: 3,
       }}
     >
       <Container maxWidth="sm">
         <Card>
           <CardContent>
-            <Chart
-              height="300"
-              options={chartOptions}
-              series={chartSeries}
-              type="radialBar"
-            />
-            <Typography
-              align="center"
-              color="textSecondary"
-              component="p"
-              variant="caption"
-            >
+            <Chart height="300" options={chartOptions} series={chartSeries} type="radialBar" />
+            <Typography align="center" color="textSecondary" component="p" variant="caption">
               This shouldn&apos;t be bellow 80%
             </Typography>
           </CardContent>

@@ -30,7 +30,7 @@ const MailToolbar: FC = (props) => {
         display: 'flex',
         flexShrink: 0,
         height: 68,
-        p: 2
+        p: 2,
       }}
       {...props}
     >
@@ -44,9 +44,9 @@ const MailToolbar: FC = (props) => {
         sx={{
           display: {
             md: 'block',
-            xs: 'none'
+            xs: 'none',
           },
-          width: 200
+          width: 200,
         }}
       >
         <TextField
@@ -56,7 +56,7 @@ const MailToolbar: FC = (props) => {
               <InputAdornment position="start">
                 <SearchIcon fontSize="small" />
               </InputAdornment>
-            )
+            ),
           }}
           placeholder="Search message"
           size="small"

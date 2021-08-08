@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { useState } from 'react';
 import type { ChangeEvent, FC, KeyboardEvent } from 'react';
 import PropTypes from 'prop-types';
@@ -24,7 +25,7 @@ const KanbanCommentAdd: FC<KanbanCommentAddProps> = (props) => {
   const handleKeyUp = async (event: KeyboardEvent<HTMLInputElement>): Promise<void> => {
     try {
       if (event.code === 'ENTER' && message) {
-        await dispatch(addComment(cardId, message));
+        dispatch(addComment(cardId, message));
         setMessage('');
         toast.success('Comment added!');
       }
@@ -38,14 +39,11 @@ const KanbanCommentAdd: FC<KanbanCommentAddProps> = (props) => {
     <Box
       sx={{
         alignItems: 'center',
-        display: 'flex'
+        display: 'flex',
       }}
       {...other}
     >
-      <Avatar
-        src={user.avatar}
-        sx={{ mr: 2 }}
-      />
+      <Avatar src={user.avatar} sx={{ mr: 2 }} />
       <TextField
         fullWidth
         onChange={handleChange}
@@ -60,7 +58,7 @@ const KanbanCommentAdd: FC<KanbanCommentAddProps> = (props) => {
 };
 
 KanbanCommentAdd.propTypes = {
-  cardId: PropTypes.string.isRequired
+  cardId: PropTypes.string.isRequired,
 };
 
 export default KanbanCommentAdd;

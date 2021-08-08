@@ -9,49 +9,34 @@ const BlogNewsletter: FC = () => {
   const [image, setImage] = useState<string>('');
 
   useEffect(() => {
-    (
-      async () => {
-        const response = await fetch(`/static/blog/blog_${theme.palette.mode}.svg`);
-        const blob = await response.blob();
+    void (async () => {
+      const response = await fetch(`/static/blog/blog_${theme.palette.mode}.svg`);
+      const blob = await response.blob();
 
-        setImage(URL.createObjectURL(blob));
-        setIsLoading(false);
-      }
-    )();
+      setImage(URL.createObjectURL(blob));
+      setIsLoading(false);
+    })();
   }, [theme.palette.mode]);
 
   return (
     <Box
       sx={{
         backgroundColor: 'background.default',
-        py: 6
+        py: 6,
       }}
     >
       <Container maxWidth="lg">
-        <Grid
-          alignItems="center"
-          container
-          justifyContent="space-between"
-          spacing={3}
-          wrap="nowrap"
-        >
-          <Grid
-            item
-            md={7}
-            xs={12}
-          >
+        <Grid alignItems="center" container justifyContent="space-between" spacing={3} wrap="nowrap">
+          <Grid item md={7} xs={12}>
             <Box
               sx={{
                 alignItems: 'flex-start',
                 display: 'flex',
                 flexDirection: 'column',
-                maxWidth: 600
+                maxWidth: 600,
               }}
             >
-              <Typography
-                color="textPrimary"
-                variant="h3"
-              >
+              <Typography color="textPrimary" variant="h3">
                 Exploring the Jamstack and the future of web development.
               </Typography>
               <Typography
@@ -59,12 +44,11 @@ const BlogNewsletter: FC = () => {
                 variant="body1"
                 sx={{
                   mb: 4.5,
-                  mt: 2
+                  mt: 2,
                 }}
               >
-                Exploring the Jamstack and the future of web development.
-                Subscribe to our newsletter to make sure you don&apos;t
-                miss anything.
+                Exploring the Jamstack and the future of web development. Subscribe to our newsletter to make sure you
+                don&apos;t miss anything.
               </Typography>
               <TextField
                 fullWidth
@@ -74,12 +58,7 @@ const BlogNewsletter: FC = () => {
                 type="email"
                 variant="outlined"
               />
-              <Button
-                color="primary"
-                size="large"
-                variant="contained"
-                sx={{ mt: 2 }}
-              >
+              <Button color="primary" size="large" variant="contained" sx={{ mt: 2 }}>
                 Subscribe
               </Button>
             </Box>
@@ -90,36 +69,28 @@ const BlogNewsletter: FC = () => {
             sx={{
               display: {
                 md: 'block',
-                xs: 'none'
-              }
+                xs: 'none',
+              },
             }}
           >
             <Box
               sx={{
                 maxWidth: 472,
-                width: '100%'
+                width: '100%',
               }}
             >
-              {
-                isLoading
-                  ? (
-                    <Skeleton
-                      sx={{
-                        borderRadius: 1,
-                        pt: '89.19%',
-                        width: '100%'
-                      }}
-                      variant="rectangular"
-                    />
-                  )
-                  : (
-                    <img
-                      alt="Blog Hero"
-                      src={image}
-                      style={{ maxWidth: '100%' }}
-                    />
-                  )
-              }
+              {isLoading ? (
+                <Skeleton
+                  sx={{
+                    borderRadius: 1,
+                    pt: '89.19%',
+                    width: '100%',
+                  }}
+                  variant="rectangular"
+                />
+              ) : (
+                <img alt="Blog Hero" src={image} style={{ maxWidth: '100%' }} />
+              )}
             </Box>
           </Grid>
         </Grid>

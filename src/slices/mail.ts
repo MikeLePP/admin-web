@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { mailApi } from '../__fakeApi__/mailApi';
@@ -18,11 +19,11 @@ interface MailState {
 const initialState: MailState = {
   emails: {
     byId: {},
-    allIds: []
+    allIds: [],
   },
   labels: [],
   isSidebarOpen: false,
-  isComposeOpen: false
+  isComposeOpen: false,
 };
 
 const slice = createSlice({
@@ -58,47 +59,58 @@ const slice = createSlice({
     },
     closeCompose(state: MailState): void {
       state.isComposeOpen = false;
-    }
-  }
+    },
+  },
 });
 
 export const { reducer } = slice;
 
-export const getLabels = (): AppThunk => async (dispatch): Promise<void> => {
-  const data = await mailApi.getLabels();
+export const getLabels =
+  (): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const data = await mailApi.getLabels();
 
-  dispatch(slice.actions.getLabels(data));
-};
+    dispatch(slice.actions.getLabels(data));
+  };
 
-export const getEmails = ({
-  customLabel,
-  systemLabel
-}: { customLabel: string, systemLabel: string }): AppThunk => async (dispatch): Promise<void> => {
-  const data = await mailApi.getEmails({ customLabel, systemLabel });
+export const getEmails =
+  ({ customLabel, systemLabel }: { customLabel: string; systemLabel: string }): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const data = await mailApi.getEmails({ customLabel, systemLabel });
 
-  dispatch(slice.actions.getEmails(data));
-};
+    dispatch(slice.actions.getEmails(data));
+  };
 
-export const getEmail = (emailId: string): AppThunk => async (dispatch): Promise<void> => {
-  const data = await mailApi.getEmail(emailId);
+export const getEmail =
+  (emailId: string): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const data = await mailApi.getEmail(emailId);
 
-  dispatch(slice.actions.getEmail(data));
-};
+    dispatch(slice.actions.getEmail(data));
+  };
 
-export const openSidebar = (): AppThunk => async (dispatch): Promise<void> => {
-  dispatch(slice.actions.openSidebar());
-};
+export const openSidebar =
+  (): AppThunk =>
+  async (dispatch): Promise<void> => {
+    dispatch(slice.actions.openSidebar());
+  };
 
-export const closeSidebar = (): AppThunk => async (dispatch): Promise<void> => {
-  dispatch(slice.actions.closeSidebar());
-};
+export const closeSidebar =
+  (): AppThunk =>
+  async (dispatch): Promise<void> => {
+    dispatch(slice.actions.closeSidebar());
+  };
 
-export const openCompose = (): AppThunk => async (dispatch): Promise<void> => {
-  dispatch(slice.actions.openCompose());
-};
+export const openCompose =
+  (): AppThunk =>
+  async (dispatch): Promise<void> => {
+    dispatch(slice.actions.openCompose());
+  };
 
-export const closeCompose = (): AppThunk => async (dispatch): Promise<void> => {
-  dispatch(slice.actions.closeCompose());
-};
+export const closeCompose =
+  (): AppThunk =>
+  async (dispatch): Promise<void> => {
+    dispatch(slice.actions.closeCompose());
+  };
 
 export default slice;

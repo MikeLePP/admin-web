@@ -22,22 +22,13 @@ const BrowseButtons: FC = () => {
         sx={{
           backgroundColor: 'background.paper',
           pb: 15,
-          pt: 8
+          pt: 8,
         }}
       >
         <Container maxWidth="lg">
-          <WidgetPreviewer
-            element={<Buttons1 />}
-            name="Simple buttons"
-          />
-          <WidgetPreviewer
-            element={<Buttons2 />}
-            name="Buttons with text and icon"
-          />
-          <WidgetPreviewer
-            element={<Buttons3 />}
-            name="Button groups"
-          />
+          <WidgetPreviewer element={<Buttons1 />} name="Simple buttons" />
+          <WidgetPreviewer element={<Buttons2 />} name="Buttons with text and icon" />
+          <WidgetPreviewer element={<Buttons3 />} name="Button groups" />
         </Container>
       </Box>
     </>

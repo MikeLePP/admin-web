@@ -18,7 +18,7 @@ const GuestGuard: FC<GuestGuardProps> = ({ children }) => {
 };
 
 GuestGuard.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 export default GuestGuard;

@@ -46,7 +46,7 @@ const ChatSidebar: FC = () => {
   const handleSearchSelect = (result: any): void => {
     setIsSearchFocused(false);
     setSearchQuery('');
-    navigate(`/dashboard/chat/${result.username}`);
+    navigate(`/dashboard/chat/${result.username as string}`);
   };
 
   return (
@@ -58,7 +58,7 @@ const ChatSidebar: FC = () => {
         display: 'flex',
         flexDirection: 'column',
         maxWidth: '100%',
-        width: 300
+        width: 300,
       }}
     >
       <Box
@@ -67,23 +67,17 @@ const ChatSidebar: FC = () => {
           display: 'flex',
           flexShrink: 0,
           height: 64,
-          px: 2
+          px: 2,
         }}
       >
-        <Typography
-          color="textPrimary"
-          variant="h5"
-        >
+        <Typography color="textPrimary" variant="h5">
           Chats
         </Typography>
         <Box sx={{ flexGrow: 1 }} />
         <IconButton>
           <CogIcon fontSize="small" />
         </IconButton>
-        <IconButton
-          component={RouterLink}
-          to="/dashboard/chat/new"
-        >
+        <IconButton component={RouterLink} to="/dashboard/chat/new">
           <PencilAltIcon fontSize="small" />
         </IconButton>
       </Box>
@@ -91,8 +85,8 @@ const ChatSidebar: FC = () => {
         sx={{
           display: {
             sm: 'block',
-            xs: 'none'
-          }
+            xs: 'none',
+          },
         }}
       >
         <ChatContactSearch

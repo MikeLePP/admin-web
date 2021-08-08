@@ -25,10 +25,7 @@ const ProjectActivities: FC<ProjectActivitiesProps> = (props) => {
 
   return (
     <div {...other}>
-      <Typography
-        color="textPrimary"
-        variant="h6"
-      >
+      <Typography color="textPrimary" variant="h6">
         Today
       </Typography>
       <Box sx={{ mt: 3 }}>
@@ -42,11 +39,7 @@ const ProjectActivities: FC<ProjectActivitiesProps> = (props) => {
           />
         ))}
       </Box>
-      <Typography
-        color="textPrimary"
-        sx={{ mt: 3 }}
-        variant="h6"
-      >
+      <Typography color="textPrimary" sx={{ mt: 3 }} variant="h6">
         Last week
       </Typography>
       <Box sx={{ mt: 3 }}>
@@ -65,7 +58,7 @@ const ProjectActivities: FC<ProjectActivitiesProps> = (props) => {
 };
 
 ProjectActivities.propTypes = {
-  activities: PropTypes.array.isRequired
+  activities: PropTypes.array.isRequired,
 };
 
 export default ProjectActivities;

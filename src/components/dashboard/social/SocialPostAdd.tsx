@@ -25,7 +25,7 @@ const SocialPostAdd: FC = (props) => {
         <Box
           sx={{
             alignItems: 'center',
-            display: 'flex'
+            display: 'flex',
           }}
         >
           <TextField
@@ -36,11 +36,7 @@ const SocialPostAdd: FC = (props) => {
             variant="outlined"
           />
           <Tooltip title="Send">
-            <IconButton
-              color={value ? 'primary' : 'inherit'}
-              component={value ? 'button' : 'span'}
-              disabled={!value}
-            >
+            <IconButton color={value ? 'primary' : 'inherit'} component={value ? 'button' : 'span'} disabled={!value}>
               <SendIcon fontSize="small" />
             </IconButton>
           </Tooltip>
@@ -48,26 +44,16 @@ const SocialPostAdd: FC = (props) => {
             <Divider orientation="vertical" />
           </Box>
           <Tooltip title="Attach image">
-            <IconButton
-              edge="end"
-              onClick={handleAttach}
-            >
+            <IconButton edge="end" onClick={handleAttach}>
               <AddPhotoIcon fontSize="small" />
             </IconButton>
           </Tooltip>
           <Tooltip title="Attach file">
-            <IconButton
-              edge="end"
-              onClick={handleAttach}
-            >
+            <IconButton edge="end" onClick={handleAttach}>
               <AttachFileIcon fontSize="small" />
             </IconButton>
           </Tooltip>
-          <input
-            hidden
-            ref={fileInputRef}
-            type="file"
-          />
+          <input hidden ref={fileInputRef} type="file" />
         </Box>
       </CardContent>
     </Card>

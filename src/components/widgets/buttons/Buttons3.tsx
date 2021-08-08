@@ -9,15 +9,11 @@ import {
   MenuItem,
   MenuList,
   Paper,
-  Popper
+  Popper,
 } from '@material-ui/core';
 import ArrowDropDownIcon from '@material-ui/icons/ArrowDropDown';
 
-const options = [
-  'Create a merge commit',
-  'Squash and merge',
-  'Rebase and merge'
-];
+const options = ['Create a merge commit', 'Squash and merge', 'Rebase and merge'];
 
 const Buttons3: FC = () => {
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -45,37 +41,21 @@ const Buttons3: FC = () => {
     <Box
       sx={{
         backgroundColor: 'background.paper',
-        p: 3
+        p: 3,
       }}
     >
-      <ButtonGroup
-        ref={anchorRef}
-        variant="contained"
-      >
-        <Button>
-          {options[selectedIndex]}
-        </Button>
-        <Button
-          onClick={handleToggle}
-          size="small"
-          sx={{ backgroundColor: 'primary.dark' }}
-        >
+      <ButtonGroup ref={anchorRef} variant="contained">
+        <Button>{options[selectedIndex]}</Button>
+        <Button onClick={handleToggle} size="small" sx={{ backgroundColor: 'primary.dark' }}>
           <ArrowDropDownIcon />
         </Button>
       </ButtonGroup>
-      <Popper
-        anchorEl={anchorRef.current}
-        open={open}
-        transition
-      >
+      <Popper anchorEl={anchorRef.current} open={open} transition>
         {({ TransitionProps, placement }) => (
           <Grow
             {...TransitionProps}
             style={{
-              transformOrigin:
-                placement === 'bottom'
-                  ? 'center top'
-                  : 'center bottom'
+              transformOrigin: placement === 'bottom' ? 'center top' : 'center bottom',
             }}
           >
             <Paper>

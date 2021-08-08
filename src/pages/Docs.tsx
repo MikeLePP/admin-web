@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
 /* eslint-disable react/prop-types */
 import { useState, useEffect } from 'react';
 import type { FC, ReactNode } from 'react';
@@ -22,88 +23,84 @@ interface CodeProps {
   value: string;
 }
 
-const MarkdownWrapper = experimentalStyled('div')(
-  ({ theme }) => (
-    {
-      color: theme.palette.text.primary,
-      fontFamily: theme.typography.fontFamily,
-      '& blockquote': {
-        borderLeft: `4px solid ${theme.palette.text.secondary}`,
-        marginBottom: theme.spacing(2),
-        paddingBottom: theme.spacing(1),
-        paddingLeft: theme.spacing(2),
-        paddingTop: theme.spacing(1),
-        '& > p': {
-          color: theme.palette.text.secondary,
-          marginBottom: 0
-        }
-      },
-      '& code': {
-        color: '#01ab56',
-        fontFamily: 'Inconsolata, Monaco, Consolas, \'Courier New\', Courier, monospace',
-        fontSize: 14,
-        paddingLeft: 2,
-        paddingRight: 2
-      },
-      '& h1': {
-        fontSize: 35,
-        fontWeight: 500,
-        letterSpacing: '-0.24px',
-        marginBottom: theme.spacing(2),
-        marginTop: theme.spacing(6)
-      },
-      '& h2': {
-        fontSize: 29,
-        fontWeight: 500,
-        letterSpacing: '-0.24px',
-        marginBottom: theme.spacing(2),
-        marginTop: theme.spacing(6)
-      },
-      '& h3': {
-        fontSize: 24,
-        fontWeight: 500,
-        letterSpacing: '-0.06px',
-        marginBottom: theme.spacing(2),
-        marginTop: theme.spacing(6)
-      },
-      '& h4': {
-        fontSize: 20,
-        fontWeight: 500,
-        letterSpacing: '-0.06px',
-        marginBottom: theme.spacing(2),
-        marginTop: theme.spacing(4)
-      },
-      '& h5': {
-        fontSize: 16,
-        fontWeight: 500,
-        letterSpacing: '-0.05px',
-        marginBottom: theme.spacing(2),
-        marginTop: theme.spacing(2)
-      },
-      '& h6': {
-        fontSize: 14,
-        fontWeight: 500,
-        letterSpacing: '-0.05px',
-        marginBottom: theme.spacing(2),
-        marginTop: theme.spacing(2)
-      },
-      '& li': {
-        fontSize: 14,
-        lineHeight: 1.5,
-        marginBottom: theme.spacing(2),
-        marginLeft: theme.spacing(4)
-      },
-      '& p': {
-        fontSize: 14,
-        lineHeight: 1.5,
-        marginBottom: theme.spacing(2),
-        '& > a': {
-          color: theme.palette.secondary.main
-        }
-      }
-    }
-  )
-);
+const MarkdownWrapper = experimentalStyled('div')(({ theme }) => ({
+  color: theme.palette.text.primary,
+  fontFamily: theme.typography.fontFamily,
+  '& blockquote': {
+    borderLeft: `4px solid ${theme.palette.text.secondary}`,
+    marginBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(1),
+    paddingLeft: theme.spacing(2),
+    paddingTop: theme.spacing(1),
+    '& > p': {
+      color: theme.palette.text.secondary,
+      marginBottom: 0,
+    },
+  },
+  '& code': {
+    color: '#01ab56',
+    fontFamily: "Inconsolata, Monaco, Consolas, 'Courier New', Courier, monospace",
+    fontSize: 14,
+    paddingLeft: 2,
+    paddingRight: 2,
+  },
+  '& h1': {
+    fontSize: 35,
+    fontWeight: 500,
+    letterSpacing: '-0.24px',
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(6),
+  },
+  '& h2': {
+    fontSize: 29,
+    fontWeight: 500,
+    letterSpacing: '-0.24px',
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(6),
+  },
+  '& h3': {
+    fontSize: 24,
+    fontWeight: 500,
+    letterSpacing: '-0.06px',
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(6),
+  },
+  '& h4': {
+    fontSize: 20,
+    fontWeight: 500,
+    letterSpacing: '-0.06px',
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(4),
+  },
+  '& h5': {
+    fontSize: 16,
+    fontWeight: 500,
+    letterSpacing: '-0.05px',
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2),
+  },
+  '& h6': {
+    fontSize: 14,
+    fontWeight: 500,
+    letterSpacing: '-0.05px',
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(2),
+  },
+  '& li': {
+    fontSize: 14,
+    lineHeight: 1.5,
+    marginBottom: theme.spacing(2),
+    marginLeft: theme.spacing(4),
+  },
+  '& p': {
+    fontSize: 14,
+    lineHeight: 1.5,
+    marginBottom: theme.spacing(2),
+    '& > a': {
+      color: theme.palette.secondary.main,
+    },
+  },
+}));
 
 const renderers = {
   link: (props: LinkProps) => {
@@ -111,22 +108,14 @@ const renderers = {
 
     if (!href.startsWith('http')) {
       return (
-        <a
-          href={href}
-          {...other}
-        >
+        <a href={href} {...other}>
           {children}
         </a>
       );
     }
 
     return (
-      <a
-        href={href}
-        rel="nofollow noreferrer noopener"
-        target="_blank"
-        {...other}
-      >
+      <a href={href} rel="nofollow noreferrer noopener" target="_blank" {...other}>
         {children}
       </a>
     );
@@ -135,15 +124,11 @@ const renderers = {
     const { language, value, ...other } = props;
 
     return (
-      <SyntaxHighlighter
-        language={language}
-        style={dracula}
-        {...other}
-      >
+      <SyntaxHighlighter language={language} style={dracula} {...other}>
         {value}
       </SyntaxHighlighter>
     );
-  }
+  },
 };
 
 const Docs: FC = () => {
@@ -166,19 +151,14 @@ const Docs: FC = () => {
           return;
         }
 
-        const response = await fetch(
-          `/static${pathname}.md`,
-          {
-            headers: {
-              accept: 'text/markdown' // Do not accept anything else
-            }
-          }
-        );
+        const response = await fetch(`/static${pathname}.md`, {
+          headers: {
+            accept: 'text/markdown', // Do not accept anything else
+          },
+        });
 
         if (response.status !== 200) {
-          navigate(response.status === 404
-            ? '/404'
-            : '/500', { replace: true });
+          navigate(response.status === 404 ? '/404' : '/500', { replace: true });
           return;
         }
 
@@ -191,7 +171,7 @@ const Docs: FC = () => {
       }
     };
 
-    getFile();
+    void getFile();
   }, [pathname]);
 
   if (!file) {
@@ -203,16 +183,9 @@ const Docs: FC = () => {
       <Helmet>
         <title>{`Docs: ${file.data.title} | Material Kit Pro`}</title>
       </Helmet>
-      <Container
-        maxWidth={settings.compact ? 'lg' : false}
-        sx={{ pb: '120px' }}
-      >
+      <Container maxWidth={settings.compact ? 'lg' : false} sx={{ pb: '120px' }}>
         <MarkdownWrapper>
-          <Markdown
-            escapeHtml
-            renderers={renderers}
-            source={file.content}
-          />
+          <Markdown escapeHtml renderers={renderers} source={file.content} />
         </MarkdownWrapper>
       </Container>
     </div>

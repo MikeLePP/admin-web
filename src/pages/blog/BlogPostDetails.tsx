@@ -4,17 +4,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import Markdown from 'react-markdown/with-html';
 import { format, subHours } from 'date-fns';
-import {
-  Avatar,
-  Box,
-  Button,
-  Chip,
-  Container,
-  Divider,
-  Grid,
-  Toolbar,
-  Typography
-} from '@material-ui/core';
+import { Avatar, Box, Button, Chip, Container, Divider, Grid, Toolbar, Typography } from '@material-ui/core';
 import { experimentalStyled } from '@material-ui/core/styles';
 import { blogApi } from '../../__fakeApi__/blogApi';
 import { BlogPostComment, BlogNewsletter } from '../../components/blog';
@@ -29,10 +19,11 @@ const comments = [
     authorAvatar: '/static/mock-images/avatars/avatar-alcides_antonio.png',
     authorName: 'Alcides Antonio',
     authorRole: 'Product Designer',
-    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    content:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
     createdAt: subHours(new Date(), 2).getTime(),
     isLiked: true,
-    likes: 12
+    likes: 12,
   },
   {
     id: '3ac1e17289e38a84108efdf3',
@@ -42,40 +33,36 @@ const comments = [
     content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor.',
     createdAt: subHours(new Date(), 8).getTime(),
     isLiked: false,
-    likes: 8
-  }
+    likes: 8,
+  },
 ];
 
-const MarkdownWrapper = experimentalStyled('div')(
-  ({ theme }) => (
-    {
-      color: theme.palette.text.primary,
-      fontFamily: theme.typography.fontFamily,
-      '& h2': {
-        fontSize: theme.typography.h2.fontSize,
-        fontWeight: theme.typography.fontWeightBold,
-        lineHeight: theme.typography.h2.lineHeight,
-        marginBottom: theme.spacing(3)
-      },
-      '& h3': {
-        fontSize: theme.typography.h3.fontSize,
-        fontWeight: theme.typography.fontWeightBold,
-        lineHeight: theme.typography.h3.lineHeight,
-        marginBottom: theme.spacing(3)
-      },
-      '& p': {
-        fontSize: theme.typography.body1.fontSize,
-        lineHeight: theme.typography.body1.lineHeight,
-        marginBottom: theme.spacing(2)
-      },
-      '& li': {
-        fontSize: theme.typography.body1.fontSize,
-        lineHeight: theme.typography.body1.lineHeight,
-        marginBottom: theme.spacing(1)
-      }
-    }
-  )
-);
+const MarkdownWrapper = experimentalStyled('div')(({ theme }) => ({
+  color: theme.palette.text.primary,
+  fontFamily: theme.typography.fontFamily,
+  '& h2': {
+    fontSize: theme.typography.h2.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    lineHeight: theme.typography.h2.lineHeight,
+    marginBottom: theme.spacing(3),
+  },
+  '& h3': {
+    fontSize: theme.typography.h3.fontSize,
+    fontWeight: theme.typography.fontWeightBold,
+    lineHeight: theme.typography.h3.lineHeight,
+    marginBottom: theme.spacing(3),
+  },
+  '& p': {
+    fontSize: theme.typography.body1.fontSize,
+    lineHeight: theme.typography.body1.lineHeight,
+    marginBottom: theme.spacing(2),
+  },
+  '& li': {
+    fontSize: theme.typography.body1.fontSize,
+    lineHeight: theme.typography.body1.lineHeight,
+    marginBottom: theme.spacing(1),
+  },
+}));
 
 const BlogPostDetails: FC = () => {
   const mounted = useMounted();
@@ -98,7 +85,7 @@ const BlogPostDetails: FC = () => {
   }, [mounted]);
 
   useEffect(() => {
-    getPost();
+    void getPost();
   }, [getPost]);
 
   if (!post) {
@@ -113,26 +100,15 @@ const BlogPostDetails: FC = () => {
       <Box
         sx={{
           backgroundColor: 'background.paper',
-          minHeight: '100%'
+          minHeight: '100%',
         }}
       >
         <div>
           <Container maxWidth="lg">
-            <Toolbar
-              disableGutters
-              sx={{ py: 2 }}
-            >
-              <Grid
-                alignItems="center"
-                container
-                justifyContent="space-between"
-                spacing={3}
-              >
+            <Toolbar disableGutters sx={{ py: 2 }}>
+              <Grid alignItems="center" container justifyContent="space-between" spacing={3}>
                 <Grid item>
-                  <Typography
-                    color="textPrimary"
-                    variant="body2"
-                  >
+                  <Typography color="textPrimary" variant="body2">
                     Hello, Jane Rotanson
                   </Typography>
                 </Grid>
@@ -158,59 +134,45 @@ const BlogPostDetails: FC = () => {
             <Box
               sx={{
                 display: 'flex',
-                justifyContent: 'center'
+                justifyContent: 'center',
               }}
             >
-              <Chip
-                label={post.category}
-                variant="outlined"
-              />
+              <Chip label={post.category} variant="outlined" />
             </Box>
             <Typography
               align="center"
               color="textPrimary"
               sx={{
                 fontWeight: 'fontWeightBold',
-                mt: 3
+                mt: 3,
               }}
               variant="h2"
             >
               {post.title}
             </Typography>
-            <Typography
-              align="center"
-              color="textSecondary"
-              sx={{ mt: 3 }}
-              variant="subtitle1"
-            >
+            <Typography align="center" color="textSecondary" sx={{ mt: 3 }} variant="subtitle1">
               {post.shortDescription}
             </Typography>
             <Box
               sx={{
                 display: 'flex',
                 justifyContent: 'center',
-                mt: 3
+                mt: 3,
               }}
             >
               <Box
                 sx={{
                   alignItems: 'center',
                   display: 'flex',
-                  mt: 2
+                  mt: 2,
                 }}
               >
                 <Avatar src={post.author.avatar} />
                 <Box sx={{ ml: 2 }}>
-                  <Typography
-                    color="textPrimary"
-                    variant="subtitle2"
-                  >
+                  <Typography color="textPrimary" variant="subtitle2">
                     {post.author.name}
                   </Typography>
-                  <Typography
-                    color="textSecondary"
-                    variant="caption"
-                  >
+                  <Typography color="textSecondary" variant="caption">
                     {`${format(post.publishedAt, 'dd MMM')} · ${post.readTime} read`}
                   </Typography>
                 </Box>
@@ -226,7 +188,7 @@ const BlogPostDetails: FC = () => {
                 backgroundPosition: 'center',
                 backgroundSize: 'cover',
                 borderRadius: '20px',
-                height: 600
+                height: 600,
               }}
             />
           </Container>
@@ -240,18 +202,12 @@ const BlogPostDetails: FC = () => {
         </Box>
         <div>
           <Container maxWidth="lg">
-            <Typography
-              color="textPrimary"
-              variant="h6"
-            >
+            <Typography color="textPrimary" variant="h6">
               {`Comments (${comments.length})`}
             </Typography>
             <Box sx={{ mt: 3 }}>
               {comments.map((comment) => (
-                <BlogPostComment
-                  key={comment.id}
-                  {...comment}
-                />
+                <BlogPostComment key={comment.id} {...comment} />
               ))}
             </Box>
           </Container>

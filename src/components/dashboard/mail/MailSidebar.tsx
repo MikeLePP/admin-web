@@ -17,18 +17,18 @@ interface MailSidebarProps {
 const MailSidebarDesktop = experimentalStyled(Drawer)({
   width: 280,
   '& .MuiDrawer-paper': {
-    position: 'relative'
-  }
+    position: 'relative',
+  },
 });
 
 const MailSidebarMobile = experimentalStyled(Drawer)({
   '& .MuiBackdrop-root': {
-    position: 'absolute'
+    position: 'absolute',
   },
   '& .MuiDrawer-paper': {
     position: 'relative',
-    width: 280
-  }
+    width: 280,
+  },
 });
 
 const MailSidebar: FC<MailSidebarProps> = ({ containerRef }) => {
@@ -56,15 +56,10 @@ const MailSidebar: FC<MailSidebarProps> = ({ containerRef }) => {
       <Box
         sx={{
           px: 3,
-          py: 2
+          py: 2,
         }}
       >
-        <Button
-          color="primary"
-          fullWidth
-          onClick={handleComposeClick}
-          variant="contained"
-        >
+        <Button color="primary" fullWidth onClick={handleComposeClick} variant="contained">
           Compose
         </Button>
       </Box>
@@ -72,15 +67,12 @@ const MailSidebar: FC<MailSidebarProps> = ({ containerRef }) => {
       <Box
         sx={{
           py: 2,
-          pr: 2
+          pr: 2,
         }}
       >
         <List>
           {labels.map((label) => (
-            <MailLabel
-              key={label.id}
-              label={label}
-            />
+            <MailLabel key={label.id} label={label} />
           ))}
         </List>
       </Box>
@@ -88,11 +80,7 @@ const MailSidebar: FC<MailSidebarProps> = ({ containerRef }) => {
   );
 
   if (mdUp) {
-    return (
-      <MailSidebarDesktop variant="permanent">
-        {content}
-      </MailSidebarDesktop>
-    );
+    return <MailSidebarDesktop variant="permanent">{content}</MailSidebarDesktop>;
   }
 
   return (
@@ -108,7 +96,7 @@ const MailSidebar: FC<MailSidebarProps> = ({ containerRef }) => {
 };
 
 MailSidebar.propTypes = {
-  containerRef: PropTypes.any.isRequired
+  containerRef: PropTypes.any.isRequired,
 };
 
 export default MailSidebar;

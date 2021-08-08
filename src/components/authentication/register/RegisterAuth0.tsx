@@ -24,22 +24,16 @@ const RegisterAuth0: FC = (props) => {
     <div {...props}>
       {error && (
         <Box sx={{ my: 3 }}>
-          <FormHelperText error>
-            {error}
-          </FormHelperText>
+          <FormHelperText error>{error}</FormHelperText>
         </Box>
       )}
       <Box
         sx={{
           display: 'flex',
-          justifyContent: 'center'
+          justifyContent: 'center',
         }}
       >
-        <Button
-          color="primary"
-          onClick={handleRegister}
-          variant="contained"
-        >
+        <Button color="primary" onClick={handleRegister} variant="contained">
           Register
         </Button>
       </Box>

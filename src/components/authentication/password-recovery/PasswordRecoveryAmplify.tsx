@@ -15,31 +15,19 @@ const PasswordRecoveryAmplify: FC = () => {
     <Formik
       initialValues={{
         email: '',
-        submit: null
+        submit: null,
       }}
-      validationSchema={
-        Yup
-          .object()
-          .shape({
-            email: Yup
-              .string()
-              .email('Must be a valid email')
-              .max(255)
-              .required('Email is required')
-          })
-      }
-      onSubmit={async (values, {
-        setErrors,
-        setStatus,
-        setSubmitting
-      }): Promise<void> => {
+      validationSchema={Yup.object().shape({
+        email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+      })}
+      onSubmit={async (values, { setErrors, setStatus, setSubmitting }): Promise<void> => {
         try {
           await passwordRecovery(values.email);
 
           navigate('/authentication/password-reset', {
             state: {
-              username: values.email
-            }
+              username: values.email,
+            },
           });
         } catch (err) {
           console.error(err);
@@ -51,19 +39,8 @@ const PasswordRecoveryAmplify: FC = () => {
         }
       }}
     >
-      {({
-        errors,
-        handleBlur,
-        handleChange,
-        handleSubmit,
-        isSubmitting,
-        touched,
-        values
-      }): JSX.Element => (
-        <form
-          noValidate
-          onSubmit={handleSubmit}
-        >
+      {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }): JSX.Element => (
+        <form noValidate onSubmit={handleSubmit}>
           <TextField
             autoFocus
             error={Boolean(touched.email && errors.email)}
@@ -80,20 +57,11 @@ const PasswordRecoveryAmplify: FC = () => {
           />
           {errors.submit && (
             <Box sx={{ mt: 3 }}>
-              <FormHelperText error>
-                {errors.submit}
-              </FormHelperText>
+              <FormHelperText error>{errors.submit}</FormHelperText>
             </Box>
           )}
           <Box sx={{ mt: 3 }}>
-            <Button
-              color="primary"
-              disabled={isSubmitting}
-              fullWidth
-              size="large"
-              type="submit"
-              variant="contained"
-            >
+            <Button color="primary" disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained">
               Recover Password
             </Button>
           </Box>

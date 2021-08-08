@@ -15,19 +15,15 @@ import getInitials from '../../../utils/getInitials';
 import MailReply from './MailReply';
 import MailToolbar from './MailToolbar';
 
-const MarkdownWrapper = experimentalStyled('div')(
-  ({ theme }) => (
-    {
-      color: theme.palette.text.secondary,
-      fontFamily: theme.typography.body1.fontFamily,
-      '& > p': {
-        fontSize: theme.typography.body1.fontSize,
-        lineHeight: theme.typography.body1.lineHeight,
-        marginBottom: theme.spacing(2)
-      }
-    }
-  )
-);
+const MarkdownWrapper = experimentalStyled('div')(({ theme }) => ({
+  color: theme.palette.text.secondary,
+  fontFamily: theme.typography.body1.fontFamily,
+  '& > p': {
+    fontSize: theme.typography.body1.fontSize,
+    lineHeight: theme.typography.body1.lineHeight,
+    marginBottom: theme.spacing(2),
+  },
+}));
 
 const MailContent: FC = () => {
   const dispatch = useDispatch();
@@ -50,7 +46,7 @@ const MailContent: FC = () => {
         flexDirection: 'column',
         flexGrow: 1,
         height: '100%',
-        overflowY: 'auto'
+        overflowY: 'auto',
       }}
     >
       <MailToolbar />
@@ -61,60 +57,40 @@ const MailContent: FC = () => {
           display: 'flex',
           flexShrink: 0,
           justifyContent: 'space-between',
-          p: 3
+          p: 3,
         }}
       >
         <Box
           sx={{
             alignItems: 'center',
-            display: 'flex'
+            display: 'flex',
           }}
         >
           <Avatar
             src={email.from.avatar}
             sx={{
               height: 48,
-              width: 48
+              width: 48,
             }}
           >
             {getInitials(email.from.name)}
           </Avatar>
           <Box sx={{ ml: 2 }}>
-            <Typography
-              color="textPrimary"
-              display="inline"
-              variant="subtitle2"
-            >
+            <Typography color="textPrimary" display="inline" variant="subtitle2">
               {email.from.name}
-            </Typography>
-            {' '}
-            <Link
-              color="textSecondary"
-              display="inline"
-              variant="body2"
-            >
+            </Typography>{' '}
+            <Link color="textSecondary" display="inline" variant="body2">
               {email.from.email}
             </Link>
-            <Typography
-              variant="subtitle2"
-              color="textSecondary"
-            >
-              To:
-              {' '}
+            <Typography variant="subtitle2" color="textSecondary">
+              To:{' '}
               {email.to.map((person) => (
-                <Link
-                  color="inherit"
-                  key={person.email}
-                >
+                <Link color="inherit" key={person.email}>
                   {person.email}
                 </Link>
               ))}
             </Typography>
-            <Typography
-              color="textSecondary"
-              noWrap
-              variant="caption"
-            >
+            <Typography color="textSecondary" noWrap variant="caption">
               {format(email.createdAt, 'MMMM Do yyyy, h:mm:ss a')}
             </Typography>
           </Box>
@@ -125,8 +101,8 @@ const MailContent: FC = () => {
             alignItems: 'center',
             display: {
               xs: 'none',
-              sm: 'flex'
-            }
+              sm: 'flex',
+            },
           }}
         >
           <Tooltip title="Reply">
@@ -157,13 +133,10 @@ const MailContent: FC = () => {
           backgroundColor: 'background.default',
           flexGrow: 1,
           px: 3,
-          py: 6
+          py: 6,
         }}
       >
-        <Typography
-          variant="h3"
-          color="textPrimary"
-        >
+        <Typography variant="h3" color="textPrimary">
           {email.subject}
         </Typography>
         <Box sx={{ mt: 2 }}>

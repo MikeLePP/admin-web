@@ -1,45 +1,26 @@
 import { useState } from 'react';
 import type { FC } from 'react';
-import {
-  Box,
-  Checkbox,
-  Chip,
-  Divider,
-  FormControlLabel,
-  Input
-} from '@material-ui/core';
+import { Box, Checkbox, Chip, Divider, FormControlLabel, Input } from '@material-ui/core';
 import MultiSelect from '../../MultiSelect';
 import SearchIcon from '../../../icons/Search';
 
 const selectOptions = [
   {
     label: 'Type',
-    options: [
-      'Freelance',
-      'Full Time',
-      'Part Time',
-      'Internship'
-    ]
+    options: ['Freelance', 'Full Time', 'Part Time', 'Internship'],
   },
   {
     label: 'Level',
-    options: ['Novice', 'Expert']
+    options: ['Novice', 'Expert'],
   },
   {
     label: 'Location',
-    options: [
-      'Africa',
-      'Asia',
-      'Australia',
-      'Europe',
-      'North America',
-      'South America'
-    ]
+    options: ['Africa', 'Asia', 'Australia', 'Europe', 'North America', 'South America'],
   },
   {
     label: 'Roles',
-    options: ['Android', 'Web Developer', 'iOS']
-  }
+    options: ['Android', 'Web Developer', 'iOS'],
+  },
 ];
 
 const Form2: FC = () => {
@@ -49,7 +30,7 @@ const Form2: FC = () => {
     'Novice',
     'Europe',
     'Android',
-    'Web Developer'
+    'Web Developer',
   ]);
 
   const handleChipDelete = (chip: string): void => {
@@ -66,28 +47,24 @@ const Form2: FC = () => {
         backgroundColor: 'background.paper',
         color: 'text.primary',
         minHeight: '100%',
-        p: 3
+        p: 3,
       }}
     >
       <Box
         sx={{
           alignItems: 'center',
           display: 'flex',
-          p: 2
+          p: 2,
         }}
       >
         <SearchIcon fontSize="small" />
         <Box
           sx={{
             flexGrow: 1,
-            ml: 3
+            ml: 3,
           }}
         >
-          <Input
-            disableUnderline
-            fullWidth
-            placeholder="Enter a keyword"
-          />
+          <Input disableUnderline fullWidth placeholder="Enter a keyword" />
         </Box>
       </Box>
       <Divider />
@@ -96,7 +73,7 @@ const Form2: FC = () => {
           alignItems: 'center',
           display: 'flex',
           flexWrap: 'wrap',
-          p: 2
+          p: 2,
         }}
       >
         {chips.map((chip) => (
@@ -115,7 +92,7 @@ const Form2: FC = () => {
           alignItems: 'center',
           display: 'flex',
           flexWrap: 'wrap',
-          p: 1
+          p: 1,
         }}
       >
         {selectOptions.map((option) => (
@@ -128,15 +105,7 @@ const Form2: FC = () => {
           />
         ))}
         <Box sx={{ flexGrow: 1 }} />
-        <FormControlLabel
-          control={(
-            <Checkbox
-              color="primary"
-              defaultChecked
-            />
-          )}
-          label="In network"
-        />
+        <FormControlLabel control={<Checkbox color="primary" defaultChecked />} label="In network" />
       </Box>
     </Box>
   );

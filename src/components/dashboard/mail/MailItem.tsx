@@ -19,45 +19,35 @@ interface MailItemProps {
   selected: boolean;
 }
 
-const Label = experimentalStyled('span')(
-  ({ theme }) => (
-    {
-      borderRadius: 2,
-      color: theme.palette.common.white,
-      fontFamily: theme.typography.fontFamily,
-      fontSize: theme.typography.pxToRem(12),
-      marginLeft: theme.spacing(1),
-      paddingBottom: 2,
-      paddingLeft: 4,
-      paddingRight: 4,
-      paddingTop: 2
-    }
-  )
-);
+const Label = experimentalStyled('span')(({ theme }) => ({
+  borderRadius: 2,
+  color: theme.palette.common.white,
+  fontFamily: theme.typography.fontFamily,
+  fontSize: theme.typography.pxToRem(12),
+  marginLeft: theme.spacing(1),
+  paddingBottom: 2,
+  paddingLeft: 4,
+  paddingRight: 4,
+  paddingTop: 2,
+}));
 
 const getTo = (params: any, emailId: string): string => {
   const { systemLabel, customLabel } = params;
   const baseUrl = '/dashboard/mail';
 
   if (systemLabel) {
-    return `${baseUrl}/${systemLabel}/${emailId}`;
+    return `${baseUrl}/${systemLabel as string}/${emailId}`;
   }
 
   if (customLabel) {
-    return `${baseUrl}/label/${customLabel}/${emailId}`;
+    return `${baseUrl}/label/${customLabel as string}/${emailId}`;
   }
 
   return baseUrl;
 };
 
 const MailItem: FC<MailItemProps> = (props) => {
-  const {
-    email,
-    onDeselect,
-    onSelect,
-    selected,
-    ...other
-  } = props;
+  const { email, onDeselect, onSelect, selected, ...other } = props;
   const params = useParams();
   const { labels } = useSelector((state) => state.mail);
 
@@ -91,31 +81,27 @@ const MailItem: FC<MailItemProps> = (props) => {
         borderBottom: (theme) => ` 1px solid ${theme.palette.divider}`,
         display: 'flex',
         p: 2,
-        ...(
-          !email.isUnread && {
-            position: 'relative',
-            '&:before': {
-              backgroundColor: 'error.main',
-              content: '" "',
-              height: '100%',
-              left: 0,
-              position: 'absolute',
-              top: 0,
-              width: 4
-            },
-            '& $name, & $subject': {
-              fontWeight: 600
-            }
-          }
-        ),
-        ...(
-          selected && {
-            backgroundColor: 'action.selected'
-          }
-        ),
+        ...(!email.isUnread && {
+          position: 'relative',
+          '&:before': {
+            backgroundColor: 'error.main',
+            content: '" "',
+            height: '100%',
+            left: 0,
+            position: 'absolute',
+            top: 0,
+            width: 4,
+          },
+          '& $name, & $subject': {
+            fontWeight: 600,
+          },
+        }),
+        ...(selected && {
+          backgroundColor: 'action.selected',
+        }),
         '&:hover': {
-          backgroundColor: 'action.hover'
-        }
+          backgroundColor: 'action.hover',
+        },
       }}
       {...other}
     >
@@ -124,44 +110,28 @@ const MailItem: FC<MailItemProps> = (props) => {
           alignItems: 'center',
           display: {
             md: 'flex',
-            xs: 'none'
+            xs: 'none',
           },
-          mr: 1
+          mr: 1,
         }}
       >
-        <Checkbox
-          checked={selected}
-          color="primary"
-          onChange={handleCheckboxChange}
-        />
+        <Checkbox checked={selected} color="primary" onChange={handleCheckboxChange} />
         <Tooltip title="Starred">
           <IconButton onClick={handleStarToggle}>
-            {
-              email.isStarred
-                ? (
-                  <StarIcon
-                    fontSize="small"
-                    sx={{ color: amber[400] }}
-                  />
-                )
-                : (
-                  <StarBorderIcon fontSize="small" />
-                )
-            }
+            {email.isStarred ? (
+              <StarIcon fontSize="small" sx={{ color: amber[400] }} />
+            ) : (
+              <StarBorderIcon fontSize="small" />
+            )}
           </IconButton>
         </Tooltip>
         <Tooltip title="Important">
           <IconButton onClick={handleImportantToggle}>
-            {
-              email.isImportant
-                ? (
-                  <LabelImportantIcon
-                    fontSize="small"
-                    sx={{ color: amber[400] }}
-                  />
-                )
-                : <LabelImportantIcon fontSize="small" />
-            }
+            {email.isImportant ? (
+              <LabelImportantIcon fontSize="small" sx={{ color: amber[400] }} />
+            ) : (
+              <LabelImportantIcon fontSize="small" />
+            )}
           </IconButton>
         </Tooltip>
       </Box>
@@ -173,41 +143,37 @@ const MailItem: FC<MailItemProps> = (props) => {
           display: 'flex',
           flexGrow: 1,
           minWidth: '1px',
-          textDecoration: 'none'
+          textDecoration: 'none',
         }}
       >
-        <Avatar src={email.from.avatar}>
-          {getInitials(email.from.name)}
-        </Avatar>
+        <Avatar src={email.from.avatar}>{getInitials(email.from.name)}</Avatar>
         <Box
           sx={{
             alignItems: {
-              md: 'center'
+              md: 'center',
             },
             display: {
-              md: 'flex'
+              md: 'flex',
             },
             flexGrow: {
-              md: 1
+              md: 1,
             },
             minWidth: '1px',
-            ml: 1
+            ml: 1,
           }}
         >
           <Typography
             color="textPrimary"
             sx={{
               flexBasis: {
-                md: 180
+                md: 180,
               },
               minWidth: {
-                md: 180
+                md: 180,
               },
-              ...(
-                !email.isUnread && {
-                  fontWeight: 600
-                }
-              )
+              ...(!email.isUnread && {
+                fontWeight: 600,
+              }),
             }}
             variant="body2"
           >
@@ -221,11 +187,9 @@ const MailItem: FC<MailItemProps> = (props) => {
               overflow: 'hidden',
               textOverflow: 'ellipsis',
               whiteSpace: 'nowrap',
-              ...(
-                !email.isUnread && {
-                  fontWeight: 600
-                }
-              )
+              ...(!email.isUnread && {
+                fontWeight: 600,
+              }),
             }}
             variant="body2"
           >
@@ -235,8 +199,8 @@ const MailItem: FC<MailItemProps> = (props) => {
             sx={{
               display: {
                 xs: 'none',
-                sm: 'block'
-              }
+                sm: 'block',
+              },
             }}
           >
             <Typography
@@ -247,18 +211,17 @@ const MailItem: FC<MailItemProps> = (props) => {
                 maxWidth: 800,
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap'
+                whiteSpace: 'nowrap',
               }}
               variant="body2"
             >
-              -
-              {email.message}
+              -{email.message}
             </Typography>
             {email.labelIds.length > 0 && (
               <Box
                 sx={{
                   display: 'flex',
-                  mx: 2
+                  mx: 2,
                 }}
               >
                 {email.labelIds.map((labelId: string) => {
@@ -269,10 +232,7 @@ const MailItem: FC<MailItemProps> = (props) => {
                   }
 
                   return (
-                    <Label
-                      key={label.id}
-                      sx={{ backgroundColor: label.color }}
-                    >
+                    <Label key={label.id} sx={{ backgroundColor: label.color }}>
                       {label.name}
                     </Label>
                   );
@@ -280,11 +240,7 @@ const MailItem: FC<MailItemProps> = (props) => {
               </Box>
             )}
           </Box>
-          <Typography
-            color="textSecondary"
-            noWrap
-            variant="caption"
-          >
+          <Typography color="textSecondary" noWrap variant="caption">
             {format(email.createdAt, 'dd MMM yyyy')}
           </Typography>
         </Box>
@@ -294,11 +250,10 @@ const MailItem: FC<MailItemProps> = (props) => {
 };
 
 MailItem.propTypes = {
-  // @ts-ignore
-  email: PropTypes.object.isRequired,
+  email: PropTypes.any.isRequired,
   onDeselect: PropTypes.func,
   onSelect: PropTypes.func,
-  selected: PropTypes.bool.isRequired
+  selected: PropTypes.bool.isRequired,
 };
 
 export default MailItem;

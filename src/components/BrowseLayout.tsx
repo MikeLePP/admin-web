@@ -10,29 +10,21 @@ const BrowseLayout: FC = () => {
   const title = isEntry
     ? 'Browse components'
     : urlLastSegment
-      .split('-')
-      .map((word) => word[0].toUpperCase() + word.slice(1))
-      .join(' ');
+        .split('-')
+        .map((word) => word[0].toUpperCase() + word.slice(1))
+        .join(' ');
 
   return (
     <>
       <Box
         sx={{
           backgroundColor: 'background.default',
-          py: 15
+          py: 15,
         }}
       >
         <Container maxWidth="lg">
-          <Grid
-            alignItems="center"
-            container
-            spacing={3}
-          >
-            <Grid
-              item
-              md={6}
-              xs={12}
-            >
+          <Grid alignItems="center" container spacing={3}>
+            <Grid item md={6} xs={12}>
               {!isEntry && (
                 <Button
                   color="primary"
@@ -45,18 +37,11 @@ const BrowseLayout: FC = () => {
                   Back to components
                 </Button>
               )}
-              <Typography
-                color="textPrimary"
-                variant="h1"
-              >
+              <Typography color="textPrimary" variant="h1">
                 {title}
               </Typography>
               {isEntry && (
-                <Typography
-                  color="textSecondary"
-                  sx={{ mt: 1 }}
-                  variant="body1"
-                >
+                <Typography color="textSecondary" sx={{ mt: 1 }} variant="body1">
                   Browse through over 100 individual components and over 35 screens
                 </Typography>
               )}
@@ -68,15 +53,12 @@ const BrowseLayout: FC = () => {
               sx={{
                 display: {
                   md: 'flex',
-                  xs: 'none'
+                  xs: 'none',
                 },
-                justifyContent: 'center'
+                justifyContent: 'center',
               }}
             >
-              <img
-                alt="Components"
-                src="/static/browse/hero.svg"
-              />
+              <img alt="Components" src="/static/browse/hero.svg" />
             </Grid>
           </Grid>
         </Container>

@@ -22,10 +22,10 @@ let board: Board = {
             {
               id: '5e85af37da584c5e4bd8a06c',
               name: 'An item',
-              state: 'complete'
-            }
-          ]
-        }
+              state: 'complete',
+            },
+          ],
+        },
       ],
       comments: [
         {
@@ -33,16 +33,17 @@ let board: Board = {
           cardId: '5e849c8708bd72683b454747',
           createdAt: subDays(now, 5).getTime(),
           memberId: '5e887ac47eed253091be10cb',
-          message: 'This is a comment'
-        }
+          message: 'This is a comment',
+        },
       ],
       cover: '/static/mock-images/projects/project_3.png',
-      description: 'Duis condimentum lacus finibus felis pellentesque, ac auctor nibh fermentum. Duis sed dui ante. Phasellus id eros tincidunt, dictum lorem vitae, pellentesque sem. Aenean eu enim sit amet mauris rhoncus mollis. Sed enim turpis, porta a felis et, luctus faucibus nisi. Phasellus et metus fermentum, ultrices arcu aliquam, facilisis justo. Cras nunc nunc, elementum sed euismod ut, maximus eget nibh. Phasellus condimentum lorem neque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce sagittis pharetra eleifend. Suspendisse potenti.',
+      description:
+        'Duis condimentum lacus finibus felis pellentesque, ac auctor nibh fermentum. Duis sed dui ante. Phasellus id eros tincidunt, dictum lorem vitae, pellentesque sem. Aenean eu enim sit amet mauris rhoncus mollis. Sed enim turpis, porta a felis et, luctus faucibus nisi. Phasellus et metus fermentum, ultrices arcu aliquam, facilisis justo. Cras nunc nunc, elementum sed euismod ut, maximus eget nibh. Phasellus condimentum lorem neque. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Fusce sagittis pharetra eleifend. Suspendisse potenti.',
       due: addDays(now, 7).getTime(),
       isSubscribed: false,
       columnId: '5e849c39325dc5ef58e5a5db',
       memberIds: ['5e86809283e28b96d2d38537'],
-      name: 'Call with sales of HubSpot'
+      name: 'Call with sales of HubSpot',
     },
     {
       id: '5e849c90fabe1f1f4b3557f6',
@@ -55,7 +56,7 @@ let board: Board = {
       isSubscribed: true,
       columnId: '5e849c39325dc5ef58e5a5db',
       memberIds: ['5e887b209c28ac3dd97f6db5', '5e887a62195cc5aef7e8ca5d'],
-      name: 'Interview for the Asis. Sales Manager'
+      name: 'Interview for the Asis. Sales Manager',
     },
     {
       id: '5e849c977ef6265938bfd90b',
@@ -68,7 +69,7 @@ let board: Board = {
       isSubscribed: false,
       columnId: '5e849c39325dc5ef58e5a5db',
       memberIds: [],
-      name: 'Change the height of the top bar because it looks too chunky'
+      name: 'Change the height of the top bar because it looks too chunky',
     },
     {
       id: '5e849c9e34ee93bc7255c599',
@@ -81,7 +82,7 @@ let board: Board = {
       isSubscribed: false,
       columnId: '5e849c39325dc5ef58e5a5db',
       memberIds: ['5e887ac47eed253091be10cb', '5e86809283e28b96d2d38537'],
-      name: 'Integrate Stripe API'
+      name: 'Integrate Stripe API',
     },
     {
       id: '5e849ca7d063dc3830d4b49c',
@@ -94,7 +95,7 @@ let board: Board = {
       isSubscribed: true,
       columnId: '5e849c2b38d238c33e516755',
       memberIds: ['5e887a62195cc5aef7e8ca5d'],
-      name: 'Update the customer API for payments'
+      name: 'Update the customer API for payments',
     },
     {
       id: '5e849cb5d0c6e8894451fdfa',
@@ -107,8 +108,8 @@ let board: Board = {
       isSubscribed: true,
       columnId: '5e849c2b38d238c33e516755',
       memberIds: [],
-      name: 'Redesign the landing page'
-    }
+      name: 'Redesign the landing page',
+    },
   ],
   columns: [
     {
@@ -118,50 +119,47 @@ let board: Board = {
         '5e849c8708bd72683b454747',
         '5e849c90fabe1f1f4b3557f6',
         '5e849c977ef6265938bfd90b',
-        '5e849c9e34ee93bc7255c599'
-      ]
+        '5e849c9e34ee93bc7255c599',
+      ],
     },
     {
       id: '5e849c2b38d238c33e516755',
       name: 'Progress',
-      cardIds: [
-        '5e849ca7d063dc3830d4b49c',
-        '5e849cb5d0c6e8894451fdfa'
-      ]
+      cardIds: ['5e849ca7d063dc3830d4b49c', '5e849cb5d0c6e8894451fdfa'],
     },
     {
       id: '5e849c2b38d238c33e5146755',
       name: 'Done',
-      cardIds: []
-    }
+      cardIds: [],
+    },
   ],
   members: [
     {
       id: '5e887a62195cc5aef7e8ca5d',
       avatar: '/static/mock-images/avatars/avatar-marcus_finn.png',
-      name: 'Marcus Finn'
+      name: 'Marcus Finn',
     },
     {
       id: '5e887ac47eed253091be10cb',
       avatar: '/static/mock-images/avatars/avatar-carson_darrin.png',
-      name: 'Carson Darrin'
+      name: 'Carson Darrin',
     },
     {
       id: '5e887b209c28ac3dd97f6db5',
       avatar: '/static/mock-images/avatars/avatar-fran_perez.png',
-      name: 'Fran Perez'
+      name: 'Fran Perez',
     },
     {
       id: '5e887b7602bdbc4dbb234b27',
       avatar: '/static/mock-images/avatars/avatar-jie_yan_song.png',
-      name: 'Jie Yan Song'
+      name: 'Jie Yan Song',
     },
     {
       id: '5e86809283e28b96d2d38537',
       avatar: '/static/mock-images/avatars/avatar-jane_rotanson.png',
-      name: 'Jane Rotanson'
-    }
-  ]
+      name: 'Jane Rotanson',
+    },
+  ],
 };
 
 class KanbanApi {
@@ -179,7 +177,7 @@ class KanbanApi {
         const column: Column = {
           id: createResourceId(),
           name,
-          cardIds: []
+          cardIds: [],
         };
 
         clonedBoard.columns.push(column);
@@ -306,7 +304,7 @@ class KanbanApi {
           isSubscribed: false,
           columnId,
           memberIds: [],
-          name
+          name,
         };
 
         // Add the new card
@@ -475,7 +473,7 @@ class KanbanApi {
           cardId,
           createdAt: now.getTime(),
           memberId: '5e86809283e28b96d2d38537',
-          message
+          message,
         };
 
         // Add the new comment to card
@@ -510,7 +508,7 @@ class KanbanApi {
         const checklist: Checklist = {
           id: createResourceId(),
           name,
-          checkItems: []
+          checkItems: [],
         };
 
         // Add the new checklist to card
@@ -618,7 +616,7 @@ class KanbanApi {
           id: createResourceId(),
           checklistId,
           name,
-          state: 'incomplete'
+          state: 'incomplete',
         };
 
         // Add the check item to the checklist
@@ -702,9 +700,7 @@ class KanbanApi {
         }
 
         // Remove the check item from the checklist
-        checklist.checkItems = checklist.checkItems.filter((checkItem) => (
-          checkItem.id !== checkItemId
-        ));
+        checklist.checkItems = checklist.checkItems.filter((checkItem) => checkItem.id !== checkItemId);
 
         // Save changes
         board = clonedBoard;

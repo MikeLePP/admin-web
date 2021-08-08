@@ -19,17 +19,7 @@ interface NavItemProps extends ListItemProps {
 }
 
 const NavItem: FC<NavItemProps> = (props) => {
-  const {
-    active,
-    children,
-    depth,
-    icon,
-    info,
-    open: openProp,
-    path,
-    title,
-    ...other
-  } = props;
+  const { active, children, depth, icon, info, open: openProp, path, title, ...other } = props;
   const [open, setOpen] = useState<boolean>(openProp);
 
   const handleToggle = (): void => {
@@ -49,13 +39,12 @@ const NavItem: FC<NavItemProps> = (props) => {
         disableGutters
         sx={{
           display: 'block',
-          py: 0
+          py: 0,
         }}
         {...other}
       >
         <Button
-          endIcon={!open ? <ChevronRightIcon fontSize="small" />
-            : <ChevronDownIcon fontSize="small" />}
+          endIcon={!open ? <ChevronRightIcon fontSize="small" /> : <ChevronDownIcon fontSize="small" />}
           onClick={handleToggle}
           startIcon={icon}
           sx={{
@@ -67,18 +56,14 @@ const NavItem: FC<NavItemProps> = (props) => {
             py: '12px',
             textAlign: 'left',
             textTransform: 'none',
-            width: '100%'
+            width: '100%',
           }}
           variant="text"
         >
-          <Box sx={{ flexGrow: 1 }}>
-            {title}
-          </Box>
+          <Box sx={{ flexGrow: 1 }}>{title}</Box>
           {info}
         </Button>
-        <Collapse in={open}>
-          {children}
-        </Collapse>
+        <Collapse in={open}>{children}</Collapse>
       </ListItem>
     );
   }
@@ -89,7 +74,7 @@ const NavItem: FC<NavItemProps> = (props) => {
       disableGutters
       sx={{
         display: 'flex',
-        py: 0
+        py: 0,
       }}
     >
       <Button
@@ -105,22 +90,18 @@ const NavItem: FC<NavItemProps> = (props) => {
           py: '12px',
           textTransform: 'none',
           width: '100%',
-          ...(
-            active && {
+          ...(active && {
+            color: 'primary.main',
+            fontWeight: 'fontWeightBold',
+            '& svg': {
               color: 'primary.main',
-              fontWeight: 'fontWeightBold',
-              '& svg': {
-                color: 'primary.main'
-              }
-            }
-          )
+            },
+          }),
         }}
         variant="text"
         to={path}
       >
-        <Box sx={{ flexGrow: 1 }}>
-          {title}
-        </Box>
+        <Box sx={{ flexGrow: 1 }}>{title}</Box>
         {info}
       </Button>
     </ListItem>
@@ -135,12 +116,12 @@ NavItem.propTypes = {
   info: PropTypes.node,
   open: PropTypes.bool,
   path: PropTypes.string,
-  title: PropTypes.string.isRequired
+  title: PropTypes.string.isRequired,
 };
 
 NavItem.defaultProps = {
   active: false,
-  open: false
+  open: false,
 };
 
 export default NavItem;

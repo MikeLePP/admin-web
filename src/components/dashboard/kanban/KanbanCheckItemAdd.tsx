@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { useState } from 'react';
 import type { ChangeEvent, FC } from 'react';
 import PropTypes from 'prop-types';
@@ -36,7 +37,7 @@ const KanbanCheckItemAdd: FC<KanbanCheckItemAddProps> = (props) => {
         return;
       }
 
-      await dispatch(addCheckItem(cardId, checklistId, name));
+      dispatch(addCheckItem(cardId, checklistId, name));
       setIsExpanded(false);
       setName('');
       toast.success('Check item added!');
@@ -48,62 +49,36 @@ const KanbanCheckItemAdd: FC<KanbanCheckItemAddProps> = (props) => {
 
   return (
     <div {...other}>
-      {
-        isExpanded
-          ? (
-            <div>
-              <TextField
-                fullWidth
-                onChange={handleChange}
-                placeholder="Add an item"
-                value={name}
-                variant="outlined"
-              />
-              <Box
-                sx={{
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                  mt: 2
-                }}
-              >
-                <Button
-                  color="primary"
-                  onClick={handleCancel}
-                  size="small"
-                  variant="text"
-                >
-                  Cancel
-                </Button>
-                <Button
-                  color="primary"
-                  onClick={handleSave}
-                  size="small"
-                  sx={{ ml: 2 }}
-                  variant="contained"
-                >
-                  Save
-                </Button>
-              </Box>
-            </div>
-          )
-          : (
-            <Button
-              color="primary"
-              onClick={handleAdd}
-              size="small"
-              variant="outlined"
-            >
-              Add Item
+      {isExpanded ? (
+        <div>
+          <TextField fullWidth onChange={handleChange} placeholder="Add an item" value={name} variant="outlined" />
+          <Box
+            sx={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              mt: 2,
+            }}
+          >
+            <Button color="primary" onClick={handleCancel} size="small" variant="text">
+              Cancel
             </Button>
-          )
-      }
+            <Button color="primary" onClick={handleSave} size="small" sx={{ ml: 2 }} variant="contained">
+              Save
+            </Button>
+          </Box>
+        </div>
+      ) : (
+        <Button color="primary" onClick={handleAdd} size="small" variant="outlined">
+          Add Item
+        </Button>
+      )}
     </div>
   );
 };
 
 KanbanCheckItemAdd.propTypes = {
   cardId: PropTypes.string.isRequired,
-  checklistId: PropTypes.string.isRequired
+  checklistId: PropTypes.string.isRequired,
 };
 
 export default KanbanCheckItemAdd;

@@ -13,7 +13,7 @@ import {
   TableCell,
   TableRow,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import MailIcon from '../../../icons/Mail';
 
@@ -23,20 +23,16 @@ const emails = [
   {
     id: '5ece2ce3613486d95ffaea58',
     createdAt: subDays(subHours(subMinutes(now, 34), 5), 3).getTime(),
-    description: 'Order confirmation'
+    description: 'Order confirmation',
   },
   {
     id: '5ece2ce8cebf7ad1d100c0cd',
     createdAt: subDays(subHours(subMinutes(now, 49), 11), 4).getTime(),
-    description: 'Order confirmation'
-  }
+    description: 'Order confirmation',
+  },
 ];
 
-const emailOptions = [
-  'Resend last invoice',
-  'Send password reset',
-  'Send verification'
-];
+const emailOptions = ['Resend last invoice', 'Send password reset', 'Send verification'];
 
 const DetailsList4: FC = () => {
   const [emailOption, setEmailOption] = useState<string>(emailOptions[0]);
@@ -46,7 +42,7 @@ const DetailsList4: FC = () => {
       sx={{
         backgroundColor: 'background.default',
         minHeight: '100%',
-        p: 3
+        p: 3,
       }}
     >
       <Card>
@@ -63,20 +59,13 @@ const DetailsList4: FC = () => {
             variant="outlined"
           >
             {emailOptions.map((option) => (
-              <option
-                key={option}
-                value={option}
-              >
+              <option key={option} value={option}>
                 {option}
               </option>
             ))}
           </TextField>
           <Box sx={{ mt: 2 }}>
-            <Button
-              color="primary"
-              startIcon={<MailIcon fontSize="small" />}
-              variant="contained"
-            >
+            <Button color="primary" startIcon={<MailIcon fontSize="small" />} variant="contained">
               Send email
             </Button>
           </Box>
@@ -86,16 +75,11 @@ const DetailsList4: FC = () => {
                 {emails.map((email) => (
                   <TableRow key={email.id}>
                     <TableCell>
-                      <Typography
-                        color="textPrimary"
-                        variant="subtitle2"
-                      >
+                      <Typography color="textPrimary" variant="subtitle2">
                         {email.description}
                       </Typography>
                     </TableCell>
-                    <TableCell>
-                      {format(email.createdAt, 'dd/MM/yyyy | HH:mm')}
-                    </TableCell>
+                    <TableCell>{format(email.createdAt, 'dd/MM/yyyy | HH:mm')}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

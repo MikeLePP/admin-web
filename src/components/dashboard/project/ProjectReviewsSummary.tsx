@@ -13,16 +13,9 @@ const ProjectReviewsSummary: FC<ProjectReviewsSummaryProps> = (props) => {
   return (
     <Card {...other}>
       <CardContent>
-        <Grid
-          alignItems="center"
-          container
-          spacing={3}
-        >
+        <Grid alignItems="center" container spacing={3}>
           <Grid item>
-            <Typography
-              color="textPrimary"
-              variant="subtitle2"
-            >
+            <Typography color="textPrimary" variant="subtitle2">
               Overall Reviews
             </Typography>
           </Grid>
@@ -30,27 +23,18 @@ const ProjectReviewsSummary: FC<ProjectReviewsSummaryProps> = (props) => {
             <Box
               sx={{
                 alignItems: 'center',
-                display: 'flex'
+                display: 'flex',
               }}
             >
               <Rating value={rating} />
-              <Typography
-                color="textPrimary"
-                sx={{ ml: 2 }}
-                variant="subtitle2"
-              >
+              <Typography color="textPrimary" sx={{ ml: 2 }} variant="subtitle2">
                 {rating.toFixed(1)}
               </Typography>
             </Box>
           </Grid>
           <Grid item>
-            <Typography
-              color="textSecondary"
-              variant="body2"
-            >
-              {reviewsCount}
-              {' '}
-              reviews in total
+            <Typography color="textSecondary" variant="body2">
+              {reviewsCount} reviews in total
             </Typography>
           </Grid>
         </Grid>
@@ -61,7 +45,7 @@ const ProjectReviewsSummary: FC<ProjectReviewsSummaryProps> = (props) => {
 
 ProjectReviewsSummary.propTypes = {
   rating: PropTypes.number.isRequired,
-  reviewsCount: PropTypes.number.isRequired
+  reviewsCount: PropTypes.number.isRequired,
 };
 
 export default ProjectReviewsSummary;

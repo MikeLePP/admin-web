@@ -1,13 +1,5 @@
 import type { FC } from 'react';
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  IconButton,
-  Paper,
-  Typography
-} from '@material-ui/core';
+import { Avatar, Box, Button, Container, IconButton, Paper, Typography } from '@material-ui/core';
 import { alpha } from '@material-ui/core/styles';
 import WarningIcon from '@material-ui/icons/WarningOutlined';
 import XIcon from '../../../icons/X';
@@ -17,19 +9,16 @@ const Modal8: FC = () => (
     sx={{
       backgroundColor: 'background.default',
       minHeight: '100%',
-      p: 3
+      p: 3,
     }}
   >
     <Container maxWidth="sm">
-      <Paper
-        elevation={12}
-        sx={{ position: 'relative' }}
-      >
+      <Paper elevation={12} sx={{ position: 'relative' }}>
         <IconButton
           sx={{
             position: 'absolute',
             top: 8,
-            right: 8
+            right: 8,
           }}
         >
           <XIcon />
@@ -39,33 +28,25 @@ const Modal8: FC = () => (
             display: 'flex',
             pb: 2,
             pt: 3,
-            px: 3
+            px: 3,
           }}
         >
           <Avatar
             sx={{
               backgroundColor: (theme) => alpha(theme.palette.error.main, 0.08),
               color: 'error.main',
-              mr: 2
+              mr: 2,
             }}
           >
             <WarningIcon />
           </Avatar>
           <Box>
-            <Typography
-              color="textPrimary"
-              variant="h5"
-            >
+            <Typography color="textPrimary" variant="h5">
               Deactivate account
             </Typography>
-            <Typography
-              color="textSecondary"
-              sx={{ mt: 1 }}
-              variant="body2"
-            >
-              Are you sure you want to deactivate your account? All of
-              your data will be permanently removed.
-              This action cannot be undone.
+            <Typography color="textSecondary" sx={{ mt: 1 }} variant="body2">
+              Are you sure you want to deactivate your account? All of your data will be permanently removed. This
+              action cannot be undone.
             </Typography>
           </Box>
         </Box>
@@ -74,22 +55,18 @@ const Modal8: FC = () => (
             display: 'flex',
             justifyContent: 'flex-end',
             px: 3,
-            py: 1.5
+            py: 1.5,
           }}
         >
-          <Button
-            color="primary"
-            sx={{ mr: 2 }}
-            variant="outlined"
-          >
+          <Button color="primary" sx={{ mr: 2 }} variant="outlined">
             Cancel
           </Button>
           <Button
             sx={{
               backgroundColor: 'error.main',
               '&:hover': {
-                backgroundColor: 'error.dark'
-              }
+                backgroundColor: 'error.dark',
+              },
             }}
             variant="contained"
           >

@@ -8,18 +8,18 @@ import {
   Radio,
   RadioGroup,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core';
 
 const paymentMethods = [
   {
     label: 'Visa Credit/Debit Card',
-    value: 'visa'
+    value: 'visa',
   },
   {
     label: 'PayPal',
-    value: 'paypal'
-  }
+    value: 'paypal',
+  },
 ];
 
 const Form13: FC = () => (
@@ -27,14 +27,14 @@ const Form13: FC = () => (
     sx={{
       backgroundColor: 'background.paper',
       minHeight: '100%',
-      p: 3
+      p: 3,
     }}
   >
     <form onSubmit={(event) => event.preventDefault()}>
       <Box
         sx={{
           alignItems: 'center',
-          display: 'flex'
+          display: 'flex',
         }}
       >
         <Box
@@ -45,95 +45,36 @@ const Form13: FC = () => (
             display: 'flex',
             height: 40,
             justifyContent: 'center',
-            width: 40
+            width: 40,
           }}
         >
-          <Typography
-            color="textPrimary"
-            sx={{ fontWeight: 'fontWeightBold' }}
-            variant="h6"
-          >
+          <Typography color="textPrimary" sx={{ fontWeight: 'fontWeightBold' }} variant="h6">
             1
           </Typography>
         </Box>
-        <Typography
-          color="textPrimary"
-          sx={{ ml: 2 }}
-          variant="h6"
-        >
+        <Typography color="textPrimary" sx={{ ml: 2 }} variant="h6">
           Billing Address
         </Typography>
       </Box>
       <Box sx={{ mt: 3 }}>
-        <Grid
-          container
-          spacing={3}
-        >
-          <Grid
-            item
-            sm={6}
-            xs={12}
-          >
-            <TextField
-              fullWidth
-              label="First Name"
-              name="firstName"
-            />
+        <Grid container spacing={3}>
+          <Grid item sm={6} xs={12}>
+            <TextField fullWidth label="First Name" name="firstName" />
           </Grid>
-          <Grid
-            item
-            sm={6}
-            xs={12}
-          >
-            <TextField
-              fullWidth
-              label="Last Name"
-              name="lastName"
-            />
+          <Grid item sm={6} xs={12}>
+            <TextField fullWidth label="Last Name" name="lastName" />
           </Grid>
-          <Grid
-            item
-            sm={6}
-            xs={12}
-          >
-            <TextField
-              fullWidth
-              label="Street Address"
-              name="address"
-            />
+          <Grid item sm={6} xs={12}>
+            <TextField fullWidth label="Street Address" name="address" />
           </Grid>
-          <Grid
-            item
-            sm={6}
-            xs={12}
-          >
-            <TextField
-              fullWidth
-              label="Street Line 2 (optional)"
-              name="optionalAddress"
-            />
+          <Grid item sm={6} xs={12}>
+            <TextField fullWidth label="Street Line 2 (optional)" name="optionalAddress" />
           </Grid>
-          <Grid
-            item
-            sm={3}
-            xs={12}
-          >
-            <TextField
-              fullWidth
-              label="State"
-              name="state"
-            />
+          <Grid item sm={3} xs={12}>
+            <TextField fullWidth label="State" name="state" />
           </Grid>
-          <Grid
-            item
-            sm={3}
-            xs={12}
-          >
-            <TextField
-              fullWidth
-              label="Zip"
-              name="zip"
-            />
+          <Grid item sm={3} xs={12}>
+            <TextField fullWidth label="Zip" name="zip" />
           </Grid>
         </Grid>
       </Box>
@@ -141,7 +82,7 @@ const Form13: FC = () => (
         sx={{
           alignItems: 'center',
           display: 'flex',
-          mt: 6
+          mt: 6,
         }}
       >
         <Box
@@ -152,39 +93,25 @@ const Form13: FC = () => (
             display: 'flex',
             height: 40,
             justifyContent: 'center',
-            width: 40
+            width: 40,
           }}
         >
-          <Typography
-            color="textPrimary"
-            sx={{ fontWeight: 'fontWeightBold' }}
-            variant="h6"
-          >
+          <Typography color="textPrimary" sx={{ fontWeight: 'fontWeightBold' }} variant="h6">
             2
           </Typography>
         </Box>
-        <Typography
-          color="textPrimary"
-          sx={{ ml: 2 }}
-          variant="h6"
-        >
+        <Typography color="textPrimary" sx={{ ml: 2 }} variant="h6">
           Shipping Address
         </Typography>
       </Box>
       <Box
         sx={{
           color: 'text.primary',
-          mt: 3
+          mt: 3,
         }}
       >
         <FormControlLabel
-          control={(
-            <Checkbox
-              color="primary"
-              defaultChecked
-              sx={{ ml: 1 }}
-            />
-          )}
+          control={<Checkbox color="primary" defaultChecked sx={{ ml: 1 }} />}
           label="Same as billing address"
         />
       </Box>
@@ -192,7 +119,7 @@ const Form13: FC = () => (
         sx={{
           alignItems: 'center',
           display: 'flex',
-          mt: 6
+          mt: 6,
         }}
       >
         <Box
@@ -203,109 +130,48 @@ const Form13: FC = () => (
             display: 'flex',
             height: 40,
             justifyContent: 'center',
-            width: 40
+            width: 40,
           }}
         >
-          <Typography
-            color="textPrimary"
-            sx={{ fontWeight: 'fontWeightBold' }}
-            variant="h6"
-          >
+          <Typography color="textPrimary" sx={{ fontWeight: 'fontWeightBold' }} variant="h6">
             3
           </Typography>
         </Box>
-        <Typography
-          color="textPrimary"
-          sx={{ ml: 2 }}
-          variant="h6"
-        >
+        <Typography color="textPrimary" sx={{ ml: 2 }} variant="h6">
           Payment Method
         </Typography>
       </Box>
       <Box sx={{ mt: 3 }}>
-        <RadioGroup
-          name="paymentMethod"
-          sx={{ flexDirection: 'row' }}
-        >
+        <RadioGroup name="paymentMethod" sx={{ flexDirection: 'row' }}>
           {paymentMethods.map((paymentMethod) => (
             <FormControlLabel
-              control={(
-                <Radio
-                  color="primary"
-                  sx={{ ml: 1 }}
-                />
-              )}
+              control={<Radio color="primary" sx={{ ml: 1 }} />}
               key={paymentMethod.value}
-              label={(
-                <Typography
-                  color="textPrimary"
-                  variant="body1"
-                >
+              label={
+                <Typography color="textPrimary" variant="body1">
                   {paymentMethod.label}
                 </Typography>
-              )}
+              }
               value={paymentMethod.value}
             />
           ))}
         </RadioGroup>
       </Box>
       <Box sx={{ mt: 3 }}>
-        <Grid
-          container
-          spacing={3}
-        >
-          <Grid
-            item
-            sm={6}
-            xs={12}
-          >
-            <TextField
-              fullWidth
-              label="Name on Card"
-              name="cardOwner"
-            />
+        <Grid container spacing={3}>
+          <Grid item sm={6} xs={12}>
+            <TextField fullWidth label="Name on Card" name="cardOwner" />
           </Grid>
-          <Grid
-            item
-            sm={6}
-          />
-          <Grid
-            item
-            sm={6}
-            xs={12}
-          >
-            <TextField
-              fullWidth
-              label="Card Number"
-              name="cardNumber"
-            />
+          <Grid item sm={6} />
+          <Grid item sm={6} xs={12}>
+            <TextField fullWidth label="Card Number" name="cardNumber" />
           </Grid>
-          <Grid
-            item
-            sm={6}
-          />
-          <Grid
-            item
-            sm={3}
-            xs={12}
-          >
-            <TextField
-              fullWidth
-              label="Expire Date"
-              name="cardExpirationDate"
-              placeholder="MM/YY"
-            />
+          <Grid item sm={6} />
+          <Grid item sm={3} xs={12}>
+            <TextField fullWidth label="Expire Date" name="cardExpirationDate" placeholder="MM/YY" />
           </Grid>
-          <Grid
-            item
-            sm={3}
-            xs={12}
-          >
-            <TextField
-              fullWidth
-              label="Security Code"
-              name="cardSecurityCode"
-            />
+          <Grid item sm={3} xs={12}>
+            <TextField fullWidth label="Security Code" name="cardSecurityCode" />
           </Grid>
         </Grid>
       </Box>
@@ -313,14 +179,10 @@ const Form13: FC = () => (
         sx={{
           display: 'flex',
           justifyContent: 'flex-end',
-          mt: 3
+          mt: 3,
         }}
       >
-        <Button
-          color="primary"
-          type="submit"
-          variant="contained"
-        >
+        <Button color="primary" type="submit" variant="contained">
           Submit
         </Button>
       </Box>

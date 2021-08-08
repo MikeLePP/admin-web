@@ -10,7 +10,7 @@ import {
   TableBody,
   TableCell,
   TableRow,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import Label from '../../Label';
 import Scrollbar from '../../Scrollbar';
@@ -26,7 +26,7 @@ const logs = [
     ip: '84.234.243.42',
     method: 'POST',
     route: '/__fakeApi__/purchase',
-    status: 200
+    status: 200,
   },
   {
     id: '5ece2d02510484b2952e1e05',
@@ -35,7 +35,7 @@ const logs = [
     ip: '84.234.243.42',
     method: 'POST',
     route: '/__fakeApi__/purchase',
-    status: 522
+    status: 522,
   },
   {
     id: '5ece2d08e2748e4e9788901a',
@@ -44,7 +44,7 @@ const logs = [
     ip: '84.234.243.42',
     method: 'DELETE',
     route: '/__fakeApi__/products/d65654e/remove',
-    status: 200
+    status: 200,
   },
   {
     id: '5ece2d0c47214e342c2d7f28',
@@ -53,7 +53,7 @@ const logs = [
     ip: '84.234.243.42',
     method: 'GET',
     route: '/__fakeApi__/products/d65654e/add',
-    status: 200
+    status: 200,
   },
   {
     id: '5ece2d11e4060a97b2b57623',
@@ -62,7 +62,7 @@ const logs = [
     ip: '84.234.243.42',
     method: 'GET',
     route: '/__fakeApi__/products/c85727f/add',
-    status: 200
+    status: 200,
   },
   {
     id: '5ece2d16cf6d53d8e33656af',
@@ -71,7 +71,7 @@ const logs = [
     ip: '84.234.243.42',
     method: 'GET',
     route: '/__fakeApi__/products/c85727f',
-    status: 200
+    status: 200,
   },
   {
     id: '5ece2d1b2ec5071be9286a96',
@@ -80,7 +80,7 @@ const logs = [
     ip: '84.234.243.42',
     method: 'GET',
     route: '/__fakeApi__/products',
-    status: 200
+    status: 200,
   },
   {
     id: '5ece2d22e68d5498917e47bc',
@@ -89,8 +89,8 @@ const logs = [
     ip: '84.234.243.42',
     method: 'POST',
     route: '/__fakeApi__/authentication/login',
-    status: 200
-  }
+    status: 200,
+  },
 ];
 
 const Table10: FC = () => (
@@ -98,16 +98,16 @@ const Table10: FC = () => (
     sx={{
       backgroundColor: 'background.default',
       minHeight: '100%',
-      p: 3
+      p: 3,
     }}
   >
     <Card>
       <CardHeader
-        action={(
+        action={
           <IconButton>
             <DotsHorizontalIcon fontSize="small" />
           </IconButton>
-        )}
+        }
         title="Logs"
       />
       <Divider />
@@ -118,34 +118,17 @@ const Table10: FC = () => (
               {logs.map((log) => (
                 <TableRow key={log.id}>
                   <TableCell width="100">
-                    <Typography
-                      color="textPrimary"
-                      variant="subtitle2"
-                    >
+                    <Typography color="textPrimary" variant="subtitle2">
                       {log.method}
                     </Typography>
                   </TableCell>
                   <TableCell width="64">
-                    <Label
-                      color={log.status === 200
-                        ? 'success'
-                        : 'error'}
-                    >
-                      {log.status}
-                    </Label>
+                    <Label color={log.status === 200 ? 'success' : 'error'}>{log.status}</Label>
                   </TableCell>
-                  <TableCell>
-                    {log.route}
-                  </TableCell>
-                  <TableCell>
-                    {log.description}
-                  </TableCell>
-                  <TableCell align="right">
-                    {log.ip}
-                  </TableCell>
-                  <TableCell align="right">
-                    {format(log.createdAt, 'yyyy/MM/dd | HH:mm:ss')}
-                  </TableCell>
+                  <TableCell>{log.route}</TableCell>
+                  <TableCell>{log.description}</TableCell>
+                  <TableCell align="right">{log.ip}</TableCell>
+                  <TableCell align="right">{format(log.createdAt, 'yyyy/MM/dd | HH:mm:ss')}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

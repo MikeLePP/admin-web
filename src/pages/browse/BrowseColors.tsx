@@ -21,18 +21,12 @@ const BrowseColors: FC = () => {
         sx={{
           backgroundColor: 'background.paper',
           pb: 15,
-          pt: 8
+          pt: 8,
         }}
       >
         <Container maxWidth="lg">
-          <WidgetPreviewer
-            element={<ColorsMain />}
-            name="Main colors"
-          />
-          <WidgetPreviewer
-            element={<ColorsSeverity />}
-            name="Severity colors"
-          />
+          <WidgetPreviewer element={<ColorsMain />} name="Main colors" />
+          <WidgetPreviewer element={<ColorsSeverity />} name="Severity colors" />
         </Container>
       </Box>
     </>

@@ -3,16 +3,7 @@ import { Link as RouterLink } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import numeral from 'numeral';
-import {
-  Avatar,
-  Card,
-  CardContent,
-  CardHeader,
-  Link,
-  List,
-  ListItem,
-  Typography
-} from '@material-ui/core';
+import { Avatar, Card, CardContent, CardHeader, Link, List, ListItem, Typography } from '@material-ui/core';
 import getInitials from '../../../utils/getInitials';
 
 interface ProjectMetadataProps {
@@ -25,50 +16,28 @@ interface ProjectMetadataProps {
 }
 
 const ProjectMetadata: FC<ProjectMetadataProps> = (props) => {
-  const {
-    authorAvatar,
-    authorName,
-    budget,
-    currency,
-    endDate,
-    updatedAt,
-    ...other
-  } = props;
+  const { authorAvatar, authorName, budget, currency, endDate, updatedAt, ...other } = props;
 
   return (
     <Card {...other}>
       <CardHeader
-        avatar={(
-          <Avatar
-            component={RouterLink}
-            src={authorAvatar}
-            to="#"
-          >
+        avatar={
+          <Avatar component={RouterLink} src={authorAvatar} to="#">
             {getInitials(authorName)}
           </Avatar>
-        )}
+        }
         disableTypography
-        subheader={(
-          <Link
-            color="textPrimary"
-            component={RouterLink}
-            to="#"
-            underline="none"
-            variant="subtitle2"
-          >
+        subheader={
+          <Link color="textPrimary" component={RouterLink} to="#" underline="none" variant="subtitle2">
             {authorName}
           </Link>
-        )}
+        }
         style={{ paddingBottom: 0 }}
-        title={(
-          <Typography
-            color="textSecondary"
-            display="block"
-            variant="overline"
-          >
+        title={
+          <Typography color="textSecondary" display="block" variant="overline">
             Contest holder
           </Typography>
-        )}
+        }
       />
       <CardContent sx={{ pt: 0 }}>
         <List>
@@ -77,19 +46,13 @@ const ProjectMetadata: FC<ProjectMetadataProps> = (props) => {
             divider
             sx={{
               justifyContent: 'space-between',
-              padding: 2
+              padding: 2,
             }}
           >
-            <Typography
-              color="textPrimary"
-              variant="subtitle2"
-            >
+            <Typography color="textPrimary" variant="subtitle2">
               Deadline
             </Typography>
-            <Typography
-              color="textSecondary"
-              variant="body2"
-            >
+            <Typography color="textSecondary" variant="body2">
               {format(endDate, 'dd MMM yyyy')}
             </Typography>
           </ListItem>
@@ -98,19 +61,13 @@ const ProjectMetadata: FC<ProjectMetadataProps> = (props) => {
             divider
             sx={{
               justifyContent: 'space-between',
-              padding: 2
+              padding: 2,
             }}
           >
-            <Typography
-              color="textPrimary"
-              variant="subtitle2"
-            >
+            <Typography color="textPrimary" variant="subtitle2">
               Budget
             </Typography>
-            <Typography
-              color="textSecondary"
-              variant="body2"
-            >
+            <Typography color="textSecondary" variant="body2">
               {numeral(budget).format(`${currency}0,0.00`)}
             </Typography>
           </ListItem>
@@ -118,19 +75,13 @@ const ProjectMetadata: FC<ProjectMetadataProps> = (props) => {
             disableGutters
             sx={{
               justifyContent: 'space-between',
-              padding: 2
+              padding: 2,
             }}
           >
-            <Typography
-              color="textPrimary"
-              variant="subtitle2"
-            >
+            <Typography color="textPrimary" variant="subtitle2">
               Last Update
             </Typography>
-            <Typography
-              color="textSecondary"
-              variant="body2"
-            >
+            <Typography color="textSecondary" variant="body2">
               {format(updatedAt, 'dd MMM yyyy')}
             </Typography>
           </ListItem>
@@ -146,7 +97,7 @@ ProjectMetadata.propTypes = {
   budget: PropTypes.number.isRequired,
   currency: PropTypes.string.isRequired,
   endDate: PropTypes.number.isRequired,
-  updatedAt: PropTypes.number.isRequired
+  updatedAt: PropTypes.number.isRequired,
 };
 
 export default ProjectMetadata;

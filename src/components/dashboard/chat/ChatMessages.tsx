@@ -30,15 +30,10 @@ const ChatMessages: FC<ChatMessagesProps> = (props) => {
   }, [messages, scrollToBottom]);
 
   return (
-    <Scrollbar
-      options={{ suppressScrollX: true }}
-      ref={rootRef}
-      {...other}
-    >
+    <Scrollbar options={{ suppressScrollX: true }} ref={rootRef} {...other}>
       <Box sx={{ p: 2 }}>
         {messages.map((message) => {
-          const participant = participants
-            .find((_participant) => _participant.id === message.senderId);
+          const participant = participants.find((_participant) => _participant.id === message.senderId);
           let senderAvatar;
           let senderName;
           let senderType;
@@ -73,9 +68,8 @@ const ChatMessages: FC<ChatMessagesProps> = (props) => {
 };
 
 ChatMessages.propTypes = {
-  // @ts-ignore
   messages: PropTypes.array,
-  participants: PropTypes.array
+  participants: PropTypes.array,
 };
 
 export default ChatMessages;

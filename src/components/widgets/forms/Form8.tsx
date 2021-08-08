@@ -1,15 +1,7 @@
 import { useState } from 'react';
 import type { FC } from 'react';
 import MobileDatePicker from '@material-ui/lab/MobileDatePicker';
-import {
-  Avatar,
-  Box,
-  Button,
-  Chip,
-  IconButton,
-  TextField,
-  Typography
-} from '@material-ui/core';
+import { Avatar, Box, Button, Chip, IconButton, TextField, Typography } from '@material-ui/core';
 import PlusIcon from '../../../icons/Plus';
 
 const Form8: FC = () => {
@@ -21,44 +13,26 @@ const Form8: FC = () => {
       sx={{
         backgroundColor: 'background.paper',
         minHeight: '100%',
-        p: 3
+        p: 3,
       }}
     >
       <form onSubmit={(event) => event.preventDefault()}>
         <Box>
-          <Typography
-            color="textPrimary"
-            variant="h5"
-          >
+          <Typography color="textPrimary" variant="h5">
             Please select one option
           </Typography>
-          <Typography
-            color="textSecondary"
-            sx={{ py: 2 }}
-            variant="body1"
-          >
-            Proin tincidunt lacus sed ante efficitur efficitur. Quisque
-            aliquam fringilla velit sit amet euismod.
+          <Typography color="textSecondary" sx={{ py: 2 }} variant="body1">
+            Proin tincidunt lacus sed ante efficitur efficitur. Quisque aliquam fringilla velit sit amet euismod.
           </Typography>
-          <TextField
-            fullWidth
-            label="Project Name"
-            name="projectName"
-            variant="outlined"
-          />
+          <TextField fullWidth label="Project Name" name="projectName" variant="outlined" />
           <Box
             sx={{
               alignItems: 'center',
               display: 'flex',
-              mt: 3
+              mt: 3,
             }}
           >
-            <TextField
-              fullWidth
-              label="Tags"
-              name="tags"
-              variant="outlined"
-            />
+            <TextField fullWidth label="Tags" name="tags" variant="outlined" />
             <IconButton sx={{ ml: 2 }}>
               <PlusIcon fontSize="small" />
             </IconButton>
@@ -69,12 +43,11 @@ const Form8: FC = () => {
                 avatar={<Avatar>F</Avatar>}
                 key={tag}
                 label={tag}
-                onDelete={() => {
-                }}
+                onDelete={() => {}}
                 sx={{
                   '& + &': {
-                    ml: 1
-                  }
+                    ml: 1,
+                  },
                 }}
                 variant="outlined"
               />
@@ -83,31 +56,21 @@ const Form8: FC = () => {
           <Box
             sx={{
               display: 'flex',
-              mt: 4
+              mt: 4,
             }}
           >
             <Box sx={{ mr: 2 }}>
               <MobileDatePicker
                 label="Start Date"
                 onChange={(newDate) => setStartDate(newDate)}
-                renderInput={(inputProps) => (
-                  <TextField
-                    variant="outlined"
-                    {...inputProps}
-                  />
-                )}
+                renderInput={(inputProps) => <TextField variant="outlined" {...inputProps} />}
                 value={startDate}
               />
             </Box>
             <MobileDatePicker
               label="End Date"
               onChange={(newDate) => setEndDate(newDate)}
-              renderInput={(inputProps) => (
-                <TextField
-                  variant="outlined"
-                  {...inputProps}
-                />
-              )}
+              renderInput={(inputProps) => <TextField variant="outlined" {...inputProps} />}
               value={endDate}
             />
           </Box>
@@ -115,15 +78,11 @@ const Form8: FC = () => {
         <Box
           sx={{
             display: 'flex',
-            mt: 6
+            mt: 6,
           }}
         >
           <Box sx={{ flexGrow: 1 }} />
-          <Button
-            color="primary"
-            type="submit"
-            variant="contained"
-          >
+          <Button color="primary" type="submit" variant="contained">
             Next
           </Button>
         </Box>

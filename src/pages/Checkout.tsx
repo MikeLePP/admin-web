@@ -23,15 +23,15 @@ const productsData: Product[] = [
     image: '/static/mock-images/products/product_1.jpeg',
     name: 'Charlie Tulip Dress',
     price: 23.99,
-    quantity: 1
+    quantity: 1,
   },
   {
     id: 'ece4069546ff025047b97735',
     image: '/static/mock-images/products/product_2.jpeg',
     name: 'Kate Leopard Dress',
-    price: 95.00,
-    quantity: 1
-  }
+    price: 95.0,
+    quantity: 1,
+  },
 ];
 
 const Checkout: FC = () => {
@@ -46,7 +46,7 @@ const Checkout: FC = () => {
     optionalAddress: '',
     paymentMethod: 'visa',
     state: '',
-    zip: ''
+    zip: '',
   });
   const [products, setProducts] = useState<Product[]>(productsData);
 
@@ -55,39 +55,32 @@ const Checkout: FC = () => {
   }, []);
 
   const handleBillingChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setBilling((prevBilling) => (
-      {
-        ...prevBilling,
-        [event.target.name]: event.target.value
-      }
-    ));
+    setBilling((prevBilling) => ({
+      ...prevBilling,
+      [event.target.name]: event.target.value,
+    }));
   };
 
-  const handleProductQuantityChange = (
-    event: ChangeEvent<{ value: number }>,
-    productId: string
-  ): void => {
-    setProducts((prevProducts) => prevProducts.map((product) => {
-      if (product.id === productId) {
-        return {
-          ...product,
-          quantity: event.target.value
-        };
-      }
+  const handleProductQuantityChange = (event: ChangeEvent<{ value: number }>, productId: string): void => {
+    setProducts((prevProducts) =>
+      prevProducts.map((product) => {
+        if (product.id === productId) {
+          return {
+            ...product,
+            quantity: event.target.value,
+          };
+        }
 
-      return product;
-    }));
+        return product;
+      }),
+    );
   };
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
   };
 
-  const subtotal = products
-    .reduce((
-      accumulator,
-      product
-    ) => accumulator + product.price * product.quantity, 0);
+  const subtotal = products.reduce((accumulator, product) => accumulator + product.price * product.quantity, 0);
   const shippingTax = 12;
   const total = subtotal + shippingTax;
 
@@ -100,7 +93,7 @@ const Checkout: FC = () => {
         sx={{
           backgroundColor: 'background.paper',
           minHeight: '100%',
-          py: 8
+          py: 8,
         }}
       >
         <Container maxWidth="lg">
@@ -119,33 +112,17 @@ const Checkout: FC = () => {
               variant="h3"
               sx={{
                 fontWeight: 'fontWeightBold',
-                mt: 3
+                mt: 3,
               }}
             >
               Payment Information
             </Typography>
             <Box mt={6}>
-              <Grid
-                container
-                spacing={6}
-              >
-                <Grid
-                  item
-                  lg={8}
-                  md={7}
-                  xs={12}
-                >
-                  <CheckoutBilling
-                    billing={billing}
-                    onChange={handleBillingChange}
-                  />
+              <Grid container spacing={6}>
+                <Grid item lg={8} md={7} xs={12}>
+                  <CheckoutBilling billing={billing} onChange={handleBillingChange} />
                 </Grid>
-                <Grid
-                  item
-                  lg={4}
-                  md={5}
-                  xs={12}
-                >
+                <Grid item lg={4} md={5} xs={12}>
                   <CheckoutOrderSummary
                     onQuantityChange={handleProductQuantityChange}
                     products={products}
@@ -160,28 +137,16 @@ const Checkout: FC = () => {
               <Box
                 sx={{
                   alignItems: 'center',
-                  display: 'flex'
+                  display: 'flex',
                 }}
               >
-                <LockIcon
-                  fontWeight="small"
-                  sx={{ color: 'text.secondary' }}
-                />
-                <Typography
-                  color="textPrimary"
-                  sx={{ ml: 2 }}
-                  variant="subtitle2"
-                >
+                <LockIcon fontWeight="small" sx={{ color: 'text.secondary' }} />
+                <Typography color="textPrimary" sx={{ ml: 2 }} variant="subtitle2">
                   Secure Checkout
                 </Typography>
               </Box>
-              <Typography
-                color="textSecondary"
-                sx={{ mt: 2 }}
-                variant="body2"
-              >
-                Your purchases are secured by an industry best encryption
-                service – Braintree
+              <Typography color="textSecondary" sx={{ mt: 2 }} variant="body2">
+                Your purchases are secured by an industry best encryption service – Braintree
               </Typography>
               <Button
                 color="primary"

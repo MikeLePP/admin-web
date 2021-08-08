@@ -1,14 +1,6 @@
 import { forwardRef, useState } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Avatar,
-  AvatarGroup,
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  Typography
-} from '@material-ui/core';
+import { Avatar, AvatarGroup, Box, Card, CardContent, CardMedia, Typography } from '@material-ui/core';
 import CheckIcon from '../../../icons/Check';
 import ChatAltIcon from '../../../icons/ChatAlt';
 import DocumentTextIcon from '../../../icons/DocumentText';
@@ -36,17 +28,12 @@ const cardSelector = (state: RootState, cardId: string): PopulatedCard => {
 
   return {
     ...card,
-    members: card.memberIds.map((memberId: string) => members.byId[memberId])
+    members: card.memberIds.map((memberId: string) => members.byId[memberId]),
   };
 };
 
 const KanbanCard = forwardRef<HTMLDivElement, KanbanCardProps>((props, ref) => {
-  const {
-    cardId,
-    dragging,
-    column,
-    ...other
-  } = props;
+  const { cardId, dragging, column, ...other } = props;
   const card = useSelector((state) => cardSelector(state, cardId));
   const [open, setOpen] = useState<boolean>(false);
 
@@ -63,7 +50,7 @@ const KanbanCard = forwardRef<HTMLDivElement, KanbanCardProps>((props, ref) => {
       ref={ref}
       sx={{
         outline: 'none',
-        py: 1
+        py: 1,
       }}
       {...other}
     >
@@ -72,25 +59,17 @@ const KanbanCard = forwardRef<HTMLDivElement, KanbanCardProps>((props, ref) => {
         raised={dragging}
         sx={{
           ...(dragging && {
-            backgroundColor: 'background.paper'
+            backgroundColor: 'background.paper',
           }),
           '&:hover': {
-            backgroundColor: 'background.default'
-          }
+            backgroundColor: 'background.default',
+          },
         }}
         variant={dragging ? 'elevation' : 'outlined'}
       >
-        {card.cover && (
-          <CardMedia
-            image={card.cover}
-            sx={{ height: 200 }}
-          />
-        )}
+        {card.cover && <CardMedia image={card.cover} sx={{ height: 200 }} />}
         <CardContent>
-          <Typography
-            color="textPrimary"
-            variant="subtitle2"
-          >
+          <Typography color="textPrimary" variant="subtitle2">
             {card.name}
           </Typography>
           <Box
@@ -99,8 +78,8 @@ const KanbanCard = forwardRef<HTMLDivElement, KanbanCardProps>((props, ref) => {
               display: 'flex',
               mt: 2,
               '& svg:not(:first-of-type)': {
-                ml: 2
-              }
+                ml: 2,
+              },
             }}
           >
             {card.isSubscribed && <EyeIcon fontSize="small" />}
@@ -111,22 +90,14 @@ const KanbanCard = forwardRef<HTMLDivElement, KanbanCardProps>((props, ref) => {
             {card.members.length > 0 && (
               <AvatarGroup max={5}>
                 {card.members.map((member) => (
-                  <Avatar
-                    key={member.id}
-                    src={member.avatar}
-                  />
+                  <Avatar key={member.id} src={member.avatar} />
                 ))}
               </AvatarGroup>
             )}
           </Box>
         </CardContent>
       </Card>
-      <KanbanCardModal
-        card={card}
-        column={column}
-        onClose={handleClose}
-        open={open}
-      />
+      <KanbanCardModal card={card} column={column} onClose={handleClose} open={open} />
     </Box>
   );
 });
@@ -135,13 +106,12 @@ KanbanCard.propTypes = {
   cardId: PropTypes.string.isRequired,
   dragging: PropTypes.bool,
   index: PropTypes.number,
-  // @ts-ignore
-  column: PropTypes.object.isRequired,
-  style: PropTypes.object
+  column: PropTypes.any.isRequired,
+  style: PropTypes.object,
 };
 
 KanbanCard.defaultProps = {
-  dragging: false
+  dragging: false,
 };
 
 export default KanbanCard;

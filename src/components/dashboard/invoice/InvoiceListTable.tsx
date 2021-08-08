@@ -19,7 +19,7 @@ import {
   TablePagination,
   TableRow,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import ArrowRightIcon from '../../../icons/ArrowRight';
 import PencilAltIcon from '../../../icons/PencilAlt';
@@ -39,64 +39,56 @@ interface Filters {
 const statusOptions = [
   {
     label: 'All',
-    value: 'all'
+    value: 'all',
   },
   {
     label: 'Paid',
-    value: 'paid'
+    value: 'paid',
   },
   {
     label: 'Pending',
-    value: 'pending'
+    value: 'pending',
   },
   {
     label: 'Canceled',
-    value: 'canceled'
-  }
+    value: 'canceled',
+  },
 ];
 
 const sortOptions = [
   {
     label: 'Newest first',
-    value: 'createdAt|desc'
+    value: 'createdAt|desc',
   },
   {
     label: 'Oldest first',
-    value: 'createdAt|asc'
-  }
+    value: 'createdAt|asc',
+  },
 ];
 
 const getStatusLabel = (invoiceStatus: InvoiceStatus): JSX.Element => {
   const map = {
     canceled: {
       color: 'error',
-      text: 'Canceled'
+      text: 'Canceled',
     },
     paid: {
       color: 'success',
-      text: 'Paid'
+      text: 'Paid',
     },
     pending: {
       color: 'warning',
-      text: 'Pending'
-    }
+      text: 'Pending',
+    },
   };
 
   const { text, color }: any = map[invoiceStatus];
 
-  return (
-    <Label color={color}>
-      {text}
-    </Label>
-  );
+  return <Label color={color}>{text}</Label>;
 };
 
-const applyFilters = (
-  invoices: Invoice[],
-  query: string,
-  filters: Filters
-): Invoice[] => invoices
-  .filter((invoice) => {
+const applyFilters = (invoices: Invoice[], query: string, filters: Filters): Invoice[] =>
+  invoices.filter((invoice) => {
     let matches = true;
 
     if (query) {
@@ -121,12 +113,8 @@ const applyFilters = (
     return matches;
   });
 
-const applyPagination = (
-  invoices: Invoice[],
-  page: number,
-  limit: number
-): Invoice[] => invoices
-  .slice(page * limit, page * limit + limit);
+const applyPagination = (invoices: Invoice[], page: number, limit: number): Invoice[] =>
+  invoices.slice(page * limit, page * limit + limit);
 
 const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
   const { invoices, ...other } = props;
@@ -136,7 +124,7 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
   const [query, setQuery] = useState<string>('');
   const [sort, setSort] = useState<string>(sortOptions[0].value);
   const [filters, setFilters] = useState<Filters>({
-    status: null
+    status: null,
   });
 
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -150,12 +138,10 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
       value = event.target.value;
     }
 
-    setFilters((prevFilters) => (
-      {
-        ...prevFilters,
-        status: value
-      }
-    ));
+    setFilters((prevFilters) => ({
+      ...prevFilters,
+      status: value,
+    }));
   };
 
   const handleSortChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -163,15 +149,10 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
   };
 
   const handleSelectAllInvoices = (event: ChangeEvent<HTMLInputElement>): void => {
-    setSelectedInvoices(event.target.checked
-      ? invoices.map((invoice) => invoice.id)
-      : []);
+    setSelectedInvoices(event.target.checked ? invoices.map((invoice) => invoice.id) : []);
   };
 
-  const handleSelectOneInvoice = (
-    event: ChangeEvent<HTMLInputElement>,
-    invoiceId: string
-  ): void => {
+  const handleSelectOneInvoice = (event: ChangeEvent<HTMLInputElement>, invoiceId: string): void => {
     if (!selectedInvoices.includes(invoiceId)) {
       setSelectedInvoices((prevSelected) => [...prevSelected, invoiceId]);
     } else {
@@ -191,8 +172,7 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
   const filteredInvoices = applyFilters(invoices, query, filters);
   const paginatedInvoices = applyPagination(filteredInvoices, page, limit);
   const enableBulkActions = selectedInvoices.length > 0;
-  const selectedSomeInvoices = selectedInvoices.length > 0
-    && selectedInvoices.length < invoices.length;
+  const selectedSomeInvoices = selectedInvoices.length > 0 && selectedInvoices.length < invoices.length;
   const selectedAllInvoices = selectedInvoices.length === invoices.length;
 
   return (
@@ -203,14 +183,14 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
           display: 'flex',
           flexWrap: 'wrap',
           m: -1,
-          p: 2
+          p: 2,
         }}
       >
         <Box
           sx={{
             m: 1,
             maxWidth: '100%',
-            width: 500
+            width: 500,
           }}
         >
           <TextField
@@ -220,7 +200,7 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
                 <InputAdornment position="start">
                   <SearchIcon fontSize="small" />
                 </InputAdornment>
-              )
+              ),
             }}
             onChange={handleQueryChange}
             placeholder="Search invoices by customer"
@@ -232,7 +212,7 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
           sx={{
             m: 1,
             maxWidth: '100%',
-            width: 240
+            width: 240,
           }}
         >
           <TextField
@@ -246,10 +226,7 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
             variant="outlined"
           >
             {sortOptions.map((option) => (
-              <option
-                key={option.value}
-                value={option.value}
-              >
+              <option key={option.value} value={option.value}>
                 {option.label}
               </option>
             ))}
@@ -259,7 +236,7 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
           sx={{
             m: 1,
             maxWidth: '100%',
-            width: 240
+            width: 240,
           }}
         >
           <TextField
@@ -273,10 +250,7 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
             variant="outlined"
           >
             {statusOptions.map((statusOption) => (
-              <option
-                key={statusOption.value}
-                value={statusOption.value}
-              >
+              <option key={statusOption.value} value={statusOption.value}>
                 {statusOption.label}
               </option>
             ))}
@@ -292,7 +266,7 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
               position: 'absolute',
               px: '4px',
               width: '100%',
-              zIndex: 2
+              zIndex: 2,
             }}
           >
             <Checkbox
@@ -301,18 +275,10 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
               indeterminate={selectedSomeInvoices}
               onChange={handleSelectAllInvoices}
             />
-            <Button
-              color="primary"
-              sx={{ ml: 2 }}
-              variant="outlined"
-            >
+            <Button color="primary" sx={{ ml: 2 }} variant="outlined">
               Delete
             </Button>
-            <Button
-              color="primary"
-              sx={{ ml: 2 }}
-              variant="outlined"
-            >
+            <Button color="primary" sx={{ ml: 2 }} variant="outlined">
               Edit
             </Button>
           </Box>
@@ -331,24 +297,12 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
                     onChange={handleSelectAllInvoices}
                   />
                 </TableCell>
-                <TableCell>
-                  Customer
-                </TableCell>
-                <TableCell>
-                  Status
-                </TableCell>
-                <TableCell>
-                  Amount
-                </TableCell>
-                <TableCell>
-                  ID
-                </TableCell>
-                <TableCell>
-                  Date
-                </TableCell>
-                <TableCell align="right">
-                  Actions
-                </TableCell>
+                <TableCell>Customer</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell>Amount</TableCell>
+                <TableCell>ID</TableCell>
+                <TableCell>Date</TableCell>
+                <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -356,11 +310,7 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
                 const isInvoiceSelected = selectedInvoices.includes(invoice.id);
 
                 return (
-                  <TableRow
-                    hover
-                    key={invoice.id}
-                    selected={isInvoiceSelected}
-                  >
+                  <TableRow hover key={invoice.id} selected={isInvoiceSelected}>
                     <TableCell padding="checkbox">
                       <Checkbox
                         checked={isInvoiceSelected}
@@ -370,46 +320,22 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
                       />
                     </TableCell>
                     <TableCell>
-                      <Link
-                        color="textPrimary"
-                        component={RouterLink}
-                        to="#"
-                        underline="none"
-                        variant="subtitle2"
-                      >
+                      <Link color="textPrimary" component={RouterLink} to="#" underline="none" variant="subtitle2">
                         {invoice.customer.name}
                       </Link>
-                      <Typography
-                        color="textSecondary"
-                        variant="body2"
-                      >
+                      <Typography color="textSecondary" variant="body2">
                         {invoice.customer.email}
                       </Typography>
                     </TableCell>
-                    <TableCell>
-                      {getStatusLabel(invoice.status)}
-                    </TableCell>
-                    <TableCell>
-                      {numeral(invoice.totalAmount)
-                        .format(`${invoice.currency}0,0.00`)}
-                    </TableCell>
-                    <TableCell>
-                      {invoice.id}
-                    </TableCell>
-                    <TableCell>
-                      {format(invoice.issueDate, 'dd/MM/yyyy')}
-                    </TableCell>
+                    <TableCell>{getStatusLabel(invoice.status)}</TableCell>
+                    <TableCell>{numeral(invoice.totalAmount).format(`${invoice.currency}0,0.00`)}</TableCell>
+                    <TableCell>{invoice.id}</TableCell>
+                    <TableCell>{format(invoice.issueDate, 'dd/MM/yyyy')}</TableCell>
                     <TableCell align="right">
-                      <IconButton
-                        component={RouterLink}
-                        to="#"
-                      >
+                      <IconButton component={RouterLink} to="#">
                         <PencilAltIcon fontSize="small" />
                       </IconButton>
-                      <IconButton
-                        component={RouterLink}
-                        to="/dashboard/invoices/1"
-                      >
+                      <IconButton component={RouterLink} to="/dashboard/invoices/1">
                         <ArrowRightIcon fontSize="small" />
                       </IconButton>
                     </TableCell>
@@ -434,7 +360,7 @@ const InvoiceListTable: FC<InvoiceListTableProps> = (props) => {
 };
 
 InvoiceListTable.propTypes = {
-  invoices: PropTypes.array.isRequired
+  invoices: PropTypes.array.isRequired,
 };
 
 export default InvoiceListTable;

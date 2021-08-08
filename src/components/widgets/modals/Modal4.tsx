@@ -1,21 +1,6 @@
 import type { FC } from 'react';
-import {
-  formatDistanceToNowStrict,
-  subDays,
-  subHours,
-  subMinutes
-} from 'date-fns';
-import {
-  Avatar,
-  Box,
-  Link,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Paper,
-  Typography
-} from '@material-ui/core';
+import { formatDistanceToNowStrict, subDays, subHours, subMinutes } from 'date-fns';
+import { Avatar, Box, Link, List, ListItem, ListItemAvatar, ListItemText, Paper, Typography } from '@material-ui/core';
 import StatusIndicator from '../../StatusIndicator';
 
 const now = new Date();
@@ -27,7 +12,7 @@ const contacts = [
     isActive: true,
     lastActivity: now.getTime(),
     name: 'Alcides Antonio',
-    username: 'alcides.antonio'
+    username: 'alcides.antonio',
   },
   {
     id: '5e887a62195cc5aef7e8ca5d',
@@ -35,7 +20,7 @@ const contacts = [
     isActive: false,
     lastActivity: subHours(now, 2).getTime(),
     name: 'Marcus Finn',
-    username: 'marcus.finn'
+    username: 'marcus.finn',
   },
   {
     id: '5e887ac47eed253091be10cb',
@@ -43,7 +28,7 @@ const contacts = [
     isActive: false,
     lastActivity: subMinutes(now, 15).getTime(),
     name: 'Carson Darrin',
-    username: 'carson.darrin'
+    username: 'carson.darrin',
   },
   {
     id: '5e887b209c28ac3dd97f6db5',
@@ -51,7 +36,7 @@ const contacts = [
     isActive: true,
     lastActivity: now.getTime(),
     name: 'Fran Perez',
-    username: 'fran.perez'
+    username: 'fran.perez',
   },
   {
     id: '5e887b7602bdbc4dbb234b27',
@@ -59,7 +44,7 @@ const contacts = [
     isActive: true,
     lastActivity: now.getTime(),
     name: 'Jie Yan Song',
-    username: 'jie.yan.song'
+    username: 'jie.yan.song',
   },
   {
     id: '5e86805e2bafd54f66cc95c3',
@@ -67,7 +52,7 @@ const contacts = [
     isActive: false,
     lastActivity: subDays(now, 2).getTime(),
     name: 'Miron Vitold',
-    username: 'miron.vitold'
+    username: 'miron.vitold',
   },
   {
     id: '5e887a1fbefd7938eea9c981',
@@ -75,7 +60,7 @@ const contacts = [
     isActive: false,
     lastActivity: subHours(now, 6).getTime(),
     name: 'Penjani Inyene',
-    username: 'penjani.inyene'
+    username: 'penjani.inyene',
   },
   {
     id: '5e887d0b3d090c1b8f162003',
@@ -83,7 +68,7 @@ const contacts = [
     isActive: true,
     lastActivity: now.getTime(),
     name: 'Omar Darobe',
-    username: 'omar.darobe'
+    username: 'omar.darobe',
   },
   {
     id: '5e88792be2d4cfb4bf0971d9',
@@ -91,7 +76,7 @@ const contacts = [
     isActive: true,
     lastActivity: now.getTime(),
     name: 'Siegbert Gottfried',
-    username: 'siegbert.gottfried'
+    username: 'siegbert.gottfried',
   },
   {
     id: '5e8877da9a65442b11551975',
@@ -99,7 +84,7 @@ const contacts = [
     isActive: true,
     lastActivity: now.getTime(),
     name: 'Iulia Albu',
-    username: 'iulia.albu'
+    username: 'iulia.albu',
   },
   {
     id: '5e8680e60cba5019c5ca6fda',
@@ -107,8 +92,8 @@ const contacts = [
     isActive: true,
     lastActivity: now.getTime(),
     name: 'Nasimiyu Danai',
-    username: 'nasimiyu.danai'
-  }
+    username: 'nasimiyu.danai',
+  },
 ];
 
 const Modal4: FC = () => (
@@ -116,7 +101,7 @@ const Modal4: FC = () => (
     sx={{
       backgroundColor: 'background.default',
       minHeight: '100%',
-      p: 3
+      p: 3,
     }}
   >
     <Paper
@@ -124,59 +109,34 @@ const Modal4: FC = () => (
       sx={{
         maxWidth: 320,
         mx: 'auto',
-        p: 2
+        p: 2,
       }}
     >
-      <Typography
-        color="textPrimary"
-        variant="h6"
-      >
+      <Typography color="textPrimary" variant="h6">
         Contacts
       </Typography>
       <Box sx={{ mt: 2 }}>
         <List disablePadding>
           {contacts.map((contact) => (
-            <ListItem
-              disableGutters
-              key={contact.id}
-            >
+            <ListItem disableGutters key={contact.id}>
               <ListItemAvatar>
                 <Avatar src={contact.avatar} />
               </ListItemAvatar>
               <ListItemText
                 disableTypography
-                primary={(
-                  <Link
-                    color="textPrimary"
-                    display="block"
-                    noWrap
-                    underline="none"
-                    variant="subtitle2"
-                  >
+                primary={
+                  <Link color="textPrimary" display="block" noWrap underline="none" variant="subtitle2">
                     {contact.name}
                   </Link>
-                )}
+                }
               />
-              {
-                contact.isActive
-                  ? (
-                    <StatusIndicator
-                      size="small"
-                      status="online"
-                    />
-                  )
-                  : (
-                    <Typography
-                      color="textSecondary"
-                      noWrap
-                      variant="caption"
-                    >
-                      {formatDistanceToNowStrict(contact.lastActivity)}
-                      {' '}
-                      ago
-                    </Typography>
-                  )
-              }
+              {contact.isActive ? (
+                <StatusIndicator size="small" status="online" />
+              ) : (
+                <Typography color="textSecondary" noWrap variant="caption">
+                  {formatDistanceToNowStrict(contact.lastActivity)} ago
+                </Typography>
+              )}
             </ListItem>
           ))}
         </List>

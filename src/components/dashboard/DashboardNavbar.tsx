@@ -16,27 +16,19 @@ interface DashboardNavbarProps extends AppBarProps {
   onSidebarMobileOpen?: () => void;
 }
 
-const DashboardNavbarRoot = experimentalStyled(AppBar)(
-  ({ theme }) => (
-    {
-      ...(
-        theme.palette.mode === 'light' && {
-          backgroundColor: theme.palette.primary.main,
-          boxShadow: 'none',
-          color: theme.palette.primary.contrastText
-        }
-      ),
-      ...(
-        theme.palette.mode === 'dark' && {
-          backgroundColor: theme.palette.background.paper,
-          borderBottom: `1px solid ${theme.palette.divider}`,
-          boxShadow: 'none'
-        }
-      ),
-      zIndex: theme.zIndex.drawer + 100
-    }
-  )
-);
+const DashboardNavbarRoot = experimentalStyled(AppBar)(({ theme }) => ({
+  ...(theme.palette.mode === 'light' && {
+    backgroundColor: theme.palette.primary.main,
+    boxShadow: 'none',
+    color: theme.palette.primary.contrastText,
+  }),
+  ...(theme.palette.mode === 'dark' && {
+    backgroundColor: theme.palette.background.paper,
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    boxShadow: 'none',
+  }),
+  zIndex: theme.zIndex.drawer + 100,
+}));
 
 const DashboardNavbar: FC<DashboardNavbarProps> = (props) => {
   const { onSidebarMobileOpen, ...other } = props;
@@ -49,8 +41,8 @@ const DashboardNavbar: FC<DashboardNavbarProps> = (props) => {
           onClick={onSidebarMobileOpen}
           sx={{
             display: {
-              lg: 'none'
-            }
+              lg: 'none',
+            },
           }}
         >
           <MenuIcon fontSize="small" />
@@ -60,17 +52,17 @@ const DashboardNavbar: FC<DashboardNavbarProps> = (props) => {
             sx={{
               display: {
                 lg: 'inline',
-                xs: 'none'
+                xs: 'none',
               },
               height: 40,
-              width: 40
+              width: 40,
             }}
           />
         </RouterLink>
         <Box
           sx={{
             flexGrow: 1,
-            ml: 2
+            ml: 2,
           }}
         />
         <LanguagePopover />
@@ -92,7 +84,7 @@ const DashboardNavbar: FC<DashboardNavbarProps> = (props) => {
 };
 
 DashboardNavbar.propTypes = {
-  onSidebarMobileOpen: PropTypes.func
+  onSidebarMobileOpen: PropTypes.func,
 };
 
 export default DashboardNavbar;

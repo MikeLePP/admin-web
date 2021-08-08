@@ -18,25 +18,14 @@ interface PricingPlanProps {
 }
 
 const PricingPlan: FC<PricingPlanProps> = (props) => {
-  const {
-    cta,
-    currency,
-    description,
-    features,
-    image,
-    name,
-    popular,
-    price,
-    sx,
-    ...other
-  } = props;
+  const { cta, currency, description, features, image, name, popular, price, sx, ...other } = props;
 
   return (
     <Box
       sx={{
         display: 'flex',
         flexDirection: 'column',
-        ...sx
+        ...sx,
       }}
       {...other}
     >
@@ -47,51 +36,34 @@ const PricingPlan: FC<PricingPlanProps> = (props) => {
             width: 52,
             '& img': {
               height: 'auto',
-              width: '100%'
-            }
+              width: '100%',
+            },
           }}
         >
-          <img
-            alt=""
-            src={image}
-          />
+          <img alt="" src={image} />
         </Box>
         <Box sx={{ display: 'flex' }}>
-          <Typography
-            color="textPrimary"
-            variant="h6"
-          >
+          <Typography color="textPrimary" variant="h6">
             {currency}
           </Typography>
-          <Typography
-            color="textPrimary"
-            variant="h4"
-          >
+          <Typography color="textPrimary" variant="h4">
             {price}
           </Typography>
           <Typography
             color="textSecondary"
             sx={{
               alignSelf: 'flex-end',
-              ml: 1
+              ml: 1,
             }}
             variant="subtitle2"
           >
             /mo
           </Typography>
         </Box>
-        <Typography
-          color="textPrimary"
-          sx={{ mt: 2 }}
-          variant="h6"
-        >
+        <Typography color="textPrimary" sx={{ mt: 2 }} variant="h6">
           {name}
         </Typography>
-        <Typography
-          color="textSecondary"
-          sx={{ mt: 2 }}
-          variant="body2"
-        >
+        <Typography color="textSecondary" sx={{ mt: 2 }} variant="body2">
           {description}
         </Typography>
       </Box>
@@ -101,7 +73,7 @@ const PricingPlan: FC<PricingPlanProps> = (props) => {
           display: 'flex',
           flexDirection: 'column',
           flexGrow: 1,
-          p: 3
+          p: 3,
         }}
       >
         {features.map((feature) => (
@@ -111,19 +83,16 @@ const PricingPlan: FC<PricingPlanProps> = (props) => {
               alignItems: 'center',
               display: 'flex',
               '& + &': {
-                mt: 2
-              }
+                mt: 2,
+              },
             }}
           >
-            <CheckIcon
-              fontSize="small"
-              sx={{ color: 'text.primary' }}
-            />
+            <CheckIcon fontSize="small" sx={{ color: 'text.primary' }} />
             <Typography
               color="textPrimary"
               sx={{
                 fontWeight: 500,
-                ml: 2
+                ml: 2,
               }}
               variant="body2"
             >
@@ -136,14 +105,10 @@ const PricingPlan: FC<PricingPlanProps> = (props) => {
           sx={{
             display: 'flex',
             justifyContent: 'center',
-            mt: 6
+            mt: 6,
           }}
         >
-          <Button
-            fullWidth
-            color="primary"
-            variant={popular ? 'contained' : 'outlined'}
-          >
+          <Button fullWidth color="primary" variant={popular ? 'contained' : 'outlined'}>
             {cta}
           </Button>
         </Box>
@@ -161,7 +126,7 @@ PricingPlan.propTypes = {
   name: propTypes.string.isRequired,
   popular: propTypes.bool,
   price: propTypes.string.isRequired,
-  sx: propTypes.object
+  sx: propTypes.object,
 };
 
 export default PricingPlan;

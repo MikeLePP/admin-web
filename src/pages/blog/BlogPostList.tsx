@@ -13,7 +13,7 @@ import {
   MenuItem,
   TextField,
   Toolbar,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { blogApi } from '../../__fakeApi__/blogApi';
 import { BlogPostCard, BlogNewsletter } from '../../components/blog';
@@ -35,13 +35,13 @@ const sortOptions: SortOption[] = [
   {
     label: 'Newest',
     value: 'desc',
-    icon: SortDescendingIcon
+    icon: SortDescendingIcon,
   },
   {
     label: 'Older',
     value: 'asc',
-    icon: SortAscendingIcon
-  }
+    icon: SortAscendingIcon,
+  },
 ];
 
 const BlogPostList: FC = () => {
@@ -68,7 +68,7 @@ const BlogPostList: FC = () => {
   }, [mounted]);
 
   useEffect(() => {
-    getPosts();
+    void getPosts();
   }, [getPosts]);
 
   const handleSortOpen = (): void => {
@@ -94,26 +94,15 @@ const BlogPostList: FC = () => {
       <Box
         sx={{
           backgroundColor: 'background.paper',
-          minHeight: '100%'
+          minHeight: '100%',
         }}
       >
         <div>
           <Container maxWidth="lg">
-            <Toolbar
-              disableGutters
-              sx={{ py: 2 }}
-            >
-              <Grid
-                alignItems="center"
-                container
-                justifyContent="space-between"
-                spacing={3}
-              >
+            <Toolbar disableGutters sx={{ py: 2 }}>
+              <Grid alignItems="center" container justifyContent="space-between" spacing={3}>
                 <Grid item>
-                  <Typography
-                    color="textPrimary"
-                    variant="body2"
-                  >
+                  <Typography color="textPrimary" variant="body2">
                     Hello, Jane Rotanson
                   </Typography>
                 </Grid>
@@ -140,7 +129,7 @@ const BlogPostList: FC = () => {
               sx={{
                 alignItems: 'center',
                 display: 'flex',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
               }}
             >
               <Box sx={{ width: 500 }}>
@@ -151,7 +140,7 @@ const BlogPostList: FC = () => {
                       <InputAdornment position="start">
                         <SearchIcon fontSize="small" />
                       </InputAdornment>
-                    )
+                    ),
                   }}
                   size="small"
                   placeholder="Search posts"
@@ -174,32 +163,20 @@ const BlogPostList: FC = () => {
                 onClose={handleSortClose}
                 open={openSort}
                 PaperProps={{
-                  sx: { width: 200 }
+                  sx: { width: 200 },
                 }}
               >
                 {sortOptions.map((option) => (
-                  <MenuItem
-                    key={option.value}
-                    onClick={() => handleSortChange(option)}
-                  >
+                  <MenuItem key={option.value} onClick={() => handleSortChange(option)}>
                     {option.label}
                   </MenuItem>
                 ))}
               </Menu>
             </Box>
             <Box sx={{ mt: 6 }}>
-              <Grid
-                container
-                spacing={6}
-              >
+              <Grid container spacing={6}>
                 {posts.map((post) => (
-                  <Grid
-                    item
-                    key={post.id}
-                    lg={4}
-                    md={6}
-                    xs={12}
-                  >
+                  <Grid item key={post.id} lg={4} md={6} xs={12}>
                     <BlogPostCard
                       authorAvatar={post.author.avatar}
                       authorName={post.author.name}

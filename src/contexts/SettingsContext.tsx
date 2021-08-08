@@ -25,7 +25,7 @@ const initialSettings: Settings = {
   direction: 'ltr',
   responsiveFontSizes: true,
   roundedCorners: true,
-  theme: THEMES.LIGHT
+  theme: THEMES.LIGHT,
 };
 
 export const restoreSettings = (): Settings | null => {
@@ -42,9 +42,7 @@ export const restoreSettings = (): Settings | null => {
         direction: 'ltr',
         responsiveFontSizes: true,
         roundedCorners: true,
-        theme: window.matchMedia('(prefers-color-scheme: dark)').matches
-          ? THEMES.DARK
-          : THEMES.LIGHT
+        theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? THEMES.DARK : THEMES.LIGHT,
       };
     }
   } catch (err) {
@@ -62,7 +60,7 @@ export const storeSettings = (settings: Settings): void => {
 
 const SettingsContext = createContext<SettingsContextValue>({
   settings: initialSettings,
-  saveSettings: () => {}
+  saveSettings: () => {},
 });
 
 export const SettingsProvider: FC<SettingsProviderProps> = (props) => {
@@ -86,7 +84,7 @@ export const SettingsProvider: FC<SettingsProviderProps> = (props) => {
     <SettingsContext.Provider
       value={{
         settings,
-        saveSettings
+        saveSettings,
       }}
     >
       {children}
@@ -95,7 +93,7 @@ export const SettingsProvider: FC<SettingsProviderProps> = (props) => {
 };
 
 SettingsProvider.propTypes = {
-  children: PropTypes.node.isRequired
+  children: PropTypes.node.isRequired,
 };
 
 export const SettingsConsumer = SettingsContext.Consumer;

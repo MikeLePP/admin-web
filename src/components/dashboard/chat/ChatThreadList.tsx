@@ -19,14 +19,12 @@ const ChatThreadList: FC = (props) => {
       // with the auth provider.
       // When implementing this app with a real database, replace this
       // ID with the ID from Auth Context.
-      const otherParticipant = thread.participants.find((participant) => (
-        participant.id !== '5e86809283e28b96d2d38537'
-      ));
+      const otherParticipant = thread.participants.find((participant) => participant.id !== '5e86809283e28b96d2d38537');
 
       threadKey = otherParticipant.username;
     }
 
-    navigate(`/dashboard/chat/${threadKey}`);
+    navigate(`/dashboard/chat/${threadKey as string}`);
   };
 
   return (

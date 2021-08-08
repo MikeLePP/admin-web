@@ -2,16 +2,7 @@ import { useCallback, useState, useEffect } from 'react';
 import type { FC, ChangeEvent } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { formatDistanceToNowStrict } from 'date-fns';
-import {
-  Box,
-  Button,
-  Container,
-  Divider,
-  Grid,
-  Tab,
-  Tabs,
-  Typography
-} from '@material-ui/core';
+import { Box, Button, Container, Divider, Grid, Tab, Tabs, Typography } from '@material-ui/core';
 import SendIcon from '@material-ui/icons/Send';
 import { projectApi } from '../../__fakeApi__/projectApi';
 import {
@@ -19,7 +10,7 @@ import {
   ProjectApplicants,
   ProjectApplicationModal,
   ProjectOverview,
-  ProjectReviews
+  ProjectReviews,
 } from '../../components/dashboard/project';
 import useMounted from '../../hooks/useMounted';
 import useSettings from '../../hooks/useSettings';
@@ -34,7 +25,7 @@ const tabs = [
   { label: 'Overview', value: 'overview' },
   { label: 'Reviews', value: 'reviews' },
   { label: 'Activity', value: 'activity' },
-  { label: 'Applicants', value: 'applicants' }
+  { label: 'Applicants', value: 'applicants' },
 ];
 
 const ProjectDetails: FC = () => {
@@ -61,7 +52,7 @@ const ProjectDetails: FC = () => {
   }, [mounted]);
 
   useEffect(() => {
-    getProject();
+    void getProject();
   }, [getProject]);
 
   const handleApplyModalOpen = (): void => {
@@ -89,20 +80,13 @@ const ProjectDetails: FC = () => {
         sx={{
           backgroundColor: 'background.default',
           minHeight: '100%',
-          py: 8
+          py: 8,
         }}
       >
         <Container maxWidth={settings.compact ? 'xl' : false}>
-          <Grid
-            container
-            justifyContent="space-between"
-            spacing={3}
-          >
+          <Grid container justifyContent="space-between" spacing={3}>
             <Grid item>
-              <Typography
-                color="textPrimary"
-                variant="h5"
-              >
+              <Typography color="textPrimary" variant="h5">
                 {project.title}
               </Typography>
               <Box
@@ -112,23 +96,18 @@ const ProjectDetails: FC = () => {
                   display: 'flex',
                   flexWrap: 'wrap',
                   mb: -2,
-                  mx: -2
+                  mx: -2,
                 }}
               >
                 <Box
                   sx={{
                     alignItems: 'center',
                     display: 'flex',
-                    m: 2
+                    m: 2,
                   }}
                 >
-                  {project.isActive ? <CheckIcon fontSize="small" />
-                    : <ExclamationIcon fontSize="small" />}
-                  <Typography
-                    color="inherit"
-                    sx={{ ml: 1 }}
-                    variant="subtitle2"
-                  >
+                  {project.isActive ? <CheckIcon fontSize="small" /> : <ExclamationIcon fontSize="small" />}
+                  <Typography color="inherit" sx={{ ml: 1 }} variant="subtitle2">
                     {project.isActive ? 'Active' : 'Inactive'}
                   </Typography>
                 </Box>
@@ -136,15 +115,11 @@ const ProjectDetails: FC = () => {
                   sx={{
                     alignItems: 'center',
                     display: 'flex',
-                    m: 2
+                    m: 2,
                   }}
                 >
                   <CalendarIcon fontSize="small" />
-                  <Typography
-                    color="inherit"
-                    sx={{ ml: 1 }}
-                    variant="subtitle2"
-                  >
+                  <Typography color="inherit" sx={{ ml: 1 }} variant="subtitle2">
                     {`Deadline in ${formatDistanceToNowStrict(project.endDate)}`}
                   </Typography>
                 </Box>
@@ -152,12 +127,7 @@ const ProjectDetails: FC = () => {
             </Grid>
             <Grid item>
               <Box sx={{ m: -1 }}>
-                <Button
-                  color="primary"
-                  startIcon={<ShareIcon fontSize="small" />}
-                  sx={{ m: 1 }}
-                  variant="text"
-                >
+                <Button color="primary" startIcon={<ShareIcon fontSize="small" />} sx={{ m: 1 }} variant="text">
                   Share
                 </Button>
                 <Button
@@ -182,24 +152,16 @@ const ProjectDetails: FC = () => {
               variant="scrollable"
             >
               {tabs.map((tab) => (
-                <Tab
-                  key={tab.value}
-                  label={tab.label}
-                  value={tab.value}
-                />
+                <Tab key={tab.value} label={tab.label} value={tab.value} />
               ))}
             </Tabs>
           </Box>
           <Divider />
           <Box sx={{ mt: 3 }}>
-            {currentTab === 'overview'
-            && <ProjectOverview project={project} />}
-            {currentTab === 'reviews'
-            && <ProjectReviews reviews={project.reviews} />}
-            {currentTab === 'activity'
-            && <ProjectActivities activities={project.activities} />}
-            {currentTab === 'applicants'
-            && <ProjectApplicants applicants={project.applicants} />}
+            {currentTab === 'overview' && <ProjectOverview project={project} />}
+            {currentTab === 'reviews' && <ProjectReviews reviews={project.reviews} />}
+            {currentTab === 'activity' && <ProjectActivities activities={project.activities} />}
+            {currentTab === 'applicants' && <ProjectApplicants applicants={project.applicants} />}
           </Box>
         </Container>
       </Box>

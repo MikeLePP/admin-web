@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import type { FC } from 'react';
 import PropTypes from 'prop-types';
 import toast from 'react-hot-toast';
@@ -14,7 +15,7 @@ import {
   IconButton,
   Switch,
   TextField,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import TrashIcon from '../../../icons/Trash';
 import { createEvent, deleteEvent, updateEvent } from '../../../slices/calendar';
@@ -40,10 +41,7 @@ interface FormValues {
   submit: any;
 }
 
-const getInitialValues = (
-  event?: CalendarEvent,
-  range?: { start: number; end: number }
-): FormValues => {
+const getInitialValues = (event?: CalendarEvent, range?: { start: number; end: number }): FormValues => {
   if (event) {
     return {
       allDay: event.allDay || false,
@@ -52,7 +50,7 @@ const getInitialValues = (
       end: event.end ? new Date(event.end) : addMinutes(new Date(), 30),
       start: event.start ? new Date(event.start) : new Date(),
       title: event.title || '',
-      submit: null
+      submit: null,
     };
   }
 
@@ -64,7 +62,7 @@ const getInitialValues = (
       end: new Date(range.end),
       start: new Date(range.start),
       title: '',
-      submit: null
+      submit: null,
     };
   }
 
@@ -75,24 +73,17 @@ const getInitialValues = (
     end: addMinutes(new Date(), 30),
     start: new Date(),
     title: '',
-    submit: null
+    submit: null,
   };
 };
 
 const CalendarEventForm: FC<CalendarEventFormProps> = (props) => {
-  const {
-    event,
-    onAddComplete,
-    onCancel,
-    onDeleteComplete,
-    onEditComplete,
-    range
-  } = props;
+  const { event, onAddComplete, onCancel, onDeleteComplete, onEditComplete, range } = props;
   const dispatch = useDispatch();
 
   const handleDelete = async (): Promise<void> => {
     try {
-      await dispatch(deleteEvent(event.id));
+      dispatch(deleteEvent(event.id));
 
       onDeleteComplete?.();
     } catch (err) {
@@ -103,49 +94,30 @@ const CalendarEventForm: FC<CalendarEventFormProps> = (props) => {
   return (
     <Formik
       initialValues={getInitialValues(event, range)}
-      validationSchema={
-        Yup
-          .object()
-          .shape({
-            allDay: Yup.bool(),
-            description: Yup.string().max(5000),
-            end: Yup
-              .date()
-              .when(
-                'start',
-                (start, schema) => (
-                  start && schema.min(
-                    start,
-                    'End date must be later than start date'
-                  )
-                )
-              ),
-            start: Yup.date(),
-            title: Yup
-              .string()
-              .max(255)
-              .required('Title is required')
-          })
-      }
-      onSubmit={async (values, {
-        resetForm,
-        setErrors,
-        setStatus,
-        setSubmitting
-      }): Promise<void> => {
+      validationSchema={Yup.object().shape({
+        allDay: Yup.bool(),
+        description: Yup.string().max(5000),
+        end: Yup.date().when(
+          'start',
+          (start, schema) => start && schema.min(start, 'End date must be later than start date'),
+        ),
+        start: Yup.date(),
+        title: Yup.string().max(255).required('Title is required'),
+      })}
+      onSubmit={async (values, { resetForm, setErrors, setStatus, setSubmitting }): Promise<void> => {
         try {
           const data = {
             allDay: values.allDay,
             description: values.description,
             end: values.end.getTime(),
             start: values.start.getTime(),
-            title: values.title
+            title: values.title,
           };
 
           if (event) {
-            await dispatch(updateEvent(event.id, data));
+            dispatch(updateEvent(event.id, data));
           } else {
-            await dispatch(createEvent(data));
+            dispatch(createEvent(data));
           }
 
           resetForm();
@@ -177,21 +149,12 @@ const CalendarEventForm: FC<CalendarEventFormProps> = (props) => {
         isSubmitting,
         setFieldValue,
         touched,
-        values
+        values,
       }): JSX.Element => (
         <form onSubmit={handleSubmit}>
           <Box sx={{ p: 3 }}>
-            <Typography
-              align="center"
-              color="textPrimary"
-              gutterBottom
-              variant="h5"
-            >
-              {
-                event
-                  ? 'Add Event'
-                  : 'Edit Event'
-              }
+            <Typography align="center" color="textPrimary" gutterBottom variant="h5">
+              {event ? 'Add Event' : 'Edit Event'}
             </Typography>
           </Box>
           <Box sx={{ p: 3 }}>
@@ -221,14 +184,7 @@ const CalendarEventForm: FC<CalendarEventFormProps> = (props) => {
             </Box>
             <Box sx={{ mt: 2 }}>
               <FormControlLabel
-                control={(
-                  <Switch
-                    checked={values.allDay}
-                    color="primary"
-                    name="allDay"
-                    onChange={handleChange}
-                  />
-                )}
+                control={<Switch checked={values.allDay} color="primary" name="allDay" onChange={handleChange} />}
                 label="All day"
               />
             </Box>
@@ -236,13 +192,7 @@ const CalendarEventForm: FC<CalendarEventFormProps> = (props) => {
               <MobileDateTimePicker
                 label="Start date"
                 onChange={(date) => setFieldValue('start', date)}
-                renderInput={(inputProps) => (
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    {...inputProps}
-                  />
-                )}
+                renderInput={(inputProps) => <TextField fullWidth variant="outlined" {...inputProps} />}
                 value={values.start}
               />
             </Box>
@@ -250,21 +200,13 @@ const CalendarEventForm: FC<CalendarEventFormProps> = (props) => {
               <MobileDateTimePicker
                 label="End date"
                 onChange={(date) => setFieldValue('end', date)}
-                renderInput={(inputProps) => (
-                  <TextField
-                    fullWidth
-                    variant="outlined"
-                    {...inputProps}
-                  />
-                )}
+                renderInput={(inputProps) => <TextField fullWidth variant="outlined" {...inputProps} />}
                 value={values.end}
               />
             </Box>
             {Boolean(touched.end && errors.end) && (
               <Box sx={{ mt: 2 }}>
-                <FormHelperText error>
-                  {errors.end}
-                </FormHelperText>
+                <FormHelperText error>{errors.end}</FormHelperText>
               </Box>
             )}
           </Box>
@@ -273,7 +215,7 @@ const CalendarEventForm: FC<CalendarEventFormProps> = (props) => {
             sx={{
               alignItems: 'center',
               display: 'flex',
-              p: 2
+              p: 2,
             }}
           >
             {event && (
@@ -282,20 +224,10 @@ const CalendarEventForm: FC<CalendarEventFormProps> = (props) => {
               </IconButton>
             )}
             <Box sx={{ flexGrow: 1 }} />
-            <Button
-              color="primary"
-              onClick={onCancel}
-              variant="text"
-            >
+            <Button color="primary" onClick={onCancel} variant="text">
               Cancel
             </Button>
-            <Button
-              color="primary"
-              disabled={isSubmitting}
-              sx={{ ml: 1 }}
-              type="submit"
-              variant="contained"
-            >
+            <Button color="primary" disabled={isSubmitting} sx={{ ml: 1 }} type="submit" variant="contained">
               Confirm
             </Button>
           </Box>
@@ -306,14 +238,12 @@ const CalendarEventForm: FC<CalendarEventFormProps> = (props) => {
 };
 
 CalendarEventForm.propTypes = {
-  // @ts-ignore
-  event: PropTypes.object,
+  event: PropTypes.any,
   onAddComplete: PropTypes.func,
   onCancel: PropTypes.func,
   onDeleteComplete: PropTypes.func,
   onEditComplete: PropTypes.func,
-  // @ts-ignore
-  range: PropTypes.object
+  range: PropTypes.any,
 };
 
 export default CalendarEventForm;

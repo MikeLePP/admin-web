@@ -2,21 +2,13 @@ import { useEffect } from 'react';
 import type { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import {
-  Box,
-  Card,
-  CardContent,
-  Container,
-  Divider,
-  Link,
-  Typography
-} from '@material-ui/core';
+import { Box, Card, CardContent, Container, Divider, Link, Typography } from '@material-ui/core';
 import AuthBanner from '../../components/authentication/AuthBanner';
 import {
   RegisterAmplify,
   RegisterAuth0,
   RegisterFirebase,
-  RegisterJWT
+  RegisterJWT,
 } from '../../components/authentication/register';
 import Logo from '../../components/Logo';
 import useAuth from '../../hooks/useAuth';
@@ -26,7 +18,7 @@ const platformIcons = {
   Amplify: '/static/icons/amplify.svg',
   Auth0: '/static/icons/auth0.svg',
   Firebase: '/static/icons/firebase.svg',
-  JWT: '/static/icons/jwt.svg'
+  JWT: '/static/icons/jwt.svg',
 };
 
 const Register: FC = () => {
@@ -46,26 +38,23 @@ const Register: FC = () => {
           backgroundColor: 'background.default',
           display: 'flex',
           flexDirection: 'column',
-          minHeight: '100vh'
+          minHeight: '100vh',
         }}
       >
         <AuthBanner />
-        <Container
-          maxWidth="sm"
-          sx={{ py: '80px' }}
-        >
+        <Container maxWidth="sm" sx={{ py: '80px' }}>
           <Box
             sx={{
               mb: 8,
               display: 'flex',
-              justifyContent: 'center'
+              justifyContent: 'center',
             }}
           >
             <RouterLink to="/">
               <Logo
                 sx={{
                   height: 40,
-                  width: 40
+                  width: 40,
                 }}
               />
             </RouterLink>
@@ -75,7 +64,7 @@ const Register: FC = () => {
               sx={{
                 display: 'flex',
                 flexDirection: 'column',
-                p: 4
+                p: 4,
               }}
             >
               <Box
@@ -83,21 +72,14 @@ const Register: FC = () => {
                   alignItems: 'center',
                   display: 'flex',
                   justifyContent: 'space-between',
-                  mb: 3
+                  mb: 3,
                 }}
               >
                 <div>
-                  <Typography
-                    color="textPrimary"
-                    gutterBottom
-                    variant="h4"
-                  >
+                  <Typography color="textPrimary" gutterBottom variant="h4">
                     Register
                   </Typography>
-                  <Typography
-                    color="textSecondary"
-                    variant="body2"
-                  >
+                  <Typography color="textSecondary" variant="body2">
                     Register on the internal platform
                   </Typography>
                 </div>
@@ -106,20 +88,17 @@ const Register: FC = () => {
                     height: 32,
                     '& > img': {
                       maxHeight: '100%',
-                      width: 'auto'
-                    }
+                      width: 'auto',
+                    },
                   }}
                 >
-                  <img
-                    alt="Auth platform"
-                    src={platformIcons[platform]}
-                  />
+                  <img alt="Auth platform" src={platformIcons[platform]} />
                 </Box>
               </Box>
               <Box
                 sx={{
                   flexGrow: 1,
-                  mt: 3
+                  mt: 3,
                 }}
               >
                 {platform === 'Amplify' && <RegisterAmplify />}
@@ -128,12 +107,7 @@ const Register: FC = () => {
                 {platform === 'JWT' && <RegisterJWT />}
               </Box>
               <Divider sx={{ my: 3 }} />
-              <Link
-                color="textSecondary"
-                component={RouterLink}
-                to="/authentication/login"
-                variant="body2"
-              >
+              <Link color="textSecondary" component={RouterLink} to="/authentication/login" variant="body2">
                 Having an account
               </Link>
             </CardContent>

@@ -49,7 +49,7 @@ const ChatMessageAdd: FC<ChatMessageAddProps> = (props) => {
         display: 'flex',
         flexShrink: 0,
         px: 2,
-        py: 1
+        py: 1,
       }}
       {...other}
     >
@@ -57,9 +57,9 @@ const ChatMessageAdd: FC<ChatMessageAddProps> = (props) => {
         sx={{
           display: {
             xs: 'none',
-            sm: 'inline'
+            sm: 'inline',
           },
-          mr: 2
+          mr: 2,
         }}
         src={user.avatar}
       />
@@ -75,11 +75,7 @@ const ChatMessageAdd: FC<ChatMessageAddProps> = (props) => {
       />
       <Tooltip title="Send">
         <span>
-          <IconButton
-            color="primary"
-            disabled={!body || disabled}
-            onClick={handleSend}
-          >
+          <IconButton color="primary" disabled={!body || disabled} onClick={handleSend}>
             <SendIcon fontSize="small" />
           </IconButton>
         </span>
@@ -89,53 +85,38 @@ const ChatMessageAdd: FC<ChatMessageAddProps> = (props) => {
           alignItems: 'center',
           display: {
             xs: 'none',
-            sm: 'flex'
-          }
+            sm: 'flex',
+          },
         }}
       >
-        <Divider
-          orientation="vertical"
-          sx={{ height: 24 }}
-        />
+        <Divider orientation="vertical" sx={{ height: 24 }} />
         <Tooltip title="Attach photo">
           <span>
-            <IconButton
-              disabled={disabled}
-              edge="end"
-              onClick={handleAttach}
-            >
+            <IconButton disabled={disabled} edge="end" onClick={handleAttach}>
               <AddPhotoIcon fontSize="small" />
             </IconButton>
           </span>
         </Tooltip>
         <Tooltip title="Attach file">
           <span>
-            <IconButton
-              disabled={disabled}
-              edge="end"
-              onClick={handleAttach}
-            >
+            <IconButton disabled={disabled} edge="end" onClick={handleAttach}>
               <AttachFileIcon fontSize="small" />
             </IconButton>
           </span>
         </Tooltip>
       </Box>
-      <input
-        hidden
-        ref={fileInputRef}
-        type="file"
-      />
+      <input hidden ref={fileInputRef} type="file" />
     </Box>
   );
 };
 
 ChatMessageAdd.propTypes = {
   disabled: PropTypes.bool,
-  onSend: PropTypes.func
+  onSend: PropTypes.func,
 };
 
 ChatMessageAdd.defaultProps = {
-  disabled: false
+  disabled: false,
 };
 
 export default ChatMessageAdd;

@@ -13,7 +13,7 @@ import {
   ListItemText,
   Paper,
   Popper,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import { chatApi } from '../../../__fakeApi__/chatApi';
 import type { Contact } from '../../../types/chat';
@@ -24,34 +24,20 @@ interface ChatThreadComposerProps {
   recipients: any[];
 }
 
-const getFilteredSearchResults = (
-  results: Contact[],
-  recipients: any[]
-): any[] => {
-  const recipientIds = recipients.reduce((acc, recipient) => [
-    ...acc,
-    recipient.id
-  ], []);
+const getFilteredSearchResults = (results: Contact[], recipients: any[]): any[] => {
+  const recipientIds = recipients.reduce((acc, recipient) => [...acc, recipient.id], []);
 
   return results.filter((result) => !recipientIds.includes(result.id));
 };
 
 const ChatThreadComposer: FC<ChatThreadComposerProps> = (props) => {
-  const {
-    onAddRecipient,
-    onRemoveRecipient,
-    recipients,
-    ...other
-  } = props;
+  const { onAddRecipient, onRemoveRecipient, recipients, ...other } = props;
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [query, setQuery] = useState<string>('');
   const [isSearchFocused, setIsSearchFocused] = useState<boolean>(true);
   const [searchResults, setSearchResults] = useState<Contact[]>([]);
 
-  const filteredSearchResults = getFilteredSearchResults(
-    searchResults,
-    recipients
-  );
+  const filteredSearchResults = getFilteredSearchResults(searchResults, recipients);
   const displayResults = query && isSearchFocused;
 
   const handleSearchChange = async (event: ChangeEvent<HTMLInputElement>): Promise<void> => {
@@ -105,14 +91,11 @@ const ChatThreadComposer: FC<ChatThreadComposerProps> = (props) => {
       sx={{
         alignItems: 'center',
         display: 'flex',
-        p: 2
+        p: 2,
       }}
       {...other}
     >
-      <Typography
-        variant="body1"
-        color="textSecondary"
-      >
+      <Typography variant="body1" color="textSecondary">
         To:
       </Typography>
       <Box
@@ -124,16 +107,12 @@ const ChatThreadComposer: FC<ChatThreadComposerProps> = (props) => {
             borderRadius: 16,
             height: 32,
             maxWidth: recipients.length > 0 ? 120 : 'auto',
-            px: 2
-          }
+            px: 2,
+          },
         }}
       >
         {recipients.map((recipient) => (
-          <Box
-            component="span"
-            key={recipient.id}
-            sx={{ mr: 2 }}
-          >
+          <Box component="span" key={recipient.id} sx={{ mr: 2 }}>
             <Chip
               color="primary"
               label={recipient.name}
@@ -147,97 +126,67 @@ const ChatThreadComposer: FC<ChatThreadComposerProps> = (props) => {
           onBlur={handleSearchBlur}
           onChange={handleSearchChange}
           onFocus={handleSearchFocus}
-          placeholder={
-            recipients.length === 0
-              ? 'Search contacts'
-              : ''
-          }
+          placeholder={recipients.length === 0 ? 'Search contacts' : ''}
           value={query}
         />
       </Box>
       {displayResults && (
-        <ClickAwayListener
-          onClickAway={handleSearchResultsClickAway}
-        >
-          <Popper
-            anchorEl={containerRef.current}
-            open={isSearchFocused}
-            placement="bottom-start"
-          >
+        <ClickAwayListener onClickAway={handleSearchResultsClickAway}>
+          <Popper anchorEl={containerRef.current} open={isSearchFocused} placement="bottom-start">
             <Paper
               sx={{
                 mt: 1,
                 maxWidth: '100%',
-                width: 320
+                width: 320,
               }}
             >
-              {
-                filteredSearchResults.length === 0
-                  ? (
-                    <Box
-                      sx={{
-                        p: 2,
-                        textAlign: 'center'
-                      }}
-                    >
-                      <Typography
-                        color="textPrimary"
-                        gutterBottom
-                        variant="h6"
-                      >
-                        Nothing Found
-                      </Typography>
-                      <Typography
-                        color="textSecondary"
-                        variant="body2"
-                      >
-                        We couldn&apos;t find any matches
-                        for &quot;
-                        {query}
-                        &quot;. Try checking for typos or using
-                        complete words.
-                      </Typography>
-                    </Box>
-                  )
-                  : (
-                    <>
-                      <Box
-                        sx={{
-                          px: 2,
-                          pt: 2
-                        }}
-                      >
-                        <Typography
-                          color="textSecondary"
-                          variant="subtitle2"
-                        >
-                          Contacts
-                        </Typography>
-                      </Box>
-                      <List>
-                        {filteredSearchResults.map((result) => (
-                          <ListItem
-                            button
-                            key={result.id}
-                            onClick={(): void => handleAddRecipient(result)}
-                          >
-                            <ListItemAvatar>
-                              <Avatar src={result.avatar} />
-                            </ListItemAvatar>
-                            <ListItemText
-                              primary={result.name}
-                              primaryTypographyProps={{
-                                color: 'textPrimary',
-                                noWrap: true,
-                                variant: 'subtitle2'
-                              }}
-                            />
-                          </ListItem>
-                        ))}
-                      </List>
-                    </>
-                  )
-              }
+              {filteredSearchResults.length === 0 ? (
+                <Box
+                  sx={{
+                    p: 2,
+                    textAlign: 'center',
+                  }}
+                >
+                  <Typography color="textPrimary" gutterBottom variant="h6">
+                    Nothing Found
+                  </Typography>
+                  <Typography color="textSecondary" variant="body2">
+                    We couldn&apos;t find any matches for &quot;
+                    {query}
+                    &quot;. Try checking for typos or using complete words.
+                  </Typography>
+                </Box>
+              ) : (
+                <>
+                  <Box
+                    sx={{
+                      px: 2,
+                      pt: 2,
+                    }}
+                  >
+                    <Typography color="textSecondary" variant="subtitle2">
+                      Contacts
+                    </Typography>
+                  </Box>
+                  <List>
+                    {filteredSearchResults.map((result) => (
+                      <ListItem button key={result.id} onClick={(): void => handleAddRecipient(result)}>
+                        <ListItemAvatar>
+                          <Avatar src={result.avatar} />
+                        </ListItemAvatar>
+                        <ListItemText
+                          primary={result.name}
+                          primaryTypographyProps={{
+                            color: 'textPrimary',
+                            noWrap: true,
+                            variant: 'subtitle2',
+                          }}
+                        />
+                      </ListItem>
+                    ))}
+                  </List>
+                </>
+              )}
             </Paper>
           </Popper>
         </ClickAwayListener>
@@ -249,11 +198,11 @@ const ChatThreadComposer: FC<ChatThreadComposerProps> = (props) => {
 ChatThreadComposer.propTypes = {
   onAddRecipient: PropTypes.func,
   onRemoveRecipient: PropTypes.func,
-  recipients: PropTypes.array
+  recipients: PropTypes.array,
 };
 
 ChatThreadComposer.defaultProps = {
-  recipients: []
+  recipients: [],
 };
 
 export default ChatThreadComposer;

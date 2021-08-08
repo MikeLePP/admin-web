@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { useEffect } from 'react';
 import type { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
@@ -24,11 +25,7 @@ const Kanban: FC = () => {
     dispatch(getBoard());
   }, []);
 
-  const handleDragEnd = async ({
-    source,
-    destination,
-    draggableId
-  }: DropResult): Promise<void> => {
+  const handleDragEnd = async ({ source, destination, draggableId }: DropResult): Promise<void> => {
     try {
       // Dropped outside the column
       if (!destination) {
@@ -36,19 +33,16 @@ const Kanban: FC = () => {
       }
 
       // Card has not been moved
-      if (
-        source.droppableId === destination.droppableId
-        && source.index === destination.index
-      ) {
+      if (source.droppableId === destination.droppableId && source.index === destination.index) {
         return;
       }
 
       if (source.droppableId === destination.droppableId) {
         // Moved to the same column on different position
-        await dispatch(moveCard(draggableId, destination.index));
+        dispatch(moveCard(draggableId, destination.index));
       } else {
         // Moved to another column
-        await dispatch(moveCard(draggableId, destination.index, destination.droppableId));
+        dispatch(moveCard(draggableId, destination.index, destination.droppableId));
       }
 
       toast.success('Card moved!');
@@ -69,33 +63,18 @@ const Kanban: FC = () => {
           display: 'flex',
           flexDirection: 'column',
           height: '100%',
-          overflow: 'hidden'
+          overflow: 'hidden',
         }}
       >
         <Box sx={{ p: 3 }}>
-          <Typography
-            color="textPrimary"
-            variant="h5"
-          >
+          <Typography color="textPrimary" variant="h5">
             Kanban
           </Typography>
-          <Breadcrumbs
-            aria-label="breadcrumb"
-            separator={<ChevronRightIcon fontSize="small" />}
-            sx={{ mt: 1 }}
-          >
-            <Link
-              color="textPrimary"
-              component={RouterLink}
-              to="/dashboard"
-              variant="subtitle2"
-            >
+          <Breadcrumbs aria-label="breadcrumb" separator={<ChevronRightIcon fontSize="small" />} sx={{ mt: 1 }}>
+            <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
               Dashboard
             </Link>
-            <Typography
-              color="textSecondary"
-              variant="subtitle2"
-            >
+            <Typography color="textSecondary" variant="subtitle2">
               Kanban
             </Typography>
           </Breadcrumbs>
@@ -107,21 +86,18 @@ const Kanban: FC = () => {
               flexGrow: 1,
               flexShrink: 1,
               overflowX: 'auto',
-              overflowY: 'hidden'
+              overflowY: 'hidden',
             }}
           >
             <Box
               sx={{
                 display: 'flex',
                 px: 1,
-                py: 3
+                py: 3,
               }}
             >
               {columns.allIds.map((columnId: string) => (
-                <KanbanColumn
-                  columnId={columnId}
-                  key={columnId}
-                />
+                <KanbanColumn columnId={columnId} key={columnId} />
               ))}
               <KanbanColumnAdd />
             </Box>

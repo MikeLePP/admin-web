@@ -1,19 +1,12 @@
 import type { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import {
-  Box,
-  Chip,
-  Container,
-  Link,
-  Tooltip,
-  Typography
-} from '@material-ui/core';
+import { Box, Chip, Container, Link, Tooltip, Typography } from '@material-ui/core';
 
 const platformIcons = {
   Amplify: '/static/icons/amplify.svg',
   Auth0: '/static/icons/auth0.svg',
   Firebase: '/static/icons/firebase.svg',
-  JWT: '/static/icons/jwt.svg'
+  JWT: '/static/icons/jwt.svg',
 };
 
 const AuthBanner: FC = () => (
@@ -22,7 +15,7 @@ const AuthBanner: FC = () => (
       backgroundColor: 'background.paper',
       borderBottom: 1,
       borderColor: 'divider',
-      py: 2
+      py: 2,
     }}
   >
     <Container maxWidth="md">
@@ -30,14 +23,10 @@ const AuthBanner: FC = () => (
         sx={{
           alignItems: 'center',
           display: 'flex',
-          justifyContent: 'center'
+          justifyContent: 'center',
         }}
       >
-        <Chip
-          color="primary"
-          label="NEW"
-          size="small"
-        />
+        <Chip color="primary" label="NEW" size="small" />
         <Box
           sx={{
             alignItems: 'center',
@@ -45,48 +34,28 @@ const AuthBanner: FC = () => (
             ml: 2,
             '& > img': {
               height: 30,
-              mx: 2
-            }
+              mx: 2,
+            },
           }}
         >
-          <Typography
-            color="textPrimary"
-            variant="subtitle2"
-          >
-            Visit our
-            {' '}
-            <Link
-              component={RouterLink}
-              to="/docs"
-            >
+          <Typography color="textPrimary" variant="subtitle2">
+            Visit our{' '}
+            <Link component={RouterLink} to="/docs">
               docs
-            </Link>
-            {' '}
+            </Link>{' '}
             and find out how to switch between
           </Typography>
           <Tooltip title="Amplify">
-            <img
-              alt="Amplify"
-              src={platformIcons.Amplify}
-            />
+            <img alt="Amplify" src={platformIcons.Amplify} />
           </Tooltip>
           <Tooltip title="Auth0">
-            <img
-              alt="Auth0"
-              src={platformIcons.Auth0}
-            />
+            <img alt="Auth0" src={platformIcons.Auth0} />
           </Tooltip>
           <Tooltip title="Firebase">
-            <img
-              alt="Firebase"
-              src={platformIcons.Firebase}
-            />
+            <img alt="Firebase" src={platformIcons.Firebase} />
           </Tooltip>
           <Tooltip title="JSON Web Token">
-            <img
-              alt="JWT"
-              src={platformIcons.JWT}
-            />
+            <img alt="JWT" src={platformIcons.JWT} />
           </Tooltip>
         </Box>
       </Box>

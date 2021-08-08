@@ -1,19 +1,11 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { useState } from 'react';
 import type { FC } from 'react';
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import MobileDatePicker from '@material-ui/lab/MobileDatePicker';
-import {
-  Box,
-  Button,
-  Card,
-  Chip,
-  FormHelperText,
-  IconButton,
-  TextField,
-  Typography
-} from '@material-ui/core';
+import { Box, Button, Card, Chip, FormHelperText, IconButton, TextField, Typography } from '@material-ui/core';
 import PlusIcon from '../../../icons/Plus';
 
 interface ProjectDetailsProps {
@@ -32,27 +24,15 @@ const ProjectDetailsForm: FC<ProjectDetailsProps> = (props) => {
         tags: ['Full-Time'],
         startDate: new Date(),
         endDate: new Date(),
-        submit: null
+        submit: null,
       }}
-      validationSchema={
-        Yup
-          .object()
-          .shape({
-            projectName: Yup
-              .string()
-              .min(3, 'Must be at least 3 characters')
-              .max(255)
-              .required('Required'),
-            tags: Yup.array(),
-            startDate: Yup.date(),
-            endDate: Yup.date()
-          })
-      }
-      onSubmit={async (values, {
-        setErrors,
-        setStatus,
-        setSubmitting
-      }): Promise<void> => {
+      validationSchema={Yup.object().shape({
+        projectName: Yup.string().min(3, 'Must be at least 3 characters').max(255).required('Required'),
+        tags: Yup.array(),
+        startDate: Yup.date(),
+        endDate: Yup.date(),
+      })}
+      onSubmit={async (values, { setErrors, setStatus, setSubmitting }): Promise<void> => {
         try {
           // Call API to store step data in server session
           // It is important to have it on server to be able to reuse it if user
@@ -80,25 +60,15 @@ const ProjectDetailsForm: FC<ProjectDetailsProps> = (props) => {
         setFieldValue,
         setFieldTouched,
         touched,
-        values
+        values,
       }): JSX.Element => (
-        <form
-          onSubmit={handleSubmit}
-          {...other}
-        >
+        <form onSubmit={handleSubmit} {...other}>
           <Card sx={{ p: 3 }}>
-            <Typography
-              color="textPrimary"
-              variant="h6"
-            >
+            <Typography color="textPrimary" variant="h6">
               Project details
             </Typography>
-            <Typography
-              color="textSecondary"
-              variant="body1"
-            >
-              Proin tincidunt lacus sed ante efficitur efficitur.
-              Quisque aliquam fringilla velit sit amet euismod.
+            <Typography color="textSecondary" variant="body1">
+              Proin tincidunt lacus sed ante efficitur efficitur. Quisque aliquam fringilla velit sit amet euismod.
             </Typography>
             <Box sx={{ mt: 2 }}>
               <TextField
@@ -116,7 +86,7 @@ const ProjectDetailsForm: FC<ProjectDetailsProps> = (props) => {
                 sx={{
                   alignItems: 'center',
                   display: 'flex',
-                  mt: 3
+                  mt: 3,
                 }}
               >
                 <TextField
@@ -134,10 +104,7 @@ const ProjectDetailsForm: FC<ProjectDetailsProps> = (props) => {
                       return;
                     }
 
-                    setFieldValue('tags', [
-                      ...values.tags,
-                      tag
-                    ]);
+                    setFieldValue('tags', [...values.tags, tag]);
                     setTag('');
                   }}
                 >
@@ -157,8 +124,8 @@ const ProjectDetailsForm: FC<ProjectDetailsProps> = (props) => {
                     label={_tag}
                     sx={{
                       '& + &': {
-                        ml: 1
-                      }
+                        ml: 1,
+                      },
                     }}
                     variant="outlined"
                   />
@@ -166,15 +133,13 @@ const ProjectDetailsForm: FC<ProjectDetailsProps> = (props) => {
               </Box>
               {Boolean(touched.tags && errors.tags) && (
                 <Box sx={{ mt: 2 }}>
-                  <FormHelperText error>
-                    {errors.tags}
-                  </FormHelperText>
+                  <FormHelperText error>{errors.tags}</FormHelperText>
                 </Box>
               )}
               <Box
                 sx={{
                   display: 'flex',
-                  mt: 4
+                  mt: 4,
                 }}
               >
                 <Box sx={{ mr: 2 }}>
@@ -183,12 +148,7 @@ const ProjectDetailsForm: FC<ProjectDetailsProps> = (props) => {
                     onAccept={() => setFieldTouched('startDate')}
                     onChange={(date) => setFieldValue('startDate', date)}
                     onClose={() => setFieldTouched('startDate')}
-                    renderInput={(inputProps) => (
-                      <TextField
-                        variant="outlined"
-                        {...inputProps}
-                      />
-                    )}
+                    renderInput={(inputProps) => <TextField variant="outlined" {...inputProps} />}
                     value={values.startDate}
                   />
                 </Box>
@@ -197,53 +157,34 @@ const ProjectDetailsForm: FC<ProjectDetailsProps> = (props) => {
                   onAccept={() => setFieldTouched('endDate')}
                   onChange={(date) => setFieldValue('endDate', date)}
                   onClose={() => setFieldTouched('endDate')}
-                  renderInput={(inputProps) => (
-                    <TextField
-                      variant="outlined"
-                      {...inputProps}
-                    />
-                  )}
+                  renderInput={(inputProps) => <TextField variant="outlined" {...inputProps} />}
                   value={values.endDate}
                 />
               </Box>
               {Boolean(touched.startDate && errors.startDate) && (
                 <Box sx={{ mt: 2 }}>
-                  <FormHelperText error>
-                    {errors.startDate}
-                  </FormHelperText>
+                  <FormHelperText error>{errors.startDate}</FormHelperText>
                 </Box>
               )}
               {Boolean(touched.endDate && errors.endDate) && (
                 <Box sx={{ mt: 2 }}>
-                  <FormHelperText error>
-                    {errors.endDate}
-                  </FormHelperText>
+                  <FormHelperText error>{errors.endDate}</FormHelperText>
                 </Box>
               )}
             </Box>
             <Box
               sx={{
                 display: 'flex',
-                mt: 6
+                mt: 6,
               }}
             >
               {onBack && (
-                <Button
-                  color="primary"
-                  onClick={onBack}
-                  size="large"
-                  variant="text"
-                >
+                <Button color="primary" onClick={onBack} size="large" variant="text">
                   Previous
                 </Button>
               )}
               <Box sx={{ flexGrow: 1 }} />
-              <Button
-                color="primary"
-                disabled={isSubmitting}
-                type="submit"
-                variant="contained"
-              >
+              <Button color="primary" disabled={isSubmitting} type="submit" variant="contained">
                 Next
               </Button>
             </Box>
@@ -256,7 +197,7 @@ const ProjectDetailsForm: FC<ProjectDetailsProps> = (props) => {
 
 ProjectDetailsForm.propTypes = {
   onBack: PropTypes.func,
-  onNext: PropTypes.func
+  onNext: PropTypes.func,
 };
 
 export default ProjectDetailsForm;

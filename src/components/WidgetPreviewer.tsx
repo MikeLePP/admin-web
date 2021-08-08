@@ -1,13 +1,7 @@
 import { useEffect, useState } from 'react';
 import type { FC, ReactNode } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Card,
-  CardHeader,
-  Divider,
-  IconButton,
-  ThemeProvider
-} from '@material-ui/core';
+import { Card, CardHeader, Divider, IconButton, ThemeProvider } from '@material-ui/core';
 import { THEMES } from '../constants';
 import useSettings from '../hooks/useSettings';
 import MoonIcon from '../icons/Moon';
@@ -28,52 +22,43 @@ const WidgetPreviewer: FC<DemoPreviewerProps> = (props) => {
     setSelectedTheme(settings.theme);
   }, [settings.theme]);
 
-  const handleSwitch = () => setSelectedTheme((prevSelectedTheme) => {
-    if (prevSelectedTheme === THEMES.LIGHT) {
-      if (settings.theme === THEMES.LIGHT) {
-        return THEMES.DARK;
+  const handleSwitch = () =>
+    setSelectedTheme((prevSelectedTheme) => {
+      if (prevSelectedTheme === THEMES.LIGHT) {
+        if (settings.theme === THEMES.LIGHT) {
+          return THEMES.DARK;
+        }
+
+        return settings.theme;
       }
 
-      return settings.theme;
-    }
-
-    return THEMES.LIGHT;
-  });
+      return THEMES.LIGHT;
+    });
 
   const theme = createCustomTheme({
     ...settings,
-    theme: selectedTheme
+    theme: selectedTheme,
   });
 
   return (
-    <Card
-      variant="outlined"
-      sx={{ mb: 8 }}
-      {...other}
-    >
+    <Card variant="outlined" sx={{ mb: 8 }} {...other}>
       <CardHeader
-        action={(
+        action={
           <IconButton onClick={handleSwitch}>
-            {
-              selectedTheme === 'LIGHT'
-                ? <MoonIcon fontSize="small" />
-                : <SunIcon fontSize="small" />
-            }
+            {selectedTheme === 'LIGHT' ? <MoonIcon fontSize="small" /> : <SunIcon fontSize="small" />}
           </IconButton>
-        )}
+        }
         title={name}
       />
       <Divider />
-      <ThemeProvider theme={theme}>
-        {element}
-      </ThemeProvider>
+      <ThemeProvider theme={theme}>{element}</ThemeProvider>
     </Card>
   );
 };
 
 WidgetPreviewer.propTypes = {
   element: PropTypes.node.isRequired,
-  name: PropTypes.string.isRequired
+  name: PropTypes.string.isRequired,
 };
 
 export default WidgetPreviewer;

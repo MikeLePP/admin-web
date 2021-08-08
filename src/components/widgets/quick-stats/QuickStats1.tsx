@@ -10,19 +10,19 @@ const data = {
     {
       color: '#169BE0',
       data: 56,
-      name: 'Subscriptions'
+      name: 'Subscriptions',
     },
     {
       color: '#DB9846',
       data: 24,
-      name: 'Affiliate'
+      name: 'Affiliate',
     },
     {
       color: '#FF5C7C',
       data: 20,
-      name: 'Sales'
-    }
-  ]
+      name: 'Sales',
+    },
+  ],
 };
 
 const QuickStats1: FC = () => {
@@ -33,23 +33,23 @@ const QuickStats1: FC = () => {
       background: 'transparent',
       stacked: false,
       toolbar: {
-        show: false
-      }
+        show: false,
+      },
     },
     colors: data.series.map((item) => item.color),
     dataLabels: {
-      enabled: false
+      enabled: false,
     },
     labels: data.series.map((item) => item.name),
     legend: {
-      show: false
+      show: false,
     },
     stroke: {
-      show: false
+      show: false,
     },
     theme: {
-      mode: theme.palette.mode
-    }
+      mode: theme.palette.mode,
+    },
   };
 
   const chartSeries = data.series.map((item) => item.data);
@@ -58,26 +58,21 @@ const QuickStats1: FC = () => {
     <Box
       sx={{
         backgroundColor: 'background.default',
-        p: 3
+        p: 3,
       }}
     >
       <Card>
         <CardHeader
-          action={(
+          action={
             <IconButton>
               <DotsHorizontalIcon fontSize="small" />
             </IconButton>
-          )}
+          }
           title="Earnings Source"
         />
         <Divider />
         <Box sx={{ p: 2 }}>
-          <Chart
-            height="300"
-            options={chartOptions}
-            series={chartSeries}
-            type="donut"
-          />
+          <Chart height="300" options={chartOptions} series={chartSeries} type="donut" />
         </Box>
         <Divider />
         <Box sx={{ display: 'flex' }}>
@@ -94,21 +89,14 @@ const QuickStats1: FC = () => {
                 textAlign: 'center',
                 '&:not(:last-of-type)': {
                   borderRight: 1,
-                  borderColor: 'divider'
-                }
+                  borderColor: 'divider',
+                },
               }}
             >
-              <Typography
-                color="textPrimary"
-                variant="h4"
-              >
-                {item.data}
-                %
+              <Typography color="textPrimary" variant="h4">
+                {item.data}%
               </Typography>
-              <Typography
-                color="textSecondary"
-                variant="overline"
-              >
+              <Typography color="textSecondary" variant="overline">
                 {item.name}
               </Typography>
             </Box>

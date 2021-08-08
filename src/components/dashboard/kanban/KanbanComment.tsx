@@ -19,19 +19,14 @@ const memberSelector = (state: RootState, memberId: string): Member => {
 };
 
 const KanbanComment: FC<KanbanCommentProps> = (props) => {
-  const {
-    createdAt,
-    memberId,
-    message,
-    ...other
-  } = props;
+  const { createdAt, memberId, message, ...other } = props;
   const member = useSelector((state) => memberSelector(state, memberId));
 
   return (
     <Box
       sx={{
         display: 'flex',
-        mb: 2
+        mb: 2,
       }}
       {...other}
     >
@@ -39,37 +34,26 @@ const KanbanComment: FC<KanbanCommentProps> = (props) => {
       <Box
         sx={{
           ml: 2,
-          flexGrow: 1
+          flexGrow: 1,
         }}
       >
-        <Typography
-          color="textPrimary"
-          variant="subtitle2"
-        >
+        <Typography color="textPrimary" variant="subtitle2">
           {member.name}
         </Typography>
         <Paper
           sx={{
             backgroundColor: 'background.default',
             mt: 1,
-            p: 2
+            p: 2,
           }}
           variant="outlined"
         >
-          <Typography
-            color="textPrimary"
-            variant="body2"
-          >
+          <Typography color="textPrimary" variant="body2">
             {message}
           </Typography>
         </Paper>
-        <Typography
-          color="textSecondary"
-          component="p"
-          sx={{ mt: 1 }}
-          variant="caption"
-        >
-          {format(createdAt, 'MMM dd, yyyy \'at\' hh:mm a')}
+        <Typography color="textSecondary" component="p" sx={{ mt: 1 }} variant="caption">
+          {format(createdAt, "MMM dd, yyyy 'at' hh:mm a")}
         </Typography>
       </Box>
     </Box>
@@ -79,7 +63,7 @@ const KanbanComment: FC<KanbanCommentProps> = (props) => {
 KanbanComment.propTypes = {
   createdAt: PropTypes.number.isRequired,
   memberId: PropTypes.string.isRequired,
-  message: PropTypes.string.isRequired
+  message: PropTypes.string.isRequired,
 };
 
 export default KanbanComment;

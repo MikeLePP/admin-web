@@ -1,15 +1,8 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { useState } from 'react';
 import type { FC, FormEvent } from 'react';
 import PropTypes from 'prop-types';
-import {
-  Box,
-  Button,
-  Card,
-  FormHelperText,
-  Paper,
-  Radio,
-  Typography
-} from '@material-ui/core';
+import { Box, Button, Card, FormHelperText, Paper, Radio, Typography } from '@material-ui/core';
 
 interface ProjectOwnerFormProps {
   onNext?: () => void;
@@ -18,20 +11,20 @@ interface ProjectOwnerFormProps {
 
 const typeOptions = [
   {
-    description: 'I\'m looking for teammates to join in a personal project',
-    title: 'I\'m a freelancer',
-    value: 'freelancer'
+    description: "I'm looking for teammates to join in a personal project",
+    title: "I'm a freelancer",
+    value: 'freelancer',
   },
   {
-    description: 'I\'m looking for freelancer or contractors to take care of my project',
+    description: "I'm looking for freelancer or contractors to take care of my project",
     title: 'I’m a project owner',
-    value: 'projectOwner'
+    value: 'projectOwner',
   },
   {
-    description: 'I\'m looking for freelancer or contractors to take care of my project',
+    description: "I'm looking for freelancer or contractors to take care of my project",
     title: 'I want to join affiliate',
-    value: 'affiliate'
-  }
+    value: 'affiliate',
+  },
 ];
 
 const ProjectOwnerForm: FC<ProjectOwnerFormProps> = (props) => {
@@ -64,23 +57,13 @@ const ProjectOwnerForm: FC<ProjectOwnerFormProps> = (props) => {
   };
 
   return (
-    <form
-      onSubmit={handleSubmit}
-      {...other}
-    >
+    <form onSubmit={handleSubmit} {...other}>
       <Card sx={{ p: 3 }}>
-        <Typography
-          color="textPrimary"
-          variant="h6"
-        >
+        <Typography color="textPrimary" variant="h6">
           Select profession
         </Typography>
-        <Typography
-          color="textSecondary"
-          variant="body1"
-        >
-          Proin tincidunt lacus sed ante efficitur efficitur.
-          Quisque aliquam fringilla velit sit amet euismod.
+        <Typography color="textSecondary" variant="body1">
+          Proin tincidunt lacus sed ante efficitur efficitur. Quisque aliquam fringilla velit sit amet euismod.
         </Typography>
         <Box sx={{ mt: 2 }}>
           {typeOptions.map((typeOption) => (
@@ -90,7 +73,7 @@ const ProjectOwnerForm: FC<ProjectOwnerFormProps> = (props) => {
                 alignItems: 'flex-start',
                 display: 'flex',
                 mb: 2,
-                padding: 2
+                padding: 2,
               }}
               variant="outlined"
             >
@@ -100,16 +83,10 @@ const ProjectOwnerForm: FC<ProjectOwnerFormProps> = (props) => {
                 onClick={(): void => handleChange(typeOption.value)}
               />
               <Box sx={{ ml: 2 }}>
-                <Typography
-                  color="textPrimary"
-                  variant="subtitle2"
-                >
+                <Typography color="textPrimary" variant="subtitle2">
                   {typeOption.title}
                 </Typography>
-                <Typography
-                  color="textSecondary"
-                  variant="body2"
-                >
+                <Typography color="textSecondary" variant="body2">
                   {typeOption.description}
                 </Typography>
               </Box>
@@ -118,34 +95,22 @@ const ProjectOwnerForm: FC<ProjectOwnerFormProps> = (props) => {
         </Box>
         {error && (
           <Box sx={{ mt: 2 }}>
-            <FormHelperText error>
-              {error}
-            </FormHelperText>
+            <FormHelperText error>{error}</FormHelperText>
           </Box>
         )}
         <Box
           sx={{
             display: 'flex',
-            mt: 6
+            mt: 6,
           }}
         >
           {onBack && (
-            <Button
-              color="primary"
-              onClick={onBack}
-              size="large"
-              variant="text"
-            >
+            <Button color="primary" onClick={onBack} size="large" variant="text">
               Previous
             </Button>
           )}
           <Box sx={{ flexGrow: 1 }} />
-          <Button
-            color="primary"
-            disabled={isSubmitting}
-            type="submit"
-            variant="contained"
-          >
+          <Button color="primary" disabled={isSubmitting} type="submit" variant="contained">
             Next
           </Button>
         </Box>
@@ -156,7 +121,7 @@ const ProjectOwnerForm: FC<ProjectOwnerFormProps> = (props) => {
 
 ProjectOwnerForm.propTypes = {
   onBack: PropTypes.func,
-  onNext: PropTypes.func
+  onNext: PropTypes.func,
 };
 
 export default ProjectOwnerForm;

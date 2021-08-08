@@ -1,17 +1,7 @@
 import type { FC } from 'react';
 import type { ApexOptions } from 'apexcharts';
 import Chart from 'react-apexcharts';
-import {
-  Avatar,
-  Box,
-  Button,
-  Card,
-  CardActions,
-  CardContent,
-  Divider,
-  Grid,
-  Typography
-} from '@material-ui/core';
+import { Avatar, Box, Button, Card, CardActions, CardContent, Divider, Grid, Typography } from '@material-ui/core';
 import { alpha, useTheme } from '@material-ui/core/styles';
 import ArrowRightIcon from '../../../icons/ArrowRight';
 import ChevronDownIcon from '../../../icons/ChevronDown';
@@ -25,8 +15,8 @@ const QuickStats6: FC = () => {
       background: 'transparent',
       stacked: false,
       toolbar: {
-        show: false
-      }
+        show: false,
+      },
     },
     colors: ['#27c6db'],
     labels: [''],
@@ -34,20 +24,20 @@ const QuickStats6: FC = () => {
       radialBar: {
         dataLabels: {
           value: {
-            show: false
-          }
+            show: false,
+          },
         },
         hollow: {
-          size: '60%'
+          size: '60%',
         },
         track: {
-          background: theme.palette.background.default
-        }
-      }
+          background: theme.palette.background.default,
+        },
+      },
     },
     theme: {
-      mode: theme.palette.mode
-    }
+      mode: theme.palette.mode,
+    },
   };
 
   const chartSeries = [83];
@@ -56,50 +46,30 @@ const QuickStats6: FC = () => {
     <Box
       sx={{
         backgroundColor: 'background.default',
-        p: 3
+        p: 3,
       }}
     >
-      <Grid
-        container
-        spacing={3}
-      >
-        <Grid
-          item
-          md={6}
-          xs={12}
-        >
+      <Grid container spacing={3}>
+        <Grid item md={6} xs={12}>
           <Card>
             <CardContent
               sx={{
                 alignItems: 'center',
-                display: 'flex'
+                display: 'flex',
               }}
             >
-              <Chart
-                height="160"
-                options={chartOptions}
-                series={chartSeries}
-                type="radialBar"
-                width="160"
-              />
+              <Chart height="160" options={chartOptions} series={chartSeries} type="radialBar" width="160" />
               <Box
                 sx={{
                   display: 'flex',
-                  flex: 1
+                  flex: 1,
                 }}
               >
                 <Box>
-                  <Typography
-                    color="primary"
-                    variant="h4"
-                  >
+                  <Typography color="primary" variant="h4">
                     0.299 BTC
                   </Typography>
-                  <Typography
-                    color="textPrimary"
-                    sx={{ mt: 1 }}
-                    variant="subtitle2"
-                  >
+                  <Typography color="textPrimary" sx={{ mt: 1 }} variant="subtitle2">
                     Weekly earnings
                   </Typography>
                 </Box>
@@ -107,7 +77,7 @@ const QuickStats6: FC = () => {
                 <Avatar
                   sx={{
                     backgroundColor: alpha(theme.palette.success.main, 0.08),
-                    color: 'success.main'
+                    color: 'success.main',
                   }}
                   variant="rounded"
                 >
@@ -117,53 +87,32 @@ const QuickStats6: FC = () => {
             </CardContent>
             <Divider />
             <CardActions>
-              <Button
-                color="primary"
-                endIcon={<ArrowRightIcon fontSize="small" />}
-                variant="text"
-              >
+              <Button color="primary" endIcon={<ArrowRightIcon fontSize="small" />} variant="text">
                 See all activity
               </Button>
             </CardActions>
           </Card>
         </Grid>
-        <Grid
-          item
-          md={6}
-          xs={12}
-        >
+        <Grid item md={6} xs={12}>
           <Card>
             <CardContent
               sx={{
                 alignItems: 'center',
-                display: 'flex'
+                display: 'flex',
               }}
             >
-              <Chart
-                height="160"
-                options={chartOptions}
-                series={chartSeries}
-                type="radialBar"
-                width="160"
-              />
+              <Chart height="160" options={chartOptions} series={chartSeries} type="radialBar" width="160" />
               <Box
                 sx={{
                   display: 'flex',
-                  flex: 1
+                  flex: 1,
                 }}
               >
                 <Box>
-                  <Typography
-                    color="textPrimary"
-                    variant="h4"
-                  >
+                  <Typography color="textPrimary" variant="h4">
                     $2,150,000.00
                   </Typography>
-                  <Typography
-                    color="textPrimary"
-                    sx={{ mt: 1 }}
-                    variant="subtitle2"
-                  >
+                  <Typography color="textPrimary" sx={{ mt: 1 }} variant="subtitle2">
                     Your private wallet
                   </Typography>
                 </Box>
@@ -171,7 +120,7 @@ const QuickStats6: FC = () => {
                 <Avatar
                   sx={{
                     backgroundColor: alpha(theme.palette.error.main, 0.08),
-                    color: 'error.main'
+                    color: 'error.main',
                   }}
                   variant="rounded"
                 >
@@ -181,11 +130,7 @@ const QuickStats6: FC = () => {
             </CardContent>
             <Divider />
             <CardActions>
-              <Button
-                color="primary"
-                endIcon={<ArrowRightIcon fontSize="small" />}
-                variant="text"
-              >
+              <Button color="primary" endIcon={<ArrowRightIcon fontSize="small" />} variant="text">
                 Withdraw money
               </Button>
             </CardActions>

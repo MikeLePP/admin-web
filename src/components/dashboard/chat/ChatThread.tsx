@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { useEffect } from 'react';
 import type { FC } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -8,7 +9,7 @@ import {
   getThread,
   markThreadAsSeen,
   removeRecipient,
-  resetActiveThread
+  resetActiveThread,
 } from '../../../slices/chat';
 import { useDispatch, useSelector } from '../../../store';
 import type { RootState } from '../../../store';
@@ -29,7 +30,7 @@ const threadSelector = (state: RootState): any => {
     id: null,
     messages: [],
     participants: [],
-    unreadMessages: 0
+    unreadMessages: 0,
   };
 };
 
@@ -37,18 +38,14 @@ const ChatThread: FC = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { threadKey } = useParams();
-  const {
-    activeThreadId,
-    participants,
-    recipients
-  } = useSelector((state) => state.chat);
+  const { activeThreadId, participants, recipients } = useSelector((state) => state.chat);
   const thread = useSelector((state) => threadSelector(state));
 
   const getDetails = async (): Promise<void> => {
     dispatch(getParticipants(threadKey));
 
     try {
-      await dispatch(getThread(threadKey));
+      dispatch(getThread(threadKey));
     } catch (err) {
       dispatch(resetActiveThread());
       // If thread key is not a valid key (thread id or username)
@@ -61,7 +58,7 @@ const ChatThread: FC = () => {
 
   useEffect(() => {
     if (threadKey) {
-      getDetails();
+      void getDetails();
     }
   }, [threadKey]);
 
@@ -98,12 +95,10 @@ const ChatThread: FC = () => {
         backgroundColor: 'background.default',
         display: 'flex',
         flexDirection: 'column',
-        flexGrow: 1
+        flexGrow: 1,
       }}
     >
-      {mode === 'DETAIL' && (
-        <ChatThreadToolbar participants={participants} />
-      )}
+      {mode === 'DETAIL' && <ChatThreadToolbar participants={participants} />}
       {mode === 'COMPOSE' && (
         <ChatThreadComposer
           onAddRecipient={handleAddRecipient}
@@ -114,19 +109,13 @@ const ChatThread: FC = () => {
       <Box
         sx={{
           flexGrow: 1,
-          overflow: 'auto'
+          overflow: 'auto',
         }}
       >
-        <ChatMessages
-          messages={thread.messages}
-          participants={thread.participants}
-        />
+        <ChatMessages messages={thread.messages} participants={thread.participants} />
       </Box>
       <Divider />
-      <ChatMessageAdd
-        disabled={false}
-        onSend={handleSendMessage}
-      />
+      <ChatMessageAdd disabled={false} onSend={handleSendMessage} />
     </Box>
   );
 };

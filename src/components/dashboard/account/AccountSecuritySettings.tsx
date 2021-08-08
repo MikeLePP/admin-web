@@ -11,7 +11,7 @@ import {
   Divider,
   FormHelperText,
   Grid,
-  TextField
+  TextField,
 } from '@material-ui/core';
 import wait from '../../../utils/wait';
 
@@ -20,29 +20,15 @@ const AccountSecuritySettings: FC = (props) => (
     initialValues={{
       password: '',
       passwordConfirm: '',
-      submit: null
+      submit: null,
     }}
-    validationSchema={
-      Yup
-        .object()
-        .shape({
-          password: Yup
-            .string()
-            .min(7, 'Must be at least 7 characters')
-            .max(255)
-            .required('Required'),
-          passwordConfirm: Yup
-            .string()
-            .oneOf([Yup.ref('password'), null], 'Passwords must match')
-            .required('Required')
-        })
-    }
-    onSubmit={async (values, {
-      resetForm,
-      setErrors,
-      setStatus,
-      setSubmitting
-    }): Promise<void> => {
+    validationSchema={Yup.object().shape({
+      password: Yup.string().min(7, 'Must be at least 7 characters').max(255).required('Required'),
+      passwordConfirm: Yup.string()
+        .oneOf([Yup.ref('password'), null], 'Passwords must match')
+        .required('Required'),
+    })}
+    onSubmit={async (values, { resetForm, setErrors, setStatus, setSubmitting }): Promise<void> => {
       try {
         // NOTE: Make API request
         await wait(500);
@@ -59,33 +45,14 @@ const AccountSecuritySettings: FC = (props) => (
       }
     }}
   >
-    {({
-      errors,
-      handleBlur,
-      handleChange,
-      handleSubmit,
-      isSubmitting,
-      touched,
-      values
-    }): JSX.Element => (
-      <form
-        onSubmit={handleSubmit}
-        {...props}
-      >
+    {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }): JSX.Element => (
+      <form onSubmit={handleSubmit} {...props}>
         <Card>
           <CardHeader title="Change Password" />
           <Divider />
           <CardContent>
-            <Grid
-              container
-              spacing={3}
-            >
-              <Grid
-                item
-                md={4}
-                sm={6}
-                xs={12}
-              >
+            <Grid container spacing={3}>
+              <Grid item md={4} sm={6} xs={12}>
                 <TextField
                   error={Boolean(touched.password && errors.password)}
                   fullWidth
@@ -99,12 +66,7 @@ const AccountSecuritySettings: FC = (props) => (
                   variant="outlined"
                 />
               </Grid>
-              <Grid
-                item
-                md={4}
-                sm={6}
-                xs={12}
-              >
+              <Grid item md={4} sm={6} xs={12}>
                 <TextField
                   error={Boolean(touched.passwordConfirm && errors.passwordConfirm)}
                   fullWidth
@@ -121,9 +83,7 @@ const AccountSecuritySettings: FC = (props) => (
             </Grid>
             {errors.submit && (
               <Box sx={{ mt: 3 }}>
-                <FormHelperText error>
-                  {errors.submit}
-                </FormHelperText>
+                <FormHelperText error>{errors.submit}</FormHelperText>
               </Box>
             )}
           </CardContent>
@@ -132,15 +92,10 @@ const AccountSecuritySettings: FC = (props) => (
             sx={{
               display: 'flex',
               justifyContent: 'flex-end',
-              p: 2
+              p: 2,
             }}
           >
-            <Button
-              color="primary"
-              disabled={isSubmitting}
-              type="submit"
-              variant="contained"
-            >
+            <Button color="primary" disabled={isSubmitting} type="submit" variant="contained">
               Change Password
             </Button>
           </Box>

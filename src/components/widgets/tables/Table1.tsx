@@ -15,7 +15,7 @@ import {
   TableRow,
   TableSortLabel,
   Tooltip,
-  Typography
+  Typography,
 } from '@material-ui/core';
 import Label from '../../Label';
 import Scrollbar from '../../Scrollbar';
@@ -30,101 +30,101 @@ const orders = [
     createdAt: subMinutes(subSeconds(now, 10), 7).getTime(),
     customer: {
       email: 'ekaterina@devias.io',
-      name: 'Ekaterina Tankova'
+      name: 'Ekaterina Tankova',
     },
     currency: '$',
     items: 7,
     number: 'DEV-1042',
     status: 'pending',
-    totalAmount: 524.00
+    totalAmount: 524.0,
   },
   {
     id: '5eff254e46b753a166e7d7af',
     createdAt: subHours(subMinutes(subSeconds(now, 50), 12), 2).getTime(),
     customer: {
       email: 'carson.darrin@devias.io',
-      name: 'Carson Darrin'
+      name: 'Carson Darrin',
     },
     currency: '$',
     items: 8,
     number: 'DEV-1041',
     status: 'complete',
-    totalAmount: 693.00
+    totalAmount: 693.0,
   },
   {
     id: '5eff2553e1c551e2e28a9205',
     createdAt: subHours(subMinutes(subSeconds(now, 12), 39), 5).getTime(),
     customer: {
       email: 'fran.perez@devias.io',
-      name: 'Fran Perez'
+      name: 'Fran Perez',
     },
     currency: '$',
     items: 4,
     number: 'DEV-1040',
     status: 'rejected',
-    totalAmount: 215.00
+    totalAmount: 215.0,
   },
   {
     id: '5eff25590f3e28f013c39a0e',
     createdAt: subHours(subMinutes(subSeconds(now, 21), 46), 5).getTime(),
     customer: {
       email: 'anje.keiser@devias.io',
-      name: 'Jie Yan Song'
+      name: 'Jie Yan Song',
     },
     currency: '$',
     items: 1,
     number: 'DEV-1039',
     status: 'pending',
-    totalAmount: 25.00
+    totalAmount: 25.0,
   },
   {
     id: '5eff255f57499089243805d8',
     createdAt: subHours(subMinutes(subSeconds(now, 54), 19), 8).getTime(),
     customer: {
       name: 'Clarke Gillebert',
-      email: 'clarke.gillebert@devias.io'
+      email: 'clarke.gillebert@devias.io',
     },
     currency: '$',
     items: 5,
     number: 'DEV-1038',
     status: 'complete',
-    totalAmount: 535.00
+    totalAmount: 535.0,
   },
   {
     id: '5eff25658d416fc5adb96a3a',
     createdAt: subDays(subMinutes(subSeconds(now, 12), 45), 1).getTime(),
     customer: {
       email: 'nasimiyu.danai@devias.io',
-      name: 'Nasimiyu Danai'
+      name: 'Nasimiyu Danai',
     },
     currency: '$',
     items: 2,
     number: 'DEV-1037',
     status: 'complete',
-    totalAmount: 56.00
-  }
+    totalAmount: 56.0,
+  },
 ];
 
 const labelColors = {
   complete: 'success',
   pending: 'warning',
-  rejected: 'error'
+  rejected: 'error',
 };
 
 const Table1: FC = () => (
   <Box
     sx={{
       backgroundColor: 'background.default',
-      p: 3
+      p: 3,
     }}
   >
     <Card>
       <CardHeader
-        action={(
+        action={
           <IconButton>
             <DotsHorizontalIcon fontSize="small" />
           </IconButton>
-        )}
+        }
         title="Latest Orders"
       />
       <Divider />
@@ -134,67 +134,34 @@ const Table1: FC = () => (
             <TableHead>
               <TableRow>
                 <TableCell sortDirection="desc">
-                  <Tooltip
-                    enterDelay={300}
-                    title="Sort"
-                  >
-                    <TableSortLabel
-                      active
-                      direction="desc"
-                    >
+                  <Tooltip enterDelay={300} title="Sort">
+                    <TableSortLabel active direction="desc">
                       Number
                     </TableSortLabel>
                   </Tooltip>
                 </TableCell>
-                <TableCell>
-                  Customer
-                </TableCell>
-                <TableCell>
-                  Items
-                </TableCell>
-                <TableCell>
-                  Total
-                </TableCell>
-                <TableCell>
-                  Status
-                </TableCell>
-                <TableCell align="right">
-                  Date
-                </TableCell>
+                <TableCell>Customer</TableCell>
+                <TableCell>Items</TableCell>
+                <TableCell>Total</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell align="right">Date</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {orders.map((order) => (
-                <TableRow
-                  hover
-                  key={order.id}
-                >
+                <TableRow hover key={order.id}>
                   <TableCell>
-                    <Typography
-                      color="textPrimary"
-                      variant="subtitle2"
-                    >
+                    <Typography color="textPrimary" variant="subtitle2">
                       {order.number}
                     </Typography>
                   </TableCell>
+                  <TableCell>{order.customer.name}</TableCell>
+                  <TableCell>{order.items}</TableCell>
+                  <TableCell>{numeral(order.totalAmount).format(`${order.currency}0,0.00`)}</TableCell>
                   <TableCell>
-                    {order.customer.name}
+                    <Label color={labelColors[order.status]}>{order.status}</Label>
                   </TableCell>
-                  <TableCell>
-                    {order.items}
-                  </TableCell>
-                  <TableCell>
-                    {numeral(order.totalAmount)
-                      .format(`${order.currency}0,0.00`)}
-                  </TableCell>
-                  <TableCell>
-                    <Label color={labelColors[order.status]}>
-                      {order.status}
-                    </Label>
-                  </TableCell>
-                  <TableCell align="right">
-                    {format(order.createdAt, 'dd MMM, yyyy HH:mm:ss')}
-                  </TableCell>
+                  <TableCell align="right">{format(order.createdAt, 'dd MMM, yyyy HH:mm:ss')}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -205,7 +172,7 @@ const Table1: FC = () => (
         sx={{
           display: 'flex',
           justifyContent: 'flex-end',
-          p: 2
+          p: 2,
         }}
       >
         <Button

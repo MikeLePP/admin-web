@@ -11,10 +11,11 @@ class ProjectApi {
         author: {
           id: '5e887b7602bdbc4dbb234b27',
           avatar: '/static/mock-images/avatars/avatar-jie_yan_song.png',
-          name: 'Jie Yan Song'
+          name: 'Jie Yan Song',
         },
-        budget: 6125.00,
-        caption: 'We\'re looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.',
+        budget: 6125.0,
+        caption:
+          "We're looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.",
         currency: '$',
         isLiked: true,
         likes: 7,
@@ -24,17 +25,18 @@ class ProjectApi {
         membersCount: 2,
         title: 'Mella Full Screen Slider',
         type: 'Full-Time',
-        updatedAt: subMinutes(now, 24).getTime()
+        updatedAt: subMinutes(now, 24).getTime(),
       },
       {
         id: '5e8dcf076c50b9d8e756a5a2',
         author: {
           id: '5e887d0b3d090c1b8f162003',
           avatar: '/static/mock-images/avatars/avatar-omar_darobe.png',
-          name: 'Omar Darobe'
+          name: 'Omar Darobe',
         },
-        budget: 4205.00,
-        caption: 'We\'re looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.',
+        budget: 4205.0,
+        caption:
+          "We're looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.",
         currency: '$',
         isLiked: true,
         likes: 12,
@@ -44,17 +46,18 @@ class ProjectApi {
         membersCount: 3,
         title: 'Overview Design',
         type: 'Full-Time',
-        updatedAt: subHours(now, 1).getTime()
+        updatedAt: subHours(now, 1).getTime(),
       },
       {
         id: '5e8dcf105a6732b3ed82cf7a',
         author: {
           id: '5e88792be2d4cfb4bf0971d9',
           avatar: '/static/mock-images/avatars/avatar-siegbert_gottfried.png',
-          name: 'Siegbert Gottfried'
+          name: 'Siegbert Gottfried',
         },
-        budget: 2394.00,
-        caption: 'We\'re looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.',
+        budget: 2394.0,
+        caption:
+          "We're looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.",
         currency: '$',
         isLiked: true,
         likes: 18,
@@ -64,17 +67,18 @@ class ProjectApi {
         membersCount: 8,
         title: 'Ten80 Web Design',
         type: 'Full-Time',
-        updatedAt: subHours(now, 16).getTime()
+        updatedAt: subHours(now, 16).getTime(),
       },
       {
         id: '5e8dcf1cc7155d0e947dc27f',
         author: {
           id: '5e8877da9a65442b11551975',
           avatar: '/static/mock-images/avatars/avatar-iulia_albu.png',
-          name: 'Iulia Albu'
+          name: 'Iulia Albu',
         },
-        budget: 2784.00,
-        caption: 'We\'re looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.',
+        budget: 2784.0,
+        caption:
+          "We're looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.",
         currency: '$',
         image: '/static/mock-images/projects/project_4.png',
         isLiked: false,
@@ -84,17 +88,18 @@ class ProjectApi {
         rating: 2,
         title: 'Neura e-commerce UI Kit',
         type: 'Full-Time',
-        updatedAt: subDays(now, 3).getTime()
+        updatedAt: subDays(now, 3).getTime(),
       },
       {
         id: '5e8dcf252313876001e83221',
         author: {
           id: '5e887ac47eed253091be10cb',
           avatar: '/static/mock-images/avatars/avatar-carson_darrin.png',
-          name: 'Carson Darrin'
+          name: 'Carson Darrin',
         },
-        budget: 5835.00,
-        caption: 'We\'re looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.',
+        budget: 5835.0,
+        caption:
+          "We're looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.",
         currency: '$',
         isLiked: false,
         likes: 7,
@@ -104,17 +109,18 @@ class ProjectApi {
         membersCount: 2,
         title: 'Administrator Overview',
         type: 'Full-Time',
-        updatedAt: subDays(now, 7).getTime()
+        updatedAt: subDays(now, 7).getTime(),
       },
       {
         id: '5e8dcf4250d77c954b04902e',
         author: {
           id: '5e887b7602bdbc4dbb234b27',
           avatar: '/static/mock-images/avatars/avatar-jie_yan_song.png',
-          name: 'Jie Yan Song'
+          name: 'Jie Yan Song',
         },
-        budget: 4255.00,
-        caption: 'We\'re looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.',
+        budget: 4255.0,
+        caption:
+          "We're looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.",
         currency: '$',
         isLiked: true,
         likes: 4,
@@ -124,8 +130,8 @@ class ProjectApi {
         membersCount: 12,
         title: 'Kalli UI Kit',
         type: 'Full-Time',
-        updatedAt: subDays(now, 8).getTime()
-      }
+        updatedAt: subDays(now, 8).getTime(),
+      },
     ];
 
     return Promise.resolve(projects);
@@ -140,36 +146,36 @@ class ProjectApi {
           createdAt: subMinutes(now, 23).getTime(),
           description: 'has uploaded a new file',
           subject: 'Project author',
-          type: 'upload_file'
+          type: 'upload_file',
         },
         {
           id: '5e8dd0893a6725f2bb603617',
           createdAt: subHours(now, 2).getTime(),
           description: 'joined team as a Front-End Developer',
           subject: 'Adrian Stefan',
-          type: 'join_team'
+          type: 'join_team',
         },
         {
           id: '5e8dd08f44603e3300b75cf1',
           createdAt: subHours(now, 9).getTime(),
           description: 'joined team as a Full Stack Developer',
           subject: 'Alexndru Robert',
-          type: 'join_team'
+          type: 'join_team',
         },
         {
           id: '5e8dd0960f3f0fe04e64d8f4',
           createdAt: subDays(now, 2).getTime(),
           description: 'raised the project budget',
           subject: 'Project author',
-          type: 'price_change'
+          type: 'price_change',
         },
         {
           id: '5e8dd09db94421c502c53d13',
           createdAt: subDays(now, 4).getTime(),
           description: 'created',
           subject: 'Contest',
-          type: 'contest_created'
-        }
+          type: 'contest_created',
+        },
       ],
       applicants: [
         {
@@ -178,13 +184,7 @@ class ProjectApi {
           commonConnections: 12,
           cover: '/static/mock-images/covers/cover_2.jpg',
           name: 'Marcus Finn',
-          skills: [
-            'User Experience',
-            'FrontEnd development',
-            'HTML5',
-            'VueJS',
-            'ReactJS'
-          ]
+          skills: ['User Experience', 'FrontEnd development', 'HTML5', 'VueJS', 'ReactJS'],
         },
         {
           id: '5e887ac47eed253091be10cb',
@@ -192,12 +192,7 @@ class ProjectApi {
           commonConnections: 5,
           cover: '/static/mock-images/covers/cover_3.jpg',
           name: 'Carson Darrin',
-          skills: [
-            'User Interface',
-            'FullStack development',
-            'Angular',
-            'ExpressJS'
-          ]
+          skills: ['User Interface', 'FullStack development', 'Angular', 'ExpressJS'],
         },
         {
           id: '5e86809283e28b96d2d38537',
@@ -205,21 +200,17 @@ class ProjectApi {
           commonConnections: 17,
           cover: '/static/mock-images/covers/cover_1.jpg',
           name: 'Jane Rotanson',
-          skills: [
-            'BackEnd development',
-            'Firebase',
-            'MongoDB',
-            'ExpressJS'
-          ]
-        }
+          skills: ['BackEnd development', 'Firebase', 'MongoDB', 'ExpressJS'],
+        },
       ],
       author: {
         id: '5e887d0b3d090c1b8f162003',
         avatar: '/static/mock-images/avatars/avatar-omar_darobe.png',
-        name: 'Omar Darobe'
+        name: 'Omar Darobe',
       },
-      budget: 12500.00,
-      caption: 'We\'re looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.',
+      budget: 12500.0,
+      caption:
+        "We're looking for experienced Developers and Product Designers to come aboard and help us build succesful businesses through software.",
       currency: '$',
       description: `
 Design files are attached in the files tab.
@@ -237,22 +228,22 @@ The project has been created in Sketch so let me know if there are any problems 
           mimeType: 'image/png',
           name: 'example-project1.jpg',
           size: 1024 * 1024 * 3,
-          url: '/static/mock-images/projects/project_4.png'
+          url: '/static/mock-images/projects/project_4.png',
         },
         {
           id: '5e8dd0784431995a30eb2586',
           mimeType: 'application/zip',
           name: 'docs.zip',
           size: 1024 * 1024 * 25,
-          url: '#'
+          url: '#',
         },
         {
           id: '5e8dd07cbb62749296ecee1c',
           mimeType: 'image/png',
           name: 'example-project2.jpg',
           size: 1024 * 1024 * 2,
-          url: '/static/mock-images/projects/project_1.png'
-        }
+          url: '/static/mock-images/projects/project_1.png',
+        },
       ],
       isActive: true,
       isLiked: true,
@@ -262,20 +253,20 @@ The project has been created in Sketch so let me know if there are any problems 
           id: '5e887a62195cc5aef7e8ca5d',
           avatar: '/static/mock-images/avatars/avatar-marcus_finn.png',
           job: 'Front End Developer',
-          name: 'Marcus Finn'
+          name: 'Marcus Finn',
         },
         {
           id: '5e887ac47eed253091be10cb',
           avatar: '/static/mock-images/avatars/avatar-carson_darrin.png',
           job: 'UX Designer',
-          name: 'Carson Darrin'
+          name: 'Carson Darrin',
         },
         {
           id: '5e887b7602bdbc4dbb234b27',
           avatar: '/static/mock-images/avatars/avatar-jie_yan_song.png',
           job: 'Copyright',
-          name: 'Jie Yan Song'
-        }
+          name: 'Jie Yan Song',
+        },
       ],
       rating: 5,
       reviews: [
@@ -283,38 +274,40 @@ The project has been created in Sketch so let me know if there are any problems 
           id: '5f0366cd843161f193ebadd4',
           author: {
             avatar: '/static/mock-images/avatars/avatar-marcus_finn.png',
-            name: 'Marcus Finn'
+            name: 'Marcus Finn',
           },
           comment: 'Great company, providing an awesome & easy to use product.',
           createdAt: subHours(now, 2).getTime(),
-          value: 5
+          value: 5,
         },
         {
           id: 'to33twsyjphcfj55y3t07261',
           author: {
             avatar: '/static/mock-images/avatars/avatar-miron_vitold.png',
-            name: 'Miron Vitold'
+            name: 'Miron Vitold',
           },
-          comment: 'Not the best people managers, poor management skills, poor career development programs. Communication from corporate & leadership isn\'t always clear and is sometime one-sided. Low pay compared to FANG.',
+          comment:
+            "Not the best people managers, poor management skills, poor career development programs. Communication from corporate & leadership isn't always clear and is sometime one-sided. Low pay compared to FANG.",
           createdAt: subHours(now, 2).getTime(),
-          value: 2
+          value: 2,
         },
         {
           id: '6z9dwxjzkqbmxuluxx2681jd',
           author: {
             avatar: '/static/mock-images/avatars/avatar-carson_darrin.png',
-            name: 'Carson Darrin'
+            name: 'Carson Darrin',
           },
-          comment: 'I have been working with this company full-time. Great for the work life balance. Cons, decentralized decision making process across the organization.',
+          comment:
+            'I have been working with this company full-time. Great for the work life balance. Cons, decentralized decision making process across the organization.',
           createdAt: subHours(now, 2).getTime(),
-          value: 4
-        }
+          value: 4,
+        },
       ],
       startDate: addDays(now, 7).getTime(),
       tags: ['React JS'],
       title: 'Develop a PDF Export App',
       type: 'Full-Time',
-      updatedAt: subMinutes(now, 23).getTime()
+      updatedAt: subMinutes(now, 23).getTime(),
     };
 
     return Promise.resolve(project);

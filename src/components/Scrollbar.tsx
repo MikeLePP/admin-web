@@ -4,8 +4,7 @@ import PerfectScrollbar from 'react-perfect-scrollbar';
 import type { ScrollBarProps as PerfectScrollbarProps } from 'react-perfect-scrollbar';
 import { Box } from '@material-ui/core';
 
-interface ScrollbarProps extends PerfectScrollbarProps {
-}
+type ScrollbarProps = PerfectScrollbarProps;
 
 const Scrollbar = forwardRef<HTMLDivElement, ScrollbarProps>((props, ref) => {
   const { children, ...other } = props;
@@ -14,28 +13,21 @@ const Scrollbar = forwardRef<HTMLDivElement, ScrollbarProps>((props, ref) => {
 
   if (isMobile) {
     return (
-      <Box
-        ref={ref}
-        sx={{ overflowX: 'auto' }}
-      >
+      <Box ref={ref} sx={{ overflowX: 'auto' }}>
         {children}
       </Box>
     );
   }
 
   return (
-    <PerfectScrollbar
-      // @ts-ignore
-      ref={ref}
-      {...other}
-    >
+    <PerfectScrollbar ref={ref as any} {...other}>
       {children}
     </PerfectScrollbar>
   );
 });
 
 Scrollbar.propTypes = {
-  children: PropTypes.node
+  children: PropTypes.node,
 };
 
 export default Scrollbar;

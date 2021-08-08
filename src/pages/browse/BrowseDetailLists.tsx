@@ -27,43 +27,19 @@ const BrowseDetailLists: FC = () => {
         sx={{
           backgroundColor: 'background.paper',
           minHeight: '100%',
-          py: 8
+          py: 8,
         }}
       >
         <Container maxWidth="lg">
           <Box>
-            <WidgetPreviewer
-              element={<DetailList1 />}
-              name="Currency balance card"
-            />
-            <WidgetPreviewer
-              element={<DetailList2 />}
-              name="Contact details card"
-            />
-            <WidgetPreviewer
-              element={<DetailList3 />}
-              name="Invoices details card"
-            />
-            <WidgetPreviewer
-              element={<DetailList4 />}
-              name="Order info"
-            />
-            <WidgetPreviewer
-              element={<DetailList5 />}
-              name="Order info card"
-            />
-            <WidgetPreviewer
-              element={<DetailList6 />}
-              name="Project information card"
-            />
-            <WidgetPreviewer
-              element={<DetailList7 />}
-              name="Project details card"
-            />
-            <WidgetPreviewer
-              element={<DetailList8 />}
-              name="About card"
-            />
+            <WidgetPreviewer element={<DetailList1 />} name="Currency balance card" />
+            <WidgetPreviewer element={<DetailList2 />} name="Contact details card" />
+            <WidgetPreviewer element={<DetailList3 />} name="Invoices details card" />
+            <WidgetPreviewer element={<DetailList4 />} name="Order info" />
+            <WidgetPreviewer element={<DetailList5 />} name="Order info card" />
+            <WidgetPreviewer element={<DetailList6 />} name="Project information card" />
+            <WidgetPreviewer element={<DetailList7 />} name="Project details card" />
+            <WidgetPreviewer element={<DetailList8 />} name="About card" />
           </Box>
         </Container>
       </Box>

@@ -1,22 +1,12 @@
 import type { FC } from 'react';
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  Container,
-  Divider,
-  Link,
-  TextField,
-  Typography
-} from '@material-ui/core';
+import { Box, Button, Card, CardContent, Container, Divider, Link, TextField, Typography } from '@material-ui/core';
 
 const Form15: FC = () => (
   <Box
     sx={{
       backgroundColor: 'background.default',
       minHeight: '100%',
-      p: 3
+      p: 3,
     }}
   >
     <Container maxWidth="sm">
@@ -26,27 +16,20 @@ const Form15: FC = () => (
             display: 'flex',
             flexDirection: 'column',
             minHeight: 400,
-            p: 4
+            p: 4,
           }}
         >
           <Box
             sx={{
               display: 'flex',
-              justifyContent: 'space-between'
+              justifyContent: 'space-between',
             }}
           >
             <Box>
-              <Typography
-                color="textPrimary"
-                variant="h4"
-              >
+              <Typography color="textPrimary" variant="h4">
                 Log in
               </Typography>
-              <Typography
-                color="textSecondary"
-                sx={{ mt: 1 }}
-                variant="body2"
-              >
+              <Typography color="textSecondary" sx={{ mt: 1 }} variant="body2">
                 Log in on the internal platform
               </Typography>
             </Box>
@@ -55,25 +38,18 @@ const Form15: FC = () => (
               src="/static/icons/amplify.svg"
               style={{
                 maxWidth: '53.62px',
-                width: '100%'
+                width: '100%',
               }}
             />
           </Box>
           <Box
             sx={{
               flexGrow: 1,
-              mt: 3
+              mt: 3,
             }}
           >
             <form onSubmit={(event) => event.preventDefault()}>
-              <TextField
-                fullWidth
-                label="Email Address"
-                margin="normal"
-                name="email"
-                type="email"
-                variant="outlined"
-              />
+              <TextField fullWidth label="Email Address" margin="normal" name="email" type="email" variant="outlined" />
               <TextField
                 fullWidth
                 label="Password"
@@ -83,24 +59,14 @@ const Form15: FC = () => (
                 variant="outlined"
               />
               <Box sx={{ mt: 2 }}>
-                <Button
-                  color="primary"
-                  fullWidth
-                  size="large"
-                  type="submit"
-                  variant="contained"
-                >
+                <Button color="primary" fullWidth size="large" type="submit" variant="contained">
                   Log In
                 </Button>
               </Box>
             </form>
           </Box>
           <Divider sx={{ my: 3 }} />
-          <Link
-            color="textSecondary"
-            href="#"
-            variant="body2"
-          >
+          <Link color="textSecondary" href="#" variant="body2">
             Create new account
           </Link>
         </CardContent>

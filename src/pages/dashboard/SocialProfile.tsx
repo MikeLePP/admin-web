@@ -2,18 +2,7 @@ import { useCallback, useState, useEffect } from 'react';
 import type { FC, ChangeEvent } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import {
-  Avatar,
-  Box,
-  Button,
-  Container,
-  Divider,
-  IconButton,
-  Tab,
-  Tabs,
-  Tooltip,
-  Typography
-} from '@material-ui/core';
+import { Avatar, Box, Button, Container, Divider, IconButton, Tab, Tabs, Tooltip, Typography } from '@material-ui/core';
 import blueGrey from '@material-ui/core/colors/blueGrey';
 import AddPhotoIcon from '@material-ui/icons/AddPhotoAlternate';
 import { socialApi } from '../../__fakeApi__/socialApi';
@@ -25,7 +14,7 @@ import type { Profile } from '../../types/social';
 
 const tabs = [
   { label: 'Timeline', value: 'timeline' },
-  { label: 'Connections', value: 'connections' }
+  { label: 'Connections', value: 'connections' },
 ];
 
 const SocialProfile: FC = () => {
@@ -51,15 +40,13 @@ const SocialProfile: FC = () => {
   }, [mounted]);
 
   useEffect(() => {
-    getProfile();
+    void getProfile();
   }, [getProfile]);
 
   const handleConnectToggle = (): void => {
-    setConnectedStatus((prevConnectedStatus) => (
-      prevConnectedStatus === 'not_connected'
-        ? 'pending'
-        : 'not_connected'
-    ));
+    setConnectedStatus((prevConnectedStatus) =>
+      prevConnectedStatus === 'not_connected' ? 'pending' : 'not_connected',
+    );
   };
 
   const handleTabsChange = (event: ChangeEvent, value: string): void => {
@@ -78,7 +65,7 @@ const SocialProfile: FC = () => {
       <Box
         sx={{
           backgroundColor: 'background.default',
-          minHeight: '100%'
+          minHeight: '100%',
         }}
       >
         <Box
@@ -96,13 +83,13 @@ const SocialProfile: FC = () => {
               left: 0,
               position: 'absolute',
               top: 0,
-              width: '100%'
+              width: '100%',
             },
             '&:hover': {
               '& button': {
-                visibility: 'visible'
-              }
-            }
+                visibility: 'visible',
+              },
+            },
           }}
         >
           <Button
@@ -111,19 +98,19 @@ const SocialProfile: FC = () => {
               backgroundColor: blueGrey[900],
               bottom: {
                 lg: 24,
-                xs: 'auto'
+                xs: 'auto',
               },
               color: 'common.white',
               position: 'absolute',
               right: 24,
               top: {
                 lg: 'auto',
-                xs: 24
+                xs: 24,
               },
               visibility: 'hidden',
               '&:hover': {
-                backgroundColor: blueGrey[900]
-              }
+                backgroundColor: blueGrey[900],
+              },
             }}
             variant="contained"
           >
@@ -136,7 +123,7 @@ const SocialProfile: FC = () => {
               alignItems: 'center',
               display: 'flex',
               mt: 1,
-              position: 'relative'
+              position: 'relative',
             }}
           >
             <Avatar
@@ -147,20 +134,14 @@ const SocialProfile: FC = () => {
                 left: 24,
                 position: 'absolute',
                 top: -60,
-                width: 120
+                width: 120,
               }}
             />
             <Box sx={{ ml: '160px' }}>
-              <Typography
-                color="textSecondary"
-                variant="overline"
-              >
+              <Typography color="textSecondary" variant="overline">
                 {profile.bio}
               </Typography>
-              <Typography
-                color="textPrimary"
-                variant="h5"
-              >
+              <Typography color="textPrimary" variant="h5">
                 {profile.name}
               </Typography>
             </Box>
@@ -169,29 +150,17 @@ const SocialProfile: FC = () => {
               sx={{
                 display: {
                   md: 'block',
-                  xs: 'none'
-                }
+                  xs: 'none',
+                },
               }}
             >
               {connectedStatus === 'not_connected' && (
-                <Button
-                  color="primary"
-                  onClick={handleConnectToggle}
-                  size="small"
-                  sx={{ ml: 1 }}
-                  variant="outlined"
-                >
+                <Button color="primary" onClick={handleConnectToggle} size="small" sx={{ ml: 1 }} variant="outlined">
                   Connect
                 </Button>
               )}
               {connectedStatus === 'pending' && (
-                <Button
-                  color="primary"
-                  onClick={handleConnectToggle}
-                  size="small"
-                  sx={{ ml: 1 }}
-                  variant="outlined"
-                >
+                <Button color="primary" onClick={handleConnectToggle} size="small" sx={{ ml: 1 }} variant="outlined">
                   Pending
                 </Button>
               )}
@@ -224,11 +193,7 @@ const SocialProfile: FC = () => {
               variant="scrollable"
             >
               {tabs.map((tab) => (
-                <Tab
-                  key={tab.value}
-                  label={tab.label}
-                  value={tab.value}
-                />
+                <Tab key={tab.value} label={tab.label} value={tab.value} />
               ))}
             </Tabs>
             <Divider />

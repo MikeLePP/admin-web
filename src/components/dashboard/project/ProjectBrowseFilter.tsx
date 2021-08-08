@@ -7,32 +7,20 @@ import MultiSelect from '../../MultiSelect';
 const selectOptions = [
   {
     label: 'Type',
-    options: [
-      'Freelance',
-      'Full Time',
-      'Part Time',
-      'Internship'
-    ]
+    options: ['Freelance', 'Full Time', 'Part Time', 'Internship'],
   },
   {
     label: 'Level',
-    options: ['Novice', 'Expert']
+    options: ['Novice', 'Expert'],
   },
   {
     label: 'Location',
-    options: [
-      'Africa',
-      'Asia',
-      'Australia',
-      'Europe',
-      'North America',
-      'South America'
-    ]
+    options: ['Africa', 'Asia', 'Australia', 'Europe', 'North America', 'South America'],
   },
   {
     label: 'Roles',
-    options: ['Android', 'Web Developer', 'iOS']
-  }
+    options: ['Android', 'Web Developer', 'iOS'],
+  },
 ];
 
 const ProjectBrowseFilter: FC = (props) => {
@@ -43,7 +31,7 @@ const ProjectBrowseFilter: FC = (props) => {
     'Novice',
     'Europe',
     'Android',
-    'Web Developer'
+    'Web Developer',
   ]);
 
   const handleInputChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -73,14 +61,14 @@ const ProjectBrowseFilter: FC = (props) => {
         sx={{
           alignItems: 'center',
           display: 'flex',
-          p: 2
+          p: 2,
         }}
       >
         <SearchIcon fontSize="small" />
         <Box
           sx={{
             flexGrow: 1,
-            ml: 3
+            ml: 3,
           }}
         >
           <Input
@@ -99,7 +87,7 @@ const ProjectBrowseFilter: FC = (props) => {
           alignItems: 'center',
           display: 'flex',
           flexWrap: 'wrap',
-          p: 2
+          p: 2,
         }}
       >
         {chips.map((chip) => (
@@ -118,7 +106,7 @@ const ProjectBrowseFilter: FC = (props) => {
           alignItems: 'center',
           display: 'flex',
           flexWrap: 'wrap',
-          p: 1
+          p: 1,
         }}
       >
         {selectOptions.map((option) => (
@@ -131,15 +119,7 @@ const ProjectBrowseFilter: FC = (props) => {
           />
         ))}
         <Box sx={{ flexGrow: 1 }} />
-        <FormControlLabel
-          control={(
-            <Checkbox
-              color="primary"
-              defaultChecked
-            />
-          )}
-          label="In network"
-        />
+        <FormControlLabel control={<Checkbox color="primary" defaultChecked />} label="In network" />
       </Box>
     </Card>
   );

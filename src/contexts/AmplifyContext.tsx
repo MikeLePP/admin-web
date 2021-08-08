@@ -171,7 +171,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
       }
     };
 
-    initialize();
+    void initialize();
   }, []);
 
   const signInWithEmailAndPassword = async (email: string, password: string): Promise<void> => {
@@ -179,7 +179,9 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
 
     if (user.challengeName) {
       console.error(
-        `Unable to login, because challenge "${user.challengeName}" is mandated and we did not handle this case.`,
+        `Unable to login, because challenge "${
+          user.challengeName as string
+        }" is mandated and we did not handle this case.`,
       );
       return;
     }

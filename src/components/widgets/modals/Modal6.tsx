@@ -1,14 +1,5 @@
 import type { FC } from 'react';
-import {
-  Box,
-  Button,
-  Divider,
-  ListItemIcon,
-  ListItemText,
-  MenuItem,
-  Paper,
-  Typography
-} from '@material-ui/core';
+import { Box, Button, Divider, ListItemIcon, ListItemText, MenuItem, Paper, Typography } from '@material-ui/core';
 import CogIcon from '../../../icons/Cog';
 import UserIcon from '../../../icons/User';
 
@@ -17,27 +8,21 @@ const Modal6: FC = () => (
     sx={{
       backgroundColor: 'background.default',
       minHeight: '100%',
-      p: 3
+      p: 3,
     }}
   >
     <Paper
       elevation={12}
       sx={{
         maxWidth: 320,
-        mx: 'auto'
+        mx: 'auto',
       }}
     >
       <Box sx={{ p: 2 }}>
-        <Typography
-          color="textPrimary"
-          variant="subtitle2"
-        >
+        <Typography color="textPrimary" variant="subtitle2">
           demo@devias.io
         </Typography>
-        <Typography
-          color="textSecondary"
-          variant="subtitle2"
-        >
+        <Typography color="textSecondary" variant="subtitle2">
           Devias
         </Typography>
       </Box>
@@ -48,14 +33,11 @@ const Modal6: FC = () => (
             <UserIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText
-            primary={(
-              <Typography
-                color="textPrimary"
-                variant="subtitle2"
-              >
+            primary={
+              <Typography color="textPrimary" variant="subtitle2">
                 Profile
               </Typography>
-            )}
+            }
           />
         </MenuItem>
         <MenuItem>
@@ -63,23 +45,16 @@ const Modal6: FC = () => (
             <CogIcon fontSize="small" />
           </ListItemIcon>
           <ListItemText
-            primary={(
-              <Typography
-                color="textPrimary"
-                variant="subtitle2"
-              >
+            primary={
+              <Typography color="textPrimary" variant="subtitle2">
                 Settings
               </Typography>
-            )}
+            }
           />
         </MenuItem>
       </Box>
       <Box sx={{ p: 2 }}>
-        <Button
-          color="primary"
-          fullWidth
-          variant="outlined"
-        >
+        <Button color="primary" fullWidth variant="outlined">
           Logout
         </Button>
       </Box>

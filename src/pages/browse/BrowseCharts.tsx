@@ -31,59 +31,23 @@ const BrowseCharts: FC = () => {
         sx={{
           backgroundColor: 'background.paper',
           minHeight: '100%',
-          py: 8
+          py: 8,
         }}
       >
         <Container maxWidth="lg">
           <Box sx={{ mt: 3 }}>
-            <WidgetPreviewer
-              element={<Chart1 />}
-              name="Chart 1"
-            />
-            <WidgetPreviewer
-              element={<Chart2 />}
-              name="Chart 2"
-            />
-            <WidgetPreviewer
-              element={<Chart3 />}
-              name="Chart 3"
-            />
-            <WidgetPreviewer
-              element={<Chart4 />}
-              name="Chart 4"
-            />
-            <WidgetPreviewer
-              element={<Chart5 />}
-              name="Chart 5"
-            />
-            <WidgetPreviewer
-              element={<Chart6 />}
-              name="Chart 6"
-            />
-            <WidgetPreviewer
-              element={<Chart7 />}
-              name="Chart 7"
-            />
-            <WidgetPreviewer
-              element={<Chart8 />}
-              name="Chart 8"
-            />
-            <WidgetPreviewer
-              element={<Chart9 />}
-              name="Chart 9"
-            />
-            <WidgetPreviewer
-              element={<Chart10 />}
-              name="Chart 10"
-            />
-            <WidgetPreviewer
-              element={<Chart11 />}
-              name="Chart 11"
-            />
-            <WidgetPreviewer
-              element={<Chart12 />}
-              name="Chart 12"
-            />
+            <WidgetPreviewer element={<Chart1 />} name="Chart 1" />
+            <WidgetPreviewer element={<Chart2 />} name="Chart 2" />
+            <WidgetPreviewer element={<Chart3 />} name="Chart 3" />
+            <WidgetPreviewer element={<Chart4 />} name="Chart 4" />
+            <WidgetPreviewer element={<Chart5 />} name="Chart 5" />
+            <WidgetPreviewer element={<Chart6 />} name="Chart 6" />
+            <WidgetPreviewer element={<Chart7 />} name="Chart 7" />
+            <WidgetPreviewer element={<Chart8 />} name="Chart 8" />
+            <WidgetPreviewer element={<Chart9 />} name="Chart 9" />
+            <WidgetPreviewer element={<Chart10 />} name="Chart 10" />
+            <WidgetPreviewer element={<Chart11 />} name="Chart 11" />
+            <WidgetPreviewer element={<Chart12 />} name="Chart 12" />
           </Box>
         </Container>
       </Box>

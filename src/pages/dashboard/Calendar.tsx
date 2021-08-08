@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/require-await */
 import { useState, useRef, useEffect } from 'react';
 import type { FC } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
@@ -8,17 +9,7 @@ import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import timelinePlugin from '@fullcalendar/timeline';
-import {
-  Box,
-  Breadcrumbs,
-  Button,
-  Card,
-  Container,
-  Dialog,
-  Grid,
-  Link,
-  Typography
-} from '@material-ui/core';
+import { Box, Breadcrumbs, Button, Card, Container, Dialog, Grid, Link, Typography } from '@material-ui/core';
 import type { Theme } from '@material-ui/core';
 import { alpha, experimentalStyled } from '@material-ui/core/styles';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -26,14 +17,7 @@ import { CalendarEventForm, CalendarToolbar } from '../../components/dashboard/c
 import ChevronRightIcon from '../../icons/ChevronRight';
 import PlusIcon from '../../icons/Plus';
 import gtm from '../../lib/gtm';
-import {
-  closeModal,
-  getEvents,
-  openModal,
-  selectEvent,
-  selectRange,
-  updateEvent
-} from '../../slices/calendar';
+import { closeModal, getEvents, openModal, selectEvent, selectRange, updateEvent } from '../../slices/calendar';
 import { useDispatch, useSelector } from '../../store';
 import type { RootState } from '../../store';
 import type { CalendarEvent, CalendarView } from '../../types/calendar';
@@ -48,54 +32,42 @@ const selectedEventSelector = (state: RootState): CalendarEvent | null => {
   return null;
 };
 
-const FullCalendarWrapper = experimentalStyled('div')(
-  ({ theme }) => (
-    {
-      '& .fc-license-message': {
-        display: 'none'
-      },
-      '& .fc': {
-        '--fc-bg-event-opacity': 1,
-        '--fc-border-color': theme.palette.divider,
-        '--fc-daygrid-event-dot-width': '10px',
-        '--fc-event-text-color': theme.palette.text.primary,
-        '--fc-list-event-hover-bg-color': theme.palette.background.default,
-        '--fc-neutral-bg-color': theme.palette.background.default,
-        '--fc-page-bg-color': theme.palette.background.default,
-        '--fc-today-bg-color': alpha(theme.palette.primary.main, 0.25),
-        color: theme.palette.text.primary,
-        fontFamily: theme.typography.fontFamily
-      },
-      '& .fc .fc-col-header-cell-cushion': {
-        paddingBottom: '10px',
-        paddingTop: '10px'
-      },
-      '& .fc .fc-day-other .fc-daygrid-day-top': {
-        color: theme.palette.text.secondary
-      },
-      '& .fc-daygrid-event': {
-        padding: '10px'
-      }
-    }
-  )
-);
+const FullCalendarWrapper = experimentalStyled('div')(({ theme }) => ({
+  '& .fc-license-message': {
+    display: 'none',
+  },
+  '& .fc': {
+    '--fc-bg-event-opacity': 1,
+    '--fc-border-color': theme.palette.divider,
+    '--fc-daygrid-event-dot-width': '10px',
+    '--fc-event-text-color': theme.palette.text.primary,
+    '--fc-list-event-hover-bg-color': theme.palette.background.default,
+    '--fc-neutral-bg-color': theme.palette.background.default,
+    '--fc-page-bg-color': theme.palette.background.default,
+    '--fc-today-bg-color': alpha(theme.palette.primary.main, 0.25),
+    color: theme.palette.text.primary,
+    fontFamily: theme.typography.fontFamily,
+  },
+  '& .fc .fc-col-header-cell-cushion': {
+    paddingBottom: '10px',
+    paddingTop: '10px',
+  },
+  '& .fc .fc-day-other .fc-daygrid-day-top': {
+    color: theme.palette.text.secondary,
+  },
+  '& .fc-daygrid-event': {
+    padding: '10px',
+  },
+}));
 
 const Calendar: FC = () => {
   const dispatch = useDispatch();
   const calendarRef = useRef<FullCalendar | null>(null);
   const mobileDevice = useMediaQuery((theme: Theme) => theme.breakpoints.down('sm'));
-  const {
-    events,
-    isModalOpen,
-    selectedRange
-  } = useSelector((state) => state.calendar);
+  const { events, isModalOpen, selectedRange } = useSelector((state) => state.calendar);
   const selectedEvent = useSelector(selectedEventSelector);
   const [date, setDate] = useState<Date>(new Date());
-  const [view, setView] = useState<CalendarView>(
-    mobileDevice
-      ? 'listWeek'
-      : 'dayGridMonth'
-  );
+  const [view, setView] = useState<CalendarView>(mobileDevice ? 'listWeek' : 'dayGridMonth');
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -183,11 +155,13 @@ const Calendar: FC = () => {
 
   const handleEventResize = async ({ event }: any): Promise<void> => {
     try {
-      await dispatch(updateEvent(event.id, {
-        allDay: event.allDay,
-        start: event.start,
-        end: event.end
-      }));
+      dispatch(
+        updateEvent(event.id, {
+          allDay: event.allDay,
+          start: event.start,
+          end: event.end,
+        }),
+      );
     } catch (err) {
       console.error(err);
     }
@@ -195,11 +169,13 @@ const Calendar: FC = () => {
 
   const handleEventDrop = async ({ event }: any): Promise<void> => {
     try {
-      await dispatch(updateEvent(event.id, {
-        allDay: event.allDay,
-        start: event.start,
-        end: event.end
-      }));
+      dispatch(
+        updateEvent(event.id, {
+          allDay: event.allDay,
+          start: event.start,
+          end: event.end,
+        }),
+      );
     } catch (err) {
       console.error(err);
     }
@@ -218,39 +194,20 @@ const Calendar: FC = () => {
         sx={{
           backgroundColor: 'background.default',
           minHeight: '100%',
-          py: 8
+          py: 8,
         }}
       >
         <Container maxWidth={false}>
-          <Grid
-            container
-            justifyContent="space-between"
-            spacing={3}
-          >
+          <Grid container justifyContent="space-between" spacing={3}>
             <Grid item>
-              <Typography
-                color="textPrimary"
-                variant="h5"
-              >
+              <Typography color="textPrimary" variant="h5">
                 Here&apos;s what you planned
               </Typography>
-              <Breadcrumbs
-                aria-label="breadcrumb"
-                separator={<ChevronRightIcon fontSize="small" />}
-                sx={{ mt: 1 }}
-              >
-                <Link
-                  color="textPrimary"
-                  component={RouterLink}
-                  to="/dashboard"
-                  variant="subtitle2"
-                >
+              <Breadcrumbs aria-label="breadcrumb" separator={<ChevronRightIcon fontSize="small" />} sx={{ mt: 1 }}>
+                <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
                   Dashboard
                 </Link>
-                <Typography
-                  color="textSecondary"
-                  variant="subtitle2"
-                >
+                <Typography color="textSecondary" variant="subtitle2">
                   Calendar
                 </Typography>
               </Breadcrumbs>
@@ -282,7 +239,7 @@ const Calendar: FC = () => {
           <Card
             sx={{
               mt: 3,
-              p: 2
+              p: 2,
             }}
           >
             <FullCalendarWrapper>
@@ -301,13 +258,7 @@ const Calendar: FC = () => {
                 height={800}
                 initialDate={date}
                 initialView={view}
-                plugins={[
-                  dayGridPlugin,
-                  interactionPlugin,
-                  listPlugin,
-                  timeGridPlugin,
-                  timelinePlugin
-                ]}
+                plugins={[dayGridPlugin, interactionPlugin, listPlugin, timeGridPlugin, timelinePlugin]}
                 ref={calendarRef}
                 rerenderDelay={10}
                 select={handleRangeSelect}
@@ -316,12 +267,7 @@ const Calendar: FC = () => {
               />
             </FullCalendarWrapper>
           </Card>
-          <Dialog
-            fullWidth
-            maxWidth="sm"
-            onClose={handleModalClose}
-            open={isModalOpen}
-          >
+          <Dialog fullWidth maxWidth="sm" onClose={handleModalClose} open={isModalOpen}>
             {/* Dialog renders its body even if not open */}
             {isModalOpen && (
               <CalendarEventForm
