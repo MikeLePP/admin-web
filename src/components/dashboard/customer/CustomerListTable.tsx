@@ -1,8 +1,3 @@
-import { useState } from 'react';
-import type { ChangeEvent, FC, MouseEvent } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import numeral from 'numeral';
-import PropTypes from 'prop-types';
 import {
   Avatar,
   Box,
@@ -22,20 +17,28 @@ import {
   TableRow,
   Tabs,
   TextField,
+  Tooltip,
   Typography,
 } from '@material-ui/core';
+import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import { startCase, upperFirst } from 'lodash';
+import PropTypes from 'prop-types';
+import type { ChangeEvent, FC, MouseEvent } from 'react';
+import { useState } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import ArrowRightIcon from '../../../icons/ArrowRight';
 import PencilAltIcon from '../../../icons/PencilAlt';
 import SearchIcon from '../../../icons/Search';
-import type { Customer } from '../../../types/customer';
+import { User } from '../../../types/users';
 import getInitials from '../../../utils/getInitials';
 import Scrollbar from '../../Scrollbar';
 
-interface CustomerListTableProps {
-  customers: Customer[];
+interface UserListTableProps {
+  users: User[];
 }
 
-type Sort = 'updatedAt|desc' | 'updatedAt|asc' | 'orders|desc' | 'orders|asc';
+type Sort = 'createdAt|desc' | 'createdAt|asc';
 
 interface SortOption {
   value: Sort;
@@ -47,49 +50,36 @@ const tabs = [
     label: 'All',
     value: 'all',
   },
-  {
-    label: 'Accepts Marketing',
-    value: 'hasAcceptedMarketing',
-  },
-  {
-    label: 'Prospect',
-    value: 'isProspect',
-  },
-  {
-    label: 'Returning',
-    value: 'isReturning',
-  },
+  // {
+  //   label: 'Collections',
+  //   value: 'collections',
+  // },
 ];
 
 const sortOptions: SortOption[] = [
   {
-    label: 'Last update (newest)',
-    value: 'updatedAt|desc',
+    label: 'Last create (newest)',
+    value: 'createdAt|desc',
   },
   {
-    label: 'Last update (oldest)',
-    value: 'updatedAt|asc',
-  },
-  {
-    label: 'Total orders (highest)',
-    value: 'orders|desc',
-  },
-  {
-    label: 'Total orders (lowest)',
-    value: 'orders|asc',
+    label: 'Last create (oldest)',
+    value: 'createdAt|asc',
   },
 ];
 
-const applyFilters = (customers: Customer[], query: string, filters: any): Customer[] =>
-  customers.filter((customer) => {
+export const getFullName = (record?: User): string =>
+  record ? [record.firstName, record.middleName, record.lastName].filter(Boolean).join(' ') : '';
+
+const applyFilters = (users: User[], query: string, filters: any): User[] =>
+  users.filter((user) => {
     let matches = true;
 
     if (query) {
-      const properties = ['email', 'name'];
+      const properties = ['email', 'firstName', 'lastName', 'middleName'];
       let containsQuery = false;
 
       properties.forEach((property) => {
-        if (customer[property].toLowerCase().includes(query.toLowerCase())) {
+        if (user[property]?.toLowerCase().includes(query.toLowerCase())) {
           containsQuery = true;
         }
       });
@@ -102,7 +92,7 @@ const applyFilters = (customers: Customer[], query: string, filters: any): Custo
     Object.keys(filters).forEach((key) => {
       const value = filters[key];
 
-      if (value && customer[key] !== value) {
+      if (value && user[key] !== value) {
         matches = false;
       }
     });
@@ -110,10 +100,10 @@ const applyFilters = (customers: Customer[], query: string, filters: any): Custo
     return matches;
   });
 
-const applyPagination = (customers: Customer[], page: number, limit: number): Customer[] =>
-  customers.slice(page * limit, page * limit + limit);
+const applyPagination = (users: User[], page: number, limit: number): User[] =>
+  users.slice(page * limit, page * limit + limit);
 
-const descendingComparator = (a: Customer, b: Customer, orderBy: string): number => {
+const descendingComparator = (a: User, b: User, orderBy: string): number => {
   if (b[orderBy] < a[orderBy]) {
     return -1;
   }
@@ -127,13 +117,13 @@ const descendingComparator = (a: Customer, b: Customer, orderBy: string): number
 
 const getComparator = (order: 'asc' | 'desc', orderBy: string) =>
   order === 'desc'
-    ? (a: Customer, b: Customer) => descendingComparator(a, b, orderBy)
-    : (a: Customer, b: Customer) => -descendingComparator(a, b, orderBy);
+    ? (a: User, b: User) => descendingComparator(a, b, orderBy)
+    : (a: User, b: User) => -descendingComparator(a, b, orderBy);
 
-const applySort = (customers: Customer[], sort: Sort): Customer[] => {
+const applySort = (users: User[], sort: Sort): User[] => {
   const [orderBy, order] = sort.split('|') as [string, 'asc' | 'desc'];
   const comparator = getComparator(order, orderBy);
-  const stabilizedThis = customers.map((el, index) => [el, index]);
+  const stabilizedThis = users.map((el, index) => [el, index]);
 
   stabilizedThis.sort((a, b) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
@@ -154,10 +144,10 @@ const applySort = (customers: Customer[], sort: Sort): Customer[] => {
   return stabilizedThis.map((el) => el[0]);
 };
 
-const CustomerListTable: FC<CustomerListTableProps> = (props) => {
-  const { customers, ...other } = props;
+const UserListTable: FC<UserListTableProps> = (props) => {
+  const { users, ...other } = props;
   const [currentTab, setCurrentTab] = useState<string>('all');
-  const [selectedCustomers, setSelectedCustomers] = useState<string[]>([]);
+  const [selectedUser, setSelectedUser] = useState<string[]>([]);
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [query, setQuery] = useState<string>('');
@@ -181,7 +171,7 @@ const CustomerListTable: FC<CustomerListTableProps> = (props) => {
     }
 
     setFilters(updatedFilters);
-    setSelectedCustomers([]);
+    setSelectedUser([]);
     setCurrentTab(value);
   };
 
@@ -193,16 +183,8 @@ const CustomerListTable: FC<CustomerListTableProps> = (props) => {
     setSort(event.target.value as Sort);
   };
 
-  const handleSelectAllCustomers = (event: ChangeEvent<HTMLInputElement>): void => {
-    setSelectedCustomers(event.target.checked ? customers.map((customer) => customer.id) : []);
-  };
-
-  const handleSelectOneCustomer = (event: ChangeEvent<HTMLInputElement>, customerId: string): void => {
-    if (!selectedCustomers.includes(customerId)) {
-      setSelectedCustomers((prevSelected) => [...prevSelected, customerId]);
-    } else {
-      setSelectedCustomers((prevSelected) => prevSelected.filter((id) => id !== customerId));
-    }
+  const handleSelectAllUsers = (event: ChangeEvent<HTMLInputElement>): void => {
+    setSelectedUser(event.target.checked ? users.map((user) => user.id) : []);
   };
 
   const handlePageChange = (event: MouseEvent<HTMLButtonElement> | null, newPage: number): void => {
@@ -213,12 +195,12 @@ const CustomerListTable: FC<CustomerListTableProps> = (props) => {
     setLimit(parseInt(event.target.value, 10));
   };
 
-  const filteredCustomers = applyFilters(customers, query, filters);
-  const sortedCustomers = applySort(filteredCustomers, sort);
-  const paginatedCustomers = applyPagination(sortedCustomers, page, limit);
-  const enableBulkActions = selectedCustomers.length > 0;
-  const selectedSomeCustomers = selectedCustomers.length > 0 && selectedCustomers.length < customers.length;
-  const selectedAllCustomers = selectedCustomers.length === customers.length;
+  const filteredUser = applyFilters(users, query, filters);
+  const sortedUser = applySort(filteredUser, sort);
+  const paginatedUsers = applyPagination(sortedUser, page, limit);
+  const enableBulkActions = selectedUser.length > 0;
+  const selectedSomeUsers = selectedUser.length > 0 && selectedUser.length < users.length;
+  const selectedAllUsers = selectedUser.length === users.length;
 
   return (
     <Card {...other}>
@@ -261,7 +243,7 @@ const CustomerListTable: FC<CustomerListTableProps> = (props) => {
               ),
             }}
             onChange={handleQueryChange}
-            placeholder="Search customers"
+            placeholder="Search users"
             value={query}
             variant="outlined"
           />
@@ -302,10 +284,10 @@ const CustomerListTable: FC<CustomerListTableProps> = (props) => {
             }}
           >
             <Checkbox
-              checked={selectedAllCustomers}
+              checked={selectedAllUsers}
               color="primary"
-              indeterminate={selectedSomeCustomers}
-              onChange={handleSelectAllCustomers}
+              indeterminate={selectedSomeUsers}
+              onChange={handleSelectAllUsers}
             />
             <Button color="primary" sx={{ ml: 2 }} variant="outlined">
               Delete
@@ -321,35 +303,17 @@ const CustomerListTable: FC<CustomerListTableProps> = (props) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedAllCustomers}
-                    color="primary"
-                    indeterminate={selectedSomeCustomers}
-                    onChange={handleSelectAllCustomers}
-                  />
-                </TableCell>
                 <TableCell>Name</TableCell>
-                <TableCell>Location</TableCell>
-                <TableCell>Orders</TableCell>
-                <TableCell>Spent</TableCell>
+                <TableCell>Create on</TableCell>
+                <TableCell>Status</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {paginatedCustomers.map((customer) => {
-                const isCustomerSelected = selectedCustomers.includes(customer.id);
-
+              {paginatedUsers.map((user) => {
+                const isUserSelected = selectedUser.includes(user.id);
                 return (
-                  <TableRow hover key={customer.id} selected={isCustomerSelected}>
-                    <TableCell padding="checkbox">
-                      <Checkbox
-                        checked={isCustomerSelected}
-                        color="primary"
-                        onChange={(event) => handleSelectOneCustomer(event, customer.id)}
-                        value={isCustomerSelected}
-                      />
-                    </TableCell>
+                  <TableRow hover key={user.id} selected={isUserSelected}>
                     <TableCell>
                       <Box
                         sx={{
@@ -358,34 +322,51 @@ const CustomerListTable: FC<CustomerListTableProps> = (props) => {
                         }}
                       >
                         <Avatar
-                          src={customer.avatar}
                           sx={{
                             height: 42,
                             width: 42,
                           }}
                         >
-                          {getInitials(customer.name)}
+                          {getInitials(getFullName(user))}
                         </Avatar>
                         <Box sx={{ ml: 1 }}>
-                          <Link color="inherit" component={RouterLink} to="/dashboard/customers/1" variant="subtitle2">
-                            {customer.name}
+                          <Link
+                            color="inherit"
+                            component={RouterLink}
+                            to={`/management/users/${user.id}`}
+                            variant="subtitle2"
+                          >
+                            {getFullName(user)}
                           </Link>
                           <Typography color="textSecondary" variant="body2">
-                            {customer.email}
+                            {user.email}
                           </Typography>
                         </Box>
                       </Box>
                     </TableCell>
-                    <TableCell>{`${customer.city}, ${customer.state}, ${customer.country}`}</TableCell>
-                    <TableCell>{customer.totalOrders}</TableCell>
-                    <TableCell>{numeral(customer.totalAmountSpent).format(`${customer.currency}0,0.00`)}</TableCell>
+                    <TableCell>{new Date(user ? user.createdAt : '').toLocaleDateString('en-GB')}</TableCell>
+                    <TableCell>{upperFirst(startCase(user?.status).toLowerCase())}</TableCell>
                     <TableCell align="right">
-                      <IconButton component={RouterLink} to="/dashboard/customers/1/edit">
-                        <PencilAltIcon fontSize="small" />
-                      </IconButton>
-                      <IconButton component={RouterLink} to="/dashboard/customers/1">
-                        <ArrowRightIcon fontSize="small" />
-                      </IconButton>
+                      <Tooltip title="Transaction">
+                        <IconButton component={RouterLink} to={`/transactions/?userId=${user.id}`}>
+                          <AccountBalanceIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Onboarding">
+                        <IconButton component={RouterLink} to={`user-onboarding/create?userId=${user.id}`}>
+                          <AccountBalanceWalletIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Edit">
+                        <IconButton component={RouterLink} to={`/management/users/${user.id}/edit`}>
+                          <PencilAltIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Show">
+                        <IconButton component={RouterLink} to={`/management/users/${user.id}`}>
+                          <ArrowRightIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 );
@@ -396,7 +377,7 @@ const CustomerListTable: FC<CustomerListTableProps> = (props) => {
       </Scrollbar>
       <TablePagination
         component="div"
-        count={filteredCustomers.length}
+        count={filteredUser.length}
         onPageChange={handlePageChange}
         onRowsPerPageChange={handleLimitChange}
         page={page}
@@ -407,8 +388,8 @@ const CustomerListTable: FC<CustomerListTableProps> = (props) => {
   );
 };
 
-CustomerListTable.propTypes = {
-  customers: PropTypes.array.isRequired,
+UserListTable.propTypes = {
+  users: PropTypes.array.isRequired,
 };
 
-export default CustomerListTable;
+export default UserListTable;

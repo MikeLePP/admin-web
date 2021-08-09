@@ -94,7 +94,7 @@ const Contact = Loadable(lazy(() => import('./pages/Contact')));
 // const Home = Loadable(lazy(() => import('./pages/Home')));
 const Pricing = Loadable(lazy(() => import('./pages/Pricing')));
 
-const routes: PartialRouteObject[] = [
+export const demoRoutes: PartialRouteObject[] = [
   {
     path: 'authentication',
     children: [
@@ -145,6 +145,279 @@ const routes: PartialRouteObject[] = [
   {
     path: 'contact',
     element: <Contact />,
+  },
+  {
+    path: 'dashboard',
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
+    children: [
+      {
+        path: '/',
+        element: <Overview />,
+      },
+      {
+        path: 'account',
+        element: <Account />,
+      },
+      {
+        path: 'analytics',
+        element: <Analytics />,
+      },
+      {
+        path: 'calendar',
+        element: <Calendar />,
+      },
+      {
+        path: 'chat',
+        children: [
+          {
+            path: '/',
+            element: <Chat />,
+          },
+          {
+            path: 'new',
+            element: <Chat />,
+          },
+          {
+            path: ':threadKey',
+            element: <Chat />,
+          },
+        ],
+      },
+      {
+        path: 'customers',
+        children: [
+          {
+            path: '/',
+            element: <CustomerList />,
+          },
+          {
+            path: ':customerId',
+            element: <CustomerDetails />,
+          },
+          {
+            path: ':customerId/edit',
+            element: <CustomerEdit />,
+          },
+        ],
+      },
+      {
+        path: 'invoices',
+        children: [
+          {
+            path: '/',
+            element: <InvoiceList />,
+          },
+          {
+            path: ':invoiceId',
+            element: <InvoiceDetails />,
+          },
+        ],
+      },
+      {
+        path: 'kanban',
+        element: <Kanban />,
+      },
+      {
+        path: 'mail',
+        children: [
+          {
+            path: '/',
+            element: <Navigate to="/dashboard/mail/all" replace />,
+          },
+          {
+            path: 'label/:customLabel',
+            element: <Mail />,
+          },
+          {
+            path: 'label/:customLabel/:emailId',
+            element: <Mail />,
+          },
+          {
+            path: ':systemLabel',
+            element: <Mail />,
+          },
+          {
+            path: ':systemLabel/:emailId',
+            element: <Mail />,
+          },
+        ],
+      },
+      {
+        path: 'orders',
+        children: [
+          {
+            path: '/',
+            element: <OrderList />,
+          },
+          {
+            path: ':orderId',
+            element: <OrderDetails />,
+          },
+        ],
+      },
+      {
+        path: 'finance',
+        element: <Finance />,
+      },
+      {
+        path: 'products',
+        children: [
+          {
+            path: '/',
+            element: <ProductList />,
+          },
+          {
+            path: 'new',
+            element: <ProductCreate />,
+          },
+        ],
+      },
+      {
+        path: 'projects',
+        children: [
+          {
+            path: 'browse',
+            element: <ProjectBrowse />,
+          },
+          {
+            path: 'new',
+            element: <ProjectCreate />,
+          },
+          {
+            path: ':projectId',
+            element: <ProjectDetails />,
+          },
+        ],
+      },
+      {
+        path: 'social',
+        children: [
+          {
+            path: 'feed',
+            element: <SocialFeed />,
+          },
+          {
+            path: 'profile',
+            element: <SocialProfile />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    path: 'docs',
+    element: <DocsLayout />,
+    children: [
+      {
+        path: '/',
+        element: <Navigate to="/docs/overview/welcome" replace />,
+      },
+      {
+        path: '*',
+        element: <Docs />,
+      },
+    ],
+  },
+  {
+    path: '*',
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
+    children: [
+      {
+        path: '/',
+        element: <Overview />,
+      },
+      {
+        path: 'checkout',
+        element: <Checkout />,
+      },
+      {
+        path: 'pricing',
+        element: <Pricing />,
+      },
+      {
+        path: '401',
+        element: <AuthorizationRequired />,
+      },
+      {
+        path: '404',
+        element: <NotFound />,
+      },
+      {
+        path: '500',
+        element: <ServerError />,
+      },
+      {
+        path: '*',
+        element: <NotFound />,
+      },
+    ],
+  },
+];
+
+export const routes: PartialRouteObject[] = [
+  {
+    path: 'authentication',
+    children: [
+      {
+        path: 'login',
+        element: (
+          <GuestGuard>
+            <Login />
+          </GuestGuard>
+        ),
+      },
+      {
+        path: 'login-unguarded',
+        element: <Login />,
+      },
+      {
+        path: 'password-recovery',
+        element: <PasswordRecovery />,
+      },
+      {
+        path: 'password-reset',
+        element: <PasswordReset />,
+      },
+      {
+        path: 'verify-code',
+        element: <VerifyCode />,
+      },
+    ],
+  },
+  {
+    path: 'management',
+    element: (
+      <AuthGuard>
+        <DashboardLayout />
+      </AuthGuard>
+    ),
+    children: [
+      {
+        path: 'users',
+        children: [
+          {
+            path: '/',
+            element: <CustomerList />,
+          },
+          {
+            path: ':customerId',
+            element: <CustomerDetails />,
+          },
+          {
+            path: ':customerId/edit',
+            element: <CustomerEdit />,
+          },
+        ],
+      },
+    ],
   },
   {
     path: 'dashboard',

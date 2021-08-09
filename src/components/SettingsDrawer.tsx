@@ -1,9 +1,8 @@
-import { useEffect, useState } from 'react';
+import { Box, Button, Drawer, FormControlLabel, Switch, TextField, Typography } from '@material-ui/core';
 import type { FC } from 'react';
-import { Box, Button, Drawer, Fab, FormControlLabel, Switch, TextField, Tooltip, Typography } from '@material-ui/core';
+import { useEffect, useState } from 'react';
 import { THEMES } from '../constants';
 import useSettings from '../hooks/useSettings';
-import AdjustmentsIcon from '../icons/Adjustments';
 
 const getValues = (settings) => ({
   compact: settings.compact,
@@ -14,17 +13,12 @@ const getValues = (settings) => ({
 });
 
 const SettingsDrawer: FC = () => {
-  const { settings, saveSettings } = useSettings();
-  const [open, setOpen] = useState<boolean>(false);
+  const { settings, saveSettings, open, setOpen } = useSettings();
   const [values, setValues] = useState(getValues(settings));
 
   useEffect(() => {
     setValues(getValues(settings));
   }, [settings]);
-
-  const handleOpen = (): void => {
-    setOpen(true);
-  };
 
   const handleClose = (): void => {
     setOpen(false);
@@ -44,7 +38,7 @@ const SettingsDrawer: FC = () => {
 
   return (
     <>
-      <Tooltip title="Settings">
+      {/* <Tooltip title="Settings">
         <Fab
           color="primary"
           onClick={handleOpen}
@@ -58,8 +52,8 @@ const SettingsDrawer: FC = () => {
           }}
         >
           <AdjustmentsIcon fontSize="small" />
-        </Fab>
-      </Tooltip>
+        </Fab> */}
+      {/* </Tooltip> */}
       <Drawer
         anchor="right"
         onClose={handleClose}

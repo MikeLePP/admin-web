@@ -29,7 +29,7 @@ interface DashboardSidebarProps {
   openMobile: boolean;
 }
 
-const sections = [
+const demoSections = [
   {
     title: 'General',
     items: [
@@ -185,6 +185,33 @@ const sections = [
         title: 'Calendar',
         path: '/dashboard/calendar',
         icon: <CalendarIcon fontSize="small" />,
+      },
+    ],
+  },
+];
+
+const sections = [
+  {
+    title: 'Management',
+    items: [
+      {
+        title: 'User',
+        path: '/management/users',
+        icon: <UsersIcon fontSize="small" />,
+        children: [
+          {
+            title: 'List',
+            path: '/management/users',
+          },
+          {
+            title: 'Details',
+            path: '/management/users/1',
+          },
+          {
+            title: 'Edit',
+            path: '/management/users/1/edit',
+          },
+        ],
       },
     ],
   },

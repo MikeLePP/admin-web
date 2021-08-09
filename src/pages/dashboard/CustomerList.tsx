@@ -1,48 +1,38 @@
-import { useState, useEffect, useCallback } from 'react';
+import { Box, Breadcrumbs, Container, Grid, Link, Typography } from '@material-ui/core';
 import type { FC } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Box, Breadcrumbs, Button, Container, Grid, Link, Typography } from '@material-ui/core';
-import { customerApi } from '../../__fakeApi__/customerApi';
+import { Link as RouterLink } from 'react-router-dom';
 import { CustomerListTable } from '../../components/dashboard/customer';
-import useMounted from '../../hooks/useMounted';
-import ChevronRightIcon from '../../icons/ChevronRight';
-import DownloadIcon from '../../icons/Download';
-import PlusIcon from '../../icons/Plus';
-import UploadIcon from '../../icons/Upload';
 import useSettings from '../../hooks/useSettings';
+import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
-import type { Customer } from '../../types/customer';
+import { getUsers } from '../../slices/user';
+import { useDispatch, useSelector } from '../../store';
 
 const CustomerList: FC = () => {
-  const mounted = useMounted();
+  const dispatch = useDispatch();
   const { settings } = useSettings();
-  const [customers, setCustomers] = useState<Customer[]>([]);
-
+  const userSelector = useSelector((state) => state.user);
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getCustomers = useCallback(async () => {
-    try {
-      const data = await customerApi.getCustomers();
-
-      if (mounted.current) {
-        setCustomers(data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [mounted]);
-
   useEffect(() => {
-    void getCustomers();
-  }, [getCustomers]);
+    dispatch(getUsers());
+  }, [dispatch]);
+
+  const user = useMemo(() => {
+    const {
+      users: { allIds, byId },
+    } = userSelector;
+    return allIds.map((id) => byId[id]);
+  }, [userSelector]);
 
   return (
     <>
       <Helmet>
-        <title>Dashboard: Customer List | Material Kit Pro</title>
+        <title>Management: User List</title>
       </Helmet>
       <Box
         sx={{
@@ -55,44 +45,20 @@ const CustomerList: FC = () => {
           <Grid container justifyContent="space-between" spacing={3}>
             <Grid item>
               <Typography color="textPrimary" variant="h5">
-                Customer List
+                User List
               </Typography>
               <Breadcrumbs aria-label="breadcrumb" separator={<ChevronRightIcon fontSize="small" />} sx={{ mt: 1 }}>
-                <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
-                  Dashboard
-                </Link>
-                <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
+                <Link color="textPrimary" component={RouterLink} to="/" variant="subtitle2">
                   Management
                 </Link>
                 <Typography color="textSecondary" variant="subtitle2">
-                  Customers
+                  Users
                 </Typography>
               </Breadcrumbs>
-              <Box
-                sx={{
-                  mb: -1,
-                  mx: -1,
-                  mt: 1,
-                }}
-              >
-                <Button color="primary" startIcon={<UploadIcon fontSize="small" />} sx={{ m: 1 }}>
-                  Import
-                </Button>
-                <Button color="primary" startIcon={<DownloadIcon fontSize="small" />} sx={{ m: 1 }}>
-                  Export
-                </Button>
-              </Box>
-            </Grid>
-            <Grid item>
-              <Box sx={{ m: -1 }}>
-                <Button color="primary" startIcon={<PlusIcon fontSize="small" />} sx={{ m: 1 }} variant="contained">
-                  Add Customer
-                </Button>
-              </Box>
             </Grid>
           </Grid>
           <Box sx={{ mt: 3 }}>
-            <CustomerListTable customers={customers} />
+            <CustomerListTable users={user} />
           </Box>
         </Container>
       </Box>

@@ -65,7 +65,7 @@ const DashboardNavbar: FC<DashboardNavbarProps> = (props) => {
             ml: 2,
           }}
         />
-        <LanguagePopover />
+        {/* <LanguagePopover />
         <Box sx={{ ml: 1 }}>
           <ContentSearch />
         </Box>
@@ -74,7 +74,7 @@ const DashboardNavbar: FC<DashboardNavbarProps> = (props) => {
         </Box>
         <Box sx={{ ml: 1 }}>
           <NotificationsPopover />
-        </Box>
+        </Box> */}
         <Box sx={{ ml: 2 }}>
           <AccountPopover />
         </Box>
