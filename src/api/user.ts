@@ -1,11 +1,12 @@
 import Auth from '@aws-amplify/auth';
+import toast from 'react-hot-toast';
+import { get } from 'lodash';
 import type { User } from '../types/users';
 
 const apiRoot = process.env.REACT_APP_API_URL;
 
 class UserApi {
   async getUsers(): Promise<User[]> {
-    console.log('apiRoot', apiRoot);
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
     console.log(signInUserSession);
     try {
@@ -18,15 +19,16 @@ class UserApi {
           },
         },
       );
-      const user = (await res.json()) as User[];
-      return user;
+      const users = (await res.json()) as User[];
+      return users;
     } catch (err) {
-      console.error('[Auth Api]: ', err);
-      throw new Error('Internal server error');
+      const errTitle = get(err, 'body.errors[0].title', 'Cannot get list users');
+      toast.error(errTitle);
     }
+    return [];
   }
 
-  async getUser({ id }: { id: string }): Promise<User> {
+  async getUser({ id }: { id: string }): Promise<User | undefined> {
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
     try {
       const res = await fetch(`${apiRoot}/users/${id}`, {
@@ -37,9 +39,10 @@ class UserApi {
       const user = (await res.json()) as User;
       return user;
     } catch (err) {
-      console.error('[Auth Api]: ', err);
-      throw new Error('Internal server error');
+      const errTitle = get(err, 'body.errors[0].title', 'Cannot get list users');
+      toast.error(errTitle);
     }
+    return undefined;
   }
 }
 
