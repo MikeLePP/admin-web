@@ -306,6 +306,8 @@ const UserListTable: FC<UserListTableProps> = (props) => {
                 <TableCell>Name</TableCell>
                 <TableCell>Create on</TableCell>
                 <TableCell>Status</TableCell>
+                <TableCell>Mobile</TableCell>
+                <TableCell>Current Ballance</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -346,6 +348,8 @@ const UserListTable: FC<UserListTableProps> = (props) => {
                     </TableCell>
                     <TableCell>{new Date(user ? user.createdAt : '').toLocaleDateString('en-GB')}</TableCell>
                     <TableCell>{upperFirst(startCase(user?.status).toLowerCase())}</TableCell>
+                    <TableCell>{user.mobileNumber}</TableCell>
+                    <TableCell>{user.balanceCurrent}</TableCell>
                     <TableCell align="right">
                       <Tooltip title="Transaction">
                         <IconButton component={RouterLink} to={`/transactions/?userId=${user.id}`}>
