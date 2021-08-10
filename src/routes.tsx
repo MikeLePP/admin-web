@@ -408,11 +408,11 @@ export const routes: PartialRouteObject[] = [
             element: <CustomerList />,
           },
           {
-            path: ':customerId',
+            path: ':userId',
             element: <CustomerDetails />,
           },
           {
-            path: ':customerId/edit',
+            path: ':userId/edit',
             element: <CustomerEdit />,
           },
         ],

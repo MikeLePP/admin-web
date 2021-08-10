@@ -53,4 +53,11 @@ export const getUsers =
     dispatch(slice.actions.getUsers(data));
   };
 
+export const getUser =
+  ({ id }): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const data = await userApi.getUser({ id });
+    dispatch(slice.actions.getUser(data));
+  };
+
 export default slice;

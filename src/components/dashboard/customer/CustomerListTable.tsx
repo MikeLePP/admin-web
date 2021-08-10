@@ -75,7 +75,7 @@ const applyFilters = (users: User[], query: string, filters: any): User[] =>
     let matches = true;
 
     if (query) {
-      const properties = ['email', 'firstName', 'lastName', 'middleName'];
+      const properties = ['email', 'firstName', 'lastName', 'middleName', 'mobileNumber'];
       let containsQuery = false;
 
       properties.forEach((property) => {
@@ -307,7 +307,7 @@ const UserListTable: FC<UserListTableProps> = (props) => {
                 <TableCell>Create on</TableCell>
                 <TableCell>Status</TableCell>
                 <TableCell>Mobile</TableCell>
-                <TableCell>Current Ballance</TableCell>
+                <TableCell>Available Ballance</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>

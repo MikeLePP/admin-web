@@ -1,23 +1,23 @@
-import { useCallback, useState, useEffect } from 'react';
+import { useCallback, useState, useEffect, useMemo } from 'react';
 import type { FC, ChangeEvent } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Box, Breadcrumbs, Button, Container, Divider, Grid, Link, Tab, Tabs, Typography } from '@material-ui/core';
-import { customerApi } from '../../__fakeApi__/customerApi';
 import {
-  CustomerContactDetails,
+  UserDetails,
   CustomerDataManagement,
   CustomerEmailsSummary,
   CustomerInvoices,
-  CustomerInvoicesSummary,
+  UserBankDetails,
   CustomerLogs,
 } from '../../components/dashboard/customer';
-import useMounted from '../../hooks/useMounted';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import PencilAltIcon from '../../icons/PencilAlt';
 import gtm from '../../lib/gtm';
-import type { Customer } from '../../types/customer';
 import useSettings from '../../hooks/useSettings';
+import { getUser } from '../../slices/user';
+import { useDispatch, useSelector } from '../../store';
+import { getFullname } from '../../lib/string';
 
 const tabs = [
   { label: 'Details', value: 'details' },
@@ -26,36 +26,33 @@ const tabs = [
 ];
 
 const CustomerDetails: FC = () => {
-  const mounted = useMounted();
   const { settings } = useSettings();
-  const [customer, setCustomer] = useState<Customer | null>(null);
   const [currentTab, setCurrentTab] = useState<string>('details');
+  const dispatch = useDispatch();
+  const userSelector = useSelector((state) => state.user);
+  const { userId: id } = useParams();
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getCustomer = useCallback(async () => {
-    try {
-      const data = await customerApi.getCustomer();
-
-      if (mounted.current) {
-        setCustomer(data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [mounted]);
+  const user = useMemo(() => {
+    const {
+      users: { byId },
+      targetUserId,
+    } = userSelector;
+    return byId[targetUserId];
+  }, [userSelector]);
 
   useEffect(() => {
-    void getCustomer();
-  }, [getCustomer]);
+    dispatch(getUser({ id }));
+  }, [dispatch]);
 
   const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
 
-  if (!customer) {
+  if (!user) {
     return null;
   }
 
@@ -75,7 +72,7 @@ const CustomerDetails: FC = () => {
           <Grid container justifyContent="space-between" spacing={3}>
             <Grid item>
               <Typography color="textPrimary" variant="h5">
-                {customer.name}
+                {getFullname(user)}
               </Typography>
               <Breadcrumbs aria-label="breadcrumb" separator={<ChevronRightIcon fontSize="small" />} sx={{ mt: 1 }}>
                 <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
@@ -123,18 +120,10 @@ const CustomerDetails: FC = () => {
             {currentTab === 'details' && (
               <Grid container spacing={3}>
                 <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                  <CustomerContactDetails
-                    address1={customer.address1}
-                    address2={customer.address2}
-                    country={customer.country}
-                    email={customer.email}
-                    isVerified={customer.isVerified}
-                    phone={customer.phone}
-                    state={customer.state}
-                  />
+                  <UserDetails user={user} />
                 </Grid>
                 <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                  <CustomerInvoicesSummary />
+                  <UserBankDetails user={user} />
                 </Grid>
                 <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
                   <CustomerEmailsSummary />
