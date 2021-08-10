@@ -3,10 +3,11 @@ import type { FC, ChangeEvent } from 'react';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Box, Breadcrumbs, Button, Container, Divider, Grid, Link, Tab, Tabs, Typography } from '@material-ui/core';
+import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import {
   UserDetails,
   CustomerDataManagement,
-  CustomerEmailsSummary,
+  UserUpdatingLimit,
   CustomerInvoices,
   UserBankDetails,
   CustomerLogs,
@@ -15,14 +16,15 @@ import ChevronRightIcon from '../../icons/ChevronRight';
 import PencilAltIcon from '../../icons/PencilAlt';
 import gtm from '../../lib/gtm';
 import useSettings from '../../hooks/useSettings';
-import { getUser } from '../../slices/user';
+import { getUser, updateBalanceLimit, swapMobileNumber } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
 import { getFullname } from '../../lib/string';
+import SwapPhoneNumber from '../../components/commons/SwapNumber';
 
 const tabs = [
   { label: 'Details', value: 'details' },
-  { label: 'Invoices', value: 'invoices' },
-  { label: 'Logs', value: 'logs' },
+  // { label: 'Invoices', value: 'invoices' },
+  // { label: 'Logs', value: 'logs' },
 ];
 
 const CustomerDetails: FC = () => {
@@ -31,6 +33,7 @@ const CustomerDetails: FC = () => {
   const dispatch = useDispatch();
   const userSelector = useSelector((state) => state.user);
   const { userId: id } = useParams();
+  const [showSwapPhoneNumber, setShowWrapPhoneNumber] = useState(false);
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -46,11 +49,25 @@ const CustomerDetails: FC = () => {
 
   useEffect(() => {
     dispatch(getUser({ id }));
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
+
+  const handleUpdateLimit = useCallback(
+    (value: number) => {
+      dispatch(updateBalanceLimit({ userId: id, balanceLimit: value }));
+    },
+    [dispatch, id],
+  );
+
+  const handleSwapPhoneNumber = useCallback(
+    (userId: string) => {
+      dispatch(swapMobileNumber({ userId: id, swapUserId: userId }));
+    },
+    [dispatch, id],
+  );
 
   if (!user) {
     return null;
@@ -75,19 +92,19 @@ const CustomerDetails: FC = () => {
                 {getFullname(user)}
               </Typography>
               <Breadcrumbs aria-label="breadcrumb" separator={<ChevronRightIcon fontSize="small" />} sx={{ mt: 1 }}>
-                <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
-                  Dashboard
-                </Link>
-                <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
+                <Link color="textPrimary" component={RouterLink} to="/management/users" variant="subtitle2">
                   Management
                 </Link>
+                <Link color="textPrimary" component={RouterLink} to="/management/users" variant="subtitle2">
+                  Users
+                </Link>
                 <Typography color="textSecondary" variant="subtitle2">
-                  Customers
+                  {user.email}
                 </Typography>
               </Breadcrumbs>
             </Grid>
             <Grid item>
-              <Box sx={{ m: -1 }}>
+              <Box sx={{ m: -1 }} display="flex">
                 <Button
                   color="primary"
                   component={RouterLink}
@@ -97,6 +114,15 @@ const CustomerDetails: FC = () => {
                   variant="contained"
                 >
                   Edit
+                </Button>
+                <Button
+                  color="primary"
+                  startIcon={<SwapHorizIcon fontSize="small" />}
+                  sx={{ m: 1 }}
+                  variant="contained"
+                  onClick={() => setShowWrapPhoneNumber(true)}
+                >
+                  Swap mobile number
                 </Button>
               </Box>
             </Grid>
@@ -126,7 +152,7 @@ const CustomerDetails: FC = () => {
                   <UserBankDetails user={user} />
                 </Grid>
                 <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                  <CustomerEmailsSummary />
+                  <UserUpdatingLimit user={user} onUpdateLimit={handleUpdateLimit} />
                 </Grid>
                 <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
                   <CustomerDataManagement />
@@ -138,6 +164,12 @@ const CustomerDetails: FC = () => {
           </Box>
         </Container>
       </Box>
+      <SwapPhoneNumber
+        open={showSwapPhoneNumber}
+        setOpen={setShowWrapPhoneNumber}
+        user={user}
+        onSwapPhoneNumber={handleSwapPhoneNumber}
+      />
     </>
   );
 };
