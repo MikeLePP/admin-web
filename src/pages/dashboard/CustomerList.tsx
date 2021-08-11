@@ -1,26 +1,35 @@
 import { Box, Breadcrumbs, Container, Grid, Link, Typography } from '@material-ui/core';
 import type { FC } from 'react';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink } from 'react-router-dom';
 import { CustomerListTable } from '../../components/dashboard/customer';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
-import { getUsers } from '../../slices/user';
+import { getUsers, filterUsers } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
 
 const CustomerList: FC = () => {
   const dispatch = useDispatch();
   const { settings } = useSettings();
   const userSelector = useSelector((state) => state.user);
+  const [currentTab, setCurrentTab] = useState<string>('all');
+  const [arrearFilterValue, setArrearFilterValue] = useState({
+    type: 'payCycles',
+    cycle: '1',
+  });
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
   useEffect(() => {
-    dispatch(getUsers());
-  }, [dispatch]);
+    if (currentTab === 'all') {
+      dispatch(getUsers());
+    } else if (currentTab === 'inArrears') {
+      dispatch(filterUsers());
+    }
+  }, [dispatch, currentTab]);
 
   const user = useMemo(() => {
     const {
@@ -28,6 +37,13 @@ const CustomerList: FC = () => {
     } = userSelector;
     return allIds.map((id) => byId[id]);
   }, [userSelector]);
+
+  const loadingState = useMemo(() => userSelector.status === 'loading', [userSelector]);
+
+  const handleFilterUserInArrears = ({ cycle, type }) => {
+    setArrearFilterValue({ cycle, type });
+    dispatch(filterUsers());
+  };
 
   return (
     <>
@@ -58,7 +74,14 @@ const CustomerList: FC = () => {
             </Grid>
           </Grid>
           <Box sx={{ mt: 3 }}>
-            <CustomerListTable users={user} />
+            <CustomerListTable
+              loading={loadingState}
+              users={user}
+              currentTab={currentTab}
+              setCurrentTab={setCurrentTab}
+              onFilterUserInArrears={handleFilterUserInArrears}
+              arrearFilterValue={arrearFilterValue}
+            />
           </Box>
         </Container>
       </Box>

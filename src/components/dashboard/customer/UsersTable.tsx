@@ -3,7 +3,7 @@ import {
   Box,
   Button,
   Card,
-  Checkbox,
+  CircularProgress,
   Divider,
   IconButton,
   InputAdornment,
@@ -36,12 +36,27 @@ import Scrollbar from '../../Scrollbar';
 
 interface UserListTableProps {
   users: User[];
+  currentTab: string;
+  setCurrentTab: (value: string) => void;
+  onFilterUserInArrears: ({ cycle, type }: { cycle: string; type: string }) => void;
+  arrearFilterValue: {
+    cycle: string;
+    type: string;
+  };
+  loading: boolean;
 }
 
 type Sort = 'createdAt|desc' | 'createdAt|asc';
 
+type RangeType = 'payCycles' | 'days';
+
 interface SortOption {
   value: Sort;
+  label: string;
+}
+
+interface RangeTypeOption {
+  value: RangeType;
   label: string;
 }
 
@@ -50,10 +65,10 @@ const tabs = [
     label: 'All',
     value: 'all',
   },
-  // {
-  //   label: 'Collections',
-  //   value: 'collections',
-  // },
+  {
+    label: 'In arrears',
+    value: 'inArrears',
+  },
 ];
 
 const sortOptions: SortOption[] = [
@@ -64,6 +79,17 @@ const sortOptions: SortOption[] = [
   {
     label: 'Last create (oldest)',
     value: 'createdAt|asc',
+  },
+];
+
+const rangeTypeOptions: RangeTypeOption[] = [
+  {
+    label: 'Pay cycles',
+    value: 'payCycles',
+  },
+  {
+    label: 'Days',
+    value: 'days',
   },
 ];
 
@@ -133,45 +159,25 @@ const applySort = (users: User[], sort: Sort): User[] => {
     if (newOrder !== 0) {
       return newOrder;
     }
-
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     return a[1] - b[1];
   });
-
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore
   return stabilizedThis.map((el) => el[0]);
 };
 
 const UserListTable: FC<UserListTableProps> = (props) => {
-  const { users, ...other } = props;
-  const [currentTab, setCurrentTab] = useState<string>('all');
-  const [selectedUser, setSelectedUser] = useState<string[]>([]);
+  const { arrearFilterValue, currentTab, loading, onFilterUserInArrears, setCurrentTab, users, ...other } = props;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [query, setQuery] = useState<string>('');
+  const [cycle, setCycle] = useState<string>(arrearFilterValue.cycle);
   const [sort, setSort] = useState<Sort>(sortOptions[0].value);
-  const [filters, setFilters] = useState<any>({
-    hasAcceptedMarketing: null,
-    isProspect: null,
-    isReturning: null,
-  });
+  const [type, setType] = useState<RangeType>(arrearFilterValue.type as RangeType);
 
   const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
-    const updatedFilters = {
-      ...filters,
-      hasAcceptedMarketing: null,
-      isProspect: null,
-      isReturning: null,
-    };
-
-    if (value !== 'all') {
-      updatedFilters[value] = true;
-    }
-
-    setFilters(updatedFilters);
-    setSelectedUser([]);
     setCurrentTab(value);
   };
 
@@ -179,12 +185,16 @@ const UserListTable: FC<UserListTableProps> = (props) => {
     setQuery(event.target.value);
   };
 
+  const handleCycleChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    setCycle(event.target.value);
+  };
+
   const handleSortChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSort(event.target.value as Sort);
   };
 
-  const handleSelectAllUsers = (event: ChangeEvent<HTMLInputElement>): void => {
-    setSelectedUser(event.target.checked ? users.map((user) => user.id) : []);
+  const handleTypeChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    setType(event.target.value as RangeType);
   };
 
   const handlePageChange = (event: MouseEvent<HTMLButtonElement> | null, newPage: number): void => {
@@ -195,12 +205,13 @@ const UserListTable: FC<UserListTableProps> = (props) => {
     setLimit(parseInt(event.target.value, 10));
   };
 
-  const filteredUser = applyFilters(users, query, filters);
+  const handleFilter = () => {
+    onFilterUserInArrears({ cycle, type });
+  };
+
+  const filteredUser = applyFilters(users, query, {});
   const sortedUser = applySort(filteredUser, sort);
   const paginatedUsers = applyPagination(sortedUser, page, limit);
-  const enableBulkActions = selectedUser.length > 0;
-  const selectedSomeUsers = selectedUser.length > 0 && selectedUser.length < users.length;
-  const selectedAllUsers = selectedUser.length === users.length;
 
   return (
     <Card {...other}>
@@ -217,175 +228,217 @@ const UserListTable: FC<UserListTableProps> = (props) => {
         ))}
       </Tabs>
       <Divider />
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexWrap: 'wrap',
-          m: -1,
-          p: 2,
-        }}
-      >
+      {currentTab === 'all' && (
         <Box
           sx={{
-            m: 1,
-            maxWidth: '100%',
-            width: 500,
+            alignItems: 'center',
+            display: 'flex',
+            flexWrap: 'wrap',
+            m: -1,
+            p: 2,
           }}
         >
-          <TextField
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" />
-                </InputAdornment>
-              ),
-            }}
-            onChange={handleQueryChange}
-            placeholder="Search users"
-            value={query}
-            variant="outlined"
-          />
-        </Box>
-        <Box
-          sx={{
-            m: 1,
-            width: 240,
-          }}
-        >
-          <TextField
-            label="Sort By"
-            name="sort"
-            onChange={handleSortChange}
-            select
-            SelectProps={{ native: true }}
-            value={sort}
-            variant="outlined"
-          >
-            {sortOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </TextField>
-        </Box>
-      </Box>
-      {enableBulkActions && (
-        <Box sx={{ position: 'relative' }}>
           <Box
             sx={{
-              backgroundColor: 'background.paper',
-              mt: '6px',
-              position: 'absolute',
-              px: '4px',
-              width: '100%',
-              zIndex: 2,
+              m: 1,
+              maxWidth: '100%',
+              width: 500,
             }}
           >
-            <Checkbox
-              checked={selectedAllUsers}
-              color="primary"
-              indeterminate={selectedSomeUsers}
-              onChange={handleSelectAllUsers}
+            <TextField
+              fullWidth
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <SearchIcon fontSize="small" />
+                  </InputAdornment>
+                ),
+              }}
+              onChange={handleQueryChange}
+              placeholder="Search users"
+              value={query}
+              variant="outlined"
             />
-            <Button color="primary" sx={{ ml: 2 }} variant="outlined">
-              Delete
-            </Button>
-            <Button color="primary" sx={{ ml: 2 }} variant="outlined">
-              Edit
+          </Box>
+          <Box
+            sx={{
+              m: 1,
+              width: 240,
+            }}
+          >
+            <TextField
+              label="Sort By"
+              name="sort"
+              onChange={handleSortChange}
+              select
+              SelectProps={{ native: true }}
+              value={sort}
+              variant="outlined"
+            >
+              {sortOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </TextField>
+          </Box>
+        </Box>
+      )}
+      {currentTab === 'inArrears' && (
+        <Box
+          sx={{
+            alignItems: 'center',
+            display: 'flex',
+            flexWrap: 'wrap',
+            m: -1,
+            p: 2,
+          }}
+        >
+          <Box
+            sx={{
+              m: 1,
+              maxWidth: '100%',
+              width: 100,
+            }}
+          >
+            <Typography className="">Arrears in</Typography>
+          </Box>
+          <Box
+            sx={{
+              m: 1,
+              maxWidth: '100%',
+              width: 300,
+            }}
+          >
+            <TextField fullWidth onChange={handleCycleChange} placeholder="" value={cycle} variant="outlined" />
+          </Box>
+          <Box
+            sx={{
+              m: 1,
+              width: 125,
+            }}
+          >
+            <TextField
+              label="Type"
+              name="type"
+              onChange={handleTypeChange}
+              select
+              SelectProps={{ native: true }}
+              value={type}
+              variant="outlined"
+            >
+              {rangeTypeOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </TextField>
+          </Box>
+          <Box
+            sx={{
+              m: 1,
+              width: 100,
+            }}
+          >
+            <Button variant="outlined" color="primary" onClick={handleFilter}>
+              Filter
             </Button>
           </Box>
         </Box>
       )}
-      <Scrollbar>
-        <Box sx={{ minWidth: 700 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell>Mobile</TableCell>
-                <TableCell>Available Ballance</TableCell>
-                <TableCell align="right">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {paginatedUsers.map((user) => {
-                const isUserSelected = selectedUser.includes(user.id);
-                return (
-                  <TableRow hover key={user.id} selected={isUserSelected}>
-                    <TableCell>
-                      <Box
-                        sx={{
-                          alignItems: 'center',
-                          display: 'flex',
-                        }}
-                      >
-                        <Avatar
+      {loading ? (
+        <Box className="full-width flex items-center justify-center" height="300px">
+          <CircularProgress />
+        </Box>
+      ) : (
+        <>
+          <Scrollbar>
+            <Box sx={{ minWidth: 700 }}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell>Mobile</TableCell>
+                    <TableCell>Available Ballance</TableCell>
+                    <TableCell align="right">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {paginatedUsers.map((user) => (
+                    <TableRow hover key={user.id}>
+                      <TableCell>
+                        <Box
                           sx={{
-                            height: 42,
-                            width: 42,
+                            alignItems: 'center',
+                            display: 'flex',
                           }}
                         >
-                          {getInitials(getFullName(user))}
-                        </Avatar>
-                        <Box sx={{ ml: 1 }}>
-                          <Link
-                            color="inherit"
-                            component={RouterLink}
-                            to={`/management/users/${user.id}`}
-                            variant="subtitle2"
+                          <Avatar
+                            sx={{
+                              height: 42,
+                              width: 42,
+                            }}
                           >
-                            {getFullName(user)}
-                          </Link>
-                          <Typography color="textSecondary" variant="body2">
-                            {user.email}
-                          </Typography>
+                            {getInitials(getFullName(user))}
+                          </Avatar>
+                          <Box sx={{ ml: 1 }}>
+                            <Link
+                              color="inherit"
+                              component={RouterLink}
+                              to={`/management/users/${user.id}`}
+                              variant="subtitle2"
+                            >
+                              {getFullName(user)}
+                            </Link>
+                            <Typography color="textSecondary" variant="body2">
+                              {user.email}
+                            </Typography>
+                          </Box>
                         </Box>
-                      </Box>
-                    </TableCell>
-                    <TableCell>{upperFirst(startCase(user?.status).toLowerCase())}</TableCell>
-                    <TableCell>{user.mobileNumber}</TableCell>
-                    <TableCell>{user.balanceLimit - user.balanceCurrent}</TableCell>
-                    <TableCell align="right">
-                      <Tooltip title="Transaction">
-                        <IconButton component={RouterLink} to={`/transactions/?userId=${user.id}`}>
-                          <AccountBalanceIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Onboarding">
-                        <IconButton component={RouterLink} to={`user-onboarding/create?userId=${user.id}`}>
-                          <AccountBalanceWalletIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Edit">
-                        <IconButton component={RouterLink} to={`/management/users/${user.id}/edit`}>
-                          <PencilAltIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                      <Tooltip title="Show">
-                        <IconButton component={RouterLink} to={`/management/users/${user.id}`}>
-                          <ArrowRightIcon fontSize="small" />
-                        </IconButton>
-                      </Tooltip>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
-        </Box>
-      </Scrollbar>
-      <TablePagination
-        component="div"
-        count={filteredUser.length}
-        onPageChange={handlePageChange}
-        onRowsPerPageChange={handleLimitChange}
-        page={page}
-        rowsPerPage={limit}
-        rowsPerPageOptions={[5, 10, 25]}
-      />
+                      </TableCell>
+                      <TableCell>{upperFirst(startCase(user?.status).toLowerCase())}</TableCell>
+                      <TableCell>{user.mobileNumber}</TableCell>
+                      <TableCell>{user.balanceLimit - user.balanceCurrent}</TableCell>
+                      <TableCell align="right">
+                        <Tooltip title="Transaction">
+                          <IconButton component={RouterLink} to={`/transactions/?userId=${user.id}`}>
+                            <AccountBalanceIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Onboarding">
+                          <IconButton component={RouterLink} to={`user-onboarding/create?userId=${user.id}`}>
+                            <AccountBalanceWalletIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edit">
+                          <IconButton component={RouterLink} to={`/management/users/${user.id}/edit`}>
+                            <PencilAltIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Show">
+                          <IconButton component={RouterLink} to={`/management/users/${user.id}`}>
+                            <ArrowRightIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Scrollbar>
+          <TablePagination
+            component="div"
+            count={filteredUser.length}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleLimitChange}
+            page={page}
+            rowsPerPage={limit}
+            rowsPerPageOptions={[5, 10, 25]}
+          />
+        </>
+      )}
     </Card>
   );
 };

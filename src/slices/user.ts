@@ -28,13 +28,21 @@ const slice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    loading(state: UserState, action: PayloadAction): void {
+      state.status = 'loading';
+    },
+    error(state: UserState, action: PayloadAction): void {
+      state.status = 'error';
+    },
     getUsers(state: UserState, action: PayloadAction<User[]>): void {
       const users = action.payload;
+      state.status = 'success';
       state.users.byId = objFromArray(users);
       state.users.allIds = Object.keys(state.users.byId);
     },
     getUser(state: UserState, action: PayloadAction<User>): void {
       const user = action.payload;
+      state.status = 'success';
       state.targetUserId = user.id;
       if (!state.users.allIds.includes(user.id)) {
         state.users.allIds.push(user.id);
@@ -89,8 +97,16 @@ export const { reducer } = slice;
 export const getUsers =
   (): AppThunk =>
   async (dispatch): Promise<void> => {
+    dispatch(slice.actions.loading());
     const data = await userApi.getUsers();
-    console.log('🚀 ~ file: user.ts ~ line 85 ~ data', data);
+    dispatch(slice.actions.getUsers(data));
+  };
+
+export const filterUsers =
+  (): AppThunk =>
+  async (dispatch): Promise<void> => {
+    dispatch(slice.actions.loading());
+    const data = await userApi.getUsers();
     dispatch(slice.actions.getUsers(data));
   };
 
