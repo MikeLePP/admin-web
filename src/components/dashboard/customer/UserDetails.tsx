@@ -2,11 +2,11 @@ import type { FC } from 'react';
 import { Card, CardHeader, Divider, Table, TableBody, TableCell, TableRow, Typography } from '@material-ui/core';
 import { User } from '../../../types/users';
 
-interface CustomerContactDetailsProps {
+interface UserDetailsProps {
   user: User;
 }
 
-const CustomerContactDetails: FC<CustomerContactDetailsProps> = (props) => {
+const UserDetails: FC<UserDetailsProps> = (props) => {
   const { user, ...other } = props;
 
   return (
@@ -105,4 +105,4 @@ const CustomerContactDetails: FC<CustomerContactDetailsProps> = (props) => {
   );
 };
 
-export default CustomerContactDetails;
+export default UserDetails;

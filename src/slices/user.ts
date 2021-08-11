@@ -38,8 +38,8 @@ const slice = createSlice({
       state.targetUserId = user.id;
       if (!state.users.allIds.includes(user.id)) {
         state.users.allIds.push(user.id);
-        state.users.byId[user.id] = { ...user };
       }
+      state.users.byId[user.id] = { ...user };
     },
     updateBalanceLimit(state: UserState, action: PayloadAction<{ userId: string; balanceLimit: number }>): void {
       const { userId, balanceLimit } = action.payload;
@@ -48,16 +48,38 @@ const slice = createSlice({
         balanceLimit,
       };
     },
-    updateMobileNumber(state: UserState, action: PayloadAction<{ userId: string; swapUserId: string }>): void {
-      const { userId, swapUserId } = action.payload;
-      // const user = state.users.byId[userId];
-      // state.users.byId[userId] = {
-      //   ...state.users.byId[userId],
-      // };
-      // state.users.byId[swapUserId] = {
-      //   ...state.users.byId[userId],
-      //   mobileNumber: user.mobileNumber,
-      // };
+    updateMobileNumber(
+      state: UserState,
+      action: PayloadAction<{
+        userId: string;
+        swappedUserId: string;
+        mobileNumber: string;
+        swappedMobileNumber: string;
+      }>,
+    ): void {
+      const { userId, mobileNumber, swappedUserId, swappedMobileNumber } = action.payload;
+      if (state.users.byId[userId]) {
+        state.users.byId[userId] = {
+          ...state.users.byId[userId],
+          mobileNumber: swappedMobileNumber,
+        };
+      }
+      if (state.users.byId[swappedUserId]) {
+        state.users.byId[swappedUserId] = {
+          ...state.users.byId[swappedUserId],
+          mobileNumber,
+        };
+      }
+    },
+    updateUser(state: UserState, action: PayloadAction<{ user: User; userId: string }>): void {
+      const { user, userId } = action.payload;
+      const existingUser = state.users.byId[userId];
+      if (existingUser) {
+        state.users.byId[userId] = {
+          ...existingUser,
+          ...user,
+        };
+      }
     },
   },
 });
@@ -68,6 +90,7 @@ export const getUsers =
   (): AppThunk =>
   async (dispatch): Promise<void> => {
     const data = await userApi.getUsers();
+    console.log('🚀 ~ file: user.ts ~ line 85 ~ data', data);
     dispatch(slice.actions.getUsers(data));
   };
 
@@ -86,9 +109,17 @@ export const updateBalanceLimit =
   };
 
 export const swapMobileNumber =
-  ({ userId, swapUserId }): AppThunk =>
+  ({ userId, mobileNumber, swappedUserId, swappedMobileNumber }): AppThunk =>
   async (dispatch): Promise<void> => {
-    await userApi.swapMobileNumber(userId, swapUserId);
-    dispatch(slice.actions.updateMobileNumber({ userId, swapUserId }));
+    await userApi.swapMobileNumber(userId, swappedUserId);
+    dispatch(slice.actions.updateMobileNumber({ userId, mobileNumber, swappedUserId, swappedMobileNumber }));
+  };
+
+export const updateUser =
+  ({ user, userId, onComplete }): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const { success } = await userApi.updateUser(userId, user);
+    onComplete({ success });
+    dispatch(slice.actions.updateUser({ user, userId }));
   };
 export default slice;

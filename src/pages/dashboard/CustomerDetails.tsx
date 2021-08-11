@@ -7,10 +7,9 @@ import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import {
   UserDetails,
   CustomerDataManagement,
-  UserUpdatingLimit,
-  CustomerInvoices,
+  UserUpdateLimit,
   UserBankDetails,
-  CustomerLogs,
+  UserSwapMobileNumber,
 } from '../../components/dashboard/customer';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import PencilAltIcon from '../../icons/PencilAlt';
@@ -19,13 +18,8 @@ import useSettings from '../../hooks/useSettings';
 import { getUser, updateBalanceLimit, swapMobileNumber } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
 import { getFullname } from '../../lib/string';
-import SwapPhoneNumber from '../../components/commons/SwapNumber';
 
-const tabs = [
-  { label: 'Details', value: 'details' },
-  // { label: 'Invoices', value: 'invoices' },
-  // { label: 'Logs', value: 'logs' },
-];
+const tabs = [{ label: 'Details', value: 'details' }];
 
 const CustomerDetails: FC = () => {
   const { settings } = useSettings();
@@ -33,7 +27,6 @@ const CustomerDetails: FC = () => {
   const dispatch = useDispatch();
   const userSelector = useSelector((state) => state.user);
   const { userId: id } = useParams();
-  const [showSwapPhoneNumber, setShowWrapPhoneNumber] = useState(false);
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -62,9 +55,16 @@ const CustomerDetails: FC = () => {
     [dispatch, id],
   );
 
-  const handleSwapPhoneNumber = useCallback(
-    (userId: string) => {
-      dispatch(swapMobileNumber({ userId: id, swapUserId: userId }));
+  const handleSwapMobileNumber = useCallback(
+    (swappedUserId: string, swappedMobileNumber) => {
+      dispatch(
+        swapMobileNumber({
+          userId: id,
+          mobileNumber: user?.mobileNumber,
+          swappedUserId,
+          swappedMobileNumber,
+        }),
+      );
     },
     [dispatch, id],
   );
@@ -76,7 +76,7 @@ const CustomerDetails: FC = () => {
   return (
     <>
       <Helmet>
-        <title>Dashboard: Customer Details | Material Kit Pro</title>
+        <title>Management: User Details</title>
       </Helmet>
       <Box
         sx={{
@@ -110,19 +110,10 @@ const CustomerDetails: FC = () => {
                   component={RouterLink}
                   startIcon={<PencilAltIcon fontSize="small" />}
                   sx={{ m: 1 }}
-                  to="/dashboard/customers/1/edit"
+                  to={`/management/users/${id}/edit`}
                   variant="contained"
                 >
                   Edit
-                </Button>
-                <Button
-                  color="primary"
-                  startIcon={<SwapHorizIcon fontSize="small" />}
-                  sx={{ m: 1 }}
-                  variant="contained"
-                  onClick={() => setShowWrapPhoneNumber(true)}
-                >
-                  Swap mobile number
                 </Button>
               </Box>
             </Grid>
@@ -152,24 +143,19 @@ const CustomerDetails: FC = () => {
                   <UserBankDetails user={user} />
                 </Grid>
                 <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                  <UserUpdatingLimit user={user} onUpdateLimit={handleUpdateLimit} />
+                  <UserUpdateLimit user={user} onUpdateLimit={handleUpdateLimit} />
+                </Grid>
+                <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
+                  <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
                 </Grid>
                 <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
                   <CustomerDataManagement />
                 </Grid>
               </Grid>
             )}
-            {currentTab === 'invoices' && <CustomerInvoices />}
-            {currentTab === 'logs' && <CustomerLogs />}
           </Box>
         </Container>
       </Box>
-      <SwapPhoneNumber
-        open={showSwapPhoneNumber}
-        setOpen={setShowWrapPhoneNumber}
-        user={user}
-        onSwapPhoneNumber={handleSwapPhoneNumber}
-      />
     </>
   );
 };

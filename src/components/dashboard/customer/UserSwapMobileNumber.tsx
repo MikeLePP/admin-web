@@ -1,31 +1,26 @@
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
-import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import { Card, CardContent, CardHeader, Divider } from '@material-ui/core';
+import SwapHoriz from '@material-ui/icons/SwapHoriz';
 import { get, startCase, upperFirst } from 'lodash';
 import React, { ChangeEvent, useEffect } from 'react';
-import type { User } from '../../types/users';
-import { userApi } from '../../api/user';
+import type { User } from '../../../types/users';
+import { userApi } from '../../../api/user';
 
 type IStatus = 'idle' | 'searching' | 'success' | 'fail';
 
 interface IProps {
-  open: boolean;
-  setOpen: (value: boolean) => void;
   user: User;
-  onSwapPhoneNumber: (userId: string) => void;
+  onSwapPhoneNumber: (swappedUserId: string, swappedMobileNumber: string) => void;
 }
 
 export const getFullName = (record?: User): string =>
   record ? [record.firstName, record.middleName, record.lastName].filter(Boolean).join(' ') : '';
 
-export default function SwapPhoneNumber({ open, setOpen, user, onSwapPhoneNumber }: IProps): JSX.Element {
+export default function SwapPhoneNumber({ user, onSwapPhoneNumber }: IProps): JSX.Element {
   const [currentPhoneNumber, setCurrentPhoneNumber] = React.useState<string | undefined>(undefined);
   const [inputPhoneNumber, setInputPhoneNumber] = React.useState<string | undefined>(undefined);
   const [userFound, setUserFound] = React.useState<User>();
@@ -34,10 +29,6 @@ export default function SwapPhoneNumber({ open, setOpen, user, onSwapPhoneNumber
   useEffect(() => {
     setCurrentPhoneNumber(user?.mobileNumber || '');
   }, [user]);
-
-  const handleClose = () => {
-    setOpen(false);
-  };
 
   const handleChange = (e: ChangeEvent<HTMLTextAreaElement | HTMLInputElement>) => {
     const { value: newValue } = e.target;
@@ -58,7 +49,7 @@ export default function SwapPhoneNumber({ open, setOpen, user, onSwapPhoneNumber
           );
           const userResponse = get(response, [0], {}) as User;
           setSearchStatus('success');
-          setUserFound(userResponse);
+          setUserFound(userResponse?.id ? userResponse : undefined);
         } catch (err) {
           setSearchStatus('fail');
           setUserFound(undefined);
@@ -74,17 +65,19 @@ export default function SwapPhoneNumber({ open, setOpen, user, onSwapPhoneNumber
   }, [inputPhoneNumber]);
 
   const handleUpdate = () => {
-    onSwapPhoneNumber(userFound.id);
+    onSwapPhoneNumber(userFound.id, userFound.mobileNumber);
   };
 
   const foundUser = searchStatus === 'success' && userFound?.id;
 
   return (
-    <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title" fullWidth maxWidth="sm">
-      <DialogTitle id="form-dialog-title">Swap mobile number</DialogTitle>
-      <DialogContent>
-        <DialogContentText>User phone number: {currentPhoneNumber}</DialogContentText>
+    <Card>
+      <CardHeader title="Swap mobile number" />
+      <Divider />
+      <CardContent>
+        <Typography>User phone number: {currentPhoneNumber}</Typography>
         <TextField
+          style={{ marginTop: 10 }}
           id="outlined-helperText"
           label="New mobile number"
           variant="outlined"
@@ -108,15 +101,18 @@ export default function SwapPhoneNumber({ open, setOpen, user, onSwapPhoneNumber
             <Typography>No existing user</Typography>
           )}
         </Box>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="primary">
-          Cancel
-        </Button>
-        <Button onClick={handleUpdate} color="primary" disabled={!userFound}>
-          Swap
-        </Button>
-      </DialogActions>
-    </Dialog>
+        <Box sx={{ mt: 2 }}>
+          <Button
+            color="primary"
+            startIcon={<SwapHoriz fontSize="small" />}
+            variant="contained"
+            onClick={handleUpdate}
+            disabled={!(userFound && searchStatus === 'success')}
+          >
+            Swap
+          </Button>
+        </Box>
+      </CardContent>
+    </Card>
   );
 }

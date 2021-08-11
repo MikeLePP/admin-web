@@ -100,7 +100,7 @@ class UserApi {
     return {};
   }
 
-  async updateBalanceLimit(userId: string, balanceLimit: number): Promise<any> {
+  async updateBalanceLimit(userId: string, balanceLimit: number): Promise<void> {
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
     try {
       await fetch(`${apiRoot}/users/${userId}/balance-limit`, {
@@ -118,13 +118,12 @@ class UserApi {
       const errTitle = get(err, 'body.errors[0].title', "Cannot update user's balance limit");
       toast.error(errTitle);
     }
-    return {};
   }
 
-  async swapMobileNumber(userId: string, swapUserId: number): Promise<any> {
+  async swapMobileNumber(userId: string, swapUserId: number): Promise<{ success: boolean }> {
     const { signInUserSession } = await Auth.currentAuthenticatedUser();
     try {
-      await fetch(`${apiRoot}/users/${userId}/mobile-number/swap`, {
+      const res = await fetch(`${apiRoot}/users/${userId}/mobile-number/swap`, {
         method: 'POST',
         headers: {
           Authorization: `Bearer ${String(signInUserSession.accessToken.jwtToken)}`,
@@ -134,11 +133,55 @@ class UserApi {
           userId: swapUserId,
         }),
       });
+      if (res.status !== 204) {
+        const jsonRes = await res.json();
+        if (jsonRes && jsonRes.errors) {
+          const errTitle = get(jsonRes, 'errors[0].title', 'Cannot swap mobile number');
+          toast.error(errTitle);
+          return {
+            success: false,
+          };
+        }
+      }
+      toast.success('Swapped mobile numbers');
+      return {
+        success: true,
+      };
     } catch (err) {
       const errTitle = get(err, 'body.errors[0].title', 'Cannot swap mobile number');
       toast.error(errTitle);
+      return {
+        success: false,
+      };
     }
-    return {};
+  }
+
+  async updateUser(userId: string, user: User): Promise<{ success: boolean }> {
+    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+    try {
+      const res = await fetch(`${apiRoot}/users/${userId}`, {
+        method: 'PUT',
+        headers: {
+          Authorization: `Bearer ${String(signInUserSession.accessToken.jwtToken)}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      });
+      if (res.status !== 200) {
+        return {
+          success: false,
+        };
+      }
+    } catch (err) {
+      const errTitle = get(err, 'body.errors[0].title', "Cannot update user's details");
+      toast.error(errTitle);
+      return {
+        success: false,
+      };
+    }
+    return {
+      success: true,
+    };
   }
 }
 

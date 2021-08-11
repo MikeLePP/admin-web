@@ -84,7 +84,7 @@ function TransactionDialog({
             <CloseIcon />
           </IconButton>
         </DialogTitle>
-        <DialogContent dividers className="h-screen p-0">
+        <DialogContent dividers className="h-screen p-0 bg-white">
           {loading && (
             <div className="flex items-center justify-center w-full h-4/5 absolute">
               <CircularProgress />

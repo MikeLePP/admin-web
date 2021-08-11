@@ -198,20 +198,6 @@ const sections = [
         title: 'User',
         path: '/management/users',
         icon: <UsersIcon fontSize="small" />,
-        children: [
-          {
-            title: 'List',
-            path: '/management/users',
-          },
-          {
-            title: 'Details',
-            path: '/management/users/1',
-          },
-          {
-            title: 'Edit',
-            path: '/management/users/1/edit',
-          },
-        ],
       },
     ],
   },

@@ -1,49 +1,41 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import type { FC } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Box, Breadcrumbs, Container, Grid, Link, Typography } from '@material-ui/core';
-import { customerApi } from '../../__fakeApi__/customerApi';
-import { CustomerEditForm } from '../../components/dashboard/customer';
-import useMounted from '../../hooks/useMounted';
+import { UserEditForm } from '../../components/dashboard/customer';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
-import type { Customer } from '../../types/customer';
+import { useDispatch, useSelector } from '../../store';
+import { getUser } from '../../slices/user';
 
 const CustomerEdit: FC = () => {
-  const mounted = useMounted();
   const { settings } = useSettings();
-  const [customer, setCustomer] = useState<Customer | null>(null);
+  const dispatch = useDispatch();
+  const userSelector = useSelector((state) => state.user);
+  const { userId: id } = useParams();
 
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  const getCustomer = useCallback(async () => {
-    try {
-      const data = await customerApi.getCustomer();
-
-      if (mounted.current) {
-        setCustomer(data);
-      }
-    } catch (err) {
-      console.error(err);
-    }
-  }, [mounted]);
+  const user = useMemo(() => {
+    const {
+      users: { byId },
+      targetUserId,
+    } = userSelector;
+    return byId[targetUserId];
+  }, [userSelector]);
 
   useEffect(() => {
-    void getCustomer();
-  }, [getCustomer]);
-
-  if (!customer) {
-    return null;
-  }
+    dispatch(getUser({ id }));
+  }, [dispatch, id]);
 
   return (
     <>
       <Helmet>
-        <title>Dashboard: Customer Edit | Material Kit Pro</title>
+        <title>Management: User Edit</title>
       </Helmet>
       <Box
         sx={{
@@ -56,23 +48,23 @@ const CustomerEdit: FC = () => {
           <Grid container justifyContent="space-between" spacing={3}>
             <Grid item>
               <Typography color="textPrimary" variant="h5">
-                Customer Edit
+                User Edit
               </Typography>
               <Breadcrumbs aria-label="breadcrumb" separator={<ChevronRightIcon fontSize="small" />} sx={{ mt: 1 }}>
-                <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
-                  Dashboard
-                </Link>
-                <Link color="textPrimary" component={RouterLink} to="/dashboard" variant="subtitle2">
+                <Link color="textPrimary" component={RouterLink} to="/management" variant="subtitle2">
                   Management
                 </Link>
+                <Link color="textPrimary" component={RouterLink} to="/management/users" variant="subtitle2">
+                  Users
+                </Link>
                 <Typography color="textSecondary" variant="subtitle2">
-                  Customers
+                  {user?.email}
                 </Typography>
               </Breadcrumbs>
             </Grid>
           </Grid>
           <Box mt={3}>
-            <CustomerEditForm customer={customer} />
+            <UserEditForm userId={id} user={user} />
           </Box>
         </Container>
       </Box>
