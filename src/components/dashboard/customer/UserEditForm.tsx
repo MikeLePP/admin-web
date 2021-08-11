@@ -67,7 +67,7 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
         incomeNextDate: Yup.date().min(new Date(), 'Please select a future date').required(),
         bankAccountId: Yup.string(),
       })}
-      onSubmit={(values, { resetForm, setErrors, setStatus, setSubmitting }): Promise<void> => {
+      onSubmit={(values, { resetForm, setErrors, setStatus, setSubmitting }): void => {
         dispatch(
           updateUser({
             userId,
