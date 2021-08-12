@@ -7,7 +7,7 @@ import { UsersTable } from '../../components/dashboard/users';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
-import { getUsers, filterUsers } from '../../slices/user';
+import { getUsers, filterUsers, filterMoreUsers } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
 
 const UserList: FC = () => {
@@ -16,8 +16,7 @@ const UserList: FC = () => {
   const userSelector = useSelector((state) => state.user);
   const [currentTab, setCurrentTab] = useState<string>('all');
   const [arrearFilterValue, setArrearFilterValue] = useState({
-    type: 'payCycles',
-    cycle: '1',
+    frequencyCount: '1',
   });
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -27,9 +26,9 @@ const UserList: FC = () => {
     if (currentTab === 'all') {
       dispatch(getUsers());
     } else if (currentTab === 'inArrears') {
-      dispatch(filterUsers());
+      dispatch(filterUsers(arrearFilterValue.frequencyCount));
     }
-  }, [dispatch, currentTab]);
+  }, [dispatch, currentTab, arrearFilterValue]);
 
   const user = useMemo(() => {
     const {
@@ -39,10 +38,14 @@ const UserList: FC = () => {
   }, [userSelector]);
 
   const loadingState = useMemo(() => userSelector.status === 'loading', [userSelector]);
+  const pageKey = useMemo(() => userSelector.pageKey, [userSelector]);
 
-  const handleFilterUserInArrears = ({ cycle, type }) => {
-    setArrearFilterValue({ cycle, type });
-    dispatch(filterUsers());
+  const handleFilterUserInArrears = ({ frequencyCount }) => {
+    setArrearFilterValue({ frequencyCount });
+  };
+
+  const handleLoadMore = () => {
+    dispatch(filterMoreUsers(arrearFilterValue.frequencyCount));
   };
 
   return (
@@ -81,6 +84,8 @@ const UserList: FC = () => {
               setCurrentTab={setCurrentTab}
               onFilterUserInArrears={handleFilterUserInArrears}
               arrearFilterValue={arrearFilterValue}
+              pageKey={pageKey}
+              onLoadMore={handleLoadMore}
             />
           </Box>
         </Container>

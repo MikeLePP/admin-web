@@ -33,6 +33,35 @@ class UserApi {
     return [];
   }
 
+  async getUsersInArrear(
+    frequencyCount: string,
+    pageKey?: Record<string, string>,
+  ): Promise<{ user: User[]; meta: { pageKey: Record<string, string> } }> {
+    const pageKeyQuery = pageKey ? `&pageKey=${encodeURIComponent(JSON.stringify(pageKey))}` : '';
+    try {
+      const res = await fetch(`${apiRoot}/users/balance-overdue?frequencyCount=${frequencyCount}${pageKeyQuery}`, {
+        method: 'GET',
+        headers: {
+          Authorization: await getAuthToken(),
+        },
+      });
+      const jsonResponse = (await res.json()) as {
+        data: { attributes: User; id: string; type: string }[];
+        meta: { pageKey: Record<string, string> };
+      };
+      const { meta } = jsonResponse;
+      return { user: jsonResponse.data.map(flatObject), meta };
+    } catch (err) {
+      toast.error(get(err, 'body.errors[0].title', 'Cannot get users'));
+    }
+    return {
+      user: [],
+      meta: {
+        pageKey: {},
+      },
+    };
+  }
+
   async getUser({ id }: { id: string }): Promise<User | undefined> {
     try {
       const res = await fetch(`${apiRoot}/users/${id}`, {

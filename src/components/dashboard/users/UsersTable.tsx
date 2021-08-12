@@ -23,7 +23,6 @@ import {
 import MonetizationOn from '@material-ui/icons/MonetizationOn';
 import Assignment from '@material-ui/icons/Assignment';
 import { startCase, upperFirst } from 'lodash';
-import PropTypes from 'prop-types';
 import type { ChangeEvent, FC, MouseEvent } from 'react';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
@@ -38,25 +37,19 @@ interface UserListTableProps {
   users: User[];
   currentTab: string;
   setCurrentTab: (value: string) => void;
-  onFilterUserInArrears: ({ cycle, type }: { cycle: string; type: string }) => void;
+  onFilterUserInArrears: ({ frequencyCount }: { frequencyCount: string }) => void;
   arrearFilterValue: {
-    cycle: string;
-    type: string;
+    frequencyCount: string;
   };
   loading: boolean;
+  pageKey?: Record<string, string>;
+  onLoadMore: () => void;
 }
 
 type Sort = 'createdAt|desc' | 'createdAt|asc';
 
-type RangeType = 'payCycles' | 'days';
-
 interface SortOption {
   value: Sort;
-  label: string;
-}
-
-interface RangeTypeOption {
-  value: RangeType;
   label: string;
 }
 
@@ -79,17 +72,6 @@ const sortOptions: SortOption[] = [
   {
     label: 'Last create (oldest)',
     value: 'createdAt|asc',
-  },
-];
-
-const rangeTypeOptions: RangeTypeOption[] = [
-  {
-    label: 'Pay cycles',
-    value: 'payCycles',
-  },
-  {
-    label: 'Days',
-    value: 'days',
   },
 ];
 
@@ -169,13 +151,22 @@ const applySort = (users: User[], sort: Sort): User[] => {
 };
 
 const UserListTable: FC<UserListTableProps> = (props) => {
-  const { arrearFilterValue, currentTab, loading, onFilterUserInArrears, setCurrentTab, users, ...other } = props;
+  const {
+    arrearFilterValue,
+    currentTab,
+    loading,
+    onFilterUserInArrears,
+    onLoadMore,
+    pageKey,
+    setCurrentTab,
+    users,
+    ...other
+  } = props;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [query, setQuery] = useState<string>('');
-  const [cycle, setCycle] = useState<string>(arrearFilterValue.cycle);
+  const [frequencyCount, setCycle] = useState<string>(arrearFilterValue.frequencyCount);
   const [sort, setSort] = useState<Sort>(sortOptions[0].value);
-  const [type, setType] = useState<RangeType>(arrearFilterValue.type as RangeType);
 
   const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
@@ -193,10 +184,6 @@ const UserListTable: FC<UserListTableProps> = (props) => {
     setSort(event.target.value as Sort);
   };
 
-  const handleTypeChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setType(event.target.value as RangeType);
-  };
-
   const handlePageChange = (event: MouseEvent<HTMLButtonElement> | null, newPage: number): void => {
     setPage(newPage);
   };
@@ -206,7 +193,7 @@ const UserListTable: FC<UserListTableProps> = (props) => {
   };
 
   const handleFilter = () => {
-    onFilterUserInArrears({ cycle, type });
+    onFilterUserInArrears({ frequencyCount });
   };
 
   const filteredUser = applyFilters(users, query, {});
@@ -310,29 +297,21 @@ const UserListTable: FC<UserListTableProps> = (props) => {
               width: 300,
             }}
           >
-            <TextField fullWidth onChange={handleCycleChange} placeholder="" value={cycle} variant="outlined" />
+            <TextField
+              fullWidth
+              onChange={handleCycleChange}
+              placeholder=""
+              value={frequencyCount}
+              variant="outlined"
+            />
           </Box>
           <Box
             sx={{
               m: 1,
-              width: 125,
+              width: 100,
             }}
           >
-            <TextField
-              label="Type"
-              name="type"
-              onChange={handleTypeChange}
-              select
-              SelectProps={{ native: true }}
-              value={type}
-              variant="outlined"
-            >
-              {rangeTypeOptions.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </TextField>
+            <Typography>pay cycles</Typography>
           </Box>
           <Box
             sx={{
@@ -346,98 +325,111 @@ const UserListTable: FC<UserListTableProps> = (props) => {
           </Box>
         </Box>
       )}
-      <Scrollbar>
-        <Box sx={{ minWidth: 700 }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>Name</TableCell>
-                <TableCell>Mobile</TableCell>
-                <TableCell>Available Balance</TableCell>
-                <TableCell>Status</TableCell>
-                <TableCell align="right">Actions</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {paginatedUsers.map((user) => (
-                <TableRow hover key={user.id}>
-                  <TableCell>
-                    <Box
-                      sx={{
-                        alignItems: 'center',
-                        display: 'flex',
-                      }}
-                    >
-                      <Box
-                        sx={{
-                          alignItems: 'center',
-                          display: 'flex',
-                        }}
-                      >
-                        <Avatar
+      {loading ? (
+        <Box display="flex" alignItems="center" justifyContent="center" width="100%" height="400px">
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Box position="relative">
+          <Scrollbar>
+            <Box sx={{ minWidth: 700 }}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Name</TableCell>
+                    <TableCell>Mobile</TableCell>
+                    <TableCell>Available Balance</TableCell>
+                    <TableCell>Status</TableCell>
+                    <TableCell align="right">Actions</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {paginatedUsers.map((user) => (
+                    <TableRow hover key={user.id}>
+                      <TableCell>
+                        <Box
                           sx={{
-                            height: 42,
-                            width: 42,
+                            alignItems: 'center',
+                            display: 'flex',
                           }}
                         >
-                          {getInitials(getFullName(user))}
-                        </Avatar>
-                        <Box sx={{ ml: 1 }}>
-                          <Link
-                            color="inherit"
-                            component={RouterLink}
-                            to={`/management/users/${user.id}`}
-                            variant="subtitle2"
+                          <Box
+                            sx={{
+                              alignItems: 'center',
+                              display: 'flex',
+                            }}
                           >
-                            {getFullName(user)}
-                          </Link>
-                          <Typography color="textSecondary" variant="body2">
-                            {user.email}
-                          </Typography>
+                            <Avatar
+                              sx={{
+                                height: 42,
+                                width: 42,
+                              }}
+                            >
+                              {getInitials(getFullName(user))}
+                            </Avatar>
+                            <Box sx={{ ml: 1 }}>
+                              <Link
+                                color="inherit"
+                                component={RouterLink}
+                                to={`/management/users/${user.id}`}
+                                variant="subtitle2"
+                              >
+                                {getFullName(user)}
+                              </Link>
+                              <Typography color="textSecondary" variant="body2">
+                                {user.email}
+                              </Typography>
+                            </Box>
+                          </Box>
                         </Box>
-                      </Box>
-                    </Box>
-                  </TableCell>
-                  <TableCell>{user.mobileNumber}</TableCell>
-                  <TableCell>{user.balanceLimit - user.balanceCurrent}</TableCell>
-                  <TableCell>{upperFirst(startCase(user?.status).toLowerCase())}</TableCell>
-                  <TableCell align="right">
-                    <Tooltip title="Transaction">
-                      <IconButton component={RouterLink} to={`/transactions/?userId=${user.id}`}>
-                        <MonetizationOn fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Onboarding">
-                      <IconButton component={RouterLink} to={`user-onboarding/create?userId=${user.id}`}>
-                        <Assignment fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Edit">
-                      <IconButton component={RouterLink} to={`/management/users/${user.id}/edit`}>
-                        <PencilAltIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Show">
-                      <IconButton component={RouterLink} to={`/management/users/${user.id}`}>
-                        <ArrowRightIcon fontSize="small" />
-                      </IconButton>
-                    </Tooltip>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+                      </TableCell>
+                      <TableCell>{user.mobileNumber}</TableCell>
+                      <TableCell>{user.balanceLimit - user.balanceCurrent}</TableCell>
+                      <TableCell>{upperFirst(startCase(user?.status).toLowerCase())}</TableCell>
+                      <TableCell align="right">
+                        <Tooltip title="Transaction">
+                          <IconButton component={RouterLink} to={`/transactions/?userId=${user.id}`}>
+                            <MonetizationOn fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Onboarding">
+                          <IconButton component={RouterLink} to={`user-onboarding/create?userId=${user.id}`}>
+                            <Assignment fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Edit">
+                          <IconButton component={RouterLink} to={`/management/users/${user.id}/edit`}>
+                            <PencilAltIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                        <Tooltip title="Show">
+                          <IconButton component={RouterLink} to={`/management/users/${user.id}`}>
+                            <ArrowRightIcon fontSize="small" />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Scrollbar>
+          <TablePagination
+            component="div"
+            count={filteredUser.length}
+            onPageChange={handlePageChange}
+            onRowsPerPageChange={handleLimitChange}
+            page={page}
+            rowsPerPage={limit}
+            rowsPerPageOptions={[5, 10, 25]}
+          />
+          {pageKey && Object.keys(pageKey).length > 0 && currentTab === 'inArrears' && (
+            <Button className="absolute bottom-2 left-2" onClick={onLoadMore}>
+              more...{' '}
+            </Button>
+          )}
         </Box>
-      </Scrollbar>
-      <TablePagination
-        component="div"
-        count={filteredUser.length}
-        onPageChange={handlePageChange}
-        onRowsPerPageChange={handleLimitChange}
-        page={page}
-        rowsPerPage={limit}
-        rowsPerPageOptions={[5, 10, 25]}
-      />
+      )}
     </Card>
   );
 };
