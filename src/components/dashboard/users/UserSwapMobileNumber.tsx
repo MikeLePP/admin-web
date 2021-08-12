@@ -5,7 +5,7 @@ import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
 import { Card, CardContent, CardHeader, Divider } from '@material-ui/core';
 import SwapHoriz from '@material-ui/icons/SwapHoriz';
-import { get, startCase, upperFirst } from 'lodash';
+import { filter, get, startCase, upperFirst } from 'lodash';
 import React, { ChangeEvent, useEffect } from 'react';
 import type { User } from '../../../types/users';
 import { userApi } from '../../../api/user';
@@ -44,9 +44,7 @@ export default function SwapPhoneNumber({ user, onSwapPhoneNumber }: IProps): JS
       const getUser = async () => {
         setSearchStatus('searching');
         try {
-          const response = await userApi.getUsers(
-            `?filter=${encodeURIComponent(JSON.stringify({ mobileNumber: inputPhoneNumber }))}`,
-          );
+          const response = await userApi.getUsers({ mobileNumber: inputPhoneNumber });
           const userResponse = get(response, [0], {}) as User;
           setSearchStatus('success');
           setUserFound(userResponse?.id ? userResponse : undefined);
@@ -98,7 +96,9 @@ export default function SwapPhoneNumber({ user, onSwapPhoneNumber }: IProps): JS
               {upperFirst(startCase(userFound?.status).toLowerCase())}{' '}
             </Typography>
           ) : (
-            <Typography>No existing user</Typography>
+            <div>
+              {(searchStatus === 'success' || searchStatus === 'fail') && <Typography>No existing user</Typography>}
+            </div>
           )}
         </Box>
         <Box sx={{ mt: 2 }}>

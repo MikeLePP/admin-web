@@ -1,4 +1,4 @@
-const incomeFrequencies = [
+const INCOME_FREQUENCY = [
   { id: 'weekly', name: 'Weekly' },
   { id: 'fortnightly', name: 'Fortnightly' },
   { id: 'four-weekly', name: 'Four weekly' },
@@ -9,4 +9,4 @@ const incomeFrequencies = [
   { id: 'monthly-by-day', name: 'Four weekly by day' },
 ];
 
-export default incomeFrequencies;
+export default INCOME_FREQUENCY;

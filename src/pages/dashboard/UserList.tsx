@@ -3,14 +3,14 @@ import type { FC } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink } from 'react-router-dom';
-import { CustomerListTable } from '../../components/dashboard/customer';
+import { UsersTable } from '../../components/dashboard/users';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
 import { getUsers, filterUsers } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
 
-const CustomerList: FC = () => {
+const UserList: FC = () => {
   const dispatch = useDispatch();
   const { settings } = useSettings();
   const userSelector = useSelector((state) => state.user);
@@ -74,7 +74,7 @@ const CustomerList: FC = () => {
             </Grid>
           </Grid>
           <Box sx={{ mt: 3 }}>
-            <CustomerListTable
+            <UsersTable
               loading={loadingState}
               users={user}
               currentTab={currentTab}
@@ -89,4 +89,4 @@ const CustomerList: FC = () => {
   );
 };
 
-export default CustomerList;
+export default UserList;

@@ -1,4 +1,6 @@
 import moment from 'moment';
+import toast from 'react-hot-toast';
+import { get } from 'lodash';
 import { useState, useEffect } from 'react';
 import { userApi } from '../api/user';
 
@@ -32,6 +34,7 @@ export function useBankData(userId: string): IBankData {
         }
         setStatus('success');
       } catch (err) {
+        toast.error(get(err, 'body.errors[0].title', 'Cannot get bank data'));
         setStatus('fail');
       }
     };

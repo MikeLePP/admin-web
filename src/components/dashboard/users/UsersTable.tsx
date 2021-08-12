@@ -20,8 +20,8 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import MonetizationOn from '@material-ui/icons/MonetizationOn';
+import Assignment from '@material-ui/icons/Assignment';
 import { startCase, upperFirst } from 'lodash';
 import PropTypes from 'prop-types';
 import type { ChangeEvent, FC, MouseEvent } from 'react';
@@ -346,105 +346,100 @@ const UserListTable: FC<UserListTableProps> = (props) => {
           </Box>
         </Box>
       )}
-      {loading ? (
-        <Box className="full-width flex items-center justify-center" height="300px">
-          <CircularProgress />
-        </Box>
-      ) : (
-        <>
-          <Scrollbar>
-            <Box sx={{ minWidth: 700 }}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell>Mobile</TableCell>
-                    <TableCell>Available Ballance</TableCell>
-                    <TableCell align="right">Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {paginatedUsers.map((user) => (
-                    <TableRow hover key={user.id}>
-                      <TableCell>
-                        <Box
+      <Scrollbar>
+        <Box sx={{ minWidth: 700 }}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Name</TableCell>
+                <TableCell>Mobile</TableCell>
+                <TableCell>Available Balance</TableCell>
+                <TableCell>Status</TableCell>
+                <TableCell align="right">Actions</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {paginatedUsers.map((user) => (
+                <TableRow hover key={user.id}>
+                  <TableCell>
+                    <Box
+                      sx={{
+                        alignItems: 'center',
+                        display: 'flex',
+                      }}
+                    >
+                      <Box
+                        sx={{
+                          alignItems: 'center',
+                          display: 'flex',
+                        }}
+                      >
+                        <Avatar
                           sx={{
-                            alignItems: 'center',
-                            display: 'flex',
+                            height: 42,
+                            width: 42,
                           }}
                         >
-                          <Avatar
-                            sx={{
-                              height: 42,
-                              width: 42,
-                            }}
+                          {getInitials(getFullName(user))}
+                        </Avatar>
+                        <Box sx={{ ml: 1 }}>
+                          <Link
+                            color="inherit"
+                            component={RouterLink}
+                            to={`/management/users/${user.id}`}
+                            variant="subtitle2"
                           >
-                            {getInitials(getFullName(user))}
-                          </Avatar>
-                          <Box sx={{ ml: 1 }}>
-                            <Link
-                              color="inherit"
-                              component={RouterLink}
-                              to={`/management/users/${user.id}`}
-                              variant="subtitle2"
-                            >
-                              {getFullName(user)}
-                            </Link>
-                            <Typography color="textSecondary" variant="body2">
-                              {user.email}
-                            </Typography>
-                          </Box>
+                            {getFullName(user)}
+                          </Link>
+                          <Typography color="textSecondary" variant="body2">
+                            {user.email}
+                          </Typography>
                         </Box>
-                      </TableCell>
-                      <TableCell>{upperFirst(startCase(user?.status).toLowerCase())}</TableCell>
-                      <TableCell>{user.mobileNumber}</TableCell>
-                      <TableCell>{user.balanceLimit - user.balanceCurrent}</TableCell>
-                      <TableCell align="right">
-                        <Tooltip title="Transaction">
-                          <IconButton component={RouterLink} to={`/transactions/?userId=${user.id}`}>
-                            <AccountBalanceIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Onboarding">
-                          <IconButton component={RouterLink} to={`user-onboarding/create?userId=${user.id}`}>
-                            <AccountBalanceWalletIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Edit">
-                          <IconButton component={RouterLink} to={`/management/users/${user.id}/edit`}>
-                            <PencilAltIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Show">
-                          <IconButton component={RouterLink} to={`/management/users/${user.id}`}>
-                            <ArrowRightIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Scrollbar>
-          <TablePagination
-            component="div"
-            count={filteredUser.length}
-            onPageChange={handlePageChange}
-            onRowsPerPageChange={handleLimitChange}
-            page={page}
-            rowsPerPage={limit}
-            rowsPerPageOptions={[5, 10, 25]}
-          />
-        </>
-      )}
+                      </Box>
+                    </Box>
+                  </TableCell>
+                  <TableCell>{user.mobileNumber}</TableCell>
+                  <TableCell>{user.balanceLimit - user.balanceCurrent}</TableCell>
+                  <TableCell>{upperFirst(startCase(user?.status).toLowerCase())}</TableCell>
+                  <TableCell align="right">
+                    <Tooltip title="Transaction">
+                      <IconButton component={RouterLink} to={`/transactions/?userId=${user.id}`}>
+                        <MonetizationOn fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Onboarding">
+                      <IconButton component={RouterLink} to={`user-onboarding/create?userId=${user.id}`}>
+                        <Assignment fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Edit">
+                      <IconButton component={RouterLink} to={`/management/users/${user.id}/edit`}>
+                        <PencilAltIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                    <Tooltip title="Show">
+                      <IconButton component={RouterLink} to={`/management/users/${user.id}`}>
+                        <ArrowRightIcon fontSize="small" />
+                      </IconButton>
+                    </Tooltip>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </Box>
+      </Scrollbar>
+      <TablePagination
+        component="div"
+        count={filteredUser.length}
+        onPageChange={handlePageChange}
+        onRowsPerPageChange={handleLimitChange}
+        page={page}
+        rowsPerPage={limit}
+        rowsPerPageOptions={[5, 10, 25]}
+      />
     </Card>
   );
-};
-
-UserListTable.propTypes = {
-  users: PropTypes.array.isRequired,
 };
 
 export default UserListTable;
