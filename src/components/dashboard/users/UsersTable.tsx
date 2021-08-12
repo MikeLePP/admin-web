@@ -165,7 +165,7 @@ const UserListTable: FC<UserListTableProps> = (props) => {
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [query, setQuery] = useState<string>('');
-  const [frequencyCount, setCycle] = useState<string>(arrearFilterValue.frequencyCount);
+  const [frequencyCount, setFrequencyCount] = useState<string>(arrearFilterValue.frequencyCount);
   const [sort, setSort] = useState<Sort>(sortOptions[0].value);
 
   const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
@@ -176,8 +176,8 @@ const UserListTable: FC<UserListTableProps> = (props) => {
     setQuery(event.target.value);
   };
 
-  const handleCycleChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setCycle(event.target.value);
+  const handleFrequencyCountChange = (event: ChangeEvent<HTMLInputElement>): void => {
+    setFrequencyCount(event.target.value);
   };
 
   const handleSortChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -299,7 +299,7 @@ const UserListTable: FC<UserListTableProps> = (props) => {
           >
             <TextField
               fullWidth
-              onChange={handleCycleChange}
+              onChange={handleFrequencyCountChange}
               placeholder=""
               value={frequencyCount}
               variant="outlined"
