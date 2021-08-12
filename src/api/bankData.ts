@@ -10,7 +10,7 @@ class BankApi {
       await fetch(`${apiRoot}/messaging/bank-data`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${await getAuthToken()}`,
+          Authorization: await getAuthToken(),
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({

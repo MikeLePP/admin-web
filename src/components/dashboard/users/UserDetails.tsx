@@ -84,7 +84,7 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
             </TableCell>
             <TableCell>
               <Typography color="textSecondary" variant="body2">
-                {moment.utc(user.incomeNextDate).format('DD/MM/YYYY h:mm A')}
+                {moment(user.incomeNextDate).format('DD/MM/YYYY h:mm A')}
               </Typography>
             </TableCell>
           </TableRow>

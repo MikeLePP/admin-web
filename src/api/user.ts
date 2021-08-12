@@ -10,8 +10,8 @@ const apiRoot = process.env.REACT_APP_API_URL;
 class UserApi {
   async getUsers(
     filter: Record<string, unknown> = {},
-    range: string = '[0,9]',
-    sort: string = 'sort=["createdAt","DESC"]',
+    range = '[0,9]',
+    sort = 'sort=["createdAt","DESC"]',
   ): Promise<User[]> {
     try {
       const res = await fetch(
@@ -21,7 +21,7 @@ class UserApi {
         {
           method: 'GET',
           headers: {
-            Authorization: `Bearer ${await getAuthToken()}`,
+            Authorization: await getAuthToken(),
           },
         },
       );
@@ -37,7 +37,7 @@ class UserApi {
     try {
       const res = await fetch(`${apiRoot}/users/${id}`, {
         headers: {
-          Authorization: `Bearer ${await getAuthToken()}`,
+          Authorization: await getAuthToken(),
         },
       });
       const user = (await res.json()) as { data: any };
@@ -53,7 +53,7 @@ class UserApi {
       const res = await fetch(`${apiRoot}/users/${userId}/bank-accounts`, {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${await getAuthToken()}`,
+          Authorization: await getAuthToken(),
         },
       });
       const jsonResponse = (await res.json()) as { data: { attributes: BankAccount; id: string }[] };
@@ -69,7 +69,7 @@ class UserApi {
       const res = await fetch(`${apiRoot}/users/${userId}/bank-data`, {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${await getAuthToken()}`,
+          Authorization: await getAuthToken(),
         },
       });
       const jsonResponse = (await res.json()) as {
@@ -87,7 +87,7 @@ class UserApi {
       const res = await fetch(`${apiRoot}/users/${userId}/bank-data?days=${days}`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${await getAuthToken()}`,
+          Authorization: await getAuthToken(),
         },
       });
       const jsonResponse = (await res.json()) as {
@@ -105,7 +105,7 @@ class UserApi {
       await fetch(`${apiRoot}/users/${userId}/balance-limit`, {
         method: 'PATCH',
         headers: {
-          Authorization: `Bearer ${await getAuthToken()}`,
+          Authorization: await getAuthToken(),
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -123,7 +123,7 @@ class UserApi {
       const res = await fetch(`${apiRoot}/users/${userId}/mobile-number/swap`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${await getAuthToken()}`,
+          Authorization: await getAuthToken(),
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -156,7 +156,7 @@ class UserApi {
       const res = await fetch(`${apiRoot}/users/${userId}`, {
         method: 'PUT',
         headers: {
-          Authorization: `Bearer ${await getAuthToken()}`,
+          Authorization: await getAuthToken(),
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(user),
