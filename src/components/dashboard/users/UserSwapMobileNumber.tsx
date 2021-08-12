@@ -96,7 +96,9 @@ export default function SwapPhoneNumber({ user, onSwapPhoneNumber }: IProps): JS
               {upperFirst(startCase(userFound?.status).toLowerCase())}{' '}
             </Typography>
           ) : (
-            <Typography>No existing user</Typography>
+            <div>
+              {(searchStatus === 'success' || searchStatus === 'fail') && <Typography>No existing user</Typography>}
+            </div>
           )}
         </Box>
         <Box sx={{ mt: 2 }}>
