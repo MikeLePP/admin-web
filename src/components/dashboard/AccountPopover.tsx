@@ -16,10 +16,12 @@ import {
 } from '@material-ui/core';
 import useAuth from '../../hooks/useAuth';
 import CogIcon from '../../icons/Cog';
-import UserIcon from '../../icons/User';
+import useSettings from '../../hooks/useSettings';
 
 const AccountPopover: FC = () => {
   const anchorRef = useRef<HTMLButtonElement | null>(null);
+  const { setOpen: setSettingOpen } = useSettings();
+
   const { user, logout } = useAuth();
   const navigate = useNavigate();
   const [open, setOpen] = useState<boolean>(false);
@@ -72,7 +74,7 @@ const AccountPopover: FC = () => {
         onClose={handleClose}
         open={open}
         PaperProps={{
-          sx: { width: 240 },
+          sx: { width: 260 },
         }}
       >
         <Box sx={{ p: 2 }}>
@@ -80,24 +82,12 @@ const AccountPopover: FC = () => {
             {user.name}
           </Typography>
           <Typography color="textSecondary" variant="subtitle2">
-            Devias
+            {user.email}
           </Typography>
         </Box>
         <Divider />
         <Box sx={{ mt: 2 }}>
-          <MenuItem component={RouterLink} to="/dashboard/social/profile">
-            <ListItemIcon>
-              <UserIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText
-              primary={
-                <Typography color="textPrimary" variant="subtitle2">
-                  Profile
-                </Typography>
-              }
-            />
-          </MenuItem>
-          <MenuItem component={RouterLink} to="/dashboard/account">
+          <MenuItem onClick={() => setSettingOpen(true)}>
             <ListItemIcon>
               <CogIcon fontSize="small" />
             </ListItemIcon>

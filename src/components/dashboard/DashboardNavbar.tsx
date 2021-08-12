@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import { AppBar, Box, IconButton, Toolbar } from '@material-ui/core';
 import { experimentalStyled } from '@material-ui/core/styles';
 import type { AppBarProps } from '@material-ui/core';
+import { Tune } from '@material-ui/icons';
 import MenuIcon from '../../icons/Menu';
 import AccountPopover from './AccountPopover';
 import ContactsPopover from './ContactsPopover';
@@ -11,6 +12,7 @@ import ContentSearch from './ContentSearch';
 import LanguagePopover from './LanguagePopover';
 import Logo from '../Logo';
 import NotificationsPopover from './NotificationsPopover';
+import useSettings from '../../hooks/useSettings';
 
 interface DashboardNavbarProps extends AppBarProps {
   onSidebarMobileOpen?: () => void;
@@ -32,6 +34,9 @@ const DashboardNavbarRoot = experimentalStyled(AppBar)(({ theme }) => ({
 
 const DashboardNavbar: FC<DashboardNavbarProps> = (props) => {
   const { onSidebarMobileOpen, ...other } = props;
+  const { settings, saveSettings, open, setOpen } = useSettings();
+
+  const handleOpenSetting = () => setOpen(true);
 
   return (
     <DashboardNavbarRoot {...other}>
@@ -65,15 +70,8 @@ const DashboardNavbar: FC<DashboardNavbarProps> = (props) => {
             ml: 2,
           }}
         />
-        <LanguagePopover />
         <Box sx={{ ml: 1 }}>
-          <ContentSearch />
-        </Box>
-        <Box sx={{ ml: 1 }}>
-          <ContactsPopover />
-        </Box>
-        <Box sx={{ ml: 1 }}>
-          <NotificationsPopover />
+          <Tune style={{ cursor: 'pointer' }} onClick={handleOpenSetting} />
         </Box>
         <Box sx={{ ml: 2 }}>
           <AccountPopover />

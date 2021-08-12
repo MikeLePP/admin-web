@@ -14,6 +14,8 @@ interface Settings {
 export interface SettingsContextValue {
   settings: Settings;
   saveSettings: (update: Settings) => void;
+  open: boolean;
+  setOpen: (value: boolean) => void;
 }
 
 interface SettingsProviderProps {
@@ -61,10 +63,13 @@ export const storeSettings = (settings: Settings): void => {
 const SettingsContext = createContext<SettingsContextValue>({
   settings: initialSettings,
   saveSettings: () => {},
+  open: false,
+  setOpen: (value) => {},
 });
 
 export const SettingsProvider: FC<SettingsProviderProps> = (props) => {
   const { children } = props;
+  const [open, setOpen] = useState(false);
   const [settings, setSettings] = useState<Settings>(initialSettings);
 
   useEffect(() => {
@@ -85,6 +90,8 @@ export const SettingsProvider: FC<SettingsProviderProps> = (props) => {
       value={{
         settings,
         saveSettings,
+        open,
+        setOpen,
       }}
     >
       {children}
