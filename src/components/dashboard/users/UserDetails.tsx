@@ -1,4 +1,5 @@
 import type { FC } from 'react';
+import moment from 'moment';
 import { Card, CardHeader, Divider, Table, TableBody, TableCell, TableRow, Typography } from '@material-ui/core';
 import { User } from '../../../types/users';
 
@@ -83,7 +84,7 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
             </TableCell>
             <TableCell>
               <Typography color="textSecondary" variant="body2">
-                {user.incomeNextDate}
+                {moment.utc(user.incomeNextDate).format('DD/MM/YYYY h:mm A')}
               </Typography>
             </TableCell>
           </TableRow>

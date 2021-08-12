@@ -70,16 +70,6 @@ const DashboardNavbar: FC<DashboardNavbarProps> = (props) => {
             ml: 2,
           }}
         />
-        {/* <LanguagePopover />
-        <Box sx={{ ml: 1 }}>
-          <ContentSearch />
-        </Box>
-        <Box sx={{ ml: 1 }}>
-          <ContactsPopover />
-        </Box>
-        <Box sx={{ ml: 1 }}>
-          <NotificationsPopover />
-        </Box> */}
         <Box sx={{ ml: 1 }}>
           <Tune style={{ cursor: 'pointer' }} onClick={handleOpenSetting} />
         </Box>

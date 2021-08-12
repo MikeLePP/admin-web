@@ -3,70 +3,73 @@ import toast from 'react-hot-toast';
 import { get } from 'lodash';
 import type { User } from '../types/users';
 import type { BankAccount } from '../types/bankAccount';
-import { flatObject } from '../lib/object';
+import { flatObject } from '../lib/apiHelpers';
+import { getAuthToken } from '../helpers/auth';
 
 const apiRoot = process.env.REACT_APP_API_URL;
 class UserApi {
-  async getUsers(filter = '?filter=%7B%7D&range=%5B0%2C9%5D&sort=%5B%22createdAt%22%2C%22DESC%22%5D'): Promise<User[]> {
-    const { signInUserSession } = await Auth.currentAuthenticatedUser();
+  async getUsers(
+    filter: Record<string, unknown> = {},
+    range: string = '[0,9]',
+    sort: string = 'sort=["createdAt","DESC"]',
+  ): Promise<User[]> {
     try {
-      const res = await fetch(`${apiRoot}/users${filter}`, {
-        method: 'GET',
-        headers: {
-          Authorization: `Bearer ${String(signInUserSession.accessToken.jwtToken)}`,
+      const res = await fetch(
+        `${apiRoot}/users?filter=${encodeURIComponent(JSON.stringify(filter))}&range=${encodeURIComponent(
+          range,
+        )}&sort=${encodeURIComponent(sort)}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${await getAuthToken()}`,
+          },
         },
-      });
+      );
       const jsonResponse = (await res.json()) as { data: { attributes: User; id: string; type: string }[] };
       return jsonResponse.data.map(flatObject);
     } catch (err) {
-      const errTitle = get(err, 'body.errors[0].title', 'Cannot get list users');
-      toast.error(errTitle);
+      toast.error(get(err, 'body.errors[0].title', 'Cannot get users'));
     }
     return [];
   }
 
   async getUser({ id }: { id: string }): Promise<User | undefined> {
-    const { signInUserSession } = await Auth.currentAuthenticatedUser();
     try {
       const res = await fetch(`${apiRoot}/users/${id}`, {
         headers: {
-          Authorization: `Bearer ${String(signInUserSession.accessToken.jwtToken)}`,
+          Authorization: `Bearer ${await getAuthToken()}`,
         },
       });
       const user = (await res.json()) as { data: any };
       return flatObject<User>(user.data);
     } catch (err) {
-      const errTitle = get(err, 'body.errors[0].title', 'Cannot get list users');
-      toast.error(errTitle);
+      toast.error(get(err, 'body.errors[0].title', 'Cannot get user details'));
     }
     return undefined;
   }
 
   async getBankAccount(userId: string): Promise<BankAccount[]> {
-    const { signInUserSession } = await Auth.currentAuthenticatedUser();
     try {
       const res = await fetch(`${apiRoot}/users/${userId}/bank-accounts`, {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${String(signInUserSession.accessToken.jwtToken)}`,
+          Authorization: `Bearer ${await getAuthToken()}`,
         },
       });
       const jsonResponse = (await res.json()) as { data: { attributes: BankAccount; id: string }[] };
       return jsonResponse.data.map(flatObject);
     } catch (err) {
-      const errTitle = get(err, 'body.errors[0].title', 'Cannot get list bank accounts');
-      toast.error(errTitle);
+      toast.error(get(err, 'body.errors[0].title', 'Cannot get bank accounts'));
     }
     return [];
   }
 
   async getBankData(userId: string): Promise<any> {
-    const { signInUserSession } = await Auth.currentAuthenticatedUser();
     try {
       const res = await fetch(`${apiRoot}/users/${userId}/bank-data`, {
         method: 'GET',
         headers: {
-          Authorization: `Bearer ${String(signInUserSession.accessToken.jwtToken)}`,
+          Authorization: `Bearer ${await getAuthToken()}`,
         },
       });
       const jsonResponse = (await res.json()) as {
@@ -74,19 +77,17 @@ class UserApi {
       };
       return jsonResponse;
     } catch (err) {
-      const errTitle = get(err, 'body.errors[0].title', 'Cannot get list bank accounts');
-      toast.error(errTitle);
+      toast.error(get(err, 'body.errors[0].title', 'Cannot get bank data'));
     }
     return {};
   }
 
   async postBankData(userId: string, days: number): Promise<any> {
-    const { signInUserSession } = await Auth.currentAuthenticatedUser();
     try {
       const res = await fetch(`${apiRoot}/users/${userId}/bank-data?days=${days}`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${String(signInUserSession.accessToken.jwtToken)}`,
+          Authorization: `Bearer ${await getAuthToken()}`,
         },
       });
       const jsonResponse = (await res.json()) as {
@@ -94,39 +95,35 @@ class UserApi {
       };
       return jsonResponse;
     } catch (err) {
-      const errTitle = get(err, 'body.errors[0].title', 'Cannot get list bank accounts');
-      toast.error(errTitle);
+      toast.error(get(err, 'body.errors[0].title', 'Cannot submit bank data'));
     }
     return {};
   }
 
   async updateBalanceLimit(userId: string, balanceLimit: number): Promise<void> {
-    const { signInUserSession } = await Auth.currentAuthenticatedUser();
     try {
       await fetch(`${apiRoot}/users/${userId}/balance-limit`, {
         method: 'PATCH',
         headers: {
-          Authorization: `Bearer ${String(signInUserSession.accessToken.jwtToken)}`,
+          Authorization: `Bearer ${await getAuthToken()}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           balanceLimit,
         }),
       });
-      toast.success('Update balance limit success');
+      toast.success("User's balance limit has been updated");
     } catch (err) {
-      const errTitle = get(err, 'body.errors[0].title', "Cannot update user's balance limit");
-      toast.error(errTitle);
+      toast.error(get(err, 'body.errors[0].title', "Cannot update user's balance limit"));
     }
   }
 
   async swapMobileNumber(userId: string, swapUserId: number): Promise<{ success: boolean }> {
-    const { signInUserSession } = await Auth.currentAuthenticatedUser();
     try {
       const res = await fetch(`${apiRoot}/users/${userId}/mobile-number/swap`, {
         method: 'POST',
         headers: {
-          Authorization: `Bearer ${String(signInUserSession.accessToken.jwtToken)}`,
+          Authorization: `Bearer ${await getAuthToken()}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
@@ -136,8 +133,7 @@ class UserApi {
       if (res.status !== 204) {
         const jsonRes = await res.json();
         if (jsonRes && jsonRes.errors) {
-          const errTitle = get(jsonRes, 'errors[0].title', 'Cannot swap mobile number');
-          toast.error(errTitle);
+          toast.error(get(jsonRes, 'errors[0].title', 'Cannot swap mobile number'));
           return {
             success: false,
           };
@@ -148,8 +144,7 @@ class UserApi {
         success: true,
       };
     } catch (err) {
-      const errTitle = get(err, 'body.errors[0].title', 'Cannot swap mobile number');
-      toast.error(errTitle);
+      toast.error(get(err, 'body.errors[0].title', 'Cannot swap mobile number'));
       return {
         success: false,
       };
@@ -157,12 +152,11 @@ class UserApi {
   }
 
   async updateUser(userId: string, user: User): Promise<{ success: boolean }> {
-    const { signInUserSession } = await Auth.currentAuthenticatedUser();
     try {
       const res = await fetch(`${apiRoot}/users/${userId}`, {
         method: 'PUT',
         headers: {
-          Authorization: `Bearer ${String(signInUserSession.accessToken.jwtToken)}`,
+          Authorization: `Bearer ${await getAuthToken()}`,
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(user),
@@ -173,8 +167,7 @@ class UserApi {
         };
       }
     } catch (err) {
-      const errTitle = get(err, 'body.errors[0].title', "Cannot update user's details");
-      toast.error(errTitle);
+      toast.error(get(err, 'body.errors[0].title', "Cannot update user's details"));
       return {
         success: false,
       };

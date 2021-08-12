@@ -20,6 +20,7 @@ import { User } from '../../../types/users';
 import TransactionDialog from '../../commons/TransactionDialog';
 import ConfirmDialog from '../../commons/Dialog';
 import { bankApi } from '../../../api/bankData';
+import { formatBankAccount } from '../../../helpers/bankAccount';
 
 interface UserBankDetailsProps {
   user: User;
@@ -37,9 +38,7 @@ const UserBankDetails: FC<UserBankDetailsProps> = (props) => {
     const bankAccount = bankAccounts.find((account) => userBankAccountId && account.id === userBankAccountId);
     return {
       bankAccount,
-      text: `Name: ${bankAccount?.accountName || 'N/A'} | BSB: ${bankAccount?.accountBsb || 'N/A'} | ACC: ${
-        bankAccount?.accountNumber || 'N/A'
-      }`,
+      text: bankAccount ? formatBankAccount(bankAccount) : 'N/A',
     };
   }, [bankAccounts, props.user]);
   const handleRequestBankData = () => {

@@ -38,22 +38,6 @@ const SettingsDrawer: FC = () => {
 
   return (
     <>
-      {/* <Tooltip title="Settings">
-        <Fab
-          color="primary"
-          onClick={handleOpen}
-          size="medium"
-          sx={{
-            bottom: 0,
-            margin: (theme) => theme.spacing(4),
-            position: 'fixed',
-            right: 0,
-            zIndex: (theme) => theme.zIndex.speedDial,
-          }}
-        >
-          <AdjustmentsIcon fontSize="small" />
-        </Fab> */}
-      {/* </Tooltip> */}
       <Drawer
         anchor="right"
         onClose={handleClose}

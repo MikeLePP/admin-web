@@ -10,14 +10,13 @@ interface IProps {
   onUpdateLimit: (limit: number) => void;
 }
 
-const UserUpdateLimit: FC<IProps> = ({ user, onUpdateLimit, ...remains }) => {
+const UserUpdateBalanceLimit: FC<IProps> = ({ user, onUpdateLimit, ...remains }) => {
   const [balanceLimit, setBalanceLimit] = useState<string>('');
   useEffect(() => {
     setBalanceLimit(user.balanceLimit.toString() || '');
   }, [user]);
   const handleUpdate = () => {
     const limit = parseFloat(balanceLimit);
-    console.log('limit', limit, balanceLimit);
     onUpdateLimit(limit);
   };
   return (
@@ -56,4 +55,4 @@ const UserUpdateLimit: FC<IProps> = ({ user, onUpdateLimit, ...remains }) => {
   );
 };
 
-export default UserUpdateLimit;
+export default UserUpdateBalanceLimit;

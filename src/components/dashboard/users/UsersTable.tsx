@@ -390,8 +390,4 @@ const UserListTable: FC<UserListTableProps> = (props) => {
   );
 };
 
-UserListTable.propTypes = {
-  users: PropTypes.array.isRequired,
-};
-
 export default UserListTable;

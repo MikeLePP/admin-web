@@ -63,16 +63,11 @@ function TransactionDialog({
   };
 
   const onRefreshClick = async (): Promise<void> => {
-    try {
-      setLoading(true);
-      const { data } = await userApi.postBankData(userId, days);
-      setUrl(data.meta.reportUrl);
-      setDataLastAt(data.attributes.dataLastAt);
-    } catch (error) {
-      throw new Error(error.message);
-    } finally {
-      setLoading(false);
-    }
+    setLoading(true);
+    const { data } = await userApi.postBankData(userId, days);
+    setUrl(data.meta.reportUrl);
+    setDataLastAt(data.attributes.dataLastAt);
+    setLoading(false);
   };
   return (
     <div>

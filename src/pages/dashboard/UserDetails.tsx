@@ -3,25 +3,25 @@ import type { FC, ChangeEvent } from 'react';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Box, Breadcrumbs, Button, Container, Divider, Grid, Link, Tab, Tabs, Typography } from '@material-ui/core';
-import SwapHorizIcon from '@material-ui/icons/SwapHoriz';
 import {
-  UserDetails,
+  UserDetails as UserDetailsComponent,
   CustomerDataManagement,
-  UserUpdateLimit,
+  UserUpdateBalanceLimit,
   UserBankDetails,
   UserSwapMobileNumber,
-} from '../../components/dashboard/customer';
+} from '../../components/dashboard/users';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import PencilAltIcon from '../../icons/PencilAlt';
 import gtm from '../../lib/gtm';
 import useSettings from '../../hooks/useSettings';
 import { getUser, updateBalanceLimit, swapMobileNumber } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
-import { getFullname } from '../../lib/string';
+import { getFullname } from '../../lib/userHelpers';
+import NotFound from '../../components/commons/NotFound';
 
 const tabs = [{ label: 'Details', value: 'details' }];
 
-const CustomerDetails: FC = () => {
+const UserDetails: FC = () => {
   const { settings } = useSettings();
   const [currentTab, setCurrentTab] = useState<string>('details');
   const dispatch = useDispatch();
@@ -70,7 +70,7 @@ const CustomerDetails: FC = () => {
   );
 
   if (!user) {
-    return null;
+    return <NotFound />;
   }
 
   return (
@@ -137,13 +137,13 @@ const CustomerDetails: FC = () => {
             {currentTab === 'details' && (
               <Grid container spacing={3}>
                 <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                  <UserDetails user={user} />
+                  <UserDetailsComponent user={user} />
                 </Grid>
                 <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
                   <UserBankDetails user={user} />
                 </Grid>
                 <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                  <UserUpdateLimit user={user} onUpdateLimit={handleUpdateLimit} />
+                  <UserUpdateBalanceLimit user={user} onUpdateLimit={handleUpdateLimit} />
                 </Grid>
                 <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
                   <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
@@ -160,4 +160,4 @@ const CustomerDetails: FC = () => {
   );
 };
 
-export default CustomerDetails;
+export default UserDetails;

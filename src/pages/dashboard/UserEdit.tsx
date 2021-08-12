@@ -1,38 +1,46 @@
-import { Box, Breadcrumbs, Container, Grid, Link, Typography } from '@material-ui/core';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 import type { FC } from 'react';
-import { useEffect, useMemo } from 'react';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
-import { Link as RouterLink } from 'react-router-dom';
-import { CustomerListTable } from '../../components/dashboard/customer';
+import { Box, Breadcrumbs, Container, Grid, Link, Typography } from '@material-ui/core';
+import { UserEditForm } from '../../components/dashboard/users';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
-import { getUsers } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
+import { getUser } from '../../slices/user';
+import NotFound from '../../components/commons/NotFound';
 
-const CustomerList: FC = () => {
-  const dispatch = useDispatch();
+const UserEdit: FC = () => {
   const { settings } = useSettings();
+  const dispatch = useDispatch();
   const userSelector = useSelector((state) => state.user);
+  const { userId: id } = useParams();
+
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
-  useEffect(() => {
-    dispatch(getUsers());
-  }, [dispatch]);
-
   const user = useMemo(() => {
     const {
-      users: { allIds, byId },
+      users: { byId },
+      targetUserId,
     } = userSelector;
-    return allIds.map((id) => byId[id]);
+    return byId[targetUserId];
   }, [userSelector]);
+
+  if (!user) {
+    return <NotFound />;
+  }
+
+  useEffect(() => {
+    dispatch(getUser({ id }));
+  }, [dispatch, id]);
 
   return (
     <>
       <Helmet>
-        <title>Management: User List</title>
+        <title>Management: User Edit</title>
       </Helmet>
       <Box
         sx={{
@@ -45,20 +53,23 @@ const CustomerList: FC = () => {
           <Grid container justifyContent="space-between" spacing={3}>
             <Grid item>
               <Typography color="textPrimary" variant="h5">
-                User List
+                User Edit
               </Typography>
               <Breadcrumbs aria-label="breadcrumb" separator={<ChevronRightIcon fontSize="small" />} sx={{ mt: 1 }}>
-                <Link color="textPrimary" component={RouterLink} to="/" variant="subtitle2">
+                <Link color="textPrimary" component={RouterLink} to="/management" variant="subtitle2">
                   Management
                 </Link>
-                <Typography color="textSecondary" variant="subtitle2">
+                <Link color="textPrimary" component={RouterLink} to="/management/users" variant="subtitle2">
                   Users
+                </Link>
+                <Typography color="textSecondary" variant="subtitle2">
+                  {user?.email}
                 </Typography>
               </Breadcrumbs>
             </Grid>
           </Grid>
-          <Box sx={{ mt: 3 }}>
-            <CustomerListTable users={user} />
+          <Box mt={3}>
+            <UserEditForm userId={id} user={user} />
           </Box>
         </Container>
       </Box>
@@ -66,4 +77,4 @@ const CustomerList: FC = () => {
   );
 };
 
-export default CustomerList;
+export default UserEdit;

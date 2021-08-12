@@ -1,4 +1,4 @@
-const colourLabelById = {
+const COLOR_LABELS = {
   G: {
     label: 'Green',
   },
@@ -10,4 +10,4 @@ const colourLabelById = {
   },
 };
 
-export default colourLabelById;
+export default COLOR_LABELS;

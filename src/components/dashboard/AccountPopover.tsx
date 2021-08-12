@@ -87,18 +87,6 @@ const AccountPopover: FC = () => {
         </Box>
         <Divider />
         <Box sx={{ mt: 2 }}>
-          {/* <MenuItem component={RouterLink} to="/dashboard/social/profile">
-            <ListItemIcon>
-              <UserIcon fontSize="small" />
-            </ListItemIcon>
-            <ListItemText
-              primary={
-                <Typography color="textPrimary" variant="subtitle2">
-                  Profile
-                </Typography>
-              }
-            />
-          </MenuItem> */}
           <MenuItem onClick={() => setSettingOpen(true)}>
             <ListItemIcon>
               <CogIcon fontSize="small" />
