@@ -74,7 +74,7 @@ const UserEdit: FC = () => {
                     Users
                   </Link>
                   <Typography color="textSecondary" variant="subtitle2">
-                    {user?.email}
+                    {user?.mobileNumber}
                   </Typography>
                 </Breadcrumbs>
               </Grid>

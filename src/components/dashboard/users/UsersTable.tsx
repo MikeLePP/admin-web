@@ -20,8 +20,8 @@ import {
   Tooltip,
   Typography,
 } from '@material-ui/core';
-import AccountBalanceIcon from '@material-ui/icons/AccountBalance';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import MonetizationOn from '@material-ui/icons/MonetizationOn';
+import Assignment from '@material-ui/icons/Assignment';
 import { startCase, upperFirst } from 'lodash';
 import PropTypes from 'prop-types';
 import type { ChangeEvent, FC, MouseEvent } from 'react';
@@ -304,9 +304,9 @@ const UserListTable: FC<UserListTableProps> = (props) => {
             <TableHead>
               <TableRow>
                 <TableCell>Name</TableCell>
-                <TableCell>Status</TableCell>
                 <TableCell>Mobile</TableCell>
-                <TableCell>Available Ballance</TableCell>
+                <TableCell>Available Balance</TableCell>
+                <TableCell>Status</TableCell>
                 <TableCell align="right">Actions</TableCell>
               </TableRow>
             </TableHead>
@@ -345,18 +345,18 @@ const UserListTable: FC<UserListTableProps> = (props) => {
                         </Box>
                       </Box>
                     </TableCell>
-                    <TableCell>{upperFirst(startCase(user?.status).toLowerCase())}</TableCell>
                     <TableCell>{user.mobileNumber}</TableCell>
                     <TableCell>{user.balanceLimit - user.balanceCurrent}</TableCell>
+                    <TableCell>{upperFirst(startCase(user?.status).toLowerCase())}</TableCell>
                     <TableCell align="right">
                       <Tooltip title="Transaction">
                         <IconButton component={RouterLink} to={`/transactions/?userId=${user.id}`}>
-                          <AccountBalanceIcon fontSize="small" />
+                          <MonetizationOn fontSize="small" />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Onboarding">
                         <IconButton component={RouterLink} to={`user-onboarding/create?userId=${user.id}`}>
-                          <AccountBalanceWalletIcon fontSize="small" />
+                          <Assignment fontSize="small" />
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Edit">
