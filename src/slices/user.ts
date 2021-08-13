@@ -13,6 +13,7 @@ interface UserState {
   };
   status: 'idle' | 'loading' | 'success' | 'error' | 'updating';
   targetUserId: string;
+  pageKey?: Record<string, string>;
 }
 
 const initialState: UserState = {
@@ -28,13 +29,24 @@ const slice = createSlice({
   name: 'user',
   initialState,
   reducers: {
+    loading(state: UserState, action: PayloadAction): void {
+      state.status = 'loading';
+    },
+    error(state: UserState, action: PayloadAction): void {
+      state.status = 'error';
+    },
+    setPageKey(state: UserState, action: PayloadAction<Record<string, string>>): void {
+      state.pageKey = action.payload;
+    },
     getUsers(state: UserState, action: PayloadAction<User[]>): void {
       const users = action.payload;
+      state.status = 'success';
       state.users.byId = objFromArray(users);
       state.users.allIds = Object.keys(state.users.byId);
     },
     getUser(state: UserState, action: PayloadAction<User>): void {
       const user = action.payload;
+      state.status = 'success';
       state.targetUserId = user.id;
       if (!state.users.allIds.includes(user.id)) {
         state.users.allIds.push(user.id);
@@ -89,9 +101,34 @@ export const { reducer } = slice;
 export const getUsers =
   (): AppThunk =>
   async (dispatch): Promise<void> => {
+    dispatch(slice.actions.loading());
     const data = await userApi.getUsers();
-    console.log('🚀 ~ file: user.ts ~ line 85 ~ data', data);
     dispatch(slice.actions.getUsers(data));
+    dispatch(slice.actions.setPageKey());
+  };
+
+export const filterUsers =
+  (frequencyCount: number): AppThunk =>
+  async (dispatch): Promise<void> => {
+    dispatch(slice.actions.loading());
+    const { user, meta } = await userApi.getUsersInArrears(frequencyCount);
+    dispatch(slice.actions.getUsers(user));
+    dispatch(slice.actions.setPageKey(meta.pageKey));
+  };
+
+export const filterMoreUsers =
+  (frequencyCount: number): AppThunk =>
+  async (dispatch, getState): Promise<void> => {
+    const state = getState();
+    const {
+      pageKey,
+      users: { allIds, byId },
+    } = state.user;
+    const currentUsers = allIds.map((id) => byId[id]);
+    dispatch(slice.actions.loading());
+    const { user, meta } = await userApi.getUsersInArrears(frequencyCount, pageKey);
+    dispatch(slice.actions.getUsers([...currentUsers, ...user]));
+    dispatch(slice.actions.setPageKey(meta.pageKey));
   };
 
 export const getUser =

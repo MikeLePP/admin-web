@@ -1,26 +1,32 @@
 import { Box, Breadcrumbs, Container, Grid, Link, Typography } from '@material-ui/core';
 import type { FC } from 'react';
-import { useEffect, useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink } from 'react-router-dom';
 import { UsersTable } from '../../components/dashboard/users';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
-import { getUsers } from '../../slices/user';
+import { getUsers, filterUsers, filterMoreUsers } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
 
 const UserList: FC = () => {
   const dispatch = useDispatch();
   const { settings } = useSettings();
   const userSelector = useSelector((state) => state.user);
+  const [currentTab, setCurrentTab] = useState<string>('all');
+  const [frequencyCount, setFrequencyCount] = useState(1);
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
 
   useEffect(() => {
-    dispatch(getUsers());
-  }, [dispatch]);
+    if (currentTab === 'all') {
+      dispatch(getUsers());
+    } else if (currentTab === 'inArrears') {
+      dispatch(filterUsers(frequencyCount));
+    }
+  }, [dispatch, currentTab, frequencyCount]);
 
   const user = useMemo(() => {
     const {
@@ -28,6 +34,17 @@ const UserList: FC = () => {
     } = userSelector;
     return allIds.map((id) => byId[id]);
   }, [userSelector]);
+
+  const loadingState = useMemo(() => userSelector.status === 'loading', [userSelector]);
+  const pageKey = useMemo(() => userSelector.pageKey, [userSelector]);
+
+  const handleFilterUserInArrears = (newFrequencyCount) => {
+    setFrequencyCount(newFrequencyCount);
+  };
+
+  const handleLoadMore = () => {
+    dispatch(filterMoreUsers(frequencyCount));
+  };
 
   return (
     <>
@@ -58,7 +75,16 @@ const UserList: FC = () => {
             </Grid>
           </Grid>
           <Box sx={{ mt: 3 }}>
-            <UsersTable users={user} />
+            <UsersTable
+              loading={loadingState}
+              users={user}
+              currentTab={currentTab}
+              setCurrentTab={setCurrentTab}
+              onFilterUserInArrears={handleFilterUserInArrears}
+              initialFrequencyCount={frequencyCount}
+              pageKey={pageKey}
+              onLoadMore={handleLoadMore}
+            />
           </Box>
         </Container>
       </Box>
