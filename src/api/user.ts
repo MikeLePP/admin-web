@@ -35,8 +35,8 @@ class UserApi {
 
   async getUsersInArrears(
     frequencyCount: number,
-    pageKey?: Record<string, string>,
-  ): Promise<{ user: User[]; meta: { pageKey: Record<string, string> } }> {
+    pageKey?: Record<string, unknown>,
+  ): Promise<{ user: User[]; meta: { pageKey: Record<string, unknown> } }> {
     const pageKeyQuery = pageKey ? `&pageKey=${encodeURIComponent(JSON.stringify(pageKey))}` : '';
     try {
       const res = await fetch(`${apiRoot}/users/balance-overdue?frequencyCount=${frequencyCount}${pageKeyQuery}`, {
@@ -47,12 +47,12 @@ class UserApi {
       });
       const jsonResponse = (await res.json()) as {
         data: { attributes: User; id: string; type: string }[];
-        meta: { pageKey: Record<string, string> };
+        meta: { pageKey: Record<string, unknown> };
       };
       const { meta } = jsonResponse;
       return { user: jsonResponse.data.map(flatObject), meta };
     } catch (err) {
-      toast.error(get(err, 'body.errors[0].title', 'Cannot get users'));
+      toast.error(get(err, 'body.errors[0].title', 'Cannot get in arrears users'));
     }
     return {
       user: [],

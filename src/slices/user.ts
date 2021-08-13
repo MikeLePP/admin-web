@@ -13,7 +13,7 @@ interface UserState {
   };
   status: 'idle' | 'loading' | 'success' | 'error' | 'updating';
   targetUserId: string;
-  pageKey?: Record<string, string>;
+  pageKey?: Record<string, unknown>;
 }
 
 const initialState: UserState = {
@@ -35,7 +35,7 @@ const slice = createSlice({
     error(state: UserState, action: PayloadAction): void {
       state.status = 'error';
     },
-    setPageKey(state: UserState, action: PayloadAction<Record<string, string>>): void {
+    setPageKey(state: UserState, action: PayloadAction<Record<string, unknown>>): void {
       state.pageKey = action.payload;
     },
     getUsers(state: UserState, action: PayloadAction<User[]>): void {
