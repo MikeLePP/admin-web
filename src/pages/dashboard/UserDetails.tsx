@@ -1,38 +1,53 @@
-import { useCallback, useState, useEffect, useMemo } from 'react';
-import type { FC, ChangeEvent } from 'react';
-import { Link as RouterLink, useParams } from 'react-router-dom';
-import { Helmet } from 'react-helmet-async';
 import { Box, Breadcrumbs, Button, Container, Divider, Grid, Link, Tab, Tabs, Typography } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import type { ChangeEvent, FC } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+import NotFound from '../../components/commons/NotFound';
 import {
-  UserDetails as UserDetailsComponent,
   CustomerDataManagement,
-  UserUpdateBalanceLimit,
   UserBankDetails,
+  UserCollectionDetails,
+  UserCollectionEmail,
+  UserDetails as UserDetailsComponent,
+  UserSplitPayment,
   UserSwapMobileNumber,
+  UserTransactions,
+  UserUpdateBalanceLimit,
 } from '../../components/dashboard/users';
+import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import PencilAltIcon from '../../icons/PencilAlt';
 import gtm from '../../lib/gtm';
-import useSettings from '../../hooks/useSettings';
-import { getUser, updateBalanceLimit, swapMobileNumber } from '../../slices/user';
+import { getFullName } from '../../lib/userHelpers';
+import { getUser, swapMobileNumber, updateBalanceLimit } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
-import { getFullname } from '../../lib/userHelpers';
-import NotFound from '../../components/commons/NotFound';
 
-const tabs = [{ label: 'Details', value: 'details' }];
+const tabs = [
+  { label: 'Details', value: 'details' },
+  { label: 'Payments', value: 'payments' },
+];
 
 const UserDetails: FC = () => {
   const { settings } = useSettings();
-  const [currentTab, setCurrentTab] = useState<string>('details');
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+  const { userId: id, tabId } = useParams();
   const userSelector = useSelector((state) => state.user);
-  const { userId: id } = useParams();
+  const [currentTab, setCurrentTab] = useState<string>(tabs[0].value);
   const [loading, setLoading] = useState<boolean>(true);
-
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
+  useEffect(() => {
+    const defaultTabValue = tabs[0].value;
+    if (!tabId) {
+      setCurrentTab(defaultTabValue);
+    }
+    const matchedTab = tabs.find((tab) => tab.value === tabId);
+    setCurrentTab(matchedTab?.value || defaultTabValue);
+  }, [tabId]);
 
   const user = useMemo(() => {
     const {
@@ -52,6 +67,7 @@ const UserDetails: FC = () => {
 
   const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
+    navigate(`/management/users/${id}/${value}`);
   };
 
   const handleUpdateLimit = useCallback(
@@ -72,7 +88,7 @@ const UserDetails: FC = () => {
         }),
       );
     },
-    [dispatch, id],
+    [dispatch, id, user?.mobileNumber],
   );
 
   if (!user && !loading) {
@@ -100,7 +116,7 @@ const UserDetails: FC = () => {
             <Grid container justifyContent="space-between" spacing={3}>
               <Grid item>
                 <Typography color="textPrimary" variant="h5">
-                  {getFullname(user)}
+                  {getFullName(user)}
                 </Typography>
                 <Breadcrumbs aria-label="breadcrumb" separator={<ChevronRightIcon fontSize="small" />} sx={{ mt: 1 }}>
                   <Link color="textPrimary" component={RouterLink} to="/management/users" variant="subtitle2">
@@ -161,6 +177,22 @@ const UserDetails: FC = () => {
                   </Grid>
                   <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
                     <CustomerDataManagement />
+                  </Grid>
+                </Grid>
+              )}
+              {currentTab === 'payments' && (
+                <Grid container spacing={3}>
+                  <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
+                    <UserCollectionDetails user={user} />
+                  </Grid>
+                  <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
+                    <UserCollectionEmail user={user} />
+                  </Grid>
+                  <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
+                    <UserSplitPayment user={user} />
+                  </Grid>
+                  <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
+                    <UserTransactions user={user} />
                   </Grid>
                 </Grid>
               )}

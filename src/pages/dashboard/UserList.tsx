@@ -1,20 +1,31 @@
-import { Box, Breadcrumbs, Container, Grid, Link, Typography } from '@material-ui/core';
-import type { FC } from 'react';
+import { Box, Breadcrumbs, Card, Container, Divider, Grid, Link, Tab, Tabs, Typography } from '@material-ui/core';
+import type { ChangeEvent, FC } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink } from 'react-router-dom';
-import { UsersTable } from '../../components/dashboard/users';
+import { UserList as UserListComponent, UserListInArrears } from '../../components/dashboard/users';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
-import { getUsers, filterUsers, filterMoreUsers } from '../../slices/user';
+import { filterMoreUsers, filterUsers, getUsers } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
+
+const tabs = [
+  {
+    label: 'All',
+    value: 'all',
+  },
+  {
+    label: 'In arrears',
+    value: 'inArrears',
+  },
+];
 
 const UserList: FC = () => {
   const dispatch = useDispatch();
   const { settings } = useSettings();
   const userSelector = useSelector((state) => state.user);
-  const [currentTab, setCurrentTab] = useState<string>('all');
+  const [currentTab, setCurrentTab] = useState<string>(tabs[0].value);
   const [frequencyCount, setFrequencyCount] = useState(1);
   useEffect(() => {
     gtm.push({ event: 'page_view' });
@@ -44,6 +55,9 @@ const UserList: FC = () => {
 
   const handleLoadMore = () => {
     dispatch(filterMoreUsers(frequencyCount));
+  };
+  const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
+    setCurrentTab(value);
   };
 
   return (
@@ -75,16 +89,32 @@ const UserList: FC = () => {
             </Grid>
           </Grid>
           <Box sx={{ mt: 3 }}>
-            <UsersTable
-              loading={loadingState}
-              users={user}
-              currentTab={currentTab}
-              setCurrentTab={setCurrentTab}
-              onFilterUserInArrears={handleFilterUserInArrears}
-              initialFrequencyCount={frequencyCount}
-              pageKey={pageKey}
-              onLoadMore={handleLoadMore}
-            />
+            <Card>
+              <Tabs
+                indicatorColor="primary"
+                onChange={handleTabsChange}
+                scrollButtons="auto"
+                textColor="primary"
+                value={currentTab}
+                variant="scrollable"
+              >
+                {tabs.map((tab) => (
+                  <Tab key={tab.value} label={tab.label} value={tab.value} />
+                ))}
+              </Tabs>
+              <Divider />
+              {currentTab === tabs[0].value && <UserListComponent loading={loadingState} users={user} />}
+              {currentTab === tabs[1].value && (
+                <UserListInArrears
+                  loading={loadingState}
+                  users={user}
+                  onFilterUserInArrears={handleFilterUserInArrears}
+                  initialFrequencyCount={frequencyCount}
+                  pageKey={pageKey}
+                  onLoadMore={handleLoadMore}
+                />
+              )}
+            </Card>
           </Box>
         </Container>
       </Box>

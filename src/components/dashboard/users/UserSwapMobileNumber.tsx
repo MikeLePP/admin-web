@@ -1,14 +1,15 @@
+import { Card, CardContent, CardHeader, Divider } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import Button from '@material-ui/core/Button';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import { Card, CardContent, CardHeader, Divider } from '@material-ui/core';
 import SwapHoriz from '@material-ui/icons/SwapHoriz';
-import { filter, get, startCase, upperFirst } from 'lodash';
+import { get, startCase, upperFirst } from 'lodash';
 import React, { ChangeEvent, useEffect } from 'react';
-import type { User } from '../../../types/users';
 import { userApi } from '../../../api/user';
+import { getFullName } from '../../../lib/userHelpers';
+import type { User } from '../../../types/users';
 
 type IStatus = 'idle' | 'searching' | 'success' | 'fail';
 
@@ -16,9 +17,6 @@ interface IProps {
   user: User;
   onSwapPhoneNumber: (swappedUserId: string, swappedMobileNumber: string) => void;
 }
-
-export const getFullName = (record?: User): string =>
-  record ? [record.firstName, record.middleName, record.lastName].filter(Boolean).join(' ') : '';
 
 export default function SwapPhoneNumber({ user, onSwapPhoneNumber }: IProps): JSX.Element {
   const [currentPhoneNumber, setCurrentPhoneNumber] = React.useState<string | undefined>(undefined);
