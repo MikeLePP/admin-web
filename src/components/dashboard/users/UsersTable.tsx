@@ -37,10 +37,8 @@ interface UserListTableProps {
   users: User[];
   currentTab: string;
   setCurrentTab: (value: string) => void;
-  onFilterUserInArrears: ({ frequencyCount }: { frequencyCount: string }) => void;
-  arrearFilterValue: {
-    frequencyCount: string;
-  };
+  onFilterUserInArrears: (frequencyCount: number) => void;
+  initialFrequencyCount: number;
   loading: boolean;
   pageKey?: Record<string, string>;
   onLoadMore: () => void;
@@ -152,7 +150,7 @@ const applySort = (users: User[], sort: Sort): User[] => {
 
 const UserListTable: FC<UserListTableProps> = (props) => {
   const {
-    arrearFilterValue,
+    initialFrequencyCount,
     currentTab,
     loading,
     onFilterUserInArrears,
@@ -165,7 +163,7 @@ const UserListTable: FC<UserListTableProps> = (props) => {
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [query, setQuery] = useState<string>('');
-  const [frequencyCount, setFrequencyCount] = useState<string>(arrearFilterValue.frequencyCount);
+  const [frequencyCount, setFrequencyCount] = useState<number>(initialFrequencyCount);
   const [sort, setSort] = useState<Sort>(sortOptions[0].value);
 
   const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
@@ -177,7 +175,7 @@ const UserListTable: FC<UserListTableProps> = (props) => {
   };
 
   const handleFrequencyCountChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setFrequencyCount(event.target.value);
+    setFrequencyCount(parseInt(event.target.value, 10));
   };
 
   const handleSortChange = (event: ChangeEvent<HTMLInputElement>): void => {
@@ -193,7 +191,7 @@ const UserListTable: FC<UserListTableProps> = (props) => {
   };
 
   const handleFilter = () => {
-    onFilterUserInArrears({ frequencyCount });
+    onFilterUserInArrears(frequencyCount);
   };
 
   const filteredUser = applyFilters(users, query, {});

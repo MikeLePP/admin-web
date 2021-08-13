@@ -15,9 +15,7 @@ const UserList: FC = () => {
   const { settings } = useSettings();
   const userSelector = useSelector((state) => state.user);
   const [currentTab, setCurrentTab] = useState<string>('all');
-  const [arrearFilterValue, setArrearFilterValue] = useState({
-    frequencyCount: '1',
-  });
+  const [frequencyCount, setFrequencyCount] = useState(1);
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
@@ -26,9 +24,9 @@ const UserList: FC = () => {
     if (currentTab === 'all') {
       dispatch(getUsers());
     } else if (currentTab === 'inArrears') {
-      dispatch(filterUsers(arrearFilterValue.frequencyCount));
+      dispatch(filterUsers(frequencyCount));
     }
-  }, [dispatch, currentTab, arrearFilterValue]);
+  }, [dispatch, currentTab, frequencyCount]);
 
   const user = useMemo(() => {
     const {
@@ -40,12 +38,12 @@ const UserList: FC = () => {
   const loadingState = useMemo(() => userSelector.status === 'loading', [userSelector]);
   const pageKey = useMemo(() => userSelector.pageKey, [userSelector]);
 
-  const handleFilterUserInArrears = ({ frequencyCount }) => {
-    setArrearFilterValue({ frequencyCount });
+  const handleFilterUserInArrears = (newFrequencyCount) => {
+    setFrequencyCount(newFrequencyCount);
   };
 
   const handleLoadMore = () => {
-    dispatch(filterMoreUsers(arrearFilterValue.frequencyCount));
+    dispatch(filterMoreUsers(frequencyCount));
   };
 
   return (
@@ -83,7 +81,7 @@ const UserList: FC = () => {
               currentTab={currentTab}
               setCurrentTab={setCurrentTab}
               onFilterUserInArrears={handleFilterUserInArrears}
-              arrearFilterValue={arrearFilterValue}
+              initialFrequencyCount={frequencyCount}
               pageKey={pageKey}
               onLoadMore={handleLoadMore}
             />

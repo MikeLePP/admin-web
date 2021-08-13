@@ -108,16 +108,16 @@ export const getUsers =
   };
 
 export const filterUsers =
-  (frequencyCount: string): AppThunk =>
+  (frequencyCount: number): AppThunk =>
   async (dispatch): Promise<void> => {
     dispatch(slice.actions.loading());
-    const { user, meta } = await userApi.getUsersInArrear(frequencyCount);
+    const { user, meta } = await userApi.getUsersInArrears(frequencyCount);
     dispatch(slice.actions.getUsers(user));
     dispatch(slice.actions.setPageKey(meta.pageKey));
   };
 
 export const filterMoreUsers =
-  (frequencyCount: string): AppThunk =>
+  (frequencyCount: number): AppThunk =>
   async (dispatch, getState): Promise<void> => {
     const state = getState();
     const {
@@ -126,7 +126,7 @@ export const filterMoreUsers =
     } = state.user;
     const currentUsers = allIds.map((id) => byId[id]);
     dispatch(slice.actions.loading());
-    const { user, meta } = await userApi.getUsersInArrear(frequencyCount, pageKey);
+    const { user, meta } = await userApi.getUsersInArrears(frequencyCount, pageKey);
     dispatch(slice.actions.getUsers([...currentUsers, ...user]));
     dispatch(slice.actions.setPageKey(meta.pageKey));
   };

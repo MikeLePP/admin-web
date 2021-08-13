@@ -33,8 +33,8 @@ class UserApi {
     return [];
   }
 
-  async getUsersInArrear(
-    frequencyCount: string,
+  async getUsersInArrears(
+    frequencyCount: number,
     pageKey?: Record<string, string>,
   ): Promise<{ user: User[]; meta: { pageKey: Record<string, string> } }> {
     const pageKeyQuery = pageKey ? `&pageKey=${encodeURIComponent(JSON.stringify(pageKey))}` : '';
