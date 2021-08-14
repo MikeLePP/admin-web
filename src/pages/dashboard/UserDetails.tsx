@@ -15,7 +15,7 @@ import {
   UserSwapMobileNumber,
   UserTransactions,
   UserUpdateBalanceLimit,
-} from '../../components/dashboard/users';
+} from '../../components/users';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import PencilAltIcon from '../../icons/PencilAlt';

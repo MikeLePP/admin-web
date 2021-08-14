@@ -20,12 +20,12 @@ import {
   Radio,
   Chip,
 } from '@material-ui/core';
-import type { User } from '../../../types/users';
-import incomeFrequencies from '../../../constants/incomeFrequencies';
-import { useBankAccount } from '../../../hooks/useBankAccount';
-import { updateUser } from '../../../slices/user';
-import { useDispatch } from '../../../store';
-import { formatBankAccount } from '../../../helpers/bankAccount';
+import type { User } from '../../types/users';
+import incomeFrequencies from '../../constants/incomeFrequencies';
+import { useBankAccount } from '../../hooks/useBankAccount';
+import { updateUser } from '../../slices/user';
+import { useDispatch } from '../../store';
+import { formatBankAccount } from '../../helpers/bankAccount';
 
 interface UserEditFormProps {
   user: User;

@@ -7,9 +7,9 @@ import Typography from '@material-ui/core/Typography';
 import SwapHoriz from '@material-ui/icons/SwapHoriz';
 import { get, startCase, upperFirst } from 'lodash';
 import React, { ChangeEvent, useEffect } from 'react';
-import { userApi } from '../../../api/user';
-import { getFullName } from '../../../lib/userHelpers';
-import type { User } from '../../../types/users';
+import { userApi } from '../../api/user';
+import { getFullName } from '../../lib/userHelpers';
+import type { User } from '../../types/users';
 
 type IStatus = 'idle' | 'searching' | 'success' | 'fail';
 

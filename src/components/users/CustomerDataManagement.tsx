@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import { Box, Card, CardHeader, CardContent, Button, Divider, Typography } from '@material-ui/core';
-import BanIcon from '../../../icons/Ban';
-import DownloadIcon from '../../../icons/Download';
-import TrashIcon from '../../../icons/Trash';
+import BanIcon from '../../icons/Ban';
+import DownloadIcon from '../../icons/Download';
+import TrashIcon from '../../icons/Trash';
 
 const CustomerDataManagement: FC = (props) => (
   <Card {...props}>

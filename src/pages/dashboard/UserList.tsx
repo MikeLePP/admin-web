@@ -3,7 +3,7 @@ import type { ChangeEvent, FC } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink } from 'react-router-dom';
-import { UserList as UserListComponent, UserListInArrears } from '../../components/dashboard/users';
+import { UserList as UserListComponent, UserListInArrears } from '../../components/users';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';

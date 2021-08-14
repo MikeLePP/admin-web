@@ -19,13 +19,13 @@ import moment from 'moment';
 import type { ChangeEvent, FC, MouseEvent } from 'react';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { getFullName } from '../../../lib/userHelpers';
-import INCOME_FREQUENCY from '../../../constants/incomeFrequencies';
-import ArrowRightIcon from '../../../icons/ArrowRight';
-import DownloadIcon from '../../../icons/Download';
-import type { User } from '../../../types/users';
-import getInitials from '../../../utils/getInitials';
-import Scrollbar from '../../Scrollbar';
+import { getFullName } from '../../lib/userHelpers';
+import INCOME_FREQUENCY from '../../constants/incomeFrequencies';
+import ArrowRightIcon from '../../icons/ArrowRight';
+import DownloadIcon from '../../icons/Download';
+import type { User } from '../../types/users';
+import getInitials from '../../utils/getInitials';
+import Scrollbar from '../Scrollbar';
 
 interface UserListTableProps {
   users: User[];

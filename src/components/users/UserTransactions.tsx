@@ -1,6 +1,6 @@
 import { Card, CardHeader, Divider } from '@material-ui/core';
 import type { FC } from 'react';
-import { User } from '../../../types/users';
+import { User } from '../../types/users';
 
 interface SplitPaymentProps {
   user: User;

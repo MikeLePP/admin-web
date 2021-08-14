@@ -14,13 +14,13 @@ import {
 import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
 import type { FC } from 'react';
 import { useMemo, useState } from 'react';
-import { useBankAccount } from '../../../hooks/useBankAccount';
-import { useBankData } from '../../../hooks/useBankData';
-import { User } from '../../../types/users';
-import TransactionDialog from '../../commons/TransactionDialog';
-import ConfirmDialog from '../../commons/Dialog';
-import { bankApi } from '../../../api/bankData';
-import { formatBankAccount } from '../../../helpers/bankAccount';
+import { useBankAccount } from '../../hooks/useBankAccount';
+import { useBankData } from '../../hooks/useBankData';
+import { User } from '../../types/users';
+import TransactionDialog from '../commons/TransactionDialog';
+import ConfirmDialog from '../commons/Dialog';
+import { bankApi } from '../../api/bankData';
+import { formatBankAccount } from '../../helpers/bankAccount';
 
 interface UserBankDetailsProps {
   user: User;

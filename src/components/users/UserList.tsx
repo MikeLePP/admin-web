@@ -21,13 +21,13 @@ import { startCase, upperFirst } from 'lodash';
 import type { ChangeEvent, FC, MouseEvent } from 'react';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { getFullName } from '../../../lib/userHelpers';
-import ArrowRightIcon from '../../../icons/ArrowRight';
-import PencilAltIcon from '../../../icons/PencilAlt';
-import SearchIcon from '../../../icons/Search';
-import { User } from '../../../types/users';
-import getInitials from '../../../utils/getInitials';
-import Scrollbar from '../../Scrollbar';
+import { getFullName } from '../../lib/userHelpers';
+import ArrowRightIcon from '../../icons/ArrowRight';
+import PencilAltIcon from '../../icons/PencilAlt';
+import SearchIcon from '../../icons/Search';
+import { User } from '../../types/users';
+import getInitials from '../../utils/getInitials';
+import Scrollbar from '../Scrollbar';
 
 interface UserListProps {
   users: User[];

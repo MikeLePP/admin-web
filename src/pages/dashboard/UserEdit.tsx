@@ -4,7 +4,7 @@ import { Link as RouterLink, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 import { Box, Breadcrumbs, Container, Grid, Link, Typography } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
-import { UserEditForm } from '../../components/dashboard/users';
+import { UserEditForm } from '../../components/users';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
