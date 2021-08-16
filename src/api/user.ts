@@ -1,4 +1,3 @@
-import Auth from '@aws-amplify/auth';
 import toast from 'react-hot-toast';
 import { get } from 'lodash';
 import type { User } from '../types/users';

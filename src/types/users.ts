@@ -37,6 +37,8 @@ export interface User {
   };
   balanceCurrent: number;
   balanceLimit: number;
+  balanceBook: number;
+  collectionEmailPausedUntil: string;
   balanceOverdueAt: string;
   riskAssessmentId?: string;
   status: string;

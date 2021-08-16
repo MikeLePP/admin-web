@@ -21,7 +21,8 @@ import ChevronRightIcon from '../../icons/ChevronRight';
 import PencilAltIcon from '../../icons/PencilAlt';
 import gtm from '../../lib/gtm';
 import { getFullName } from '../../lib/userHelpers';
-import { getUser, swapMobileNumber, updateBalanceLimit } from '../../slices/user';
+import { getUser, swapMobileNumber, updateBalanceLimit, updateCollectionEmailPausedUntil } from '../../slices/user';
+import { getTransactionsByUserId } from '../../slices/transaction';
 import { useDispatch, useSelector } from '../../store';
 
 const tabs = [
@@ -35,6 +36,7 @@ const UserDetails: FC = () => {
   const dispatch = useDispatch();
   const { userId: id, tabId } = useParams();
   const userSelector = useSelector((state) => state.user);
+  const transactionSelector = useSelector((state) => state.transaction);
   const [currentTab, setCurrentTab] = useState<string>(tabs[0].value);
   const [loading, setLoading] = useState<boolean>(true);
   useEffect(() => {
@@ -61,8 +63,16 @@ const UserDetails: FC = () => {
     return foundUser;
   }, [userSelector]);
 
+  const transactions = useMemo(() => {
+    const {
+      transactions: { byId, allIds },
+    } = transactionSelector;
+    return allIds.map((transactionId) => byId[transactionId]);
+  }, [transactionSelector]);
+
   useEffect(() => {
     dispatch(getUser({ id }));
+    dispatch(getTransactionsByUserId(id));
   }, [dispatch, id]);
 
   const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
@@ -89,6 +99,18 @@ const UserDetails: FC = () => {
       );
     },
     [dispatch, id, user?.mobileNumber],
+  );
+
+  const handleUpdateCollectionEmailPausedUntil = useCallback(
+    (collectionEmailPausedUntil) => {
+      dispatch(
+        updateCollectionEmailPausedUntil({
+          userId: id,
+          collectionEmailPausedUntil,
+        }),
+      );
+    },
+    [dispatch, id],
   );
 
   if (!user && !loading) {
@@ -182,17 +204,43 @@ const UserDetails: FC = () => {
               )}
               {currentTab === 'payments' && (
                 <Grid container spacing={3}>
-                  <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                    <UserCollectionDetails user={user} />
+                  <Grid container lg={6} md={6} xl={6} xs={12} item>
+                    <Grid
+                      className="mb-4"
+                      item
+                      lg={settings.compact ? 12 : 6}
+                      md={12}
+                      xl={settings.compact ? 12 : 6}
+                      xs={12}
+                    >
+                      <UserCollectionDetails user={user} />
+                    </Grid>
+                    <Grid
+                      className="mb-4"
+                      item
+                      lg={settings.compact ? 12 : 6}
+                      md={12}
+                      xl={settings.compact ? 12 : 6}
+                      xs={12}
+                    >
+                      <UserCollectionEmail
+                        user={user}
+                        onUpdateCollectionEmailPausedUntil={handleUpdateCollectionEmailPausedUntil}
+                      />
+                    </Grid>
+                    <Grid
+                      className="mb-4"
+                      item
+                      lg={settings.compact ? 12 : 6}
+                      md={12}
+                      xl={settings.compact ? 12 : 6}
+                      xs={12}
+                    >
+                      <UserSplitPayment user={user} />
+                    </Grid>
                   </Grid>
-                  <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                    <UserCollectionEmail user={user} />
-                  </Grid>
-                  <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                    <UserSplitPayment user={user} />
-                  </Grid>
-                  <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                    <UserTransactions user={user} />
+                  <Grid item lg={6} md={6} xl={6} xs={12}>
+                    <UserTransactions user={user} transactions={transactions} />
                   </Grid>
                 </Grid>
               )}

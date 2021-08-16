@@ -93,6 +93,13 @@ const slice = createSlice({
         };
       }
     },
+    updateCollectionEmailPausedUntil(
+      state: UserState,
+      action: PayloadAction<{ userId: string; collectionEmailPausedUntil: string }>,
+    ): void {
+      const { userId, collectionEmailPausedUntil } = action.payload;
+      state.users.byId[userId].collectionEmailPausedUntil = collectionEmailPausedUntil;
+    },
   },
 });
 
@@ -158,5 +165,12 @@ export const updateUser =
     const { success } = await userApi.updateUser(userId, user);
     onComplete({ success });
     dispatch(slice.actions.updateUser({ user, userId }));
+  };
+
+export const updateCollectionEmailPausedUntil =
+  ({ userId, collectionEmailPausedUntil }): AppThunk =>
+  async (dispatch): Promise<void> => {
+    // await userApi.swapMobileNumber(userId, swappedUserId);
+    dispatch(slice.actions.updateCollectionEmailPausedUntil({ userId, collectionEmailPausedUntil }));
   };
 export default slice;
