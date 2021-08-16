@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import moment from 'moment';
 import { Card, CardHeader, Divider, Table, TableBody, TableCell, TableRow, Typography } from '@material-ui/core';
-import { User } from '../../../types/users';
+import { User } from '../../types/users';
 
 interface UserDetailsProps {
   user: User;

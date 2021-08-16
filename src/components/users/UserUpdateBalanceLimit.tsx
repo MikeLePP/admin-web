@@ -2,8 +2,8 @@ import { Box, Button, Card, CardContent, CardHeader, Divider, TextField } from '
 import SaveIcon from '@material-ui/icons/Save';
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
-import { APPROVED_AMOUNT } from '../../../constants/amount';
-import type { User } from '../../../types/users';
+import { APPROVED_AMOUNT } from '../../constants/amount';
+import type { User } from '../../types/users';
 
 interface IProps {
   user: User;
