@@ -222,15 +222,16 @@ class UserApi {
         }),
       });
       if (res.status !== 200) {
-        toast.error("Update user's collection email paused until error");
+        toast.error("Updating user's collection email paused until failed");
         return {
           success: false,
         };
       }
-      const message = collectionEmailPausedUntil
-        ? "Update user's collection email paused until success"
-        : "Clear user's collection email paused until success";
-      toast.success(message);
+      toast.success(
+        collectionEmailPausedUntil
+          ? "Update user's collection email paused until success"
+          : "Clear user's collection email paused until success",
+      );
     } catch (err) {
       toast.error(get(err, 'body.errors[0].title', "Cannot update user's collection email paused until"));
       return {

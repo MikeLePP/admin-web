@@ -105,7 +105,13 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
                 width: 100,
               }}
             >
-              <TextField type="number" variant="outlined" value={count} onChange={handleChangeCount} />
+              <TextField
+                placeholder="count"
+                type="number"
+                variant="outlined"
+                value={count}
+                onChange={handleChangeCount}
+              />
             </Box>
             <Box
               sx={{
@@ -122,7 +128,14 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
                 width: 120,
               }}
             >
-              <TextField type="number" name="amount" variant="outlined" value={amount} onChange={handleChangeAmount} />
+              <TextField
+                placeholder="amount"
+                type="number"
+                name="amount"
+                variant="outlined"
+                value={amount}
+                onChange={handleChangeAmount}
+              />
             </Box>
             <Box
               sx={{
@@ -139,7 +152,14 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
                 width: 120,
               }}
             >
-              <TextField type="number" name="fee" variant="outlined" value={fee} onChange={handleChangeFee} />
+              <TextField
+                placeholder="fee"
+                type="number"
+                name="fee"
+                variant="outlined"
+                value={fee}
+                onChange={handleChangeFee}
+              />
             </Box>
             <Box
               sx={{
