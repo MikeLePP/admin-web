@@ -21,7 +21,13 @@ import ChevronRightIcon from '../../icons/ChevronRight';
 import PencilAltIcon from '../../icons/PencilAlt';
 import gtm from '../../lib/gtm';
 import { getFullName } from '../../lib/userHelpers';
-import { getUser, swapMobileNumber, updateBalanceLimit, updateCollectionEmailPausedUntil } from '../../slices/user';
+import {
+  getUser,
+  swapMobileNumber,
+  updateBalanceLimit,
+  updateCollectionEmailPausedUntil,
+  splitPayment,
+} from '../../slices/user';
 import { getTransactionsByUserId } from '../../slices/transaction';
 import { useDispatch, useSelector } from '../../store';
 
@@ -107,6 +113,19 @@ const UserDetails: FC = () => {
         updateCollectionEmailPausedUntil({
           userId: id,
           collectionEmailPausedUntil,
+        }),
+      );
+    },
+    [dispatch, id],
+  );
+
+  const handleSplitPayment = useCallback(
+    (params, callback) => {
+      dispatch(
+        splitPayment({
+          userId: id,
+          params,
+          callback,
         }),
       );
     },
@@ -236,7 +255,7 @@ const UserDetails: FC = () => {
                       xl={settings.compact ? 12 : 6}
                       xs={12}
                     >
-                      <UserSplitPayment user={user} />
+                      <UserSplitPayment user={user} onSplitPayment={handleSplitPayment} />
                     </Grid>
                   </Grid>
                   <Grid item lg={6} md={6} xl={6} xs={12}>

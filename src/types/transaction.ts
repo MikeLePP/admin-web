@@ -10,6 +10,7 @@ export const TransactionStatus = [
 ] as const;
 
 export interface ITransactionAttributes {
+  id: string;
   amount: number;
   amountFee: number;
   description: string;

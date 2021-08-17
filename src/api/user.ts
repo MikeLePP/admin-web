@@ -1,9 +1,10 @@
-import toast from 'react-hot-toast';
 import { get } from 'lodash';
-import type { User } from '../types/users';
-import type { BankAccount } from '../types/bankAccount';
-import { flatObject } from '../lib/apiHelpers';
+import moment from 'moment';
+import toast from 'react-hot-toast';
 import { getAuthToken } from '../helpers/auth';
+import { flatObject } from '../lib/apiHelpers';
+import type { BankAccount } from '../types/bankAccount';
+import type { User } from '../types/users';
 
 const apiRoot = process.env.REACT_APP_API_URL;
 class UserApi {
@@ -196,6 +197,82 @@ class UserApi {
       }
     } catch (err) {
       toast.error(get(err, 'body.errors[0].title', "Cannot update user's details"));
+      return {
+        success: false,
+      };
+    }
+    return {
+      success: true,
+    };
+  }
+
+  async updateCollectionEmailPausedUntil(
+    userId: string,
+    collectionEmailPausedUntil: string,
+  ): Promise<{ success: boolean }> {
+    try {
+      const res = await fetch(`${apiRoot}/users/${userId}`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: await getAuthToken(),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          collectionEmailPausedUntil: moment(collectionEmailPausedUntil).utc().toISOString(),
+        }),
+      });
+      if (res.status !== 200) {
+        toast.error("Update user's collection email paused until error");
+        return {
+          success: false,
+        };
+      }
+      const message = collectionEmailPausedUntil
+        ? "Update user's collection email paused until success"
+        : "Clear user's collection email paused until success";
+      toast.success(message);
+    } catch (err) {
+      toast.error(get(err, 'body.errors[0].title', "Cannot update user's collection email paused until"));
+      return {
+        success: false,
+      };
+    }
+    return {
+      success: true,
+    };
+  }
+
+  async userSplitPayment(
+    userId: string,
+    params: {
+      count: string;
+      amount: string;
+      fee: string;
+      pauseCollectionEmail: boolean;
+      cancelAllPendingTransactions: boolean;
+    },
+  ): Promise<{ success: boolean }> {
+    try {
+      const res = await fetch(`${apiRoot}/users/${userId}/split-payments`, {
+        method: 'POST',
+        headers: {
+          Authorization: await getAuthToken(),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          ...params,
+        }),
+      });
+      const resJson = await res.json();
+      if (res.status !== 200) {
+        toast.error(get(resJson, 'errors[0].title', "Cannot split user's payment"));
+        return {
+          success: false,
+        };
+      }
+      toast.success("Split user's payment success");
+    } catch (err) {
+      toast.error(get(err, 'body.errors[0].title', "Cannot split user's payment"));
       return {
         success: false,
       };

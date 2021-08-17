@@ -25,8 +25,10 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
   const { user, ...other } = props;
   const { dataLastAt, reportUrl, setDataLastAt } = useBankData(props.user?.id);
   const [showAllTransactions, setShowAllTransactions] = useState(false);
-  const arrearsSince = moment(user.balanceOverdueAt).format('DD/MM/yyyy');
-  const collectionEmailPausedUntil = moment(user.collectionEmailPausedUntil).format('DD/MM/yyyy');
+  const arrearsSince = user.balanceOverdueAt ? moment(user.balanceOverdueAt).format('DD/MM/yyyy') : '--';
+  const collectionEmailPausedUntil = user.collectionEmailPausedUntil
+    ? moment(user.collectionEmailPausedUntil).format('DD/MM/yyyy')
+    : '--';
   return (
     <>
       <Card {...other}>
@@ -75,7 +77,7 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
         <CardActions>
           {reportUrl && (
             <Box className="pr-1.5 py-1.5">
-              <Button variant="contained" color="secondary" onClick={() => setShowAllTransactions(true)}>
+              <Button variant="contained" color="primary" onClick={() => setShowAllTransactions(true)}>
                 View bank statements
               </Button>
             </Box>

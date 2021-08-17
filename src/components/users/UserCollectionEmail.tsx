@@ -1,6 +1,7 @@
 import { Button, Card, CardActions, CardContent, CardHeader, Divider, TextField } from '@material-ui/core';
+import moment from 'moment';
 import type { FC } from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { User } from '../../types/users';
 
 interface CollectionEmailProps {
@@ -11,9 +12,17 @@ interface CollectionEmailProps {
 const CollectionEmail: FC<CollectionEmailProps> = (props) => {
   const { user, onUpdateCollectionEmailPausedUntil, ...other } = props;
   const [collectionEmailPausedUntil, setCollectionEmailPausedUntil] = useState(user.collectionEmailPausedUntil || '');
-  useEffect(() => {
-    setCollectionEmailPausedUntil(user.collectionEmailPausedUntil || '');
+  const userCollectionEmailPausedUntil = useMemo(() => {
+    if (user.collectionEmailPausedUntil) {
+      return moment(user.collectionEmailPausedUntil).format('yyyy-MM-DD');
+    }
+    return user.collectionEmailPausedUntil;
   }, [user]);
+  useEffect(() => {
+    if (userCollectionEmailPausedUntil) {
+      setCollectionEmailPausedUntil(userCollectionEmailPausedUntil);
+    }
+  }, [userCollectionEmailPausedUntil]);
   const handleChange = (event) => {
     const { value } = event.target;
     setCollectionEmailPausedUntil(value);
@@ -51,11 +60,11 @@ const CollectionEmail: FC<CollectionEmailProps> = (props) => {
           variant="contained"
           color="primary"
           onClick={handleUpdate}
-          disabled={user.collectionEmailPausedUntil !== collectionEmailPausedUntil}
+          disabled={userCollectionEmailPausedUntil === collectionEmailPausedUntil || !collectionEmailPausedUntil}
         >
           Update
         </Button>
-        <Button variant="outlined" color="primary" onClick={handleClear}>
+        <Button variant="outlined" color="primary" onClick={handleClear} disabled={!userCollectionEmailPausedUntil}>
           Clear
         </Button>
       </CardActions>
