@@ -53,7 +53,7 @@ const UserTransactions: FC<SplitPaymentProps> = (props) => {
   const [openEditModal, setOpenEditModal] = useState(false);
   const [targetTransaction, setTargetTransaction] = useState<ITransactionAttributes>();
   const [page, setPage] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(5);
+  const [limit, setLimit] = useState<number>(10);
   const paginatedTransactions = applyPagination(transactions, page, limit);
 
   const handlePageChange = (event: MouseEvent<HTMLButtonElement> | null, newPage: number): void => {

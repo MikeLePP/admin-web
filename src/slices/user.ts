@@ -198,6 +198,7 @@ export const splitPayment =
     callback?.(success);
     if (success) {
       dispatch(getTransactionsByUserId(userId));
+      dispatch(getUser({ id: userId }));
     }
   };
 export default slice;

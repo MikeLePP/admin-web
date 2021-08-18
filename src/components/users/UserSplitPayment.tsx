@@ -31,11 +31,11 @@ interface SplitPaymentProps {
 
 const SplitPayment: FC<SplitPaymentProps> = (props) => {
   const { user, onSplitPayment, ...other } = props;
-  const [pauseCollectionEmail, setPauseCollectionEmail] = useState(false);
+  const [pauseCollectionEmail, setPauseCollectionEmail] = useState(true);
   const [cancelAllPendingTransactions, setCancelAllPendingTransactions] = useState(false);
-  const [count, setCount] = useState('');
-  const [amount, setAmount] = useState('');
-  const [fee, setFee] = useState('');
+  const [count, setCount] = useState('2');
+  const [amount, setAmount] = useState('50');
+  const [fee, setFee] = useState('2.5');
 
   const handleChangeCount = (event) => {
     const { value } = event.target;
@@ -91,84 +91,52 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
             justifyContent: 'space-between',
           }}
         >
-          <Box
-            sx={{
-              alignItems: 'center',
-              display: 'flex',
-              flexWrap: 'wrap',
-            }}
-          >
-            <Box
-              sx={{
-                m: 1,
-                maxWidth: '100%',
-                width: 100,
-              }}
-            >
-              <TextField type="number" variant="outlined" value={count} onChange={handleChangeCount} />
+          <Box sx={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap' }}>
+            <Box sx={{ m: 1, maxWidth: '100%', width: 100 }}>
+              <TextField
+                placeholder="count"
+                type="number"
+                variant="outlined"
+                value={count}
+                onChange={handleChangeCount}
+              />
             </Box>
-            <Box
-              sx={{
-                m: 1,
-                maxWidth: '100%',
-                width: 10,
-              }}
-            >
+            <Box sx={{ m: 1, maxWidth: '100%', width: 10 }}>
               <Typography>x</Typography>
             </Box>
-            <Box
-              sx={{
-                m: 1,
-                width: 120,
-              }}
-            >
-              <TextField type="number" name="amount" variant="outlined" value={amount} onChange={handleChangeAmount} />
+            <Box sx={{ m: 1, width: 120 }}>
+              <TextField
+                placeholder="amount"
+                type="number"
+                name="amount"
+                variant="outlined"
+                value={amount}
+                onChange={handleChangeAmount}
+              />
             </Box>
-            <Box
-              sx={{
-                m: 1,
-                maxWidth: '100%',
-                width: 10,
-              }}
-            >
+            <Box sx={{ m: 1, maxWidth: '100%', width: 10 }}>
               <Typography>+</Typography>
             </Box>
-            <Box
-              sx={{
-                m: 1,
-                width: 120,
-              }}
-            >
-              <TextField type="number" name="fee" variant="outlined" value={fee} onChange={handleChangeFee} />
+            <Box sx={{ m: 1, width: 120 }}>
+              <TextField
+                placeholder="fee"
+                type="number"
+                name="fee"
+                variant="outlined"
+                value={fee}
+                onChange={handleChangeFee}
+              />
             </Box>
-            <Box
-              sx={{
-                m: 1,
-                maxWidth: '100%',
-                width: 10,
-              }}
-            >
+            <Box sx={{ m: 1, maxWidth: '100%', width: 10 }}>
               <Typography>fee</Typography>
             </Box>
           </Box>
-          <Box
-            sx={{
-              m: 1,
-              maxWidth: '100%',
-              width: 140,
-            }}
-          >
+          <Box sx={{ m: 1, maxWidth: '100%', width: 140 }}>
             <Typography className="text-right">Total: ${total}</Typography>
           </Box>
         </Box>
 
-        <Box
-          sx={{
-            alignItems: 'center',
-            display: 'flex',
-            flexWrap: 'wrap',
-          }}
-        >
+        <Box sx={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap' }}>
           <FormControlLabel
             control={
               <Checkbox
@@ -188,7 +156,7 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
                 onClick={() => setCancelAllPendingTransactions(!cancelAllPendingTransactions)}
               />
             }
-            label="Cancel all pending transaction"
+            label="Cancel current pending transactions"
             className="w-full"
           />
         </Box>
