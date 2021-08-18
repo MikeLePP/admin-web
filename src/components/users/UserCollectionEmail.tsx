@@ -12,12 +12,10 @@ interface CollectionEmailProps {
 const CollectionEmail: FC<CollectionEmailProps> = (props) => {
   const { user, onUpdateCollectionEmailPausedUntil, ...other } = props;
   const [collectionEmailPausedUntil, setCollectionEmailPausedUntil] = useState(user.collectionEmailPausedUntil || '');
-  const userCollectionEmailPausedUntil = useMemo(() => {
-    if (user.collectionEmailPausedUntil) {
-      return moment(user.collectionEmailPausedUntil).format('yyyy-MM-DD');
-    }
-    return user.collectionEmailPausedUntil;
-  }, [user]);
+  const userCollectionEmailPausedUntil = useMemo(
+    () => user.collectionEmailPausedUntil && moment(user.collectionEmailPausedUntil).format('YYYY-MM-DD'),
+    [user],
+  );
   useEffect(() => {
     if (userCollectionEmailPausedUntil) {
       setCollectionEmailPausedUntil(userCollectionEmailPausedUntil);
@@ -64,7 +62,7 @@ const CollectionEmail: FC<CollectionEmailProps> = (props) => {
         >
           Update
         </Button>
-        <Button variant="outlined" color="primary" onClick={handleClear} disabled={!userCollectionEmailPausedUntil}>
+        <Button variant="outlined" color="primary" onClick={handleClear}>
           Clear
         </Button>
       </CardActions>

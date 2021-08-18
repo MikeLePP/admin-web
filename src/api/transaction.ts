@@ -20,7 +20,7 @@ class TransactionApi {
       };
       return jsonResponse.data.map(flatObject);
     } catch (err) {
-      toast.error(get(err, 'body.errors[0].title', 'Cannot get users'));
+      toast.error(get(err, 'body.errors[0].title', 'Cannot get transactions'));
     }
     return [];
   }

@@ -36,7 +36,7 @@ const applyPagination = (
 const SplitPayment: FC<SplitPaymentProps> = (props) => {
   const { user, transactions, ...other } = props;
   const [page, setPage] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(5);
+  const [limit, setLimit] = useState<number>(10);
   const paginatedTransactions = applyPagination(transactions, page, limit);
 
   const handlePageChange = (event: MouseEvent<HTMLButtonElement> | null, newPage: number): void => {

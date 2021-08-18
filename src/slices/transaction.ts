@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/require-await */
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import { sortBy } from 'lodash';
 import type { AppThunk } from '../store';
 import { transactionApi } from '../api/transaction';
 import type { ITransactionAttributes } from '../types/transaction';
@@ -45,7 +46,9 @@ const slice = createSlice({
       state.userId = userId;
     },
     getTransactions(state: TransactionState, action: PayloadAction<ITransactionAttributes[]>): void {
-      const transactions = action.payload;
+      const transactions = action.payload.sort(
+        (a, b) => new Date(b.submitAt).getTime() - new Date(a.submitAt).getTime(),
+      );
       state.status = 'success';
       state.transactions.byId = objFromArray(transactions);
       state.transactions.allIds = Object.keys(state.transactions.byId);

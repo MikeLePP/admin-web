@@ -162,13 +162,7 @@ const UserList: FC<UserListProps> = (props) => {
           p: 2,
         }}
       >
-        <Box
-          sx={{
-            m: 1,
-            maxWidth: '100%',
-            width: 500,
-          }}
-        >
+        <Box sx={{ m: 1, maxWidth: '100%', width: 500 }}>
           <TextField
             fullWidth
             InputProps={{
@@ -184,12 +178,7 @@ const UserList: FC<UserListProps> = (props) => {
             variant="outlined"
           />
         </Box>
-        <Box
-          sx={{
-            m: 1,
-            width: 240,
-          }}
-        >
+        <Box sx={{ m: 1, width: 240 }}>
           <TextField
             label="Sort By"
             name="sort"
@@ -229,26 +218,9 @@ const UserList: FC<UserListProps> = (props) => {
                   {paginatedUsers.map((user) => (
                     <TableRow hover key={user.id}>
                       <TableCell>
-                        <Box
-                          sx={{
-                            alignItems: 'center',
-                            display: 'flex',
-                          }}
-                        >
-                          <Box
-                            sx={{
-                              alignItems: 'center',
-                              display: 'flex',
-                            }}
-                          >
-                            <Avatar
-                              sx={{
-                                height: 42,
-                                width: 42,
-                              }}
-                            >
-                              {getInitials(getFullName(user))}
-                            </Avatar>
+                        <Box sx={{ alignItems: 'center', display: 'flex' }}>
+                          <Box sx={{ alignItems: 'center', display: 'flex' }}>
+                            <Avatar sx={{ height: 42, width: 42 }}>{getInitials(getFullName(user))}</Avatar>
                             <Box sx={{ ml: 1 }}>
                               <Link
                                 color="inherit"

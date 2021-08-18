@@ -218,7 +218,9 @@ class UserApi {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          collectionEmailPausedUntil: moment(collectionEmailPausedUntil).utc().toISOString(),
+          collectionEmailPausedUntil: collectionEmailPausedUntil
+            ? moment.utc(collectionEmailPausedUntil).toISOString()
+            : null,
         }),
       });
       if (res.status !== 200) {
@@ -228,12 +230,10 @@ class UserApi {
         };
       }
       toast.success(
-        collectionEmailPausedUntil
-          ? "Update user's collection email paused until success"
-          : "Clear user's collection email paused until success",
+        collectionEmailPausedUntil ? "User's collection email has been paused" : "User's collection email has resumed",
       );
     } catch (err) {
-      toast.error(get(err, 'body.errors[0].title', "Cannot update user's collection email paused until"));
+      toast.error(get(err, 'body.errors[0].title', "Cannot update user's collection pause date"));
       return {
         success: false,
       };
@@ -260,9 +260,7 @@ class UserApi {
           Authorization: await getAuthToken(),
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-          ...params,
-        }),
+        body: JSON.stringify(params),
       });
       const resJson = await res.json();
       if (res.status !== 200) {
