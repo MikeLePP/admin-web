@@ -28,7 +28,7 @@ import {
   updateCollectionEmailPausedUntil,
   splitPayment,
 } from '../../slices/user';
-import { getTransactionsByUserId } from '../../slices/transaction';
+import { getTransactionsByUserId, reconcileTransaction, updateTransaction } from '../../slices/transaction';
 import { useDispatch, useSelector } from '../../store';
 
 const tabs = [
@@ -130,6 +130,20 @@ const UserDetails: FC = () => {
       );
     },
     [dispatch, id],
+  );
+
+  const handleReconcileTransaction = useCallback(
+    (params, callback) => {
+      dispatch(reconcileTransaction(params, callback));
+    },
+    [dispatch],
+  );
+
+  const handleUpdateTransaction = useCallback(
+    (transactionsParams, callback) => {
+      dispatch(updateTransaction(transactionsParams, callback));
+    },
+    [dispatch],
   );
 
   if (!user && !loading) {
@@ -259,7 +273,12 @@ const UserDetails: FC = () => {
                     </Grid>
                   </Grid>
                   <Grid item lg={6} md={6} xl={6} xs={12}>
-                    <UserTransactions user={user} transactions={transactions} />
+                    <UserTransactions
+                      user={user}
+                      transactions={transactions}
+                      onReconcileTransaction={handleReconcileTransaction}
+                      onUpdateTransaction={handleUpdateTransaction}
+                    />
                   </Grid>
                 </Grid>
               )}

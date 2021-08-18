@@ -26,7 +26,7 @@ const initialSettings: Settings = {
   compact: true,
   direction: 'ltr',
   responsiveFontSizes: true,
-  roundedCorners: true,
+  roundedCorners: false,
   theme: THEMES.LIGHT,
 };
 
@@ -43,8 +43,8 @@ export const restoreSettings = (): Settings | null => {
         compact: true,
         direction: 'ltr',
         responsiveFontSizes: true,
-        roundedCorners: true,
-        theme: window.matchMedia('(prefers-color-scheme: dark)').matches ? THEMES.DARK : THEMES.LIGHT,
+        roundedCorners: false,
+        theme: THEMES.LIGHT,
       };
     }
   } catch (err) {

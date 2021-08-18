@@ -3,9 +3,10 @@ import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { AppThunk } from '../store';
 import { transactionApi } from '../api/transaction';
-import type { ITransactionAttributes } from '../types/transaction';
+import type { ITransactionAttributes, TransactionStatus } from '../types/transaction';
 import objFromArray from '../utils/objFromArray';
 
+type ITransactionStatus = typeof TransactionStatus[number];
 interface TransactionState {
   transactions: {
     byId: Record<string, ITransactionAttributes>;
@@ -50,6 +51,10 @@ const slice = createSlice({
       state.transactions.byId = objFromArray(transactions);
       state.transactions.allIds = Object.keys(state.transactions.byId);
     },
+    updateTransaction(state: TransactionState, action: PayloadAction<ITransactionAttributes>): void {
+      const updatingTransaction = action.payload;
+      state.transactions.byId[updatingTransaction.id] = updatingTransaction;
+    },
   },
 });
 
@@ -62,6 +67,46 @@ export const getTransactionsByUserId =
     dispatch(slice.actions.setUser(userId));
     const data = await transactionApi.getTransactionsByUserId(userId);
     dispatch(slice.actions.getTransactions(data));
+  };
+
+export const reconcileTransaction =
+  (
+    params: {
+      id: string;
+      status: ITransactionStatus;
+      statusReason?: string;
+      updatedBy?: string;
+    },
+    callback: (success: boolean) => void,
+  ): AppThunk =>
+  async (dispatch, getState): Promise<void> => {
+    const { success } = await transactionApi.reconcileTransaction(params);
+    if (success) {
+      const transaction = getState().transaction.transactions.byId[params.id];
+      dispatch(
+        slice.actions.updateTransaction({
+          ...transaction,
+          ...params,
+        }),
+      );
+    }
+    callback(success);
+  };
+
+export const updateTransaction =
+  (params: ITransactionAttributes, callback: (success: boolean) => void): AppThunk =>
+  async (dispatch, getState): Promise<void> => {
+    const { success } = await transactionApi.updateTransaction(params);
+    if (success) {
+      const transaction = getState().transaction.transactions.byId[params.id];
+      dispatch(
+        slice.actions.updateTransaction({
+          ...transaction,
+          ...params,
+        }),
+      );
+    }
+    callback(success);
   };
 
 export default slice;
