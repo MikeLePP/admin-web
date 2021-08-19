@@ -66,14 +66,12 @@ export default function EditTransaction({
             destinationId: yup.string().required(),
           })}
           onSubmit={(values, { setSubmitting }): void => {
-            console.log('values', values);
             const payload = {
               ...transaction,
               ...values,
               sourceId: values.paymentType === 'debit' ? values.sourceId : transaction?.sourceId,
               submitAt: moment.utc(values.submitAt).startOf('minute').toISOString(),
             } as ITransactionAttributes;
-            console.log(payload);
             setSubmitting(true);
             onUpdateTransaction(payload, (success) => {
               setSubmitting(false);
