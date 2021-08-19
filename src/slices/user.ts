@@ -211,12 +211,12 @@ export const splitPayment =
       dispatch(getUser({ id: userId }));
     }
   };
-export const getUsersByFilter =
-  (filter: Record<string, string>): AppThunk =>
+export const getUsersWithFilter =
+  (query: Record<string, string>): AppThunk =>
   async (dispatch, getState): Promise<void> => {
     dispatch(slice.actions.loading());
-    dispatch(slice.actions.updateFilter(filter));
-    const data = await userApi.getUsers(filter);
+    dispatch(slice.actions.updateFilter(query));
+    const data = await userApi.getUsers(query);
     dispatch(slice.actions.getUsers(data));
     dispatch(slice.actions.setPageKey());
   };

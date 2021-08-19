@@ -7,7 +7,7 @@ import { UserList as UserListComponent, UserListInArrears } from '../../componen
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
-import { exportUserCSV, filterMoreUsers, filterUsers, getUsers, getUsersByFilter } from '../../slices/user';
+import { exportUserCSV, filterMoreUsers, filterUsers, getUsers, getUsersWithFilter } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
 
 const tabs = [
@@ -62,8 +62,8 @@ const UserList: FC = () => {
   };
 
   const handleFilter = useCallback(
-    (filter) => {
-      dispatch(getUsersByFilter(filter));
+    (query) => {
+      dispatch(getUsersWithFilter(query));
     },
     [dispatch],
   );
