@@ -108,7 +108,7 @@ const UserTransactions: FC<SplitPaymentProps> = (props) => {
                     <TableRow hover key={transaction.id}>
                       <TableCell>{transaction.paymentType}</TableCell>
                       <TableCell>
-                        {transaction.submitAt ? moment(transaction.submitAt).format('MM/DD/YYYY, hh:mm:ss A') : ''}
+                        {transaction.submitAt ? moment(transaction.submitAt).format('DD/MM/YYYY') : ''}
                       </TableCell>
                       <TableCell>{transaction.amount}</TableCell>
                       <TableCell>{transaction.description}</TableCell>

@@ -10,7 +10,9 @@ import {
   TableCell,
   TableRow,
   Typography,
+  IconButton,
 } from '@material-ui/core';
+import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
 import moment from 'moment';
 import { FC, useState } from 'react';
 import { useBankData } from '../../hooks/useBankData';
@@ -51,24 +53,12 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
             <TableRow>
               <TableCell>
                 <Typography color="textPrimary" variant="subtitle2">
-                  Arrears amount
+                  Arrears amount (excl. fees)
                 </Typography>
               </TableCell>
               <TableCell>
                 <Typography color="textSecondary" variant="body2">
                   {user.balanceBook}
-                </Typography>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Typography color="textPrimary" variant="subtitle2">
-                  Collection email paused util
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography color="textSecondary" variant="body2">
-                  {collectionEmailPausedUntil}
                 </Typography>
               </TableCell>
             </TableRow>
@@ -84,6 +74,30 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
                 </Typography>
               </TableCell>
             </TableRow>
+            <TableRow>
+              <TableCell>
+                <Typography color="textPrimary" variant="subtitle2">
+                  Income frequency
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography color="textSecondary" variant="body2">
+                  {user.incomeFrequency}
+                </Typography>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <Typography color="textPrimary" variant="subtitle2">
+                  Collection email paused until
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography color="textSecondary" variant="body2">
+                  {collectionEmailPausedUntil}
+                </Typography>
+              </TableCell>
+            </TableRow>
           </TableBody>
         </Table>
         <CardActions>
@@ -92,6 +106,9 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
               <Button variant="contained" color="primary" onClick={() => setShowAllTransactions(true)}>
                 View bank statements
               </Button>
+              <IconButton href={reportUrl} target="_blank">
+                <OpenInNewIcon />
+              </IconButton>
             </Box>
           )}
         </CardActions>

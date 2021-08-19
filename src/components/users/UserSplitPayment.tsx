@@ -40,10 +40,12 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
   const handleChangeCount = (event) => {
     const { value } = event.target;
     setCount(value);
+    setAmount(`${user.balanceBook / parseFloat(value)}`);
   };
   const handleChangeAmount = (event) => {
     const { value } = event.target;
     setAmount(value);
+    setCount(`${user.balanceBook / parseFloat(value)}`);
   };
   const handleChangeFee = (event) => {
     const { value } = event.target;
@@ -68,9 +70,9 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
       },
       (success) => {
         if (success) {
-          setCount('');
-          setAmount('');
-          setFee('');
+          setCount('2');
+          setAmount('50');
+          setFee('2.5');
           setPauseCollectionEmail(false);
           setCancelAllPendingTransactions(false);
         }

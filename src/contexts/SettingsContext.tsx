@@ -39,13 +39,7 @@ export const restoreSettings = (): Settings | null => {
     if (storedData) {
       settings = JSON.parse(storedData);
     } else {
-      settings = {
-        compact: true,
-        direction: 'ltr',
-        responsiveFontSizes: true,
-        roundedCorners: false,
-        theme: THEMES.LIGHT,
-      };
+      settings = initialSettings;
     }
   } catch (err) {
     console.error(err);
