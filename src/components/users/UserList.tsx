@@ -138,7 +138,7 @@ const UserList: FC<UserListProps> = (props) => {
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const { value } = event.target;
     setQuery(value);
-    if (value === '' && useServerSideSearch) {
+    if (value === '') {
       onFilter({
         mobileNumber: '',
       });
