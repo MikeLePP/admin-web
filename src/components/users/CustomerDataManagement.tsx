@@ -6,7 +6,7 @@ import TrashIcon from '../../icons/Trash';
 
 const CustomerDataManagement: FC = (props) => (
   <Card {...props}>
-    <CardHeader title="Data Management" />
+    <CardHeader title="Data Management [No Available]" />
     <Divider />
     <CardContent>
       <Box

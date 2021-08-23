@@ -609,7 +609,7 @@ export const routes: PartialRouteObject[] = [
     children: [
       {
         path: '/',
-        element: <Overview />,
+        element: <Navigate to="/management/users" />,
       },
       {
         path: 'checkout',

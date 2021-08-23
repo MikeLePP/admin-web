@@ -41,7 +41,6 @@ const applyPagination = (users: User[], page: number, limit: number): User[] =>
 
 const UserListTable: FC<UserListTableProps> = (props) => {
   const { initialFrequencyCount, loading, onFilterUserInArrears, onLoadMore, pageKey, users, ...other } = props;
-  console.log(users);
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [frequencyCount, setFrequencyCount] = useState<number | null>(initialFrequencyCount);
@@ -77,22 +76,10 @@ const UserListTable: FC<UserListTableProps> = (props) => {
             p: 2,
           }}
         >
-          <Box
-            sx={{
-              m: 1,
-              maxWidth: '100%',
-              width: 100,
-            }}
-          >
+          <Box sx={{ m: 1, maxWidth: '100%', width: 100 }}>
             <Typography className="">Arrears in</Typography>
           </Box>
-          <Box
-            sx={{
-              m: 1,
-              maxWidth: '100%',
-              width: 300,
-            }}
-          >
+          <Box sx={{ m: 1, maxWidth: '100%', width: 300 }}>
             <TextField
               fullWidth
               onChange={handleFrequencyCountChange}
@@ -101,20 +88,10 @@ const UserListTable: FC<UserListTableProps> = (props) => {
               variant="outlined"
             />
           </Box>
-          <Box
-            sx={{
-              m: 1,
-              width: 100,
-            }}
-          >
+          <Box sx={{ m: 1, width: 100 }}>
             <Typography>pay cycles</Typography>
           </Box>
-          <Box
-            sx={{
-              m: 1,
-              width: 100,
-            }}
-          >
+          <Box sx={{ m: 1, width: 100 }}>
             <Button variant="outlined" color="primary" onClick={handleFilter}>
               Filter
             </Button>
@@ -165,26 +142,9 @@ const UserListTable: FC<UserListTableProps> = (props) => {
                     return (
                       <TableRow hover key={user.id}>
                         <TableCell>
-                          <Box
-                            sx={{
-                              alignItems: 'center',
-                              display: 'flex',
-                            }}
-                          >
-                            <Box
-                              sx={{
-                                alignItems: 'center',
-                                display: 'flex',
-                              }}
-                            >
-                              <Avatar
-                                sx={{
-                                  height: 42,
-                                  width: 42,
-                                }}
-                              >
-                                {getInitials(getFullName(user))}
-                              </Avatar>
+                          <Box sx={{ alignItems: 'center', display: 'flex' }}>
+                            <Box sx={{ alignItems: 'center', display: 'flex' }}>
+                              <Avatar sx={{ height: 42, width: 42 }}>{getInitials(getFullName(user))}</Avatar>
                               <Box sx={{ ml: 1 }}>
                                 <Link
                                   color="inherit"

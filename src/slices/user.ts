@@ -5,6 +5,7 @@ import type { AppThunk } from '../store';
 import { userApi } from '../api/user';
 import type { User } from '../types/users';
 import objFromArray from '../utils/objFromArray';
+import { getTransactionsByUserId } from './transaction';
 
 interface UserState {
   users: {
@@ -93,6 +94,13 @@ const slice = createSlice({
         };
       }
     },
+    updateCollectionEmailPausedUntil(
+      state: UserState,
+      action: PayloadAction<{ userId: string; collectionEmailPausedUntil: string }>,
+    ): void {
+      const { userId, collectionEmailPausedUntil } = action.payload;
+      state.users.byId[userId].collectionEmailPausedUntil = collectionEmailPausedUntil;
+    },
   },
 });
 
@@ -158,5 +166,39 @@ export const updateUser =
     const { success } = await userApi.updateUser(userId, user);
     onComplete({ success });
     dispatch(slice.actions.updateUser({ user, userId }));
+  };
+
+export const updateCollectionEmailPausedUntil =
+  ({ userId, collectionEmailPausedUntil }): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const { success } = await userApi.updateCollectionEmailPausedUntil(userId, collectionEmailPausedUntil);
+    if (success) {
+      dispatch(slice.actions.updateCollectionEmailPausedUntil({ userId, collectionEmailPausedUntil }));
+    }
+  };
+
+export const splitPayment =
+  ({
+    userId,
+    params,
+    callback,
+  }: {
+    userId: string;
+    params: {
+      count: string;
+      amount: string;
+      fee: string;
+      pauseCollectionEmail: boolean;
+      cancelAllPendingTransactions: boolean;
+    };
+    callback: (status: boolean) => void;
+  }): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const { success } = await userApi.userSplitPayment(userId, params);
+    callback?.(success);
+    if (success) {
+      dispatch(getTransactionsByUserId(userId));
+      dispatch(getUser({ id: userId }));
+    }
   };
 export default slice;
