@@ -34,13 +34,15 @@ interface UserListTableProps {
   loading: boolean;
   pageKey?: Record<string, unknown>;
   onLoadMore: () => void;
+  onExport: () => void;
 }
 
 const applyPagination = (users: User[], page: number, limit: number): User[] =>
   users.slice(page * limit, page * limit + limit);
 
 const UserListTable: FC<UserListTableProps> = (props) => {
-  const { initialFrequencyCount, loading, onFilterUserInArrears, onLoadMore, pageKey, users, ...other } = props;
+  const { initialFrequencyCount, loading, onFilterUserInArrears, onLoadMore, pageKey, users, onExport, ...other } =
+    props;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [frequencyCount, setFrequencyCount] = useState<number | null>(initialFrequencyCount);
@@ -92,7 +94,7 @@ const UserListTable: FC<UserListTableProps> = (props) => {
             <Typography>pay cycles</Typography>
           </Box>
           <Box sx={{ m: 1, width: 100 }}>
-            <Button variant="outlined" color="primary" onClick={handleFilter}>
+            <Button variant="contained" color="primary" onClick={handleFilter}>
               Filter
             </Button>
           </Box>
@@ -109,9 +111,10 @@ const UserListTable: FC<UserListTableProps> = (props) => {
           <Button
             startIcon={<DownloadIcon fontSize="small" />}
             sx={{ mt: 1 }}
-            variant="contained"
+            variant="outlined"
             color="primary"
-            onClick={handleFilter}
+            onClick={onExport}
+            disabled={users.length === 0 || loading}
           >
             Export
           </Button>

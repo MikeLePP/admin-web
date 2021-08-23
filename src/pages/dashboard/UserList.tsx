@@ -1,13 +1,13 @@
 import { Box, Breadcrumbs, Card, Container, Divider, Grid, Link, Tab, Tabs, Typography } from '@material-ui/core';
 import type { ChangeEvent, FC } from 'react';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useState, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink } from 'react-router-dom';
 import { UserList as UserListComponent, UserListInArrears } from '../../components/users';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
-import { filterMoreUsers, filterUsers, getUsers } from '../../slices/user';
+import { exportUserCSV, filterMoreUsers, filterUsers, getUsers, getUsersWithFilter } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
 
 const tabs = [
@@ -49,16 +49,28 @@ const UserList: FC = () => {
   const loadingState = useMemo(() => userSelector.status === 'loading', [userSelector]);
   const pageKey = useMemo(() => userSelector.pageKey, [userSelector]);
 
-  const handleFilterUserInArrears = (newFrequencyCount) => {
+  const handleFilterUserInArrears = useCallback((newFrequencyCount) => {
     setFrequencyCount(newFrequencyCount);
-  };
+  }, []);
 
-  const handleLoadMore = () => {
+  const handleLoadMore = useCallback(() => {
     dispatch(filterMoreUsers(frequencyCount));
-  };
+  }, [dispatch, frequencyCount]);
+
   const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
   };
+
+  const handleFilter = useCallback(
+    (query) => {
+      dispatch(getUsersWithFilter(query));
+    },
+    [dispatch],
+  );
+
+  const handleExport = useCallback(() => {
+    dispatch(exportUserCSV());
+  }, [dispatch]);
 
   return (
     <>
@@ -103,7 +115,9 @@ const UserList: FC = () => {
                 ))}
               </Tabs>
               <Divider />
-              {currentTab === tabs[0].value && <UserListComponent loading={loadingState} users={user} />}
+              {currentTab === tabs[0].value && (
+                <UserListComponent loading={loadingState} users={user} onFilter={handleFilter} />
+              )}
               {currentTab === tabs[1].value && (
                 <UserListInArrears
                   loading={loadingState}
@@ -112,6 +126,7 @@ const UserList: FC = () => {
                   initialFrequencyCount={frequencyCount}
                   pageKey={pageKey}
                   onLoadMore={handleLoadMore}
+                  onExport={handleExport}
                 />
               )}
             </Card>

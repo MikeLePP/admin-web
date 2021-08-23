@@ -19,7 +19,7 @@ import Assignment from '@material-ui/icons/Assignment';
 import MonetizationOn from '@material-ui/icons/MonetizationOn';
 import { startCase, upperFirst } from 'lodash';
 import type { ChangeEvent, FC, MouseEvent } from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import { getFullName } from '../../lib/userHelpers';
 import ArrowRightIcon from '../../icons/ArrowRight';
@@ -32,6 +32,7 @@ import Scrollbar from '../Scrollbar';
 interface UserListProps {
   users: User[];
   loading: boolean;
+  onFilter: (filter: Record<string, string>) => void;
 }
 
 type Sort = 'createdAt|desc' | 'createdAt|asc';
@@ -125,15 +126,37 @@ const applySort = (users: User[], sort: Sort): User[] => {
 };
 
 const UserList: FC<UserListProps> = (props) => {
-  const { loading, users, ...other } = props;
+  const { loading, users, onFilter, ...other } = props;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [query, setQuery] = useState<string>('');
+  const filteredUsers = applyFilters(users, query, {});
   const [sort, setSort] = useState<Sort>(sortOptions[0].value);
 
+  const useServerSideSearch = !filteredUsers.length;
+
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setQuery(event.target.value);
+    const { value } = event.target;
+    setQuery(value);
+    if (value === '' && useServerSideSearch) {
+      onFilter({
+        mobileNumber: '',
+      });
+    }
   };
+
+  useEffect(() => {
+    const handler = setTimeout(() => {
+      if (query && useServerSideSearch) {
+        onFilter({
+          mobileNumber: query,
+        });
+      }
+    }, 1000);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [onFilter, query]);
 
   const handleSortChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSort(event.target.value as Sort);
@@ -147,8 +170,7 @@ const UserList: FC<UserListProps> = (props) => {
     setLimit(parseInt(event.target.value, 10));
   };
 
-  const filteredUser = applyFilters(users, query, {});
-  const sortedUser = applySort(filteredUser, sort);
+  const sortedUser = applySort(filteredUsers, sort);
   const paginatedUsers = applyPagination(sortedUser, page, limit);
 
   return (
@@ -270,7 +292,7 @@ const UserList: FC<UserListProps> = (props) => {
           </Scrollbar>
           <TablePagination
             component="div"
-            count={filteredUser.length}
+            count={users.length}
             onPageChange={handlePageChange}
             onRowsPerPageChange={handleLimitChange}
             page={page}

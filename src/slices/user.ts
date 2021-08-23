@@ -1,11 +1,14 @@
 /* eslint-disable @typescript-eslint/require-await */
 import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
+import { pick } from 'lodash';
 import type { AppThunk } from '../store';
 import { userApi } from '../api/user';
 import type { User } from '../types/users';
 import objFromArray from '../utils/objFromArray';
 import { getTransactionsByUserId } from './transaction';
+import jsonexport from 'jsonexport';
+import fileDownload from 'js-file-download';
 
 interface UserState {
   users: {
@@ -14,6 +17,7 @@ interface UserState {
   };
   status: 'idle' | 'loading' | 'success' | 'error' | 'updating';
   targetUserId: string;
+  filter: Record<string, string>;
   pageKey?: Record<string, unknown>;
 }
 
@@ -22,6 +26,7 @@ const initialState: UserState = {
     byId: {},
     allIds: [],
   },
+  filter: {},
   status: 'idle',
   targetUserId: '',
 };
@@ -101,6 +106,10 @@ const slice = createSlice({
       const { userId, collectionEmailPausedUntil } = action.payload;
       state.users.byId[userId].collectionEmailPausedUntil = collectionEmailPausedUntil;
     },
+    updateFilter(state: UserState, action: PayloadAction<Record<string, string>>): void {
+      const filter = action.payload;
+      state.filter = filter;
+    },
   },
 });
 
@@ -108,9 +117,10 @@ export const { reducer } = slice;
 
 export const getUsers =
   (): AppThunk =>
-  async (dispatch): Promise<void> => {
+  async (dispatch, getState): Promise<void> => {
     dispatch(slice.actions.loading());
-    const data = await userApi.getUsers();
+    const { filter } = getState().user;
+    const data = await userApi.getUsers(filter);
     dispatch(slice.actions.getUsers(data));
     dispatch(slice.actions.setPageKey());
   };
@@ -200,5 +210,42 @@ export const splitPayment =
       dispatch(getTransactionsByUserId(userId));
       dispatch(getUser({ id: userId }));
     }
+  };
+export const getUsersWithFilter =
+  (query: Record<string, string>): AppThunk =>
+  async (dispatch, getState): Promise<void> => {
+    dispatch(slice.actions.loading());
+    dispatch(slice.actions.updateFilter(query));
+    const data = await userApi.getUsers(query);
+    dispatch(slice.actions.getUsers(data));
+    dispatch(slice.actions.setPageKey());
+  };
+
+export const exportUserCSV =
+  (): AppThunk =>
+  async (dispatch, getState): Promise<void> => {
+    const { users } = getState().user;
+    const userMappingToCSV = users.allIds.map((userId) => {
+      const user = users.byId[userId];
+      return pick(user, [
+        'id',
+        'lastName',
+        'status',
+        'balanceLimit',
+        'createdAt',
+        'balanceCurrent',
+        'email',
+        'mobileNumber',
+        'firstName',
+        'middleName',
+      ]);
+    });
+    jsonexport(userMappingToCSV, (err, csv) => {
+      if (err) return console.error(err);
+      fileDownload(csv, 'users.csv');
+      return {
+        success: true,
+      };
+    });
   };
 export default slice;
