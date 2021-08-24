@@ -93,12 +93,7 @@ const UserDataManagement: FC<UserDataManagementProps> = (props) => {
             </Box>
           </Collapse>
         </Box>
-        <Box
-          sx={{
-            mb: 2,
-            mt: 1,
-          }}
-        >
+        <Box sx={{ mb: 2, mt: 1 }}>
           <Typography color="textSecondary" variant="body2">
             Remove this customer’s chart if he requested that, if not please be aware that what has been deleted can
             never brought back
