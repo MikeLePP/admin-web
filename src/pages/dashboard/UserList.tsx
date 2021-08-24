@@ -5,6 +5,7 @@ import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { UserList as UserListComponent, UserListInArrears } from '../../components/users';
 import useSettings from '../../hooks/useSettings';
+import useQuery from '../../hooks/useQuery';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
 import { exportUserCSV, filterMoreUsers, filterUsers, getUsersWithFilter } from '../../slices/user';
@@ -20,10 +21,6 @@ const tabs = [
     value: 'inArrears',
   },
 ];
-
-function useQuery() {
-  return new URLSearchParams(useLocation().search);
-}
 
 const UserList: FC = () => {
   const dispatch = useDispatch();
@@ -146,7 +143,12 @@ const UserList: FC = () => {
               </Tabs>
               <Divider />
               {currentTab === tabs[0].value && (
-                <UserListComponent loading={loadingState} users={user} onFilter={handleFilter} filterBy={filterBy} />
+                <UserListComponent
+                  loading={loadingState}
+                  users={user}
+                  onFilter={handleFilter}
+                  initialQuery={filterBy}
+                />
               )}
               {currentTab === tabs[1].value && (
                 <UserListInArrears

@@ -33,7 +33,7 @@ import Scrollbar from '../Scrollbar';
 interface UserListProps {
   users: User[];
   loading: boolean;
-  filterBy: string;
+  initialQuery: string;
   onFilter: (filter: Record<string, string>) => void;
 }
 
@@ -128,18 +128,18 @@ const applySort = (users: User[], sort: Sort): User[] => {
 };
 
 const UserList: FC<UserListProps> = (props) => {
-  const { loading, users, onFilter, filterBy, ...other } = props;
+  const { loading, users, onFilter, initialQuery, ...other } = props;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
-  const [query, setQuery] = useState<string>(filterBy);
+  const [query, setQuery] = useState<string>(initialQuery);
   const filteredUsers = applyFilters(users, query, {});
   const [sort, setSort] = useState<Sort>(sortOptions[0].value);
 
   const useServerSideSearch = !filteredUsers.length;
 
   useEffect(() => {
-    setQuery((current) => (filterBy !== current ? filterBy : current));
-  }, [filterBy]);
+    setQuery((current) => (initialQuery !== current ? initialQuery : current));
+  }, [initialQuery]);
 
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const { value } = event.target;
@@ -160,7 +160,7 @@ const UserList: FC<UserListProps> = (props) => {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (query && useServerSideSearch && filterBy !== query) {
+      if (query && useServerSideSearch && initialQuery !== query) {
         onFilter({
           mobileNumber: query,
         });
@@ -169,7 +169,7 @@ const UserList: FC<UserListProps> = (props) => {
     return () => {
       clearTimeout(handler);
     };
-  }, [onFilter, query, useServerSideSearch, filterBy]);
+  }, [onFilter, query, useServerSideSearch, initialQuery]);
 
   const handleSortChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSort(event.target.value as Sort);

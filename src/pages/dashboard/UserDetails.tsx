@@ -146,7 +146,7 @@ const UserDetails: FC = () => {
     [dispatch],
   );
 
-  const filterByQuery = useMemo(() => {
+  const getUserQuery = useMemo(() => {
     const {
       filter: { mobileNumber },
     } = userSelector;
@@ -187,7 +187,7 @@ const UserDetails: FC = () => {
                   <Link
                     color="textPrimary"
                     component={RouterLink}
-                    to={`/management/users${filterByQuery}`}
+                    to={`/management/users${getUserQuery}`}
                     variant="subtitle2"
                   >
                     Users
