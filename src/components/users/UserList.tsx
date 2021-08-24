@@ -16,6 +16,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import Assignment from '@material-ui/icons/Assignment';
+import BackspaceIcon from '@material-ui/icons/Backspace';
 import MonetizationOn from '@material-ui/icons/MonetizationOn';
 import { startCase, upperFirst } from 'lodash';
 import type { ChangeEvent, FC, MouseEvent } from 'react';
@@ -32,6 +33,7 @@ import Scrollbar from '../Scrollbar';
 interface UserListProps {
   users: User[];
   loading: boolean;
+  filterBy: string;
   onFilter: (filter: Record<string, string>) => void;
 }
 
@@ -126,14 +128,18 @@ const applySort = (users: User[], sort: Sort): User[] => {
 };
 
 const UserList: FC<UserListProps> = (props) => {
-  const { loading, users, onFilter, ...other } = props;
+  const { loading, users, onFilter, filterBy, ...other } = props;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
-  const [query, setQuery] = useState<string>('');
+  const [query, setQuery] = useState<string>(filterBy);
   const filteredUsers = applyFilters(users, query, {});
   const [sort, setSort] = useState<Sort>(sortOptions[0].value);
 
   const useServerSideSearch = !filteredUsers.length;
+
+  useEffect(() => {
+    setQuery((current) => (filterBy !== current ? filterBy : current));
+  }, [filterBy]);
 
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const { value } = event.target;
@@ -145,9 +151,16 @@ const UserList: FC<UserListProps> = (props) => {
     }
   };
 
+  const handleClearFilter = () => {
+    setQuery('');
+    onFilter({
+      mobileNumber: '',
+    });
+  };
+
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (query && useServerSideSearch) {
+      if (query && useServerSideSearch && filterBy !== query) {
         onFilter({
           mobileNumber: query,
         });
@@ -156,7 +169,7 @@ const UserList: FC<UserListProps> = (props) => {
     return () => {
       clearTimeout(handler);
     };
-  }, [onFilter, query]);
+  }, [onFilter, query, useServerSideSearch, filterBy]);
 
   const handleSortChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSort(event.target.value as Sort);
@@ -192,6 +205,11 @@ const UserList: FC<UserListProps> = (props) => {
                 <InputAdornment position="start">
                   <SearchIcon fontSize="small" />
                 </InputAdornment>
+              ),
+              endAdornment: (
+                <IconButton onClick={handleClearFilter} disabled={!query}>
+                  <BackspaceIcon fontSize="small" />
+                </IconButton>
               ),
             }}
             onChange={handleQueryChange}

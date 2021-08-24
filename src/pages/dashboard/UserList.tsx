@@ -2,12 +2,12 @@ import { Box, Breadcrumbs, Card, Container, Divider, Grid, Link, Tab, Tabs, Typo
 import type { ChangeEvent, FC } from 'react';
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useLocation, useNavigate } from 'react-router-dom';
 import { UserList as UserListComponent, UserListInArrears } from '../../components/users';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
-import { exportUserCSV, filterMoreUsers, filterUsers, getUsers, getUsersWithFilter } from '../../slices/user';
+import { exportUserCSV, filterMoreUsers, filterUsers, getUsersWithFilter } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
 
 const tabs = [
@@ -21,23 +21,22 @@ const tabs = [
   },
 ];
 
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
+
 const UserList: FC = () => {
   const dispatch = useDispatch();
+  const query = useQuery();
+  const navigate = useNavigate();
   const { settings } = useSettings();
   const userSelector = useSelector((state) => state.user);
   const [currentTab, setCurrentTab] = useState<string>(tabs[0].value);
   const [frequencyCount, setFrequencyCount] = useState(1);
+  const queryMobileNumber = query.get('mobileNumber');
   useEffect(() => {
     gtm.push({ event: 'page_view' });
   }, []);
-
-  useEffect(() => {
-    if (currentTab === 'all') {
-      dispatch(getUsers());
-    } else if (currentTab === 'inArrears') {
-      dispatch(filterUsers(frequencyCount));
-    }
-  }, [dispatch, currentTab, frequencyCount]);
 
   const user = useMemo(() => {
     const {
@@ -45,6 +44,35 @@ const UserList: FC = () => {
     } = userSelector;
     return allIds.map((id) => byId[id]);
   }, [userSelector]);
+
+  const filterBy = useMemo(() => {
+    const {
+      filter: { mobileNumber },
+    } = userSelector;
+    return mobileNumber;
+  }, [userSelector]);
+
+  useEffect(() => {
+    if (currentTab === 'all' && !queryMobileNumber) {
+      dispatch(
+        getUsersWithFilter({
+          mobileNumber: '',
+        }),
+      );
+    } else if (currentTab === 'inArrears') {
+      dispatch(filterUsers(frequencyCount));
+    }
+  }, [dispatch, currentTab, frequencyCount, queryMobileNumber]);
+
+  useEffect(() => {
+    if (queryMobileNumber && queryMobileNumber !== filterBy) {
+      dispatch(
+        getUsersWithFilter({
+          mobileNumber: queryMobileNumber,
+        }),
+      );
+    }
+  }, [dispatch, filterBy, queryMobileNumber]);
 
   const loadingState = useMemo(() => userSelector.status === 'loading', [userSelector]);
   const pageKey = useMemo(() => userSelector.pageKey, [userSelector]);
@@ -62,10 +90,12 @@ const UserList: FC = () => {
   };
 
   const handleFilter = useCallback(
-    (query) => {
-      dispatch(getUsersWithFilter(query));
+    (filterQuery: { mobileNumber: string }) => {
+      const { mobileNumber } = filterQuery;
+      const newQueryParam = mobileNumber ? `?mobileNumber=${encodeURIComponent(mobileNumber)}` : '';
+      navigate(`/management/users${newQueryParam}`);
     },
-    [dispatch],
+    [navigate],
   );
 
   const handleExport = useCallback(() => {
@@ -116,7 +146,7 @@ const UserList: FC = () => {
               </Tabs>
               <Divider />
               {currentTab === tabs[0].value && (
-                <UserListComponent loading={loadingState} users={user} onFilter={handleFilter} />
+                <UserListComponent loading={loadingState} users={user} onFilter={handleFilter} filterBy={filterBy} />
               )}
               {currentTab === tabs[1].value && (
                 <UserListInArrears

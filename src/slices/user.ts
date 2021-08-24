@@ -116,11 +116,11 @@ const slice = createSlice({
 export const { reducer } = slice;
 
 export const getUsers =
-  (): AppThunk =>
+  (withFilter: boolean): AppThunk =>
   async (dispatch, getState): Promise<void> => {
     dispatch(slice.actions.loading());
     const { filter } = getState().user;
-    const data = await userApi.getUsers(filter);
+    const data = await userApi.getUsers(withFilter ? filter : {});
     dispatch(slice.actions.getUsers(data));
     dispatch(slice.actions.setPageKey());
   };
