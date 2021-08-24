@@ -89,7 +89,7 @@ const slice = createSlice({
         };
       }
     },
-    updateUser(state: UserState, action: PayloadAction<{ user: User; userId: string }>): void {
+    updateUser(state: UserState, action: PayloadAction<{ user: Partial<User>; userId: string }>): void {
       const { user, userId } = action.payload;
       const existingUser = state.users.byId[userId];
       if (existingUser) {
@@ -176,6 +176,16 @@ export const updateUser =
     const { success } = await userApi.updateUser(userId, user);
     onComplete({ success });
     dispatch(slice.actions.updateUser({ user, userId }));
+  };
+
+export const updateUserStatus =
+  ({ status, statusReason, userId, updatedBy, onComplete }): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const { success } = await userApi.updateUserStatus(userId, status, statusReason, updatedBy);
+    onComplete({ success });
+    if (success) {
+      dispatch(slice.actions.updateUser({ user: { status, statusReason, updatedBy }, userId }));
+    }
   };
 
 export const updateCollectionEmailPausedUntil =
