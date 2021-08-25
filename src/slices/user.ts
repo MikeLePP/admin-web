@@ -125,7 +125,7 @@ export const getUsers =
     dispatch(slice.actions.setPageKey());
   };
 
-export const filterUsers =
+export const getUsersInArrears =
   (frequencyCount: number): AppThunk =>
   async (dispatch): Promise<void> => {
     dispatch(slice.actions.loading());
@@ -211,13 +211,54 @@ export const splitPayment =
       dispatch(getUser({ id: userId }));
     }
   };
+
+const applyFilters = (users: User[], query: string, filters: any): User[] =>
+  users.filter((user) => {
+    let matches = true;
+
+    if (query) {
+      const properties = ['email', 'firstName', 'lastName', 'middleName', 'mobileNumber'];
+      let containsQuery = false;
+
+      properties.forEach((property) => {
+        if (user[property]?.toLowerCase().includes(query.toLowerCase())) {
+          containsQuery = true;
+        }
+      });
+
+      if (!containsQuery) {
+        matches = false;
+      }
+    }
+
+    Object.keys(filters).forEach((key) => {
+      const value = filters[key];
+
+      if (value && user[key] !== value) {
+        matches = false;
+      }
+    });
+
+    return matches;
+  });
+
 export const getUsersWithFilter =
-  (query: Record<string, string>): AppThunk =>
+  (query?: string): AppThunk =>
   async (dispatch, getState): Promise<void> => {
     dispatch(slice.actions.loading());
-    dispatch(slice.actions.updateFilter(query));
-    const data = await userApi.getUsers(query);
-    dispatch(slice.actions.getUsers(data));
+    const data = await userApi.getUsers({
+      mobileNumber: query,
+    });
+    if (!data || !data.length) {
+      const userState = getState().user;
+      const users = userState.users.allIds.length
+        ? userState.users.allIds.map((id) => userState.users.byId[id])
+        : await userApi.getUsers();
+      const filteredUsers = applyFilters(users, query, {});
+      dispatch(slice.actions.getUsers(filteredUsers));
+    } else {
+      dispatch(slice.actions.getUsers(data));
+    }
     dispatch(slice.actions.setPageKey());
   };
 

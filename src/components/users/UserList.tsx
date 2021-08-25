@@ -34,7 +34,7 @@ interface UserListProps {
   users: User[];
   loading: boolean;
   initialQuery: string;
-  onFilter: (filter: Record<string, string>) => void;
+  onFilter: (query: string) => void;
 }
 
 type Sort = 'createdAt|desc' | 'createdAt|asc';
@@ -54,36 +54,6 @@ const sortOptions: SortOption[] = [
     value: 'createdAt|asc',
   },
 ];
-
-const applyFilters = (users: User[], query: string, filters: any): User[] =>
-  users.filter((user) => {
-    let matches = true;
-
-    if (query) {
-      const properties = ['email', 'firstName', 'lastName', 'middleName', 'mobileNumber'];
-      let containsQuery = false;
-
-      properties.forEach((property) => {
-        if (user[property]?.toLowerCase().includes(query.toLowerCase())) {
-          containsQuery = true;
-        }
-      });
-
-      if (!containsQuery) {
-        matches = false;
-      }
-    }
-
-    Object.keys(filters).forEach((key) => {
-      const value = filters[key];
-
-      if (value && user[key] !== value) {
-        matches = false;
-      }
-    });
-
-    return matches;
-  });
 
 const applyPagination = (users: User[], page: number, limit: number): User[] =>
   users.slice(page * limit, page * limit + limit);
@@ -132,44 +102,29 @@ const UserList: FC<UserListProps> = (props) => {
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
   const [query, setQuery] = useState<string>(initialQuery);
-  const filteredUsers = applyFilters(users, query, {});
   const [sort, setSort] = useState<Sort>(sortOptions[0].value);
-
-  const useServerSideSearch = !filteredUsers.length;
-
-  useEffect(() => {
-    setQuery((current) => (initialQuery !== current ? initialQuery : current));
-  }, [initialQuery]);
 
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const { value } = event.target;
     setQuery(value);
-    if (value === '') {
-      onFilter({
-        mobileNumber: '',
-      });
-    }
+    onFilter(query);
   };
 
   const handleClearFilter = () => {
     setQuery('');
-    onFilter({
-      mobileNumber: '',
-    });
+    onFilter(null);
   };
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (query && useServerSideSearch && initialQuery !== query) {
-        onFilter({
-          mobileNumber: query,
-        });
+      if (query) {
+        onFilter(query);
       }
     }, 1000);
     return () => {
       clearTimeout(handler);
     };
-  }, [onFilter, query, useServerSideSearch, initialQuery]);
+  }, [onFilter, query]);
 
   const handleSortChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSort(event.target.value as Sort);
@@ -183,7 +138,7 @@ const UserList: FC<UserListProps> = (props) => {
     setLimit(parseInt(event.target.value, 10));
   };
 
-  const sortedUser = applySort(filteredUsers, sort);
+  const sortedUser = applySort(users, sort);
   const paginatedUsers = applyPagination(sortedUser, page, limit);
 
   return (
@@ -207,7 +162,7 @@ const UserList: FC<UserListProps> = (props) => {
                 </InputAdornment>
               ),
               endAdornment: (
-                <IconButton onClick={handleClearFilter} disabled={!query}>
+                <IconButton onClick={handleClearFilter} disabled={!initialQuery || !query}>
                   <BackspaceIcon fontSize="small" />
                 </IconButton>
               ),
