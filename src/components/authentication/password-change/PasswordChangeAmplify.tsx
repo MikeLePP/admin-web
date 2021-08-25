@@ -47,7 +47,9 @@ const PasswordChangeAmplify: FC = () => {
         try {
           const { email, existingPassword, password } = values;
           const user = await Auth.signIn(email, existingPassword);
-          await passwordChange(user, existingPassword, password);
+          await Auth.completeNewPassword(user, password, {
+            email,
+          });
           navigate('/authentication/login');
         } catch (err) {
           console.error(err);
