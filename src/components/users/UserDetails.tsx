@@ -60,7 +60,7 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
             </TableCell>
             <TableCell>
               <Typography color="textSecondary" variant="body2">
-                {user.dob}
+                {user.dob ? moment(user.dob).format('DD-MM-YYYY') : ''}
               </Typography>
             </TableCell>
           </TableRow>

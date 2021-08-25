@@ -37,7 +37,7 @@ const CollectionEmail: FC<CollectionEmailProps> = (props) => {
 
   return (
     <Card {...other}>
-      <CardHeader title="Collection email" />
+      <CardHeader title="Collection Email" />
       <Divider />
       <CardContent className="py-4 px-2">
         <TextField

@@ -152,7 +152,7 @@ const UserListTable: FC<UserListTableProps> = (props) => {
                                 <Link
                                   color="inherit"
                                   component={RouterLink}
-                                  to={`/management/users/${user.id}/payments`}
+                                  to={`/management/users/${user.id}/collections`}
                                   variant="subtitle2"
                                 >
                                   {getFullName(user)}
@@ -169,7 +169,7 @@ const UserListTable: FC<UserListTableProps> = (props) => {
                         <TableCell>{arrearsSince}</TableCell>
                         <TableCell align="right">
                           <Tooltip title="View">
-                            <IconButton component={RouterLink} to={`/management/users/${user.id}/payments`}>
+                            <IconButton component={RouterLink} to={`/management/users/${user.id}/collections`}>
                               <ArrowRightIcon fontSize="small" />
                             </IconButton>
                           </Tooltip>
