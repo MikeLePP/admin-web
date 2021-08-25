@@ -31,6 +31,18 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
           <TableRow>
             <TableCell>
               <Typography color="textPrimary" variant="subtitle2">
+                Middle name
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography color="textSecondary" variant="body2">
+                {user.middleName}
+              </Typography>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>
+              <Typography color="textPrimary" variant="subtitle2">
                 Last name
               </Typography>
             </TableCell>
