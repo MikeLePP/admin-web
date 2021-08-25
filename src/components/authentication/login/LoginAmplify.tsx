@@ -66,11 +66,18 @@ const LoginAmplify: FC = (props) => {
         })}
         onSubmit={async (values, { setErrors, setStatus, setSubmitting }): Promise<void> => {
           try {
-            await signInWithEmailAndPassword(values.email, values.password);
-
+            const user = await signInWithEmailAndPassword(values.email, values.password);
             if (mounted.current) {
               setStatus({ success: true });
               setSubmitting(false);
+            }
+            if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
+              navigate('/authentication/password-change', {
+                state: {
+                  username: values.email,
+                  password: values.password,
+                },
+              });
             }
           } catch (err) {
             console.error(err);

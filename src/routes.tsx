@@ -36,6 +36,7 @@ const Loadable = (Component) => (props) =>
 // Authentication pages
 
 const Login = Loadable(lazy(() => import('./pages/authentication/Login')));
+const PasswordChange = Loadable(lazy(() => import('./pages/authentication/PasswordChange')));
 const PasswordRecovery = Loadable(lazy(() => import('./pages/authentication/PasswordRecovery')));
 const PasswordReset = Loadable(lazy(() => import('./pages/authentication/PasswordReset')));
 const VerifyCode = Loadable(lazy(() => import('./pages/authentication/VerifyCode')));
@@ -117,6 +118,10 @@ export const demoRoutes: PartialRouteObject[] = [
       {
         path: 'password-reset',
         element: <PasswordReset />,
+      },
+      {
+        path: 'password-change',
+        element: <PasswordChange />,
       },
       {
         path: 'verify-code',
@@ -385,6 +390,10 @@ export const routes: PartialRouteObject[] = [
       {
         path: 'password-reset',
         element: <PasswordReset />,
+      },
+      {
+        path: 'password-change',
+        element: <PasswordChange />,
       },
       {
         path: 'verify-code',
