@@ -1,4 +1,4 @@
-export { default as CustomerDataManagement } from './CustomerDataManagement';
+export { default as UserDataManagement } from './UserDataManagement';
 export { default as UserDetails } from './UserDetails';
 export { default as UserEditForm } from './UserEditForm';
 export { default as UserUpdateBalanceLimit } from './UserUpdateBalanceLimit';
