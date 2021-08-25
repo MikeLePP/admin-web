@@ -105,9 +105,7 @@ const UserList: FC<UserListProps> = (props) => {
   const [sort, setSort] = useState<Sort>(sortOptions[0].value);
 
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    const { value } = event.target;
-    setQuery(value);
-    onFilter(query);
+    setQuery(event.target.value);
   };
 
   const handleClearFilter = () => {
@@ -117,9 +115,7 @@ const UserList: FC<UserListProps> = (props) => {
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (query) {
-        onFilter(query);
-      }
+      onFilter(query);
     }, 1000);
     return () => {
       clearTimeout(handler);
