@@ -1,6 +1,5 @@
-import { Box, Button, FormHelperText, TextField, Typography } from '@material-ui/core';
+import { Box, Button, FormHelperText, TextField } from '@material-ui/core';
 import { Formik } from 'formik';
-import Auth from '@aws-amplify/auth';
 import type { Location } from 'history';
 import type { FC } from 'react';
 import { useEffect, useRef } from 'react';
@@ -12,12 +11,12 @@ import useMounted from '../../../hooks/useMounted';
 interface LocationState {
   username?: string;
   password?: string;
-  user?: any;
+  firstTimeLogin?: boolean;
 }
 
 const PasswordChangeAmplify: FC = () => {
   const mounted = useMounted();
-  const { passwordChange } = useAuth() as any;
+  const { passwordChange, passwordComplete } = useAuth() as any;
   const location = useLocation() as Location<LocationState>;
   const navigate = useNavigate();
   const itemsRef = useRef([]);
@@ -45,11 +44,13 @@ const PasswordChangeAmplify: FC = () => {
       })}
       onSubmit={async (values, { setErrors, setStatus, setSubmitting }): Promise<void> => {
         try {
+          const { firstTimeLogin } = location.state;
           const { email, existingPassword, password } = values;
-          const user = await Auth.signIn(email, existingPassword);
-          await Auth.completeNewPassword(user, password, {
-            email,
-          });
+          if (firstTimeLogin) {
+            await passwordComplete(email, existingPassword, password);
+          } else {
+            await passwordChange(email, existingPassword, password);
+          }
           navigate('/authentication/login');
         } catch (err) {
           console.error(err);
@@ -90,16 +91,6 @@ const PasswordChangeAmplify: FC = () => {
           ) : (
             <TextField fullWidth margin="normal" value={location.state.username} variant="outlined" />
           )}
-          <Typography
-            color="textSecondary"
-            sx={{
-              mb: 2,
-              mt: 3,
-            }}
-            variant="subtitle2"
-          >
-            Verification code
-          </Typography>
           <TextField
             error={Boolean(touched.existingPassword && errors.existingPassword)}
             fullWidth
@@ -117,7 +108,7 @@ const PasswordChangeAmplify: FC = () => {
             error={Boolean(touched.password && errors.password)}
             fullWidth
             helperText={touched.password && errors.password}
-            label="Password"
+            label="New Password"
             margin="normal"
             name="password"
             onBlur={handleBlur}

@@ -26,6 +26,7 @@ interface AuthContextValue extends State {
   passwordRecovery: (username: string) => Promise<void>;
   passwordReset: (username: string, code: string, newPassword: string) => Promise<void>;
   passwordChange: (username: string, existingPassword: string, newPassword: string) => Promise<void>;
+  passwordComplete: (username: string, existingPassword: string, newPassword: string) => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -73,6 +74,9 @@ type PasswordResetAction = {
 type PasswordChangeAction = {
   type: 'PASSWORD_CHANGE';
 };
+type PasswordCompleteAction = {
+  type: 'PASSWORD_COMPLETE';
+};
 
 type Action =
   | InitializeAction
@@ -83,6 +87,7 @@ type Action =
   | ResendCodeAction
   | PasswordRecoveryAction
   | PasswordResetAction
+  | PasswordCompleteAction
   | PasswordChangeAction;
 
 const initialState: State = {
@@ -122,6 +127,7 @@ const handlers: Record<string, (state: State, action: Action) => State> = {
   PASSWORD_RECOVERY: (state: State): State => ({ ...state }),
   PASSWORD_RESET: (state: State): State => ({ ...state }),
   PASSWORD_CHANGE: (state: State): State => ({ ...state }),
+  PASSWORD_COMPLETE: (state: State): State => ({ ...state }),
 };
 
 const reducer = (state: State, action: Action): State =>
@@ -139,6 +145,7 @@ const AuthContext = createContext<AuthContextValue>({
   passwordRecovery: () => Promise.resolve(),
   passwordReset: () => Promise.resolve(),
   passwordChange: () => Promise.resolve(),
+  passwordComplete: () => Promise.resolve(),
 });
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
@@ -263,10 +270,21 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     });
   };
 
-  const passwordChange = async (user: any, existingPassword: string, newPassword: string): Promise<void> => {
+  const passwordChange = async (email: string, existingPassword: string, newPassword: string): Promise<void> => {
+    const user = await Auth.signIn(email, existingPassword);
     await Auth.changePassword(user, existingPassword, newPassword);
     dispatch({
       type: 'PASSWORD_CHANGE',
+    });
+  };
+
+  const passwordComplete = async (email: string, existingPassword: string, newPassword: string): Promise<void> => {
+    const user = await Auth.signIn(email, existingPassword);
+    await Auth.completeNewPassword(user, newPassword, {
+      email,
+    });
+    dispatch({
+      type: 'PASSWORD_COMPLETE',
     });
   };
 
@@ -284,6 +302,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         passwordRecovery,
         passwordReset,
         passwordChange,
+        passwordComplete,
       }}
     >
       {children}

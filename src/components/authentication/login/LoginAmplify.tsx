@@ -74,6 +74,7 @@ const LoginAmplify: FC = (props) => {
             if (user.challengeName === 'NEW_PASSWORD_REQUIRED') {
               navigate('/authentication/password-change', {
                 state: {
+                  firstTimeLogin: true,
                   username: values.email,
                   password: values.password,
                 },
