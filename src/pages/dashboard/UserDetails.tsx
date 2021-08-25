@@ -4,9 +4,10 @@ import type { ChangeEvent, FC } from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import NotFound from '../../components/commons/NotFound';
 import {
-  CustomerDataManagement,
+  UserDataManagement,
   UserBankDetails,
   UserCollectionDetails,
   UserCollectionEmail,
@@ -27,9 +28,12 @@ import {
   updateBalanceLimit,
   updateCollectionEmailPausedUntil,
   splitPayment,
+  updateUserStatus,
 } from '../../slices/user';
 import { getTransactionsByUserId, reconcileTransaction, updateTransaction } from '../../slices/transaction';
 import { useDispatch, useSelector } from '../../store';
+import { UserStatus } from '../../types/users';
+import useAuth from '../../hooks/useAuth';
 
 const tabs = [
   { label: 'Details', value: 'details' },
@@ -39,6 +43,7 @@ const tabs = [
 const UserDetails: FC = () => {
   const { settings } = useSettings();
   const navigate = useNavigate();
+  const auth = useAuth();
   const dispatch = useDispatch();
   const { userId: id, tabId } = useParams();
   const userSelector = useSelector((state) => state.user);
@@ -146,6 +151,25 @@ const UserDetails: FC = () => {
     [dispatch],
   );
 
+  const handleUserStatusChanged = useCallback(
+    (status: typeof UserStatus[number], statusReason: string) => {
+      dispatch(
+        updateUserStatus({
+          userId: id,
+          status,
+          statusReason,
+          updatedBy: auth.user.email,
+          onComplete: (success: boolean) => {
+            if (success) {
+              toast.success("User's status updated");
+            }
+          },
+        }),
+      );
+    },
+    [dispatch],
+  );
+
   if (!user && !loading) {
     return <NotFound />;
   }
@@ -236,7 +260,7 @@ const UserDetails: FC = () => {
                           <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
                         </Grid>
                         <Grid item lg={12} md={12} xs={12}>
-                          <CustomerDataManagement />
+                          <UserDataManagement user={user} onUserStatusChanged={handleUserStatusChanged} />
                         </Grid>
                       </Grid>
                     </Grid>
@@ -255,7 +279,7 @@ const UserDetails: FC = () => {
                         <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
                       </Grid>
                       <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                        <CustomerDataManagement />
+                        <UserDataManagement user={user} onUserStatusChanged={handleUserStatusChanged} />
                       </Grid>
                     </Grid>
                   )}

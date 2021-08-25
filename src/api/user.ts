@@ -1,10 +1,10 @@
-import { get } from 'lodash';
+import { get, pick } from 'lodash';
 import moment from 'moment';
 import toast from 'react-hot-toast';
 import { getAuthToken } from '../helpers/auth';
 import { flatObject } from '../lib/apiHelpers';
 import type { BankAccount } from '../types/bankAccount';
-import type { User } from '../types/users';
+import type { User, UserStatus } from '../types/users';
 
 const apiRoot = process.env.REACT_APP_API_URL;
 class UserApi {
@@ -197,6 +197,41 @@ class UserApi {
       }
     } catch (err) {
       toast.error(get(err, 'body.errors[0].title', "Cannot update user's details"));
+      return {
+        success: false,
+      };
+    }
+    return {
+      success: true,
+    };
+  }
+
+  async updateUserStatus(
+    userId: string,
+    status: typeof UserStatus[number],
+    statusReason: string,
+    updatedBy?: string,
+  ): Promise<{ success: boolean }> {
+    try {
+      const res = await fetch(`${apiRoot}/users/${userId}/status`, {
+        method: 'PATCH',
+        headers: {
+          Authorization: await getAuthToken(),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          status,
+          statusReason,
+          updatedBy,
+        }),
+      });
+      if (res.status !== 200) {
+        return {
+          success: false,
+        };
+      }
+    } catch (err) {
+      toast.error(get(err, 'body.errors[0].title', "Cannot update user's status"));
       return {
         success: false,
       };
