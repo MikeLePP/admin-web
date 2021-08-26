@@ -8,7 +8,7 @@ import useSettings from '../../hooks/useSettings';
 import useQuery from '../../hooks/useQuery';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
-import { exportUserCSV, filterMoreUsers, getUsersInArrears, getUsersWithFilter, getUsers } from '../../slices/user';
+import { exportUserCSV, filterMoreUsers, getUsersInArrears, getUsersWithFilter, getAllUsers } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
 
 const tabs = [
@@ -33,7 +33,8 @@ const UserList: FC = () => {
   const queryToSearch = query.get('query');
   useEffect(() => {
     gtm.push({ event: 'page_view' });
-  }, []);
+    dispatch(getAllUsers());
+  }, [dispatch]);
 
   const users = useMemo(() => {
     const {
@@ -43,24 +44,19 @@ const UserList: FC = () => {
   }, [userSelector]);
 
   useEffect(() => {
-    if (!queryToSearch) {
-      dispatch(getUsers(false));
-    } else {
+    if (queryToSearch && userSelector.allUsers.allIds.length) {
       dispatch(getUsersWithFilter(queryToSearch));
     }
-  }, [dispatch, queryToSearch]);
+    if (!queryToSearch && userSelector.allUsers.allIds.length) {
+      dispatch(getAllUsers());
+    }
+  }, [dispatch, queryToSearch, userSelector.allUsers.allIds.length]);
 
   useEffect(() => {
     if (currentTab === 'inArrears') {
       dispatch(getUsersInArrears(frequencyCount));
-    } else if (currentTab === 'all') {
-      if (!queryToSearch) {
-        dispatch(getUsers(false));
-      } else {
-        dispatch(getUsersWithFilter(queryToSearch));
-      }
     }
-  }, [dispatch, currentTab, frequencyCount]);
+  }, [dispatch, frequencyCount]);
 
   const loadingState = useMemo(() => userSelector.status === 'loading', [userSelector]);
   const pageKey = useMemo(() => userSelector.pageKey, [userSelector]);
@@ -75,6 +71,16 @@ const UserList: FC = () => {
 
   const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
+    if (value === 'inArrears') {
+      dispatch(getUsersInArrears(frequencyCount));
+    }
+    if (value === 'all') {
+      if (!queryToSearch) {
+        dispatch(getAllUsers());
+      } else {
+        dispatch(getUsersWithFilter(queryToSearch));
+      }
+    }
   };
 
   const handleFilter = useCallback(

@@ -15,6 +15,10 @@ interface UserState {
     byId: Record<string, User>;
     allIds: string[];
   };
+  allUsers: {
+    byId: Record<string, User>;
+    allIds: string[];
+  };
   status: 'idle' | 'loading' | 'success' | 'error' | 'updating';
   targetUserId: string;
   filter: Record<string, string>;
@@ -23,6 +27,10 @@ interface UserState {
 
 const initialState: UserState = {
   users: {
+    byId: {},
+    allIds: [],
+  },
+  allUsers: {
     byId: {},
     allIds: [],
   },
@@ -49,6 +57,11 @@ const slice = createSlice({
       state.status = 'success';
       state.users.byId = objFromArray(users);
       state.users.allIds = Object.keys(state.users.byId);
+    },
+    getAllUsers(state: UserState, action: PayloadAction<User[]>): void {
+      const users = action.payload;
+      state.allUsers.byId = objFromArray(users);
+      state.allUsers.allIds = Object.keys(state.allUsers.byId);
     },
     getUser(state: UserState, action: PayloadAction<User>): void {
       const user = action.payload;
@@ -115,14 +128,30 @@ const slice = createSlice({
 
 export const { reducer } = slice;
 
-export const getUsers =
-  (withFilter: boolean): AppThunk =>
+// export const getUsers =
+//   (withFilter: boolean): AppThunk =>
+//   async (dispatch, getState): Promise<void> => {
+//     dispatch(slice.actions.loading());
+//     const data = await userApi.getUsers({});
+//     dispatch(slice.actions.getUsers(data));
+//     dispatch(slice.actions.getAllUsers(data));
+//     dispatch(slice.actions.setPageKey());
+//   };
+
+export const getAllUsers =
+  (): AppThunk =>
   async (dispatch, getState): Promise<void> => {
-    dispatch(slice.actions.loading());
-    const { filter } = getState().user;
-    const data = await userApi.getUsers(withFilter ? filter : {});
-    dispatch(slice.actions.getUsers(data));
-    dispatch(slice.actions.setPageKey());
+    const userState = getState().user;
+    if (!userState.allUsers.allIds.length) {
+      dispatch(slice.actions.loading());
+      const data = await userApi.getUsers({});
+      dispatch(slice.actions.getAllUsers(data));
+      dispatch(slice.actions.getUsers(data));
+      dispatch(slice.actions.setPageKey());
+    } else {
+      const allUsers = userState.allUsers.allIds.map((id) => userState.allUsers.byId[id]);
+      dispatch(slice.actions.getUsers(allUsers));
+    }
   };
 
 export const getUsersInArrears =
@@ -255,21 +284,20 @@ const applyFilters = (users: User[], query: string, filters: any): User[] =>
 export const getUsersWithFilter =
   (query?: string): AppThunk =>
   async (dispatch, getState): Promise<void> => {
-    dispatch(slice.actions.loading());
-    const data = await userApi.getUsers({
-      mobileNumber: query,
-    });
-    if (!data || !data.length) {
-      const userState = getState().user;
-      const users = userState.users.allIds.length
-        ? userState.users.allIds.map((id) => userState.users.byId[id])
-        : await userApi.getUsers();
-      const filteredUsers = applyFilters(users, query, {});
-      dispatch(slice.actions.getUsers(filteredUsers));
-    } else {
-      dispatch(slice.actions.getUsers(data));
+    const userState = getState().user;
+    const allUsers = userState.allUsers.allIds.map((id) => userState.allUsers.byId[id]);
+    if (allUsers.length) {
+      const filteredUsers = applyFilters(allUsers, query, {});
+      if (filteredUsers.length) {
+        dispatch(slice.actions.getUsers(filteredUsers));
+      } else {
+        dispatch(slice.actions.loading());
+        const data = await userApi.getUsers({
+          mobileNumber: query,
+        });
+        dispatch(slice.actions.getUsers(data));
+      }
     }
-    dispatch(slice.actions.setPageKey());
   };
 
 export const exportUserCSV =
