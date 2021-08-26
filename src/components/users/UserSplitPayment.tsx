@@ -41,11 +41,12 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
     const { value } = event.target;
     setCount(value);
     setAmount(`${user.balanceBook / parseFloat(value)}`);
+    setFee(`${(user.balanceBook / parseFloat(value)) * 0.05}`);
   };
   const handleChangeAmount = (event) => {
     const { value } = event.target;
     setAmount(value);
-    setCount(`${user.balanceBook / parseFloat(value)}`);
+    setFee(`${parseFloat(value) * 0.05}`);
   };
   const handleChangeFee = (event) => {
     const { value } = event.target;

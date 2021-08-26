@@ -120,7 +120,7 @@ const UserList: FC<UserListProps> = (props) => {
     return () => {
       clearTimeout(handler);
     };
-  }, [onFilter, query]);
+  }, [onFilter, query, useServerSideSearch]);
 
   const handleSortChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSort(event.target.value as Sort);
