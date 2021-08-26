@@ -34,7 +34,7 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
   return (
     <>
       <Card {...other}>
-        <CardHeader title="Collection details" />
+        <CardHeader title="Collection Details" />
         <Divider />
         <Table>
           <TableBody>

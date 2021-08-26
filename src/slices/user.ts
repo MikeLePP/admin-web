@@ -15,6 +15,10 @@ interface UserState {
     byId: Record<string, User>;
     allIds: string[];
   };
+  allUsers: {
+    byId: Record<string, User>;
+    allIds: string[];
+  };
   status: 'idle' | 'loading' | 'success' | 'error' | 'updating';
   targetUserId: string;
   filter: Record<string, string>;
@@ -23,6 +27,10 @@ interface UserState {
 
 const initialState: UserState = {
   users: {
+    byId: {},
+    allIds: [],
+  },
+  allUsers: {
     byId: {},
     allIds: [],
   },
@@ -49,6 +57,11 @@ const slice = createSlice({
       state.status = 'success';
       state.users.byId = objFromArray(users);
       state.users.allIds = Object.keys(state.users.byId);
+    },
+    getAllUsers(state: UserState, action: PayloadAction<User[]>): void {
+      const users = action.payload;
+      state.allUsers.byId = objFromArray(users);
+      state.allUsers.allIds = Object.keys(state.allUsers.byId);
     },
     getUser(state: UserState, action: PayloadAction<User>): void {
       const user = action.payload;
@@ -89,7 +102,7 @@ const slice = createSlice({
         };
       }
     },
-    updateUser(state: UserState, action: PayloadAction<{ user: User; userId: string }>): void {
+    updateUser(state: UserState, action: PayloadAction<{ user: Partial<User>; userId: string }>): void {
       const { user, userId } = action.payload;
       const existingUser = state.users.byId[userId];
       if (existingUser) {
@@ -115,17 +128,33 @@ const slice = createSlice({
 
 export const { reducer } = slice;
 
-export const getUsers =
+// export const getUsers =
+//   (withFilter: boolean): AppThunk =>
+//   async (dispatch, getState): Promise<void> => {
+//     dispatch(slice.actions.loading());
+//     const data = await userApi.getUsers({});
+//     dispatch(slice.actions.getUsers(data));
+//     dispatch(slice.actions.getAllUsers(data));
+//     dispatch(slice.actions.setPageKey());
+//   };
+
+export const getAllUsers =
   (): AppThunk =>
   async (dispatch, getState): Promise<void> => {
-    dispatch(slice.actions.loading());
-    const { filter } = getState().user;
-    const data = await userApi.getUsers(filter);
-    dispatch(slice.actions.getUsers(data));
-    dispatch(slice.actions.setPageKey());
+    const userState = getState().user;
+    if (!userState.allUsers.allIds.length) {
+      dispatch(slice.actions.loading());
+      const data = await userApi.getUsers({});
+      dispatch(slice.actions.getAllUsers(data));
+      dispatch(slice.actions.getUsers(data));
+      dispatch(slice.actions.setPageKey());
+    } else {
+      const allUsers = userState.allUsers.allIds.map((id) => userState.allUsers.byId[id]);
+      dispatch(slice.actions.getUsers(allUsers));
+    }
   };
 
-export const filterUsers =
+export const getUsersInArrears =
   (frequencyCount: number): AppThunk =>
   async (dispatch): Promise<void> => {
     dispatch(slice.actions.loading());
@@ -178,6 +207,16 @@ export const updateUser =
     dispatch(slice.actions.updateUser({ user, userId }));
   };
 
+export const updateUserStatus =
+  ({ status, statusReason, userId, updatedBy, onComplete }): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const { success } = await userApi.updateUserStatus(userId, status, statusReason, updatedBy);
+    onComplete({ success });
+    if (success) {
+      dispatch(slice.actions.updateUser({ user: { status, statusReason, updatedBy }, userId }));
+    }
+  };
+
 export const updateCollectionEmailPausedUntil =
   ({ userId, collectionEmailPausedUntil }): AppThunk =>
   async (dispatch): Promise<void> => {
@@ -211,14 +250,54 @@ export const splitPayment =
       dispatch(getUser({ id: userId }));
     }
   };
+
+const applyFilters = (users: User[], query: string, filters: any): User[] =>
+  users.filter((user) => {
+    let matches = true;
+
+    if (query) {
+      const properties = ['email', 'firstName', 'lastName', 'middleName', 'mobileNumber'];
+      let containsQuery = false;
+
+      properties.forEach((property) => {
+        if (user[property]?.toLowerCase().includes(query.toLowerCase())) {
+          containsQuery = true;
+        }
+      });
+
+      if (!containsQuery) {
+        matches = false;
+      }
+    }
+
+    Object.keys(filters).forEach((key) => {
+      const value = filters[key];
+
+      if (value && user[key] !== value) {
+        matches = false;
+      }
+    });
+
+    return matches;
+  });
+
 export const getUsersWithFilter =
-  (query: Record<string, string>): AppThunk =>
+  (query?: string): AppThunk =>
   async (dispatch, getState): Promise<void> => {
-    dispatch(slice.actions.loading());
-    dispatch(slice.actions.updateFilter(query));
-    const data = await userApi.getUsers(query);
-    dispatch(slice.actions.getUsers(data));
-    dispatch(slice.actions.setPageKey());
+    const userState = getState().user;
+    const allUsers = userState.allUsers.allIds.map((id) => userState.allUsers.byId[id]);
+    if (allUsers.length) {
+      const filteredUsers = applyFilters(allUsers, query, {});
+      if (filteredUsers.length) {
+        dispatch(slice.actions.getUsers(filteredUsers));
+      } else {
+        dispatch(slice.actions.loading());
+        const data = await userApi.getUsers({
+          mobileNumber: query,
+        });
+        dispatch(slice.actions.getUsers(data));
+      }
+    }
   };
 
 export const exportUserCSV =

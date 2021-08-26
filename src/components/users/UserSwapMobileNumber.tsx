@@ -68,7 +68,7 @@ export default function SwapPhoneNumber({ user, onSwapPhoneNumber }: IProps): JS
 
   return (
     <Card>
-      <CardHeader title="Swap mobile number" />
+      <CardHeader title="Swap Mobile Number" />
       <Divider />
       <CardContent>
         <Typography>User phone number: {currentPhoneNumber}</Typography>

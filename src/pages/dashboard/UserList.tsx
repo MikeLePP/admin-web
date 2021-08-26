@@ -2,12 +2,13 @@ import { Box, Breadcrumbs, Card, Container, Divider, Grid, Link, Tab, Tabs, Typo
 import type { ChangeEvent, FC } from 'react';
 import { useEffect, useMemo, useState, useCallback } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { UserList as UserListComponent, UserListInArrears } from '../../components/users';
 import useSettings from '../../hooks/useSettings';
+import useQuery from '../../hooks/useQuery';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
-import { exportUserCSV, filterMoreUsers, filterUsers, getUsers, getUsersWithFilter } from '../../slices/user';
+import { exportUserCSV, filterMoreUsers, getUsersInArrears, getUsersWithFilter, getAllUsers } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
 
 const tabs = [
@@ -23,28 +24,39 @@ const tabs = [
 
 const UserList: FC = () => {
   const dispatch = useDispatch();
+  const query = useQuery();
+  const navigate = useNavigate();
   const { settings } = useSettings();
   const userSelector = useSelector((state) => state.user);
   const [currentTab, setCurrentTab] = useState<string>(tabs[0].value);
   const [frequencyCount, setFrequencyCount] = useState(1);
+  const queryToSearch = query.get('query');
   useEffect(() => {
     gtm.push({ event: 'page_view' });
-  }, []);
+    dispatch(getAllUsers());
+  }, [dispatch]);
 
-  useEffect(() => {
-    if (currentTab === 'all') {
-      dispatch(getUsers());
-    } else if (currentTab === 'inArrears') {
-      dispatch(filterUsers(frequencyCount));
-    }
-  }, [dispatch, currentTab, frequencyCount]);
-
-  const user = useMemo(() => {
+  const users = useMemo(() => {
     const {
       users: { allIds, byId },
     } = userSelector;
     return allIds.map((id) => byId[id]);
   }, [userSelector]);
+
+  useEffect(() => {
+    if (queryToSearch && userSelector.allUsers.allIds.length) {
+      dispatch(getUsersWithFilter(queryToSearch));
+    }
+    if (!queryToSearch && userSelector.allUsers.allIds.length) {
+      dispatch(getAllUsers());
+    }
+  }, [dispatch, queryToSearch, userSelector.allUsers.allIds.length]);
+
+  useEffect(() => {
+    if (currentTab === 'inArrears') {
+      dispatch(getUsersInArrears(frequencyCount));
+    }
+  }, [dispatch, frequencyCount]);
 
   const loadingState = useMemo(() => userSelector.status === 'loading', [userSelector]);
   const pageKey = useMemo(() => userSelector.pageKey, [userSelector]);
@@ -59,13 +71,27 @@ const UserList: FC = () => {
 
   const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
     setCurrentTab(value);
+    if (value === 'inArrears') {
+      dispatch(getUsersInArrears(frequencyCount));
+    }
+    if (value === 'all') {
+      if (!queryToSearch) {
+        dispatch(getAllUsers());
+      } else {
+        dispatch(getUsersWithFilter(queryToSearch));
+      }
+    }
   };
 
   const handleFilter = useCallback(
-    (query) => {
-      dispatch(getUsersWithFilter(query));
+    (newQuery: string) => {
+      if (newQuery) {
+        navigate(`/management/users?query=${encodeURIComponent(newQuery)}`);
+      } else {
+        navigate(`/management/users`);
+      }
     },
-    [dispatch],
+    [navigate],
   );
 
   const handleExport = useCallback(() => {
@@ -116,12 +142,17 @@ const UserList: FC = () => {
               </Tabs>
               <Divider />
               {currentTab === tabs[0].value && (
-                <UserListComponent loading={loadingState} users={user} onFilter={handleFilter} />
+                <UserListComponent
+                  initialQuery={queryToSearch}
+                  loading={loadingState}
+                  users={users}
+                  onFilter={handleFilter}
+                />
               )}
               {currentTab === tabs[1].value && (
                 <UserListInArrears
                   loading={loadingState}
-                  users={user}
+                  users={users}
                   onFilterUserInArrears={handleFilterUserInArrears}
                   initialFrequencyCount={frequencyCount}
                   pageKey={pageKey}
