@@ -4,9 +4,10 @@ import type { ChangeEvent, FC } from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
+import toast from 'react-hot-toast';
 import NotFound from '../../components/commons/NotFound';
 import {
-  CustomerDataManagement,
+  UserDataManagement,
   UserBankDetails,
   UserCollectionDetails,
   UserCollectionEmail,
@@ -27,18 +28,22 @@ import {
   updateBalanceLimit,
   updateCollectionEmailPausedUntil,
   splitPayment,
+  updateUserStatus,
 } from '../../slices/user';
 import { getTransactionsByUserId, reconcileTransaction, updateTransaction } from '../../slices/transaction';
 import { useDispatch, useSelector } from '../../store';
+import { UserStatus } from '../../types/users';
+import useAuth from '../../hooks/useAuth';
 
 const tabs = [
   { label: 'Details', value: 'details' },
-  { label: 'Payments', value: 'payments' },
+  { label: 'Collections', value: 'collections' },
 ];
 
 const UserDetails: FC = () => {
   const { settings } = useSettings();
   const navigate = useNavigate();
+  const auth = useAuth();
   const dispatch = useDispatch();
   const { userId: id, tabId } = useParams();
   const userSelector = useSelector((state) => state.user);
@@ -146,6 +151,25 @@ const UserDetails: FC = () => {
     [dispatch],
   );
 
+  const handleUserStatusChanged = useCallback(
+    (status: typeof UserStatus[number], statusReason: string) => {
+      dispatch(
+        updateUserStatus({
+          userId: id,
+          status,
+          statusReason,
+          updatedBy: auth.user.email,
+          onComplete: (success: boolean) => {
+            if (success) {
+              toast.success("User's status updated");
+            }
+          },
+        }),
+      );
+    },
+    [dispatch],
+  );
+
   if (!user && !loading) {
     return <NotFound />;
   }
@@ -177,7 +201,7 @@ const UserDetails: FC = () => {
                   <Link color="textPrimary" component={RouterLink} to="/management/users" variant="subtitle2">
                     Management
                   </Link>
-                  <Link color="textPrimary" component={RouterLink} to="/management/users" variant="subtitle2">
+                  <Link color="textPrimary" component={RouterLink} to={`/management/users`} variant="subtitle2">
                     Users
                   </Link>
                   <Typography color="textSecondary" variant="subtitle2">
@@ -217,27 +241,53 @@ const UserDetails: FC = () => {
             <Divider />
             <Box sx={{ mt: 3 }}>
               {currentTab === 'details' && (
-                <Grid container spacing={3}>
-                  <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                    <UserDetailsComponent user={user} />
-                  </Grid>
-                  <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                    <UserBankDetails user={user} />
-                  </Grid>
-                  <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                    <UserUpdateBalanceLimit user={user} onUpdateLimit={handleUpdateLimit} />
-                  </Grid>
-                  <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                    <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
-                  </Grid>
-                  <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                    <CustomerDataManagement />
-                  </Grid>
-                </Grid>
+                <>
+                  {settings.compact ? (
+                    <Grid container spacing={3}>
+                      <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12} container>
+                        <Grid item lg={12} md={12} xs={12}>
+                          <UserDetailsComponent user={user} />
+                        </Grid>
+                        <Grid item lg={12} md={12} xs={12} className="mt-4">
+                          <UserBankDetails user={user} />
+                        </Grid>
+                      </Grid>
+                      <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12} container>
+                        <Grid item lg={12} md={12} xs={12}>
+                          <UserUpdateBalanceLimit user={user} onUpdateLimit={handleUpdateLimit} />
+                        </Grid>
+                        <Grid item lg={12} md={12} xs={12}>
+                          <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
+                        </Grid>
+                        <Grid item lg={12} md={12} xs={12}>
+                          <UserDataManagement user={user} onUserStatusChanged={handleUserStatusChanged} />
+                        </Grid>
+                      </Grid>
+                    </Grid>
+                  ) : (
+                    <Grid container spacing={3}>
+                      <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
+                        <UserDetailsComponent user={user} />
+                      </Grid>
+                      <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
+                        <UserUpdateBalanceLimit user={user} onUpdateLimit={handleUpdateLimit} />
+                      </Grid>
+                      <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
+                        <UserBankDetails user={user} />
+                      </Grid>
+                      <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
+                        <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
+                      </Grid>
+                      <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
+                        <UserDataManagement user={user} onUserStatusChanged={handleUserStatusChanged} />
+                      </Grid>
+                    </Grid>
+                  )}
+                </>
               )}
-              {currentTab === 'payments' && (
+              {currentTab === 'collections' && (
                 <Grid container spacing={3}>
-                  <Grid container lg={6} md={6} xl={6} xs={12} item>
+                  <Grid container lg={6} md={6} xl={6} xs={12} spacing={!settings.compact ? 3 : 0} item>
                     <Grid
                       className="mb-4"
                       item

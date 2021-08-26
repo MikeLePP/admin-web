@@ -108,7 +108,7 @@ function TransactionDialog({
 
           <Button
             variant="contained"
-            color="secondary"
+            color="primary"
             onClick={onRefreshClick}
             disabled={loading || (!!dataLastAt && moment().diff(dataLastAt, 'minutes') < MINUTES_TO_DISABLE_REFRESH)}
           >

@@ -1,3 +1,5 @@
+export const UserStatus = ['inactive', 'active', 'on_hold', 'dishonoured', 'rejected', 'deleted'] as const;
+
 export interface User {
   id: string;
   firstName: string;
@@ -41,5 +43,7 @@ export interface User {
   collectionEmailPausedUntil: string;
   balanceOverdueAt: string;
   riskAssessmentId?: string;
-  status: string;
+  status: typeof UserStatus[number];
+  statusReason: string;
+  updatedBy?: string;
 }

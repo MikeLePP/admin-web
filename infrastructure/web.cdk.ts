@@ -59,6 +59,7 @@ export default class WebConstruct extends core.Construct {
       destinationBucket: s3Bucket,
       distribution,
       distributionPaths: ['/*'],
+      memoryLimit: 1024,
     });
 
     new core.CfnOutput(this, 'S3BucketArn', { value: s3Bucket.bucketArn });

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import type { FC } from 'react';
 import { Link as RouterLink, useParams } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
@@ -39,6 +39,13 @@ const UserEdit: FC = () => {
     return foundUser;
   }, [userSelector]);
 
+  const filterByQuery = useMemo(() => {
+    const {
+      filter: { mobileNumber },
+    } = userSelector;
+    return mobileNumber ? `?mobileNumber=${encodeURIComponent(mobileNumber)}` : '';
+  }, [userSelector]);
+
   if (!user && !loading) {
     return <NotFound />;
   }
@@ -70,7 +77,12 @@ const UserEdit: FC = () => {
                   <Link color="textPrimary" component={RouterLink} to="/management" variant="subtitle2">
                     Management
                   </Link>
-                  <Link color="textPrimary" component={RouterLink} to="/management/users" variant="subtitle2">
+                  <Link
+                    color="textPrimary"
+                    component={RouterLink}
+                    to={`/management/users${filterByQuery}`}
+                    variant="subtitle2"
+                  >
                     Users
                   </Link>
                   <Typography color="textSecondary" variant="subtitle2">

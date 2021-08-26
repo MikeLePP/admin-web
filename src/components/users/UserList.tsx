@@ -16,6 +16,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import Assignment from '@material-ui/icons/Assignment';
+import BackspaceIcon from '@material-ui/icons/Backspace';
 import MonetizationOn from '@material-ui/icons/MonetizationOn';
 import { startCase, upperFirst } from 'lodash';
 import type { ChangeEvent, FC, MouseEvent } from 'react';
@@ -32,7 +33,8 @@ import Scrollbar from '../Scrollbar';
 interface UserListProps {
   users: User[];
   loading: boolean;
-  onFilter: (filter: Record<string, string>) => void;
+  initialQuery: string;
+  onFilter: (query: string) => void;
 }
 
 type Sort = 'createdAt|desc' | 'createdAt|asc';
@@ -52,36 +54,6 @@ const sortOptions: SortOption[] = [
     value: 'createdAt|asc',
   },
 ];
-
-const applyFilters = (users: User[], query: string, filters: any): User[] =>
-  users.filter((user) => {
-    let matches = true;
-
-    if (query) {
-      const properties = ['email', 'firstName', 'lastName', 'middleName', 'mobileNumber'];
-      let containsQuery = false;
-
-      properties.forEach((property) => {
-        if (user[property]?.toLowerCase().includes(query.toLowerCase())) {
-          containsQuery = true;
-        }
-      });
-
-      if (!containsQuery) {
-        matches = false;
-      }
-    }
-
-    Object.keys(filters).forEach((key) => {
-      const value = filters[key];
-
-      if (value && user[key] !== value) {
-        matches = false;
-      }
-    });
-
-    return matches;
-  });
 
 const applyPagination = (users: User[], page: number, limit: number): User[] =>
   users.slice(page * limit, page * limit + limit);
@@ -126,37 +98,29 @@ const applySort = (users: User[], sort: Sort): User[] => {
 };
 
 const UserList: FC<UserListProps> = (props) => {
-  const { loading, users, onFilter, ...other } = props;
+  const { loading, users, onFilter, initialQuery, ...other } = props;
   const [page, setPage] = useState<number>(0);
   const [limit, setLimit] = useState<number>(5);
-  const [query, setQuery] = useState<string>('');
-  const filteredUsers = applyFilters(users, query, {});
+  const [query, setQuery] = useState<string>(initialQuery);
   const [sort, setSort] = useState<Sort>(sortOptions[0].value);
 
-  const useServerSideSearch = !filteredUsers.length;
-
   const handleQueryChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    const { value } = event.target;
-    setQuery(value);
-    if (value === '') {
-      onFilter({
-        mobileNumber: '',
-      });
-    }
+    setQuery(event.target.value);
+  };
+
+  const handleClearFilter = () => {
+    setQuery('');
+    onFilter(null);
   };
 
   useEffect(() => {
     const handler = setTimeout(() => {
-      if (query && useServerSideSearch) {
-        onFilter({
-          mobileNumber: query,
-        });
-      }
+      onFilter(query);
     }, 1000);
     return () => {
       clearTimeout(handler);
     };
-  }, [onFilter, query]);
+  }, [onFilter, query, useServerSideSearch]);
 
   const handleSortChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSort(event.target.value as Sort);
@@ -170,7 +134,7 @@ const UserList: FC<UserListProps> = (props) => {
     setLimit(parseInt(event.target.value, 10));
   };
 
-  const sortedUser = applySort(filteredUsers, sort);
+  const sortedUser = applySort(users, sort);
   const paginatedUsers = applyPagination(sortedUser, page, limit);
 
   return (
@@ -192,6 +156,11 @@ const UserList: FC<UserListProps> = (props) => {
                 <InputAdornment position="start">
                   <SearchIcon fontSize="small" />
                 </InputAdornment>
+              ),
+              endAdornment: (
+                <IconButton onClick={handleClearFilter} disabled={!initialQuery || !query}>
+                  <BackspaceIcon fontSize="small" />
+                </IconButton>
               ),
             }}
             onChange={handleQueryChange}
