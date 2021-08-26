@@ -58,12 +58,6 @@ const AccountGeneralSettings: FC = (props) => {
               <Typography color="textPrimary" sx={{ mt: 1 }} variant="subtitle2">
                 {user.name}
               </Typography>
-              <Typography color="textSecondary" variant="body2">
-                Your plan:{' '}
-                <Link color="primary" component={RouterLink} to="/dashboard/account">
-                  {user.plan}
-                </Link>
-              </Typography>
             </Box>
           </CardContent>
           <CardActions>

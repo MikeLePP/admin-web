@@ -268,12 +268,6 @@ const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
               <Typography color="textPrimary" variant="subtitle2">
                 {user.name}
               </Typography>
-              <Typography color="textSecondary" variant="body2">
-                Your plan:{' '}
-                <Link color="primary" component={RouterLink} to="/pricing">
-                  {user.plan}
-                </Link>
-              </Typography>
             </Box>
           </Box>
         </Box>
