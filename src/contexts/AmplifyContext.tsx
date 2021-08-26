@@ -25,6 +25,8 @@ interface AuthContextValue extends State {
   resendCode: (username: string) => Promise<void>;
   passwordRecovery: (username: string) => Promise<void>;
   passwordReset: (username: string, code: string, newPassword: string) => Promise<void>;
+  passwordChange: (username: string, existingPassword: string, newPassword: string) => Promise<void>;
+  passwordComplete: (username: string, existingPassword: string, newPassword: string) => Promise<void>;
 }
 
 interface AuthProviderProps {
@@ -69,6 +71,13 @@ type PasswordResetAction = {
   type: 'PASSWORD_RESET';
 };
 
+type PasswordChangeAction = {
+  type: 'PASSWORD_CHANGE';
+};
+type PasswordCompleteAction = {
+  type: 'PASSWORD_COMPLETE';
+};
+
 type Action =
   | InitializeAction
   | LoginAction
@@ -77,7 +86,9 @@ type Action =
   | VerifyCodeAction
   | ResendCodeAction
   | PasswordRecoveryAction
-  | PasswordResetAction;
+  | PasswordResetAction
+  | PasswordCompleteAction
+  | PasswordChangeAction;
 
 const initialState: State = {
   isAuthenticated: false,
@@ -115,6 +126,8 @@ const handlers: Record<string, (state: State, action: Action) => State> = {
   RESEND_CODE: (state: State): State => ({ ...state }),
   PASSWORD_RECOVERY: (state: State): State => ({ ...state }),
   PASSWORD_RESET: (state: State): State => ({ ...state }),
+  PASSWORD_CHANGE: (state: State): State => ({ ...state }),
+  PASSWORD_COMPLETE: (state: State): State => ({ ...state }),
 };
 
 const reducer = (state: State, action: Action): State =>
@@ -131,6 +144,8 @@ const AuthContext = createContext<AuthContextValue>({
   resendCode: () => Promise.resolve(),
   passwordRecovery: () => Promise.resolve(),
   passwordReset: () => Promise.resolve(),
+  passwordChange: () => Promise.resolve(),
+  passwordComplete: () => Promise.resolve(),
 });
 
 export const AuthProvider: FC<AuthProviderProps> = (props) => {
@@ -174,16 +189,15 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     void initialize();
   }, []);
 
-  const signInWithEmailAndPassword = async (email: string, password: string): Promise<void> => {
+  const signInWithEmailAndPassword = async (email: string, password: string): Promise<any> => {
     const user = await Auth.signIn(email, password);
-
     if (user.challengeName) {
       console.error(
         `Unable to login, because challenge "${
           user.challengeName as string
         }" is mandated and we did not handle this case.`,
       );
-      return;
+      return user;
     }
 
     dispatch({
@@ -198,6 +212,7 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         },
       },
     });
+    return user;
   };
 
   const signInWithGoogle = async (): Promise<void> => {
@@ -254,6 +269,24 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
     });
   };
 
+  const passwordChange = async (email: string, existingPassword: string, newPassword: string): Promise<void> => {
+    const user = await Auth.signIn(email, existingPassword);
+    await Auth.changePassword(user, existingPassword, newPassword);
+    dispatch({
+      type: 'PASSWORD_CHANGE',
+    });
+  };
+
+  const passwordComplete = async (email: string, existingPassword: string, newPassword: string): Promise<void> => {
+    const user = await Auth.signIn(email, existingPassword);
+    await Auth.completeNewPassword(user, newPassword, {
+      email,
+    });
+    dispatch({
+      type: 'PASSWORD_COMPLETE',
+    });
+  };
+
   return (
     <AuthContext.Provider
       value={{
@@ -267,6 +300,8 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
         resendCode,
         passwordRecovery,
         passwordReset,
+        passwordChange,
+        passwordComplete,
       }}
     >
       {children}
