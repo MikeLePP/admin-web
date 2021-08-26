@@ -32,7 +32,7 @@ const MailContent: FC = () => {
 
   useEffect(() => {
     dispatch(getEmail(emailId));
-  }, [emailId]);
+  }, [dispatch, emailId]);
 
   if (!email) {
     return null;

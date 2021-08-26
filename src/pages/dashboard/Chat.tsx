@@ -16,7 +16,7 @@ const Chat: FC = () => {
 
   useEffect(() => {
     dispatch(getThreads());
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

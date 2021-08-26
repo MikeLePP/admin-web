@@ -1,6 +1,6 @@
 import { useRef, useState } from 'react';
 import type { FC } from 'react';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import {
   Avatar,

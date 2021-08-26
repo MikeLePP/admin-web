@@ -1,9 +1,8 @@
 /* eslint-disable @typescript-eslint/require-await */
-import { createSlice } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
-import { sortBy } from 'lodash';
-import type { AppThunk } from '../store';
+import { createSlice } from '@reduxjs/toolkit';
 import { transactionApi } from '../api/transaction';
+import type { AppThunk } from '../store';
 import type { ITransactionAttributes, TransactionStatus } from '../types/transaction';
 import objFromArray from '../utils/objFromArray';
 

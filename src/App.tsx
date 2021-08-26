@@ -12,7 +12,7 @@ import useAuth from './hooks/useAuth';
 import useScrollReset from './hooks/useScrollReset';
 import useSettings from './hooks/useSettings';
 import gtm from './lib/gtm';
-import routes from './routes';
+import { routes } from './routes';
 import { createCustomTheme } from './theme';
 
 const App: FC = () => {

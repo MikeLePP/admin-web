@@ -19,7 +19,7 @@ const Mail: FC = () => {
 
   useEffect(() => {
     dispatch(getLabels());
-  }, []);
+  }, [dispatch]);
 
   return (
     <>

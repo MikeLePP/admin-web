@@ -23,7 +23,7 @@ const Kanban: FC = () => {
 
   useEffect(() => {
     dispatch(getBoard());
-  }, []);
+  }, [dispatch]);
 
   const handleDragEnd = async ({ source, destination, draggableId }: DropResult): Promise<void> => {
     try {

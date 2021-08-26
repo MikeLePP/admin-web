@@ -17,13 +17,13 @@ const ChatMessages: FC<ChatMessagesProps> = (props) => {
   const rootRef = useRef<any>(null);
   const { user } = useAuth();
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     // eslint-disable-next-line no-underscore-dangle
     if (rootRef?.current?._container) {
       // eslint-disable-next-line no-underscore-dangle
       rootRef.current._container.scrollTop = rootRef.current._container.scrollHeight;
     }
-  };
+  }, []);
 
   useEffect(() => {
     scrollToBottom();

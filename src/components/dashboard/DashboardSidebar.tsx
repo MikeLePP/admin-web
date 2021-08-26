@@ -1,11 +1,11 @@
-import { useEffect } from 'react';
-import type { FC } from 'react';
-import { Link as RouterLink, useLocation } from 'react-router-dom';
-import PropTypes from 'prop-types';
-import { Avatar, Box, Button, Divider, Drawer, Link, Typography } from '@material-ui/core';
 import type { Theme } from '@material-ui/core';
+import { Avatar, Box, Button, Divider, Drawer, Typography } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import ReceiptIcon from '@material-ui/icons/Receipt';
+import PropTypes from 'prop-types';
+import type { FC } from 'react';
+import { useEffect } from 'react';
+import { Link as RouterLink, useLocation } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
 import BriefcaseIcon from '../../icons/Briefcase';
 import CalendarIcon from '../../icons/Calendar';
@@ -29,7 +29,7 @@ interface DashboardSidebarProps {
   openMobile: boolean;
 }
 
-const demoSections = [
+export const demoSections = [
   {
     title: 'General',
     items: [
@@ -213,7 +213,7 @@ const DashboardSidebar: FC<DashboardSidebarProps> = (props) => {
     if (openMobile && onMobileClose) {
       onMobileClose();
     }
-  }, [location.pathname]);
+  }, [location.pathname, onMobileClose, openMobile]);
 
   const content = (
     <Box

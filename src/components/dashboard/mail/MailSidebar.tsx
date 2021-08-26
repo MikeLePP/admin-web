@@ -41,7 +41,7 @@ const MailSidebar: FC<MailSidebarProps> = ({ containerRef }) => {
     if (isSidebarOpen) {
       dispatch(closeSidebar());
     }
-  }, [location.pathname]);
+  }, [dispatch, isSidebarOpen, location.pathname]);
 
   const handleCloseSidebar = (): void => {
     dispatch(closeSidebar());
