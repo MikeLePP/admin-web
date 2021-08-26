@@ -137,7 +137,7 @@ const UserBankDetails: FC<UserBankDetailsProps> = (props) => {
         <CardActions>
           {reportUrl && (
             <div className="pr-1.5 py-1.5">
-              <Button variant="contained" color="secondary" onClick={() => setShowAllTransactions(true)}>
+              <Button variant="contained" color="primary" onClick={() => setShowAllTransactions(true)}>
                 View bank statements
               </Button>
               <IconButton href={reportUrl} target="_blank">

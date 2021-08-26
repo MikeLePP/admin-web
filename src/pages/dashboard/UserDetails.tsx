@@ -201,7 +201,7 @@ const UserDetails: FC = () => {
                   <Link color="textPrimary" component={RouterLink} to="/management/users" variant="subtitle2">
                     Management
                   </Link>
-                  <Link color="textPrimary" component={RouterLink} to="/management/users" variant="subtitle2">
+                  <Link color="textPrimary" component={RouterLink} to={`/management/users`} variant="subtitle2">
                     Users
                   </Link>
                   <Typography color="textSecondary" variant="subtitle2">
@@ -261,7 +261,7 @@ const UserDetails: FC = () => {
               )}
               {currentTab === 'payments' && (
                 <Grid container spacing={3}>
-                  <Grid container lg={6} md={6} xl={6} xs={12} item>
+                  <Grid container lg={6} md={6} xl={6} xs={12} spacing={!settings.compact ? 3 : 0} item>
                     <Grid
                       className="mb-4"
                       item
