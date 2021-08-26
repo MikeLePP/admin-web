@@ -270,16 +270,26 @@ const UserDetails: FC = () => {
                         <UserDetailsComponent user={user} />
                       </Grid>
                       <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                        <UserUpdateBalanceLimit user={user} onUpdateLimit={handleUpdateLimit} />
-                      </Grid>
-                      <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
                         <UserBankDetails user={user} />
                       </Grid>
                       <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                        <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
+                        <UserUpdateBalanceLimit user={user} onUpdateLimit={handleUpdateLimit} />
                       </Grid>
-                      <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                        <UserDataManagement user={user} onUserStatusChanged={handleUserStatusChanged} />
+                      <Grid
+                        item
+                        lg={settings.compact ? 6 : 4}
+                        md={6}
+                        xl={settings.compact ? 6 : 3}
+                        xs={12}
+                        container
+                        spacing={3}
+                      >
+                        <Grid item lg={12} md={6} xl={12} xs={12}>
+                          <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
+                        </Grid>
+                        <Grid item lg={12} md={6} xl={12} xs={12}>
+                          <UserDataManagement user={user} onUserStatusChanged={handleUserStatusChanged} />
+                        </Grid>
                       </Grid>
                     </Grid>
                   )}

@@ -191,7 +191,6 @@ export const AuthProvider: FC<AuthProviderProps> = (props) => {
 
   const signInWithEmailAndPassword = async (email: string, password: string): Promise<any> => {
     const user = await Auth.signIn(email, password);
-    console.log(user);
     if (user.challengeName) {
       console.error(
         `Unable to login, because challenge "${
