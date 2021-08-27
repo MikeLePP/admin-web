@@ -148,7 +148,7 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
             </Box>
           </Box>
           <Box sx={{ m: 1, maxWidth: '100%', width: 140 }}>
-            <Typography className="text-right">Total: ${total}</Typography>
+            <Typography className="text-right">Total: ${total.toPrecision(2)}</Typography>
           </Box>
         </Box>
 
