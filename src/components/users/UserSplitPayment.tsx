@@ -37,27 +37,39 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
   const [amount, setAmount] = useState('50');
   const [fee, setFee] = useState('2.5');
 
+  const roundTwoDecimal = (value: number): number => Math.round(value * 100) / 100;
+
   const handleChangeCount = (event) => {
     const { value } = event.target;
-    setCount(value);
-    setAmount(`${user.balanceBook / parseFloat(value)}`);
-    setFee(`${(user.balanceBook / parseFloat(value)) * 0.05}`);
+    const newCount = parseInt(value, 10);
+    const newAmount = roundTwoDecimal(user.balanceBook / newCount);
+    const newFee = Math.round(newAmount * 5) / 100;
+
+    setCount(newCount.toString());
+    setAmount(newAmount.toString());
+    setFee(newFee.toString());
   };
+
   const handleChangeAmount = (event) => {
     const { value } = event.target;
-    setAmount(value);
-    setFee(`${parseFloat(value) * 0.05}`);
+    const newAmount = roundTwoDecimal(parseFloat(value));
+    const newFee = Math.round(newAmount * 5) / 100;
+
+    setAmount(newAmount.toString());
+    setFee(newFee.toString());
   };
+
   const handleChangeFee = (event) => {
     const { value } = event.target;
-    setFee(value);
+    const newFee = roundTwoDecimal(parseFloat(value));
+    setFee(newFee.toString());
   };
 
   const total = useMemo(() => {
     if (!count || !amount || !fee) {
       return 0;
     }
-    return parseFloat(count) * (parseFloat(amount) + parseFloat(fee));
+    return roundTwoDecimal(parseFloat(count) * (parseFloat(amount) + parseFloat(fee)));
   }, [count, amount, fee]);
 
   const handleCreate = () => {
@@ -72,8 +84,6 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
       (success) => {
         if (success) {
           setCount('2');
-          setAmount('50');
-          setFee('2.5');
           setPauseCollectionEmail(false);
           setCancelAllPendingTransactions(false);
         }
@@ -102,6 +112,7 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
                 variant="outlined"
                 value={count}
                 onChange={handleChangeCount}
+                inputProps={{ min: '1', max: '10', step: '1' }}
               />
             </Box>
             <Box sx={{ m: 1, maxWidth: '100%', width: 10 }}>
@@ -115,6 +126,7 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
                 variant="outlined"
                 value={amount}
                 onChange={handleChangeAmount}
+                inputProps={{ min: '1', max: '1000', step: '1' }}
               />
             </Box>
             <Box sx={{ m: 1, maxWidth: '100%', width: 10 }}>
@@ -128,6 +140,7 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
                 variant="outlined"
                 value={fee}
                 onChange={handleChangeFee}
+                inputProps={{ min: '0', max: '50', step: '1' }}
               />
             </Box>
             <Box sx={{ m: 1, maxWidth: '100%', width: 10 }}>
