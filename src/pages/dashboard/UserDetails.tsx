@@ -167,7 +167,7 @@ const UserDetails: FC = () => {
         }),
       );
     },
-    [dispatch],
+    [auth.user.email, dispatch, id],
   );
 
   if (!user && !loading) {

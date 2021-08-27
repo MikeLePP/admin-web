@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import type { FC } from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '@material-ui/core';

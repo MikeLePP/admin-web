@@ -172,7 +172,7 @@ const Docs: FC = () => {
     };
 
     void getFile();
-  }, [pathname]);
+  }, [navigate, pathname]);
 
   if (!file) {
     return null;

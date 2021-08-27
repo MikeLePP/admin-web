@@ -87,7 +87,7 @@ const HomeFeatures: FC = (props) => {
 
       setIsLoading(false);
     })();
-  }, [theme.palette.mode]);
+  }, [features, theme.palette.mode]);
 
   const handleSelectedFeatureIndexChange = (index: number): void => {
     setSelectedFeatureIndex(index);
