@@ -159,7 +159,7 @@ const UserDetails: FC = () => {
           status,
           statusReason,
           updatedBy: auth.user.email,
-          onComplete: (success: boolean) => {
+          onComplete: ({ success }: { success: boolean }) => {
             if (success) {
               toast.success("User's status updated");
             }
