@@ -58,7 +58,7 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
               </TableCell>
               <TableCell>
                 <Typography color="textSecondary" variant="body2">
-                  {user.balanceBook}
+                  {user.balanceBook.toFixed(2)}
                 </Typography>
               </TableCell>
             </TableRow>
@@ -101,16 +101,19 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
           </TableBody>
         </Table>
         <CardActions>
-          {reportUrl && (
-            <Box className="pr-1.5 py-1.5">
-              <Button variant="contained" color="primary" onClick={() => setShowAllTransactions(true)}>
-                View bank statements
-              </Button>
-              <IconButton href={reportUrl} target="_blank">
-                <OpenInNewIcon />
-              </IconButton>
-            </Box>
-          )}
+          <Box className="pr-1.5 py-1.5">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setShowAllTransactions(true)}
+              disabled={!reportUrl}
+            >
+              View bank statements
+            </Button>
+            <IconButton href={reportUrl} target="_blank" disabled={!reportUrl}>
+              <OpenInNewIcon />
+            </IconButton>
+          </Box>
         </CardActions>
       </Card>
       <TransactionDialog
