@@ -7,7 +7,6 @@ import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import NotFound from '../../components/commons/NotFound';
 import {
-  UserDataManagement,
   UserBankDetails,
   UserCollectionDetails,
   UserCollectionEmail,
@@ -16,6 +15,7 @@ import {
   UserSwapMobileNumber,
   UserTransactions,
   UserUpdateBalanceLimit,
+  UserUpdateStatus,
 } from '../../components/users';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
@@ -260,7 +260,7 @@ const UserDetails: FC = () => {
                           <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
                         </Grid>
                         <Grid item lg={12} md={12} xs={12}>
-                          <UserDataManagement user={user} onUserStatusChanged={handleUserStatusChanged} />
+                          <UserUpdateStatus user={user} onUserStatusChanged={handleUserStatusChanged} />
                         </Grid>
                       </Grid>
                     </Grid>
@@ -288,7 +288,7 @@ const UserDetails: FC = () => {
                           <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
                         </Grid>
                         <Grid item lg={12} md={6} xl={12} xs={12}>
-                          <UserDataManagement user={user} onUserStatusChanged={handleUserStatusChanged} />
+                          <UserUpdateStatus user={user} onUserStatusChanged={handleUserStatusChanged} />
                         </Grid>
                       </Grid>
                     </Grid>

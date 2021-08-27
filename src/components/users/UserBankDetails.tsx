@@ -135,16 +135,19 @@ const UserBankDetails: FC<UserBankDetailsProps> = (props) => {
           </TableBody>
         </Table>
         <CardActions>
-          {reportUrl && (
-            <div className="pr-1.5 py-1.5">
-              <Button variant="contained" color="primary" onClick={() => setShowAllTransactions(true)}>
-                View bank statements
-              </Button>
-              <IconButton href={reportUrl} target="_blank">
-                <OpenInNewIcon />
-              </IconButton>
-            </div>
-          )}
+          <div className="pr-1.5 py-1.5">
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => setShowAllTransactions(true)}
+              disabled={!reportUrl}
+            >
+              View bank statements
+            </Button>
+            <IconButton href={reportUrl} target="_blank" disabled={!reportUrl}>
+              <OpenInNewIcon />
+            </IconButton>
+          </div>
           <Button
             variant="text"
             color="primary"
