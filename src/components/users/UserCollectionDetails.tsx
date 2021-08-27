@@ -58,7 +58,7 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
               </TableCell>
               <TableCell>
                 <Typography color="textSecondary" variant="body2">
-                  {user.balanceBook.toPrecision(2)}
+                  {user.balanceBook.toFixed(2)}
                 </Typography>
               </TableCell>
             </TableRow>

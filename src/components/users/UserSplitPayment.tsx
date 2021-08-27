@@ -46,8 +46,8 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
     const newFee = Math.round(newAmount * 5) / 100;
 
     setCount(newCount.toString());
-    setAmount(newAmount.toPrecision(2));
-    setFee(newFee.toPrecision(2));
+    setAmount(newAmount.toFixed(2));
+    setFee(newFee.toFixed(2));
   };
 
   const handleChangeAmount = (event) => {
@@ -55,14 +55,14 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
     const newAmount = roundTwoDecimal(parseFloat(value));
     const newFee = Math.round(newAmount * 5) / 100;
 
-    setAmount(newAmount.toPrecision(2));
-    setFee(newFee.toPrecision(2));
+    setAmount(newAmount.toFixed(2));
+    setFee(newFee.toFixed(2));
   };
 
   const handleChangeFee = (event) => {
     const { value } = event.target;
     const newFee = roundTwoDecimal(parseFloat(value));
-    setFee(newFee.toPrecision(2));
+    setFee(newFee.toFixed(2));
   };
 
   const total = useMemo(() => {
@@ -148,7 +148,7 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
             </Box>
           </Box>
           <Box sx={{ m: 1, maxWidth: '100%', width: 140 }}>
-            <Typography className="text-right">Total: ${total.toPrecision(2)}</Typography>
+            <Typography className="text-right">Total: ${total.toFixed(2)}</Typography>
           </Box>
         </Box>
 
