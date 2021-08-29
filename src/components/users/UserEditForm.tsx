@@ -242,7 +242,7 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
               </Grid>
               <Box sx={{ mt: 2 }}>
                 <Button color="primary" disabled={isSubmitting} type="submit" variant="contained">
-                  Update User
+                  Update
                 </Button>
               </Box>
             </Box>
