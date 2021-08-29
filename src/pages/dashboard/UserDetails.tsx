@@ -252,7 +252,15 @@ const UserDetails: FC = () => {
                           <UserBankDetails user={user} />
                         </Grid>
                       </Grid>
-                      <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12} container>
+                      <Grid
+                        item
+                        alignItems="flex-start"
+                        lg={settings.compact ? 6 : 4}
+                        md={6}
+                        xl={settings.compact ? 6 : 3}
+                        xs={12}
+                        container
+                      >
                         <Grid item lg={12} md={12} xs={12}>
                           <UserUpdateBalanceLimit user={user} onUpdateLimit={handleUpdateLimit} />
                         </Grid>

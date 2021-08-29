@@ -26,30 +26,34 @@ const UserUpdateStatus: FC<UserUpdateStatusProps> = (props) => {
       <CardHeader title="Update Status" />
       <Divider />
       <CardContent>
-        <TextField
-          fullWidth
-          name="option"
-          onChange={(event): void => setUserStatus(event.target.value as typeof UserStatus[number])}
-          select
-          SelectProps={{ native: true }}
-          value={userStatus}
-          variant="outlined"
-        >
-          {UserStatus.filter((item) => item !== 'inactive').map((value) => (
-            <option key={value} value={value}>
-              {startCase(value)}
-            </option>
-          ))}
-        </TextField>
-        <TextField
-          style={{ marginBottom: 15 }}
-          fullWidth
-          name="option"
-          label="Reason"
-          onChange={(event): void => setUserStatusReason(event.target.value)}
-          value={userStatusReason}
-          variant="outlined"
-        />
+        <Box sx={{ mt: 2 }}>
+          <TextField
+            fullWidth
+            name="option"
+            onChange={(event): void => setUserStatus(event.target.value as typeof UserStatus[number])}
+            select
+            SelectProps={{ native: true }}
+            value={userStatus}
+            variant="outlined"
+          >
+            {UserStatus.filter((item) => item !== 'inactive').map((value) => (
+              <option key={value} value={value}>
+                {startCase(value)}
+              </option>
+            ))}
+          </TextField>
+        </Box>
+        <Box sx={{ mt: 2 }}>
+          <TextField
+            style={{ marginBottom: 15 }}
+            fullWidth
+            name="option"
+            label="Reason"
+            onChange={(event): void => setUserStatusReason(event.target.value)}
+            value={userStatusReason}
+            variant="outlined"
+          />
+        </Box>
         <Box sx={{ mt: 2 }}>
           <Button
             color="primary"
