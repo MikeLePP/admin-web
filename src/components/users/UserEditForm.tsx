@@ -1,31 +1,32 @@
-import type { FC } from 'react';
-import moment from 'moment';
-import toast from 'react-hot-toast';
-import { startCase } from 'lodash';
-import * as Yup from 'yup';
-import { Formik } from 'formik';
 import {
   Box,
   Button,
   Card,
+  Chip,
+  FormControl,
+  FormControlLabel,
   Grid,
+  InputLabel,
+  MenuItem,
+  Radio,
+  RadioGroup,
   Select,
   TextField,
-  FormControl,
-  InputLabel,
   Typography,
-  MenuItem,
-  RadioGroup,
-  FormControlLabel,
-  Radio,
-  Chip,
 } from '@material-ui/core';
-import type { User } from '../../types/users';
+import { Formik } from 'formik';
+import { startCase } from 'lodash';
+import moment from 'moment';
+import type { FC } from 'react';
+import toast from 'react-hot-toast';
+import { useNavigate } from 'react-router';
+import * as Yup from 'yup';
 import incomeFrequencies from '../../constants/incomeFrequencies';
+import { formatBankAccount } from '../../helpers/bankAccount';
 import { useBankAccount } from '../../hooks/useBankAccount';
 import { updateUser } from '../../slices/user';
 import { useDispatch } from '../../store';
-import { formatBankAccount } from '../../helpers/bankAccount';
+import type { User } from '../../types/users';
 
 interface UserEditFormProps {
   user: User;
@@ -36,6 +37,7 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
   const { user, userId, ...other } = props;
   const dispatch = useDispatch();
   const { bankAccounts } = useBankAccount(user?.id);
+  const navigate = useNavigate();
 
   if (!user) {
     return null;
@@ -67,7 +69,7 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
         incomeNextDate: Yup.date().min(new Date(), 'Please select a future date').required(),
         bankAccountId: Yup.string(),
       })}
-      onSubmit={(values, { resetForm, setErrors, setStatus, setSubmitting }): void => {
+      onSubmit={(values, { setStatus, setSubmitting }): void => {
         dispatch(
           updateUser({
             userId,
@@ -75,13 +77,13 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
             onComplete: (result) => {
               if (result && result.success) {
                 setStatus({ success: true });
-                setSubmitting(false);
-                toast.success('User updated!');
+                navigate(`/management/users/${userId}/details`);
+                toast.success('User updated');
               } else {
                 setStatus({ success: false });
-                setSubmitting(false);
-                toast.error("Cannot update user's details");
               }
+
+              setSubmitting(false);
             },
           }),
         );
