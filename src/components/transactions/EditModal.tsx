@@ -215,7 +215,7 @@ export default function EditTransaction({
                 </Grid>
                 <Box sx={{ mt: 2 }}>
                   <Button color="primary" disabled={isSubmitting} type="submit" variant="contained">
-                    Update Transaction
+                    Update
                   </Button>
                   <Button color="primary" disabled={isSubmitting} onClick={handleClose} variant="text">
                     Cancel
