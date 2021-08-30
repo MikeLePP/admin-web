@@ -1,10 +1,11 @@
-import { Button, Card, CardActions, CardContent, CardHeader, Divider, TextField } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, CardHeader, CardTypeMap, Divider, TextField } from '@material-ui/core';
+import { DefaultComponentProps } from '@material-ui/core/OverridableComponent';
 import moment from 'moment';
 import type { FC } from 'react';
 import { useState, useEffect, useMemo } from 'react';
 import { User } from '../../types/users';
 
-interface CollectionEmailProps {
+interface CollectionEmailProps extends DefaultComponentProps<CardTypeMap> {
   user: User;
   onUpdateCollectionEmailPausedUntil: (value: string | null) => void;
 }
@@ -39,7 +40,7 @@ const CollectionEmail: FC<CollectionEmailProps> = (props) => {
     <Card {...other}>
       <CardHeader title="Collection Email" />
       <Divider />
-      <CardContent className="py-4 px-2">
+      <CardContent>
         <TextField
           type="date"
           fullWidth
@@ -62,7 +63,7 @@ const CollectionEmail: FC<CollectionEmailProps> = (props) => {
         >
           Update
         </Button>
-        <Button variant="outlined" color="primary" onClick={handleClear}>
+        <Button variant="outlined" color="primary" disabled={!user.collectionEmailPausedUntil} onClick={handleClear}>
           Clear
         </Button>
       </CardActions>

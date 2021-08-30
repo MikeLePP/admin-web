@@ -1,11 +1,12 @@
-import { Box, Button, Card, CardContent, CardHeader, Divider, TextField } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, CardHeader, CardTypeMap, Divider, TextField } from '@material-ui/core';
+import { DefaultComponentProps } from '@material-ui/core/OverridableComponent';
 import { Save as SaveIcon } from '@material-ui/icons';
 import { startCase } from 'lodash';
 import type { FC } from 'react';
 import { useState } from 'react';
 import { User, UserStatus } from '../../types/users';
 
-interface UserUpdateStatusProps {
+interface UserUpdateStatusProps extends DefaultComponentProps<CardTypeMap> {
   user: User;
   onUserStatusChanged: (userStatus: string, userStatusReason?: string) => void;
 }
@@ -26,46 +27,43 @@ const UserUpdateStatus: FC<UserUpdateStatusProps> = (props) => {
       <CardHeader title="Update Status" />
       <Divider />
       <CardContent>
-        <Box sx={{ mt: 2 }}>
-          <TextField
-            fullWidth
-            name="option"
-            onChange={(event): void => setUserStatus(event.target.value as typeof UserStatus[number])}
-            select
-            SelectProps={{ native: true }}
-            value={userStatus}
-            variant="outlined"
-          >
-            {UserStatus.filter((item) => item !== 'inactive').map((value) => (
-              <option key={value} value={value}>
-                {startCase(value)}
-              </option>
-            ))}
-          </TextField>
-        </Box>
-        <Box sx={{ mt: 2 }}>
-          <TextField
-            style={{ marginBottom: 15 }}
-            fullWidth
-            name="option"
-            label="Reason"
-            onChange={(event): void => setUserStatusReason(event.target.value)}
-            value={userStatusReason}
-            variant="outlined"
-          />
-        </Box>
-        <Box sx={{ mt: 2 }}>
-          <Button
-            color="primary"
-            startIcon={<SaveIcon fontSize="small" />}
-            variant="contained"
-            onClick={handleUpdate}
-            disabled={disabled}
-          >
-            Update
-          </Button>
-        </Box>
+        <TextField
+          fullWidth
+          name="option"
+          onChange={(event): void => setUserStatus(event.target.value as typeof UserStatus[number])}
+          select
+          SelectProps={{ native: true }}
+          value={userStatus}
+          variant="outlined"
+        >
+          {UserStatus.filter((item) => item !== 'inactive').map((value) => (
+            <option key={value} value={value}>
+              {startCase(value)}
+            </option>
+          ))}
+        </TextField>
+        <TextField
+          style={{ marginBottom: 15 }}
+          fullWidth
+          name="option"
+          label="Reason"
+          onChange={(event): void => setUserStatusReason(event.target.value)}
+          value={userStatusReason}
+          variant="outlined"
+          sx={{ mt: 2 }}
+        />
       </CardContent>
+      <CardActions>
+        <Button
+          color="primary"
+          startIcon={<SaveIcon fontSize="small" />}
+          variant="contained"
+          onClick={handleUpdate}
+          disabled={disabled}
+        >
+          Update
+        </Button>
+      </CardActions>
     </Card>
   );
 };

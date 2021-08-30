@@ -2,21 +2,25 @@ import {
   Box,
   Button,
   Card,
+  CardActions,
   CardContent,
   CardHeader,
+  CardTypeMap,
   Dialog as MuiDialog,
   DialogActions,
   DialogContent,
   DialogContentText,
   DialogTitle,
+  Divider,
   TextField,
   Typography,
 } from '@material-ui/core';
+import { DefaultComponentProps } from '@material-ui/core/OverridableComponent';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { FC, useMemo, useState } from 'react';
 import type { User } from '../../types/users';
 
-interface IProps {
+interface IProps extends DefaultComponentProps<CardTypeMap> {
   user: User;
   onUserDeleted: () => void;
 }
@@ -40,25 +44,24 @@ const UserUpdateBalanceLimit: FC<IProps> = ({ user, onUserDeleted, ...remains })
   };
 
   return (
-    <>
-      <Card {...remains}>
-        <CardHeader title="DANGER ZONE" />
-        <CardContent>
-          <Typography>
-            Delete a user that has not made any transactions. Deleting a user is permanent and cannot be undone.
-          </Typography>
-          <Box sx={{ mt: 2 }}>
-            <Button
-              startIcon={<DeleteIcon fontSize="small" />}
-              variant="contained"
-              onClick={showDeleteDialog}
-              sx={DeleteColors}
-            >
-              DELETE
-            </Button>
-          </Box>
-        </CardContent>
-      </Card>
+    <Card {...remains}>
+      <CardHeader title="DANGER ZONE" />
+      <Divider />
+      <CardContent>
+        <Typography>
+          Delete a user that has not made any transactions. Deleting a user is permanent and cannot be undone.
+        </Typography>
+      </CardContent>
+      <CardActions>
+        <Button
+          startIcon={<DeleteIcon fontSize="small" />}
+          variant="contained"
+          onClick={showDeleteDialog}
+          sx={DeleteColors}
+        >
+          DELETE
+        </Button>
+      </CardActions>
       <MuiDialog open={show}>
         <DialogTitle>Permanent Delete</DialogTitle>
         <DialogContent>
@@ -86,7 +89,7 @@ const UserUpdateBalanceLimit: FC<IProps> = ({ user, onUserDeleted, ...remains })
           </Button>
         </DialogActions>
       </MuiDialog>
-    </>
+    </Card>
   );
 };
 

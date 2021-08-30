@@ -2,6 +2,7 @@ import {
   Button,
   Card,
   CardActions,
+  CardContent,
   CardHeader,
   Divider,
   IconButton,
@@ -66,10 +67,10 @@ const UserBankDetails: FC<UserBankDetailsProps> = (props) => {
   };
 
   return (
-    <>
-      <Card {...props}>
-        <CardHeader title="Bank Details" />
-        <Divider />
+    <Card {...props}>
+      <CardHeader title="Bank Details" />
+      <Divider />
+      <CardContent>
         <Table>
           <TableBody>
             <TableRow>
@@ -134,30 +135,23 @@ const UserBankDetails: FC<UserBankDetailsProps> = (props) => {
             </TableRow>
           </TableBody>
         </Table>
-        <CardActions>
-          <div className="pr-1.5 py-1.5">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setShowAllTransactions(true)}
-              disabled={!reportUrl}
-            >
-              View bank statements
-            </Button>
-            <IconButton href={reportUrl} target="_blank" disabled={!reportUrl}>
-              <OpenInNewIcon />
-            </IconButton>
-          </div>
-          <Button
-            variant="text"
-            color="primary"
-            disabled={status === 'loading' || loading}
-            onClick={handleClickRequestBankDataButton}
-          >
-            Request bank statements
-          </Button>
-        </CardActions>
-      </Card>
+      </CardContent>
+      <CardActions>
+        <Button variant="contained" color="primary" onClick={() => setShowAllTransactions(true)} disabled={!reportUrl}>
+          View bank statements
+        </Button>
+        <IconButton href={reportUrl} target="_blank" disabled={!reportUrl} sx={{ ml: 1 }}>
+          <OpenInNewIcon />
+        </IconButton>
+        <Button
+          variant="text"
+          color="primary"
+          disabled={status === 'loading' || loading}
+          onClick={handleClickRequestBankDataButton}
+        >
+          Request bank statements
+        </Button>
+      </CardActions>
       <TransactionDialog
         openDialog={showAllTransactions}
         setShowAllTransactions={setShowAllTransactions}
@@ -175,7 +169,7 @@ const UserBankDetails: FC<UserBankDetailsProps> = (props) => {
         confirmLabel="Yes"
         cancelLabel="No"
       />
-    </>
+    </Card>
   );
 };
 

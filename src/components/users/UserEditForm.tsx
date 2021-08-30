@@ -26,6 +26,7 @@ import * as Yup from 'yup';
 import incomeFrequencies from '../../constants/incomeFrequencies';
 import { formatBankAccount } from '../../helpers/bankAccount';
 import { useBankAccount } from '../../hooks/useBankAccount';
+import { getFullName } from '../../lib/userHelpers';
 import { updateUser } from '../../slices/user';
 import { useDispatch } from '../../store';
 import type { User } from '../../types/users';
@@ -96,8 +97,8 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }): JSX.Element => (
         <form onSubmit={handleSubmit} {...other}>
           <Card>
-            <CardHeader />
-            <CardContent sx={{ pt: '8px' }}>
+            <CardHeader title={getFullName(user)} subheader={user.mobileNumber} />
+            <CardContent>
               <Grid container spacing={3}>
                 <Grid item md={6} xs={12}>
                   <TextField
@@ -246,7 +247,7 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
                 )}
               </Grid>
             </CardContent>
-            <CardActions sx={{ p: 2 }}>
+            <CardActions>
               <Button color="primary" disabled={isSubmitting} type="submit" variant="contained">
                 Update
               </Button>

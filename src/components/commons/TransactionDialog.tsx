@@ -70,53 +70,51 @@ function TransactionDialog({
     setLoading(false);
   };
   return (
-    <div>
-      <Dialog open={open} BackdropProps={{ onClick: () => {} }} disableEscapeKeyDown fullWidth maxWidth="lg">
-        <DialogTitle disableTypography className="flex items-center justify-between">
-          <Typography variant="h6">All account transactions</Typography>
+    <Dialog open={open} BackdropProps={{ onClick: () => {} }} disableEscapeKeyDown fullWidth maxWidth="lg">
+      <DialogTitle disableTypography className="flex items-center justify-between">
+        <Typography variant="h6">All account transactions</Typography>
 
-          <IconButton onClick={handleShowAllTransactions}>
-            <CloseIcon />
-          </IconButton>
-        </DialogTitle>
-        <DialogContent dividers className="h-screen p-0 bg-white">
-          {loading && (
-            <div className="flex items-center justify-center w-full h-4/5 absolute">
-              <CircularProgress />
-            </div>
-          )}
-          <iframe
-            title="Account transactions"
-            src={url}
-            className="w-full h-full border-0"
-            loading="eager"
-            onLoad={handleLoaded}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Typography>
-            {dataLastAt ? `Last Refreshed: ${moment(dataLastAt).fromNow()}` : 'Last Refreshed time is unavailable'}
-          </Typography>
-          <Box display="flex" flexGrow={1} />
-          <Select value={days} onChange={handleChange} autoWidth>
-            {REFRESH_DAYS.map(({ value, label }) => (
-              <MenuItem key={value} value={value}>
-                {label}
-              </MenuItem>
-            ))}
-          </Select>
+        <IconButton onClick={handleShowAllTransactions}>
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
+      <DialogContent dividers className="h-screen p-0 bg-white">
+        {loading && (
+          <div className="flex items-center justify-center w-full h-4/5 absolute">
+            <CircularProgress />
+          </div>
+        )}
+        <iframe
+          title="Account transactions"
+          src={url}
+          className="w-full h-full border-0"
+          loading="eager"
+          onLoad={handleLoaded}
+        />
+      </DialogContent>
+      <DialogActions>
+        <Typography>
+          {dataLastAt ? `Last Refreshed: ${moment(dataLastAt).fromNow()}` : 'Last Refreshed time is unavailable'}
+        </Typography>
+        <Box display="flex" flexGrow={1} />
+        <Select value={days} onChange={handleChange} autoWidth>
+          {REFRESH_DAYS.map(({ value, label }) => (
+            <MenuItem key={value} value={value}>
+              {label}
+            </MenuItem>
+          ))}
+        </Select>
 
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={onRefreshClick}
-            disabled={loading || (!!dataLastAt && moment().diff(dataLastAt, 'minutes') < MINUTES_TO_DISABLE_REFRESH)}
-          >
-            REFRESH BANK DATA
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </div>
+        <Button
+          variant="contained"
+          color="primary"
+          onClick={onRefreshClick}
+          disabled={loading || (!!dataLastAt && moment().diff(dataLastAt, 'minutes') < MINUTES_TO_DISABLE_REFRESH)}
+        >
+          REFRESH BANK DATA
+        </Button>
+      </DialogActions>
+    </Dialog>
   );
 }
 
