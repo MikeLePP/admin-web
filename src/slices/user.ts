@@ -138,6 +138,12 @@ export const { reducer } = slice;
 //     dispatch(slice.actions.setPageKey());
 //   };
 
+export const deleteUser =
+  ({ userId, onSuccess, onError }): AppThunk =>
+  async (): Promise<void> => {
+    await userApi.deleteUser(userId).then(onSuccess).catch(onError);
+  };
+
 export const getAllUsers =
   (): AppThunk =>
   async (dispatch, getState): Promise<void> => {

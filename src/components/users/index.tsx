@@ -1,4 +1,5 @@
 export { default as UserUpdateStatus } from './UserUpdateStatus';
+export { default as UserDelete } from './UserDelete';
 export { default as UserDetails } from './UserDetails';
 export { default as UserEditForm } from './UserEditForm';
 export { default as UserUpdateBalanceLimit } from './UserUpdateBalanceLimit';

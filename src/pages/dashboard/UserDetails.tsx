@@ -3,13 +3,14 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import type { ChangeEvent, FC } from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import NotFound from '../../components/commons/NotFound';
 import {
   UserBankDetails,
   UserCollectionDetails,
   UserCollectionEmail,
+  UserDelete,
   UserDetails as UserDetailsComponent,
   UserSplitPayment,
   UserSwapMobileNumber,
@@ -17,23 +18,24 @@ import {
   UserUpdateBalanceLimit,
   UserUpdateStatus,
 } from '../../components/users';
+import useAuth from '../../hooks/useAuth';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import PencilAltIcon from '../../icons/PencilAlt';
 import gtm from '../../lib/gtm';
 import { getFullName } from '../../lib/userHelpers';
+import { getTransactionsByUserId, reconcileTransaction, updateTransaction } from '../../slices/transaction';
 import {
+  deleteUser,
   getUser,
+  splitPayment,
   swapMobileNumber,
   updateBalanceLimit,
   updateCollectionEmailPausedUntil,
-  splitPayment,
   updateUserStatus,
 } from '../../slices/user';
-import { getTransactionsByUserId, reconcileTransaction, updateTransaction } from '../../slices/transaction';
 import { useDispatch, useSelector } from '../../store';
 import { UserStatus } from '../../types/users';
-import useAuth from '../../hooks/useAuth';
 
 const tabs = [
   { label: 'Details', value: 'details' },
@@ -170,6 +172,19 @@ const UserDetails: FC = () => {
     [auth.user.email, dispatch, id],
   );
 
+  const handleUserDeleted = useCallback(() => {
+    dispatch(
+      deleteUser({
+        userId: id,
+        onSuccess: () => {
+          toast.success('User deleted');
+          navigate('/management/users');
+        },
+        onError: (err) => toast.error(err.message),
+      }),
+    );
+  }, [dispatch, navigate, id]);
+
   if (!user && !loading) {
     return <NotFound />;
   }
@@ -270,6 +285,9 @@ const UserDetails: FC = () => {
                         <Grid item lg={12} md={12} xs={12} className="mt-4">
                           <UserUpdateStatus user={user} onUserStatusChanged={handleUserStatusChanged} />
                         </Grid>
+                        <Grid item lg={12} md={12} xs={12} className="mt-4">
+                          <UserDelete user={user} onUserDeleted={handleUserDeleted} />
+                        </Grid>
                       </Grid>
                     </Grid>
                   ) : (
@@ -281,7 +299,12 @@ const UserDetails: FC = () => {
                         <UserBankDetails user={user} />
                       </Grid>
                       <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                        <UserUpdateBalanceLimit user={user} onUpdateLimit={handleUpdateLimit} />
+                        <Grid item lg={12} md={6} xl={12} xs={12}>
+                          <UserUpdateBalanceLimit user={user} onUpdateLimit={handleUpdateLimit} />
+                        </Grid>
+                        <Grid item lg={12} md={6} xl={12} xs={12}>
+                          <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
+                        </Grid>
                       </Grid>
                       <Grid
                         item
@@ -293,10 +316,10 @@ const UserDetails: FC = () => {
                         spacing={3}
                       >
                         <Grid item lg={12} md={6} xl={12} xs={12}>
-                          <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
+                          <UserUpdateStatus user={user} onUserStatusChanged={handleUserStatusChanged} />
                         </Grid>
                         <Grid item lg={12} md={6} xl={12} xs={12}>
-                          <UserUpdateStatus user={user} onUserStatusChanged={handleUserStatusChanged} />
+                          <UserDelete user={user} onUserDeleted={handleUserDeleted} />
                         </Grid>
                       </Grid>
                     </Grid>
