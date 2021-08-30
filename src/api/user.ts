@@ -16,17 +16,13 @@ class UserApi {
         Authorization: await getAuthToken(),
         'Content-Type': 'application/json',
       },
-    })
-      .then(async (res) => {
-        if (!res.ok) {
-          const body = await res.json();
-          throw new Error(get(body, 'errors[0].title', 'Cannot delete user'));
-        }
-        return undefined;
-      })
-      .catch(() => {
-        throw new Error('Cannot delete user');
-      });
+    }).then(async (res) => {
+      if (!res.ok) {
+        const body = await res.json();
+        throw new Error(get(body, 'errors[0].title', 'Cannot delete user'));
+      }
+      return undefined;
+    });
   }
 
   async getUsers(
