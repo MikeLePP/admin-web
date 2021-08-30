@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import moment from 'moment';
-import { Copy as CopyIcon } from '@material-ui/icons';
+import { FileCopyOutlined as FileCopyIcon } from '@material-ui/icons';
 import {
   Card,
   CardHeader,
@@ -40,7 +40,7 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
                 {user.id}
               </Typography>
               <IconButton onClick={handleCopyId}>
-                <CopyIcon />
+                <FileCopyIcon />
               </IconButton>
             </TableCell>
           </TableRow>
