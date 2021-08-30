@@ -1,5 +1,4 @@
-/* eslint-disable @typescript-eslint/require-await */
-import { useEffect } from 'react';
+import { useEffect, useCallback } from 'react';
 import type { FC } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Box, Divider } from '@material-ui/core';
@@ -41,7 +40,7 @@ const ChatThread: FC = () => {
   const { activeThreadId, participants, recipients } = useSelector((state) => state.chat);
   const thread = useSelector((state) => threadSelector(state));
 
-  const getDetails = async (): Promise<void> => {
+  const getDetails = useCallback(() => {
     dispatch(getParticipants(threadKey));
 
     try {
@@ -54,19 +53,19 @@ const ChatThread: FC = () => {
       console.error(err);
       navigate('/dashboard/chat/new');
     }
-  };
+  }, [dispatch, navigate, threadKey]);
 
   useEffect(() => {
     if (threadKey) {
-      void getDetails();
+      getDetails();
     }
-  }, [threadKey]);
+  }, [getDetails, threadKey]);
 
   useEffect(() => {
     if (activeThreadId) {
       dispatch(markThreadAsSeen(activeThreadId));
     }
-  }, [activeThreadId]);
+  }, [activeThreadId, dispatch]);
 
   // In our case there two possible routes
   // one that contains chat/new and one with a chat/:threadKey
@@ -81,7 +80,7 @@ const ChatThread: FC = () => {
     dispatch(removeRecipient(recipientId));
   };
 
-  const handleSendMessage = async (): Promise<void> => {
+  const handleSendMessage = () => {
     try {
       // Handle send message
     } catch (err) {

@@ -1,4 +1,4 @@
-import { get, pick } from 'lodash';
+import { get } from 'lodash';
 import moment from 'moment';
 import toast from 'react-hot-toast';
 import { getAuthToken } from '../helpers/auth';

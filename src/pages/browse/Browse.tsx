@@ -241,7 +241,7 @@ const Browse: FC = () => {
 
       setIsLoading(false);
     })();
-  }, [theme.palette.mode]);
+  }, [theme.palette.mode, urls]);
 
   return (
     <>

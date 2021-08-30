@@ -56,7 +56,7 @@ const UserList: FC = () => {
     if (currentTab === 'inArrears') {
       dispatch(getUsersInArrears(frequencyCount));
     }
-  }, [dispatch, frequencyCount]);
+  }, [currentTab, dispatch, frequencyCount]);
 
   const loadingState = useMemo(() => userSelector.status === 'loading', [userSelector]);
   const pageKey = useMemo(() => userSelector.pageKey, [userSelector]);

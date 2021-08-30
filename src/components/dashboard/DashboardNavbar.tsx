@@ -1,18 +1,14 @@
-import type { FC } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import PropTypes from 'prop-types';
+import type { AppBarProps } from '@material-ui/core';
 import { AppBar, Box, IconButton, Toolbar } from '@material-ui/core';
 import { experimentalStyled } from '@material-ui/core/styles';
-import type { AppBarProps } from '@material-ui/core';
 import { Tune } from '@material-ui/icons';
-import MenuIcon from '../../icons/Menu';
-import AccountPopover from './AccountPopover';
-import ContactsPopover from './ContactsPopover';
-import ContentSearch from './ContentSearch';
-import LanguagePopover from './LanguagePopover';
-import Logo from '../Logo';
-import NotificationsPopover from './NotificationsPopover';
+import PropTypes from 'prop-types';
+import type { FC } from 'react';
+import { Link as RouterLink } from 'react-router-dom';
 import useSettings from '../../hooks/useSettings';
+import MenuIcon from '../../icons/Menu';
+import Logo from '../Logo';
+import AccountPopover from './AccountPopover';
 
 interface DashboardNavbarProps extends AppBarProps {
   onSidebarMobileOpen?: () => void;
@@ -34,7 +30,7 @@ const DashboardNavbarRoot = experimentalStyled(AppBar)(({ theme }) => ({
 
 const DashboardNavbar: FC<DashboardNavbarProps> = (props) => {
   const { onSidebarMobileOpen, ...other } = props;
-  const { settings, saveSettings, open, setOpen } = useSettings();
+  const { setOpen } = useSettings();
 
   const handleOpenSetting = () => setOpen(true);
 

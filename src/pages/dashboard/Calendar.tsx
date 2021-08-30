@@ -75,7 +75,7 @@ const Calendar: FC = () => {
 
   useEffect(() => {
     dispatch(getEvents());
-  }, []);
+  }, [dispatch]);
 
   useEffect(() => {
     const calendarEl = calendarRef.current;

@@ -27,7 +27,7 @@ const ContactsPopover: FC = () => {
 
   useEffect(() => {
     dispatch(getContacts());
-  }, []);
+  }, [dispatch]);
 
   const handleOpen = (): void => {
     setOpen(true);

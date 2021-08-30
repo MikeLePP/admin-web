@@ -15,7 +15,7 @@ const MailList: FC = (props) => {
 
   useEffect(() => {
     dispatch(getEmails({ customLabel, systemLabel }));
-  }, [customLabel, systemLabel]);
+  }, [customLabel, dispatch, systemLabel]);
 
   const handleSelectAllEmails = (): void => {
     setSelectedEmails(emails.allIds.map((emailId) => emailId));

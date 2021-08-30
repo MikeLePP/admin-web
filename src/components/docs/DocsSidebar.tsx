@@ -176,7 +176,7 @@ const DocsSidebar: FC<DocsSidebarProps> = (props) => {
     if (openMobile && onMobileClose) {
       onMobileClose();
     }
-  }, [location.pathname]);
+  }, [location.pathname, onMobileClose, openMobile]);
 
   const content = (
     <Box height="100%" display="flex" flexDirection="column">

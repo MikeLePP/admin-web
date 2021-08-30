@@ -1,8 +1,3 @@
-import type { FC } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import toast from 'react-hot-toast';
-import * as Yup from 'yup';
-import { Formik } from 'formik';
 import {
   Autocomplete,
   Avatar,
@@ -15,11 +10,14 @@ import {
   Divider,
   FormHelperText,
   Grid,
-  Link,
   Switch,
   TextField,
   Typography,
 } from '@material-ui/core';
+import { Formik } from 'formik';
+import type { FC } from 'react';
+import toast from 'react-hot-toast';
+import * as Yup from 'yup';
 import useAuth from '../../../hooks/useAuth';
 import wait from '../../../utils/wait';
 import countries from './countries';

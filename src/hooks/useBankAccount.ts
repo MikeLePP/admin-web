@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-import { get } from 'lodash';
-import { BankAccount } from '../types/bankAccount';
 import { userApi } from '../api/user';
+import { BankAccount } from '../types/bankAccount';
 
 export type IStatus = 'idle' | 'loading' | 'success' | 'fail';
 

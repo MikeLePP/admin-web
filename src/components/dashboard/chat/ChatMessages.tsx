@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import type { FC } from 'react';
 import PropTypes from 'prop-types';
 import { Box } from '@material-ui/core';
@@ -17,13 +17,13 @@ const ChatMessages: FC<ChatMessagesProps> = (props) => {
   const rootRef = useRef<any>(null);
   const { user } = useAuth();
 
-  const scrollToBottom = () => {
+  const scrollToBottom = useCallback(() => {
     // eslint-disable-next-line no-underscore-dangle
     if (rootRef?.current?._container) {
       // eslint-disable-next-line no-underscore-dangle
       rootRef.current._container.scrollTop = rootRef.current._container.scrollHeight;
     }
-  };
+  }, []);
 
   useEffect(() => {
     scrollToBottom();
