@@ -1,6 +1,18 @@
-import type { FC } from 'react';
+import {
+  Card,
+  CardHeader,
+  Divider,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  Typography,
+} from '@material-ui/core';
+import { FileCopyOutlined as FileCopyIcon } from '@material-ui/icons';
 import moment from 'moment';
-import { Card, CardHeader, Divider, Table, TableBody, TableCell, TableRow, Typography } from '@material-ui/core';
+import type { FC } from 'react';
+import toast from 'react-hot-toast';
 import { User } from '../../types/users';
 
 interface UserDetailsProps {
@@ -10,12 +22,64 @@ interface UserDetailsProps {
 const UserDetails: FC<UserDetailsProps> = (props) => {
   const { user, ...other } = props;
 
+  const handleCopyId = () => {
+    void navigator.clipboard.writeText(user?.id);
+    toast.success('ID copied to clipboard');
+  };
+
+  const handleCopyMobileNumber = () => {
+    void navigator.clipboard.writeText(user?.mobileNumber);
+    toast.success('Mobile number copied to clipboard');
+  };
+
   return (
     <Card {...other}>
       <CardHeader title="User Details" />
       <Divider />
       <Table>
         <TableBody>
+          <TableRow>
+            <TableCell>
+              <Typography color="textPrimary" variant="subtitle2">
+                ID
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
+                {user.id}
+                <IconButton onClick={handleCopyId} size="small">
+                  <FileCopyIcon />
+                </IconButton>
+              </Typography>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>
+              <Typography color="textPrimary" variant="subtitle2">
+                Mobile number
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
+                {user.mobileNumber}
+                <IconButton onClick={handleCopyMobileNumber} size="small">
+                  <FileCopyIcon />
+                </IconButton>
+              </Typography>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>
+              <Typography color="textPrimary" variant="subtitle2">
+                Email
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography color="textSecondary" variant="body2">
+                {user.email}
+              </Typography>
+            </TableCell>
+          </TableRow>
           <TableRow>
             <TableCell>
               <Typography color="textPrimary" variant="subtitle2">
@@ -49,18 +113,6 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
             <TableCell>
               <Typography color="textSecondary" variant="body2">
                 {user.lastName}
-              </Typography>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <Typography color="textPrimary" variant="subtitle2">
-                Mobile number
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography color="textSecondary" variant="body2">
-                {user.mobileNumber}
               </Typography>
             </TableCell>
           </TableRow>

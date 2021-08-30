@@ -33,9 +33,9 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
   const { user, onSplitPayment, ...other } = props;
   const [pauseCollectionEmail, setPauseCollectionEmail] = useState(true);
   const [cancelAllPendingTransactions, setCancelAllPendingTransactions] = useState(false);
-  const [count, setCount] = useState('2');
-  const [amount, setAmount] = useState('50');
-  const [fee, setFee] = useState('2.5');
+  const [count, setCount] = useState(2);
+  const [amount, setAmount] = useState(50);
+  const [fee, setFee] = useState(2.5);
 
   const roundTwoDecimal = (value: number): number => Math.round(value * 100) / 100;
 
@@ -45,9 +45,9 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
     const newAmount = roundTwoDecimal(user.balanceBook / newCount);
     const newFee = Math.round(newAmount * 5) / 100;
 
-    setCount(newCount.toString());
-    setAmount(newAmount.toFixed(2));
-    setFee(newFee.toFixed(2));
+    setCount(newCount);
+    setAmount(newAmount);
+    setFee(newFee);
   };
 
   const handleChangeAmount = (event) => {
@@ -55,35 +55,35 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
     const newAmount = roundTwoDecimal(parseFloat(value));
     const newFee = Math.round(newAmount * 5) / 100;
 
-    setAmount(newAmount.toFixed(2));
-    setFee(newFee.toFixed(2));
+    setAmount(newAmount);
+    setFee(newFee);
   };
 
   const handleChangeFee = (event) => {
     const { value } = event.target;
     const newFee = roundTwoDecimal(parseFloat(value));
-    setFee(newFee.toFixed(2));
+    setFee(newFee);
   };
 
   const total = useMemo(() => {
     if (!count || !amount || !fee) {
       return 0;
     }
-    return roundTwoDecimal(parseFloat(count) * (parseFloat(amount) + parseFloat(fee)));
+    return roundTwoDecimal(count * (amount + fee));
   }, [count, amount, fee]);
 
   const handleCreate = () => {
     onSplitPayment?.(
       {
-        count: parseFloat(count),
-        amount: parseFloat(amount),
-        fee: parseFloat(fee),
+        count,
+        amount,
+        fee,
         pauseCollectionEmail,
         cancelAllPendingTransactions,
       },
       (success) => {
         if (success) {
-          setCount('2');
+          setCount(2);
           setPauseCollectionEmail(false);
           setCancelAllPendingTransactions(false);
         }
