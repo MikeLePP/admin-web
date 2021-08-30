@@ -84,8 +84,10 @@ const UserTransactions: FC<SplitPaymentProps> = (props) => {
     setOpenEditModal(false);
   };
 
-  const transactionDisabled = (status: string): boolean =>
+  const reconcileDisabled = (status: string): boolean =>
     status === 'failed' || status === 'cancelled' || status === 'confirmed';
+
+  const editDisabled = (status: string): boolean => status !== 'pending_submission';
 
   return (
     <>
@@ -119,7 +121,7 @@ const UserTransactions: FC<SplitPaymentProps> = (props) => {
                       <TableCell align="right" className="flex">
                         <Tooltip title="Edit">
                           <IconButton
-                            disabled={transactionDisabled(transaction.status)}
+                            disabled={editDisabled(transaction.status)}
                             onClick={handleEditTransaction(transaction)}
                           >
                             <PencilAltIcon fontSize="small" />
@@ -128,7 +130,7 @@ const UserTransactions: FC<SplitPaymentProps> = (props) => {
                         <Tooltip title="Reconcile">
                           <Box>
                             <IconButton
-                              disabled={transactionDisabled(transaction.status)}
+                              disabled={reconcileDisabled(transaction.status)}
                               onClick={handleReconcileTransaction(transaction)}
                             >
                               <UpdateIcon fontSize="small" />
