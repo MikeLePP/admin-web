@@ -128,16 +128,6 @@ const slice = createSlice({
 
 export const { reducer } = slice;
 
-// export const getUsers =
-//   (withFilter: boolean): AppThunk =>
-//   async (dispatch, getState): Promise<void> => {
-//     dispatch(slice.actions.loading());
-//     const data = await userApi.getUsers({});
-//     dispatch(slice.actions.getUsers(data));
-//     dispatch(slice.actions.getAllUsers(data));
-//     dispatch(slice.actions.setPageKey());
-//   };
-
 export const deleteUser =
   ({ userId, onSuccess, onError }): AppThunk =>
   async (dispatch): Promise<void> => {
