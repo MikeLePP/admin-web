@@ -1,6 +1,17 @@
 import type { FC } from 'react';
 import moment from 'moment';
-import { Card, CardHeader, Divider, Table, TableBody, TableCell, TableRow, Typography } from '@material-ui/core';
+import { Copy as CopyIcon } from '@material-ui/icons';
+import {
+  Card,
+  CardHeader,
+  Divider,
+  IconButton,
+  Table,
+  TableBody,
+  TableCell,
+  TableRow,
+  Typography,
+} from '@material-ui/core';
 import { User } from '../../types/users';
 
 interface UserDetailsProps {
@@ -10,12 +21,29 @@ interface UserDetailsProps {
 const UserDetails: FC<UserDetailsProps> = (props) => {
   const { user, ...other } = props;
 
+  const handleCopyId = () => navigator.clipboard.writeText(user?.id);
+
   return (
     <Card {...other}>
       <CardHeader title="User Details" />
       <Divider />
       <Table>
         <TableBody>
+          <TableRow>
+            <TableCell>
+              <Typography color="textPrimary" variant="subtitle2">
+                ID
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography color="textSecondary" variant="body2">
+                {user.id}
+              </Typography>
+              <IconButton onClick={handleCopyId}>
+                <CopyIcon />
+              </IconButton>
+            </TableCell>
+          </TableRow>
           <TableRow>
             <TableCell>
               <Typography color="textPrimary" variant="subtitle2">
@@ -61,6 +89,18 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
             <TableCell>
               <Typography color="textSecondary" variant="body2">
                 {user.mobileNumber}
+              </Typography>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>
+              <Typography color="textPrimary" variant="subtitle2">
+                Email
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography color="textSecondary" variant="body2">
+                {user.email}
               </Typography>
             </TableCell>
           </TableRow>
