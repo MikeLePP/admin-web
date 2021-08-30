@@ -193,7 +193,7 @@ const UserDetails: FC = () => {
   return (
     <>
       <Helmet>
-        <title>{`User details ${user.mobileNumber}`}</title>
+        <title>{`User details ${user?.mobileNumber}`}</title>
       </Helmet>
       {loading ? (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
