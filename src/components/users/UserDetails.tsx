@@ -1,6 +1,3 @@
-import type { FC } from 'react';
-import moment from 'moment';
-import { FileCopyOutlined as FileCopyIcon } from '@material-ui/icons';
 import {
   Card,
   CardHeader,
@@ -12,6 +9,10 @@ import {
   TableRow,
   Typography,
 } from '@material-ui/core';
+import { FileCopyOutlined as FileCopyIcon } from '@material-ui/icons';
+import moment from 'moment';
+import type { FC } from 'react';
+import toast from 'react-hot-toast';
 import { User } from '../../types/users';
 
 interface UserDetailsProps {
@@ -21,7 +22,15 @@ interface UserDetailsProps {
 const UserDetails: FC<UserDetailsProps> = (props) => {
   const { user, ...other } = props;
 
-  const handleCopyId = () => navigator.clipboard.writeText(user?.id);
+  const handleCopyId = () => {
+    void navigator.clipboard.writeText(user?.id);
+    toast.success('ID copied to clipboard');
+  };
+
+  const handleCopyMobileNumber = () => {
+    void navigator.clipboard.writeText(user?.mobileNumber);
+    toast.success('Mobile number copied to clipboard');
+  };
 
   return (
     <Card {...other}>
@@ -36,12 +45,39 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
               </Typography>
             </TableCell>
             <TableCell>
-              <Typography color="textSecondary" variant="body2">
+              <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
                 {user.id}
+                <IconButton onClick={handleCopyId} size="small">
+                  <FileCopyIcon />
+                </IconButton>
               </Typography>
-              <IconButton onClick={handleCopyId}>
-                <FileCopyIcon />
-              </IconButton>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>
+              <Typography color="textPrimary" variant="subtitle2">
+                Mobile number
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
+                {user.mobileNumber}
+                <IconButton onClick={handleCopyMobileNumber} size="small">
+                  <FileCopyIcon />
+                </IconButton>
+              </Typography>
+            </TableCell>
+          </TableRow>
+          <TableRow>
+            <TableCell>
+              <Typography color="textPrimary" variant="subtitle2">
+                Email
+              </Typography>
+            </TableCell>
+            <TableCell>
+              <Typography color="textSecondary" variant="body2">
+                {user.email}
+              </Typography>
             </TableCell>
           </TableRow>
           <TableRow>
@@ -77,30 +113,6 @@ const UserDetails: FC<UserDetailsProps> = (props) => {
             <TableCell>
               <Typography color="textSecondary" variant="body2">
                 {user.lastName}
-              </Typography>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <Typography color="textPrimary" variant="subtitle2">
-                Mobile number
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography color="textSecondary" variant="body2">
-                {user.mobileNumber}
-              </Typography>
-            </TableCell>
-          </TableRow>
-          <TableRow>
-            <TableCell>
-              <Typography color="textPrimary" variant="subtitle2">
-                Email
-              </Typography>
-            </TableCell>
-            <TableCell>
-              <Typography color="textSecondary" variant="body2">
-                {user.email}
               </Typography>
             </TableCell>
           </TableRow>
