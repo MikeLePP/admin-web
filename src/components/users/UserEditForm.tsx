@@ -244,6 +244,9 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
                 <Button color="primary" disabled={isSubmitting} type="submit" variant="contained">
                   Update
                 </Button>
+                <Button disabled={isSubmitting} href={`/management/users/${userId}/details`}>
+                  Cancel
+                </Button>
               </Box>
             </Box>
           </Card>
