@@ -140,8 +140,9 @@ export const { reducer } = slice;
 
 export const deleteUser =
   ({ userId, onSuccess, onError }): AppThunk =>
-  async (): Promise<void> => {
+  async (dispatch): Promise<void> => {
     await userApi.deleteUser(userId).then(onSuccess).catch(onError);
+    dispatch(getAllUsers());
   };
 
 export const getAllUsers =
