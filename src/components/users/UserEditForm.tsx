@@ -1,7 +1,9 @@
 import {
-  Box,
   Button,
   Card,
+  CardActions,
+  CardContent,
+  CardHeader,
   Chip,
   FormControl,
   FormControlLabel,
@@ -35,13 +37,15 @@ interface UserEditFormProps {
 
 const UserEditForm: FC<UserEditFormProps> = (props) => {
   const { user, userId, ...other } = props;
-  const dispatch = useDispatch();
   const { bankAccounts } = useBankAccount(user?.id);
+  const dispatch = useDispatch();
   const navigate = useNavigate();
 
   if (!user) {
     return null;
   }
+
+  const handleCancelClicked = () => navigate(`/management/users/${userId}/details`);
 
   return (
     <Formik
@@ -92,7 +96,8 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
       {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }): JSX.Element => (
         <form onSubmit={handleSubmit} {...other}>
           <Card>
-            <Box sx={{ p: 3 }}>
+            <CardHeader />
+            <CardContent sx={{ pt: '8px' }}>
               <Grid container spacing={3}>
                 <Grid item md={6} xs={12}>
                   <TextField
@@ -240,15 +245,15 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
                   </Grid>
                 )}
               </Grid>
-              <Box sx={{ mt: 2 }}>
-                <Button color="primary" disabled={isSubmitting} type="submit" variant="contained">
-                  Update
-                </Button>
-                <Button disabled={isSubmitting} href={`/management/users/${userId}/details`}>
-                  Cancel
-                </Button>
-              </Box>
-            </Box>
+            </CardContent>
+            <CardActions sx={{ p: 2 }}>
+              <Button color="primary" disabled={isSubmitting} type="submit" variant="contained">
+                Update
+              </Button>
+              <Button disabled={isSubmitting} onClick={handleCancelClicked}>
+                Cancel
+              </Button>
+            </CardActions>
           </Card>
         </form>
       )}
