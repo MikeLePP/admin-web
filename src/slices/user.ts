@@ -52,6 +52,12 @@ const slice = createSlice({
     setPageKey(state: UserState, action: PayloadAction<Record<string, unknown>>): void {
       state.pageKey = action.payload;
     },
+    deleteUser(state: UserState, action: PayloadAction<{ userId: string }>): void {
+      delete state.allUsers.byId[action.payload.userId];
+      state.allUsers.allIds = Object.keys(state.allUsers.byId);
+      delete state.users.byId[action.payload.userId];
+      state.users.allIds = Object.keys(state.users.byId);
+    },
     getUsers(state: UserState, action: PayloadAction<User[]>): void {
       const users = action.payload;
       state.status = 'success';
@@ -70,7 +76,7 @@ const slice = createSlice({
       if (!state.users.allIds.includes(user.id)) {
         state.users.allIds.push(user.id);
       }
-      state.users.byId[user.id] = { ...user };
+      state.users.byId[user.id] = user;
     },
     updateBalanceLimit(state: UserState, action: PayloadAction<{ userId: string; balanceLimit: number }>): void {
       const { userId, balanceLimit } = action.payload;
@@ -131,8 +137,13 @@ export const { reducer } = slice;
 export const deleteUser =
   ({ userId, onSuccess, onError }): AppThunk =>
   async (dispatch): Promise<void> => {
-    await userApi.deleteUser(userId).then(onSuccess).catch(onError);
-    dispatch(getAllUsers());
+    try {
+      await userApi.deleteUser(userId);
+      dispatch(slice.actions.deleteUser({ userId }));
+      onSuccess();
+    } catch (err) {
+      onError(err);
+    }
   };
 
 export const getAllUsers =
