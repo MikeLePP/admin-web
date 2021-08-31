@@ -15,13 +15,13 @@ import {
 import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
 import type { FC } from 'react';
 import { useMemo, useState } from 'react';
+import { bankApi } from '../../api/bankData';
+import { formatBankAccount } from '../../helpers/bankAccount';
 import { useBankAccount } from '../../hooks/useBankAccount';
 import { useBankData } from '../../hooks/useBankData';
 import { User } from '../../types/users';
-import TransactionDialog from '../commons/TransactionDialog';
+import BankStatementDialog from '../bank-data/BankStatementDialog';
 import ConfirmDialog from '../commons/Dialog';
-import { bankApi } from '../../api/bankData';
-import { formatBankAccount } from '../../helpers/bankAccount';
 
 interface UserBankDetailsProps {
   user: User;
@@ -30,7 +30,7 @@ interface UserBankDetailsProps {
 const UserBankDetails: FC<UserBankDetailsProps> = (props) => {
   const { bankAccounts } = useBankAccount(props.user?.id);
   const { dataLastAt, status, reportUrl, setDataLastAt } = useBankData(props.user?.id);
-  const [showAllTransactions, setShowAllTransactions] = useState(false);
+  const [showBankStatements, setShowBankStatements] = useState(false);
   const [showConfirmDialog, setShowConfirmDialog] = useState(false);
   const [loading, setLoading] = useState(false);
 
@@ -137,7 +137,7 @@ const UserBankDetails: FC<UserBankDetailsProps> = (props) => {
         </Table>
       </CardContent>
       <CardActions>
-        <Button variant="contained" color="primary" onClick={() => setShowAllTransactions(true)} disabled={!reportUrl}>
+        <Button variant="contained" color="primary" onClick={() => setShowBankStatements(true)} disabled={!reportUrl}>
           View bank statements
         </Button>
         <IconButton href={reportUrl} target="_blank" disabled={!reportUrl} sx={{ ml: 1 }}>
@@ -152,9 +152,9 @@ const UserBankDetails: FC<UserBankDetailsProps> = (props) => {
           Request bank statements
         </Button>
       </CardActions>
-      <TransactionDialog
-        openDialog={showAllTransactions}
-        setShowAllTransactions={setShowAllTransactions}
+      <BankStatementDialog
+        open={showBankStatements}
+        setOpen={setShowBankStatements}
         reportUrl={reportUrl}
         dataLastAt={dataLastAt}
         setDataLastAt={setDataLastAt}

@@ -257,7 +257,7 @@ const UserDetails: FC = () => {
             <Divider />
             <Box sx={{ mt: 3 }}>
               {currentTab === 'details' && (
-                <Box className={classNames('items-start', 'gap-4', 'grid', 'grid-cols-2')}>
+                <Box className={classNames('items-start', 'gap-4', 'grid', 'grid-cols-1', 'lg:grid-cols-2')}>
                   <Box className={classNames('gap-4', 'flex', 'flex-col')}>
                     <UserDetailsComponent user={user} />
                     <UserBankDetails user={user} />
@@ -271,7 +271,7 @@ const UserDetails: FC = () => {
                 </Box>
               )}
               {currentTab === 'collections' && (
-                <Box className={classNames('items-start', 'gap-4', 'grid', 'grid-cols-2')}>
+                <Box className={classNames('items-start', 'gap-4', 'grid', 'grid-cols-1', 'lg:grid-cols-2')}>
                   <Box className={classNames('gap-4', 'flex', 'flex-col')}>
                     <UserCollectionDetails user={user} />
                     <UserCollectionEmail

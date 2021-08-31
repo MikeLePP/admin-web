@@ -19,7 +19,7 @@ import moment from 'moment';
 import { FC, useState } from 'react';
 import { useBankData } from '../../hooks/useBankData';
 import { User } from '../../types/users';
-import TransactionDialog from '../commons/TransactionDialog';
+import BankStatementDialog from '../bank-data/BankStatementDialog';
 
 interface CollectionDetailsProps extends DefaultComponentProps<CardTypeMap> {
   user: User;
@@ -28,11 +28,12 @@ interface CollectionDetailsProps extends DefaultComponentProps<CardTypeMap> {
 const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
   const { user, ...other } = props;
   const { dataLastAt, reportUrl, setDataLastAt } = useBankData(props.user?.id);
-  const [showAllTransactions, setShowAllTransactions] = useState(false);
+  const [showBankStatements, setShowBankStatements] = useState(false);
   const arrearsSince = user.balanceOverdueAt ? moment(user.balanceOverdueAt).format('DD/MM/YYYY') : '--';
   const collectionEmailPausedUntil = user.collectionEmailPausedUntil
     ? moment(user.collectionEmailPausedUntil).format('DD/MM/YYYY')
     : '--';
+
   return (
     <Card {...other}>
       <CardHeader title="Collection Details" />
@@ -104,16 +105,16 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
         </Table>
       </CardContent>
       <CardActions>
-        <Button variant="contained" color="primary" onClick={() => setShowAllTransactions(true)} disabled={!reportUrl}>
+        <Button variant="contained" color="primary" onClick={() => setShowBankStatements(true)} disabled={!reportUrl}>
           View bank statements
         </Button>
         <IconButton href={reportUrl} target="_blank" disabled={!reportUrl} sx={{ ml: 1 }}>
           <OpenInNewIcon />
         </IconButton>
       </CardActions>
-      <TransactionDialog
-        openDialog={showAllTransactions}
-        setShowAllTransactions={setShowAllTransactions}
+      <BankStatementDialog
+        open={showBankStatements}
+        setOpen={setShowBankStatements}
         reportUrl={reportUrl}
         dataLastAt={dataLastAt}
         setDataLastAt={setDataLastAt}
