@@ -61,7 +61,7 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
               </TableCell>
               <TableCell>
                 <Typography color="textSecondary" variant="body2">
-                  {user.balanceBook.toFixed(2)}
+                  {user.balanceBook?.toFixed(2)}
                 </Typography>
               </TableCell>
             </TableRow>
@@ -118,7 +118,7 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
         reportUrl={reportUrl}
         dataLastAt={dataLastAt}
         setDataLastAt={setDataLastAt}
-        userId={props.user.id}
+        userId={user.id}
       />
     </Card>
   );
