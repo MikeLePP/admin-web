@@ -62,7 +62,7 @@ workflows:
             branches:
               only:
                 - develop
-                - /dev\/.*/
+                - /features?\/.*/
                 - v2
           requires:
             - build

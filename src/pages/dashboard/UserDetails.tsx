@@ -1,15 +1,17 @@
+import classNames from 'classnames';
 import { Box, Breadcrumbs, Button, Container, Divider, Grid, Link, Tab, Tabs, Typography } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import type { ChangeEvent, FC } from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
+import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
 import NotFound from '../../components/commons/NotFound';
 import {
   UserBankDetails,
   UserCollectionDetails,
   UserCollectionEmail,
+  UserDelete,
   UserDetails as UserDetailsComponent,
   UserSplitPayment,
   UserSwapMobileNumber,
@@ -17,23 +19,24 @@ import {
   UserUpdateBalanceLimit,
   UserUpdateStatus,
 } from '../../components/users';
+import useAuth from '../../hooks/useAuth';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import PencilAltIcon from '../../icons/PencilAlt';
 import gtm from '../../lib/gtm';
 import { getFullName } from '../../lib/userHelpers';
+import { getTransactionsByUserId, reconcileTransaction, updateTransaction } from '../../slices/transaction';
 import {
+  deleteUser,
   getUser,
+  splitPayment,
   swapMobileNumber,
   updateBalanceLimit,
   updateCollectionEmailPausedUntil,
-  splitPayment,
   updateUserStatus,
 } from '../../slices/user';
-import { getTransactionsByUserId, reconcileTransaction, updateTransaction } from '../../slices/transaction';
 import { useDispatch, useSelector } from '../../store';
 import { UserStatus } from '../../types/users';
-import useAuth from '../../hooks/useAuth';
 
 const tabs = [
   { label: 'Details', value: 'details' },
@@ -170,6 +173,19 @@ const UserDetails: FC = () => {
     [auth.user.email, dispatch, id],
   );
 
+  const handleUserDeleted = useCallback(() => {
+    dispatch(
+      deleteUser({
+        userId: id,
+        onSuccess: () => {
+          toast.success('User deleted');
+          navigate('/management/users');
+        },
+        onError: (err) => toast.error(err.message),
+      }),
+    );
+  }, [dispatch, navigate, id]);
+
   if (!user && !loading) {
     return <NotFound />;
   }
@@ -177,7 +193,7 @@ const UserDetails: FC = () => {
   return (
     <>
       <Helmet>
-        <title>Management: User Details</title>
+        <title>{`User details ${user?.mobileNumber}`}</title>
       </Helmet>
       {loading ? (
         <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
@@ -241,114 +257,36 @@ const UserDetails: FC = () => {
             <Divider />
             <Box sx={{ mt: 3 }}>
               {currentTab === 'details' && (
-                <>
-                  {settings.compact ? (
-                    <Grid container spacing={3}>
-                      <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12} container>
-                        <Grid item lg={12} md={12} xs={12}>
-                          <UserDetailsComponent user={user} />
-                        </Grid>
-                        <Grid item lg={12} md={12} xs={12} className="mt-4">
-                          <UserBankDetails user={user} />
-                        </Grid>
-                      </Grid>
-                      <Grid
-                        item
-                        alignContent="flex-start"
-                        lg={settings.compact ? 6 : 4}
-                        md={6}
-                        xl={settings.compact ? 6 : 3}
-                        xs={12}
-                        container
-                      >
-                        <Grid item lg={12} md={12} xs={12}>
-                          <UserUpdateBalanceLimit user={user} onUpdateLimit={handleUpdateLimit} />
-                        </Grid>
-                        <Grid item lg={12} md={12} xs={12} className="mt-4">
-                          <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
-                        </Grid>
-                        <Grid item lg={12} md={12} xs={12} className="mt-4">
-                          <UserUpdateStatus user={user} onUserStatusChanged={handleUserStatusChanged} />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  ) : (
-                    <Grid container spacing={3}>
-                      <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                        <UserDetailsComponent user={user} />
-                      </Grid>
-                      <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                        <UserBankDetails user={user} />
-                      </Grid>
-                      <Grid item lg={settings.compact ? 6 : 4} md={6} xl={settings.compact ? 6 : 3} xs={12}>
-                        <UserUpdateBalanceLimit user={user} onUpdateLimit={handleUpdateLimit} />
-                      </Grid>
-                      <Grid
-                        item
-                        lg={settings.compact ? 6 : 4}
-                        md={6}
-                        xl={settings.compact ? 6 : 3}
-                        xs={12}
-                        container
-                        spacing={3}
-                      >
-                        <Grid item lg={12} md={6} xl={12} xs={12}>
-                          <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
-                        </Grid>
-                        <Grid item lg={12} md={6} xl={12} xs={12}>
-                          <UserUpdateStatus user={user} onUserStatusChanged={handleUserStatusChanged} />
-                        </Grid>
-                      </Grid>
-                    </Grid>
-                  )}
-                </>
+                <Box className={classNames('items-start', 'gap-4', 'grid', 'grid-cols-2')}>
+                  <Box className={classNames('gap-4', 'flex', 'flex-col')}>
+                    <UserDetailsComponent user={user} />
+                    <UserBankDetails user={user} />
+                  </Box>
+                  <Box className={classNames('gap-4', 'flex', 'flex-col')}>
+                    <UserUpdateBalanceLimit user={user} onUpdateLimit={handleUpdateLimit} />
+                    <UserSwapMobileNumber user={user} onSwapPhoneNumber={handleSwapMobileNumber} />
+                    <UserUpdateStatus user={user} onUserStatusChanged={handleUserStatusChanged} />
+                    <UserDelete user={user} onUserDeleted={handleUserDeleted} />
+                  </Box>
+                </Box>
               )}
               {currentTab === 'collections' && (
-                <Grid container spacing={3}>
-                  <Grid container lg={6} md={6} xl={6} xs={12} spacing={!settings.compact ? 3 : 0} item>
-                    <Grid
-                      className="mb-4"
-                      item
-                      lg={settings.compact ? 12 : 6}
-                      md={12}
-                      xl={settings.compact ? 12 : 6}
-                      xs={12}
-                    >
-                      <UserCollectionDetails user={user} />
-                    </Grid>
-                    <Grid
-                      className="mb-4"
-                      item
-                      lg={settings.compact ? 12 : 6}
-                      md={12}
-                      xl={settings.compact ? 12 : 6}
-                      xs={12}
-                    >
-                      <UserCollectionEmail
-                        user={user}
-                        onUpdateCollectionEmailPausedUntil={handleUpdateCollectionEmailPausedUntil}
-                      />
-                    </Grid>
-                    <Grid
-                      className="mb-4"
-                      item
-                      lg={settings.compact ? 12 : 6}
-                      md={12}
-                      xl={settings.compact ? 12 : 6}
-                      xs={12}
-                    >
-                      <UserSplitPayment user={user} onSplitPayment={handleSplitPayment} />
-                    </Grid>
-                  </Grid>
-                  <Grid item lg={6} md={6} xl={6} xs={12}>
-                    <UserTransactions
+                <Box className={classNames('items-start', 'gap-4', 'grid', 'grid-cols-2')}>
+                  <Box className={classNames('gap-4', 'flex', 'flex-col')}>
+                    <UserCollectionDetails user={user} />
+                    <UserCollectionEmail
                       user={user}
-                      transactions={transactions}
-                      onReconcileTransaction={handleReconcileTransaction}
-                      onUpdateTransaction={handleUpdateTransaction}
+                      onUpdateCollectionEmailPausedUntil={handleUpdateCollectionEmailPausedUntil}
                     />
-                  </Grid>
-                </Grid>
+                    <UserSplitPayment user={user} onSplitPayment={handleSplitPayment} />
+                  </Box>
+                  <UserTransactions
+                    user={user}
+                    transactions={transactions}
+                    onReconcileTransaction={handleReconcileTransaction}
+                    onUpdateTransaction={handleUpdateTransaction}
+                  />
+                </Box>
               )}
             </Box>
           </Container>

@@ -1,17 +1,19 @@
 import {
-  Box,
   Button,
   Card,
   CardActions,
+  CardContent,
   CardHeader,
+  CardTypeMap,
   Divider,
+  IconButton,
   Table,
   TableBody,
   TableCell,
   TableRow,
   Typography,
-  IconButton,
 } from '@material-ui/core';
+import { DefaultComponentProps } from '@material-ui/core/OverridableComponent';
 import { OpenInNewOutlined as OpenInNewIcon } from '@material-ui/icons';
 import moment from 'moment';
 import { FC, useState } from 'react';
@@ -19,7 +21,7 @@ import { useBankData } from '../../hooks/useBankData';
 import { User } from '../../types/users';
 import TransactionDialog from '../commons/TransactionDialog';
 
-interface CollectionDetailsProps {
+interface CollectionDetailsProps extends DefaultComponentProps<CardTypeMap> {
   user: User;
 }
 
@@ -27,15 +29,15 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
   const { user, ...other } = props;
   const { dataLastAt, reportUrl, setDataLastAt } = useBankData(props.user?.id);
   const [showAllTransactions, setShowAllTransactions] = useState(false);
-  const arrearsSince = user.balanceOverdueAt ? moment(user.balanceOverdueAt).format('DD/MM/yyyy') : '--';
+  const arrearsSince = user.balanceOverdueAt ? moment(user.balanceOverdueAt).format('DD/MM/YYYY') : '--';
   const collectionEmailPausedUntil = user.collectionEmailPausedUntil
-    ? moment(user.collectionEmailPausedUntil).format('DD/MM/yyyy')
+    ? moment(user.collectionEmailPausedUntil).format('DD/MM/YYYY')
     : '--';
   return (
-    <>
-      <Card {...other}>
-        <CardHeader title="Collection Details" />
-        <Divider />
+    <Card {...other}>
+      <CardHeader title="Collection Details" />
+      <Divider />
+      <CardContent>
         <Table>
           <TableBody>
             <TableRow>
@@ -100,22 +102,15 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
             </TableRow>
           </TableBody>
         </Table>
-        <CardActions>
-          <Box className="pr-1.5 py-1.5">
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => setShowAllTransactions(true)}
-              disabled={!reportUrl}
-            >
-              View bank statements
-            </Button>
-            <IconButton href={reportUrl} target="_blank" disabled={!reportUrl}>
-              <OpenInNewIcon />
-            </IconButton>
-          </Box>
-        </CardActions>
-      </Card>
+      </CardContent>
+      <CardActions>
+        <Button variant="contained" color="primary" onClick={() => setShowAllTransactions(true)} disabled={!reportUrl}>
+          View bank statements
+        </Button>
+        <IconButton href={reportUrl} target="_blank" disabled={!reportUrl} sx={{ ml: 1 }}>
+          <OpenInNewIcon />
+        </IconButton>
+      </CardActions>
       <TransactionDialog
         openDialog={showAllTransactions}
         setShowAllTransactions={setShowAllTransactions}
@@ -124,7 +119,7 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
         setDataLastAt={setDataLastAt}
         userId={props.user.id}
       />
-    </>
+    </Card>
   );
 };
 

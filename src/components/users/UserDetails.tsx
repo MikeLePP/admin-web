@@ -1,6 +1,7 @@
 import {
   Card,
   CardHeader,
+  CardTypeMap,
   Divider,
   IconButton,
   Table,
@@ -9,13 +10,14 @@ import {
   TableRow,
   Typography,
 } from '@material-ui/core';
+import { DefaultComponentProps } from '@material-ui/core/OverridableComponent';
 import { FileCopyOutlined as FileCopyIcon } from '@material-ui/icons';
 import moment from 'moment';
 import type { FC } from 'react';
 import toast from 'react-hot-toast';
 import { User } from '../../types/users';
 
-interface UserDetailsProps {
+interface UserDetailsProps extends DefaultComponentProps<CardTypeMap> {
   user: User;
 }
 

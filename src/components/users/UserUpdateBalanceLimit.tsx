@@ -1,11 +1,12 @@
-import { Box, Button, Card, CardContent, CardHeader, Divider, TextField } from '@material-ui/core';
+import { Button, Card, CardActions, CardContent, CardHeader, CardTypeMap, Divider, TextField } from '@material-ui/core';
+import { DefaultComponentProps } from '@material-ui/core/OverridableComponent';
 import SaveIcon from '@material-ui/icons/Save';
 import type { FC } from 'react';
 import { useEffect, useState } from 'react';
 import { APPROVED_AMOUNT } from '../../constants/amount';
 import type { User } from '../../types/users';
 
-interface IProps {
+interface IProps extends DefaultComponentProps<CardTypeMap> {
   user: User;
   onUpdateLimit: (limit: number) => void;
 }
@@ -39,18 +40,18 @@ const UserUpdateBalanceLimit: FC<IProps> = ({ user, onUpdateLimit, ...remains })
             </option>
           ))}
         </TextField>
-        <Box sx={{ mt: 2 }}>
-          <Button
-            disabled={user.balanceLimit.toString() === balanceLimit.toString()}
-            color="primary"
-            startIcon={<SaveIcon fontSize="small" />}
-            variant="contained"
-            onClick={handleUpdate}
-          >
-            Update
-          </Button>
-        </Box>
       </CardContent>
+      <CardActions>
+        <Button
+          disabled={user.balanceLimit.toString() === balanceLimit.toString()}
+          color="primary"
+          startIcon={<SaveIcon fontSize="small" />}
+          variant="contained"
+          onClick={handleUpdate}
+        >
+          Update
+        </Button>
+      </CardActions>
     </Card>
   );
 };

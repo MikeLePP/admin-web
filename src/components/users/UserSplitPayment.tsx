@@ -5,17 +5,19 @@ import {
   CardActions,
   CardContent,
   CardHeader,
+  CardTypeMap,
   Checkbox,
   Divider,
   FormControlLabel,
   TextField,
   Typography,
 } from '@material-ui/core';
+import { DefaultComponentProps } from '@material-ui/core/OverridableComponent';
 import type { FC } from 'react';
 import { useMemo, useState } from 'react';
 import { User } from '../../types/users';
 
-interface SplitPaymentProps {
+interface SplitPaymentProps extends DefaultComponentProps<CardTypeMap> {
   user: User;
   onSplitPayment: (
     params: {
@@ -95,87 +97,70 @@ const SplitPayment: FC<SplitPaymentProps> = (props) => {
     <Card {...other}>
       <CardHeader title="Split Payments" />
       <Divider />
-      <CardContent className="py-4 px-2">
+      <CardContent>
         <Box
           sx={{
             alignItems: 'center',
             display: 'flex',
             flexWrap: 'wrap',
-            justifyContent: 'space-between',
           }}
         >
-          <Box sx={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap' }}>
-            <Box sx={{ m: 1, maxWidth: '100%', width: 100 }}>
-              <TextField
-                placeholder="count"
-                type="number"
-                variant="outlined"
-                value={count}
-                onChange={handleChangeCount}
-                inputProps={{ min: '1', max: '10', step: '1' }}
-              />
-            </Box>
-            <Box sx={{ m: 1, maxWidth: '100%', width: 10 }}>
-              <Typography>x</Typography>
-            </Box>
-            <Box sx={{ m: 1, width: 120 }}>
-              <TextField
-                placeholder="amount"
-                type="number"
-                name="amount"
-                variant="outlined"
-                value={amount}
-                onChange={handleChangeAmount}
-                inputProps={{ min: '1', max: '1000', step: '1' }}
-              />
-            </Box>
-            <Box sx={{ m: 1, maxWidth: '100%', width: 10 }}>
-              <Typography>+</Typography>
-            </Box>
-            <Box sx={{ m: 1, width: 120 }}>
-              <TextField
-                placeholder="fee"
-                type="number"
-                name="fee"
-                variant="outlined"
-                value={fee}
-                onChange={handleChangeFee}
-                inputProps={{ min: '0', max: '50', step: '1' }}
-              />
-            </Box>
-            <Box sx={{ m: 1, maxWidth: '100%', width: 10 }}>
-              <Typography>fee</Typography>
-            </Box>
-          </Box>
-          <Box sx={{ m: 1, maxWidth: '100%', width: 140 }}>
-            <Typography className="text-right">Total: ${total.toFixed(2)}</Typography>
-          </Box>
+          <TextField
+            placeholder="count"
+            type="number"
+            variant="outlined"
+            value={count}
+            onChange={handleChangeCount}
+            inputProps={{ min: '1', max: '10', step: '1' }}
+          />
+          <Typography sx={{ ml: 2 }}>x</Typography>
+          <TextField
+            placeholder="amount"
+            type="number"
+            name="amount"
+            variant="outlined"
+            value={amount}
+            onChange={handleChangeAmount}
+            inputProps={{ min: '1', max: '1000', step: '1' }}
+            sx={{ ml: 2 }}
+          />
+          <Typography sx={{ ml: 2 }}>+</Typography>
+          <TextField
+            placeholder="fee"
+            type="number"
+            name="fee"
+            variant="outlined"
+            value={fee}
+            onChange={handleChangeFee}
+            inputProps={{ min: '0', max: '50', step: '1' }}
+            sx={{ ml: 2 }}
+          />
+          <Typography sx={{ ml: 2 }}>fee</Typography>
+          <Typography sx={{ ml: 2, flexGrow: 1, textAlign: 'right' }}>Total: ${total.toFixed(2)}</Typography>
         </Box>
 
-        <Box sx={{ alignItems: 'center', display: 'flex', flexWrap: 'wrap' }}>
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="pauseCollectionEmail"
-                checked={pauseCollectionEmail}
-                onClick={() => setPauseCollectionEmail(!pauseCollectionEmail)}
-              />
-            }
-            label="Pause collection email"
-            className="w-full"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="cancelPendingTransaction"
-                checked={cancelAllPendingTransactions}
-                onClick={() => setCancelAllPendingTransactions(!cancelAllPendingTransactions)}
-              />
-            }
-            label="Cancel current pending transactions"
-            className="w-full"
-          />
-        </Box>
+        <FormControlLabel
+          control={
+            <Checkbox
+              name="pauseCollectionEmail"
+              checked={pauseCollectionEmail}
+              onClick={() => setPauseCollectionEmail(!pauseCollectionEmail)}
+            />
+          }
+          label="Pause collection email"
+          sx={{ mt: 2 }}
+        />
+        <FormControlLabel
+          control={
+            <Checkbox
+              name="cancelPendingTransaction"
+              checked={cancelAllPendingTransactions}
+              onClick={() => setCancelAllPendingTransactions(!cancelAllPendingTransactions)}
+            />
+          }
+          label="Cancel current pending transactions"
+          sx={{ mt: 2 }}
+        />
       </CardContent>
       <CardActions>
         <Button variant="contained" color="primary" onClick={handleCreate} disabled={!total}>

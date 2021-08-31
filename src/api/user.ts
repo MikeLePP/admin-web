@@ -7,7 +7,24 @@ import type { BankAccount } from '../types/bankAccount';
 import type { User, UserStatus } from '../types/users';
 
 const apiRoot = process.env.REACT_APP_API_URL;
+
 class UserApi {
+  async deleteUser(userId: string): Promise<void> {
+    await fetch(`${apiRoot}/users/${userId}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: await getAuthToken(),
+        'Content-Type': 'application/json',
+      },
+    }).then(async (res) => {
+      if (!res.ok) {
+        const body = await res.json();
+        throw new Error(get(body, 'errors[0].title', 'Cannot delete user'));
+      }
+      return undefined;
+    });
+  }
+
   async getUsers(
     filter: Record<string, unknown> = {},
     range = '[0,9]',
