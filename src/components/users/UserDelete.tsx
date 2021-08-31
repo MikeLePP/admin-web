@@ -69,16 +69,15 @@ const UserUpdateBalanceLimit: FC<IProps> = ({ user, onUserDeleted, ...remains })
             Are you sure you want to delete this user? Deleting a user is permanent and cannot be undone. Type the
             user's phone number to proceed.
           </DialogContentText>
-          <Box sx={{ mt: 2 }}>
-            <TextField
-              autoFocus
-              fullWidth
-              label="Mobile number"
-              margin="dense"
-              onChange={(event): void => setMobileNumber(event.target.value)}
-              value={mobileNumber}
-            />
-          </Box>
+          <TextField
+            autoFocus
+            fullWidth
+            label="Mobile number"
+            margin="dense"
+            onChange={(event): void => setMobileNumber(event.target.value)}
+            value={mobileNumber}
+            sx={{ mt: 2 }}
+          />
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setShow(false)} color="primary">
