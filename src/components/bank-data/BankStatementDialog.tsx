@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   CircularProgress,
   Dialog,
@@ -24,40 +23,38 @@ const REFRESH_DAYS = [
 ];
 
 interface IProps {
-  setShowAllTransactions: (value: boolean) => void;
-  openDialog: boolean;
+  open?: boolean;
+  setOpen?: (open: boolean) => void;
   reportUrl: string;
   userId: string;
   dataLastAt: string | undefined;
   setDataLastAt: React.Dispatch<React.SetStateAction<string | undefined>>;
 }
 
-function TransactionDialog({
-  setShowAllTransactions,
-  openDialog,
+function BankStatementDialog({
+  open = false,
+  setOpen = () => {},
   reportUrl,
   dataLastAt,
   setDataLastAt,
   userId,
 }: IProps): JSX.Element {
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(true);
-  const [days, setDays] = useState(1);
+  const [days, setDays] = useState(30);
   const [url, setUrl] = useState('');
 
   useEffect(() => {
-    setOpen(openDialog);
-  }, [openDialog]);
-  useEffect(() => {
     setUrl(reportUrl);
   }, [reportUrl]);
+
   const handleShowAllTransactions = (): void => {
     setOpen(false);
-    setShowAllTransactions(false);
   };
+
   const handleLoaded = () => {
     setLoading(false);
   };
+
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setDays(Number(event.target.value));
   };
@@ -69,11 +66,11 @@ function TransactionDialog({
     setDataLastAt(data.attributes.dataLastAt);
     setLoading(false);
   };
+
   return (
     <Dialog open={open} BackdropProps={{ onClick: () => {} }} disableEscapeKeyDown fullWidth maxWidth="lg">
       <DialogTitle disableTypography className="flex items-center justify-between">
-        <Typography variant="h6">All account transactions</Typography>
-
+        <Typography variant="h6">Bank statements</Typography>
         <IconButton onClick={handleShowAllTransactions}>
           <CloseIcon />
         </IconButton>
@@ -93,23 +90,22 @@ function TransactionDialog({
         />
       </DialogContent>
       <DialogActions>
-        <Typography>
-          {dataLastAt ? `Last Refreshed: ${moment(dataLastAt).fromNow()}` : 'Last Refreshed time is unavailable'}
+        <Typography sx={{ flexGrow: 1 }}>
+          {dataLastAt ? `Last refreshed ${moment(dataLastAt).fromNow()}` : 'Last refreshed time is unavailable'}
         </Typography>
-        <Box display="flex" flexGrow={1} />
-        <Select value={days} onChange={handleChange} autoWidth>
+        <Select autoWidth value={days} onChange={handleChange} size="small" sx={{ ml: 1 }}>
           {REFRESH_DAYS.map(({ value, label }) => (
             <MenuItem key={value} value={value}>
               {label}
             </MenuItem>
           ))}
         </Select>
-
         <Button
           variant="contained"
           color="primary"
           onClick={onRefreshClick}
           disabled={loading || (!!dataLastAt && moment().diff(dataLastAt, 'minutes') < MINUTES_TO_DISABLE_REFRESH)}
+          sx={{ ml: 1 }}
         >
           REFRESH BANK DATA
         </Button>
@@ -118,4 +114,4 @@ function TransactionDialog({
   );
 }
 
-export default TransactionDialog;
+export default BankStatementDialog;

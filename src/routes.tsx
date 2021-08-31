@@ -53,9 +53,6 @@ const Account = Loadable(lazy(() => import('./pages/dashboard/Account')));
 const Analytics = Loadable(lazy(() => import('./pages/dashboard/Analytics')));
 const Calendar = Loadable(lazy(() => import('./pages/dashboard/Calendar')));
 const Chat = Loadable(lazy(() => import('./pages/dashboard/Chat')));
-const CustomerDetails = Loadable(lazy(() => import('./pages/dashboard/UserDetails')));
-const CustomerEdit = Loadable(lazy(() => import('./pages/dashboard/UserEdit')));
-const CustomerList = Loadable(lazy(() => import('./pages/dashboard/UserList')));
 const Finance = Loadable(lazy(() => import('./pages/dashboard/Finance')));
 const InvoiceDetails = Loadable(lazy(() => import('./pages/dashboard/InvoiceDetails')));
 const InvoiceList = Loadable(lazy(() => import('./pages/dashboard/InvoiceList')));
@@ -66,6 +63,12 @@ const OrderList = Loadable(lazy(() => import('./pages/dashboard/OrderList')));
 const Overview = Loadable(lazy(() => import('./pages/dashboard/Overview')));
 const ProductCreate = Loadable(lazy(() => import('./pages/dashboard/ProductCreate')));
 const ProductList = Loadable(lazy(() => import('./pages/dashboard/ProductList')));
+
+// User pages
+
+const UserDetails = Loadable(lazy(() => import('./pages/user/UserDetails')));
+const UserEdit = Loadable(lazy(() => import('./pages/user/UserEdit')));
+const UserList = Loadable(lazy(() => import('./pages/user/UserList')));
 
 // Docs pages
 
@@ -197,15 +200,15 @@ export const demoRoutes: PartialRouteObject[] = [
         children: [
           {
             path: '/',
-            element: <CustomerList />,
+            element: <UserList />,
           },
           {
             path: ':customerId',
-            element: <CustomerDetails />,
+            element: <UserDetails />,
           },
           {
             path: ':customerId/edit',
-            element: <CustomerEdit />,
+            element: <UserEdit />,
           },
         ],
       },
@@ -414,19 +417,19 @@ export const routes: PartialRouteObject[] = [
         children: [
           {
             path: '/',
-            element: <CustomerList />,
+            element: <UserList />,
           },
           {
             path: ':userId',
-            element: <CustomerDetails />,
+            element: <UserDetails />,
           },
           {
             path: ':userId/:tabId',
-            element: <CustomerDetails />,
+            element: <UserDetails />,
           },
           {
             path: ':userId/edit',
-            element: <CustomerEdit />,
+            element: <UserEdit />,
           },
         ],
       },
@@ -478,15 +481,15 @@ export const routes: PartialRouteObject[] = [
         children: [
           {
             path: '/',
-            element: <CustomerList />,
+            element: <UserList />,
           },
           {
             path: ':customerId',
-            element: <CustomerDetails />,
+            element: <UserDetails />,
           },
           {
             path: ':customerId/edit',
-            element: <CustomerEdit />,
+            element: <UserEdit />,
           },
         ],
       },
