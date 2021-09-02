@@ -136,10 +136,10 @@ const UserList: FC<BoxProps> = (props) => {
     [searchParams, setSearchParams],
   );
 
-  const handleClearFilter = () => {
+  const handleClearFilter = useCallback(() => {
     searchParams.delete('filter');
     setSearchParams(searchParams);
-  };
+  }, [searchParams, setSearchParams]);
 
   const handleSortChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSort(event.target.value as Sort);
