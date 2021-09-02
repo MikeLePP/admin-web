@@ -17,8 +17,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import moment from 'moment';
-import type { ChangeEvent, FC, MouseEvent } from 'react';
-import { useState } from 'react';
+import { ChangeEvent, FC, MouseEvent, useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 import INCOME_FREQUENCY from '../../constants/incomeFrequencies';
 import ArrowRightIcon from '../../icons/ArrowRight';
@@ -73,6 +72,11 @@ const UserListTable: FC<UserListTableProps> = (props) => {
   const [limit, setLimit] = useState<number>(5);
   const [comparer, setComparer] = useState<string | null>(initialComparer);
   const [frequencyCount, setFrequencyCount] = useState<number | null>(initialFrequencyCount);
+
+  useEffect(() => {
+    setComparer(initialComparer);
+    setFrequencyCount(initialFrequencyCount);
+  }, [initialComparer, initialFrequencyCount]);
 
   const handleFrequencyCountChange = (event: ChangeEvent<HTMLInputElement>): void => {
     const data = parseInt(event.target.value, 10);
