@@ -2,6 +2,7 @@ import {
   Avatar,
   Backdrop,
   Box,
+  BoxProps,
   Button,
   CircularProgress,
   IconButton,
@@ -17,26 +18,17 @@ import {
   Typography,
 } from '@material-ui/core';
 import moment from 'moment';
-import { ChangeEvent, FC, MouseEvent, useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import INCOME_FREQUENCY from '../../constants/incomeFrequencies';
 import ArrowRightIcon from '../../icons/ArrowRight';
 import DownloadIcon from '../../icons/Download';
 import { getFullName } from '../../lib/userHelpers';
+import { exportUserCSV, filterMoreUsers, getUsersInArrears } from '../../slices/user';
+import { useDispatch, useSelector } from '../../store';
 import type { User } from '../../types/users';
 import getInitials from '../../utils/getInitials';
 import Scrollbar from '../Scrollbar';
-
-interface UserListTableProps {
-  users: User[];
-  onFilterUserInArrears: (comparer: string, frequencyCount: number) => void;
-  initialComparer: string;
-  initialFrequencyCount: number;
-  loading: boolean;
-  pageKey?: Record<string, unknown>;
-  onLoadMore: () => void;
-  onExport: () => void;
-}
 
 const comparerOptions: { value: string; label: string }[] = [
   {
@@ -56,31 +48,42 @@ const comparerOptions: { value: string; label: string }[] = [
 const applyPagination = (users: User[], page: number, limit: number): User[] =>
   users.slice(page * limit, page * limit + limit);
 
-const UserListTable: FC<UserListTableProps> = (props) => {
-  const {
-    initialComparer,
-    initialFrequencyCount,
-    loading,
-    onFilterUserInArrears,
-    onLoadMore,
-    pageKey,
-    users,
-    onExport,
-    ...other
-  } = props;
+const UserListTable: FC<BoxProps> = (props) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const arrearsComparer = useMemo(() => searchParams.get('ac') || 'e', [searchParams]);
+  const arrearsFrequency = useMemo(() => +searchParams.get('af') || 1, [searchParams]);
+
+  const userSelector = useSelector((state) => state.user);
+  const userLoading = useMemo(() => userSelector.status === 'loading', [userSelector]);
+  const pageKey = useMemo(() => userSelector.pageKey, [userSelector]);
+
   const [page, setPage] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(5);
-  const [comparer, setComparer] = useState<string | null>(initialComparer);
-  const [frequencyCount, setFrequencyCount] = useState<number | null>(initialFrequencyCount);
+  const [limit, setLimit] = useState<number>(10);
+  const [comparer, setComparer] = useState<string | null>(arrearsComparer);
+  const [frequencyCount, setFrequencyCount] = useState<number | null>(arrearsFrequency);
+  const dispatch = useDispatch();
+
+  const users = useMemo(() => {
+    const {
+      users: { allIds, byId },
+    } = userSelector;
+    return allIds.map((id) => byId[id]);
+  }, [userSelector]);
 
   useEffect(() => {
-    setComparer(initialComparer);
-    setFrequencyCount(initialFrequencyCount);
-  }, [initialComparer, initialFrequencyCount]);
+    setComparer(arrearsComparer);
+    setFrequencyCount(arrearsFrequency);
+    dispatch(getUsersInArrears(arrearsComparer, arrearsFrequency));
+  }, [dispatch, arrearsComparer, arrearsFrequency]);
+
+  useEffect(() => {
+    setComparer(arrearsComparer);
+    setFrequencyCount(arrearsFrequency);
+  }, [arrearsComparer, arrearsFrequency]);
 
   const handleFrequencyCountChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    const data = parseInt(event.target.value, 10);
-    setFrequencyCount(isNaN(data) ? null : data);
+    const value = parseInt(event.target.value, 10);
+    setFrequencyCount(value || 1);
   };
 
   const handlePageChange = (event: MouseEvent<HTMLButtonElement> | null, newPage: number): void => {
@@ -92,13 +95,23 @@ const UserListTable: FC<UserListTableProps> = (props) => {
   };
 
   const handleFilter = () => {
-    onFilterUserInArrears(comparer, frequencyCount);
+    searchParams.set('ac', comparer);
+    searchParams.set('af', frequencyCount.toString());
+    setSearchParams(searchParams);
   };
+
+  const handleLoadMore = useCallback(() => {
+    dispatch(filterMoreUsers(arrearsComparer, arrearsFrequency));
+  }, [dispatch, arrearsComparer, arrearsFrequency]);
+
+  const handleExport = useCallback(() => {
+    dispatch(exportUserCSV());
+  }, [dispatch]);
 
   const paginatedUsers = applyPagination(users, page, limit);
 
   return (
-    <Box {...other}>
+    <Box {...props}>
       <Box display="flex" alignItems="center" flexWrap="wrap" gap={2} p={2}>
         <TextField
           label="Compare"
@@ -131,13 +144,13 @@ const UserListTable: FC<UserListTableProps> = (props) => {
           startIcon={<DownloadIcon fontSize="small" />}
           variant="outlined"
           color="primary"
-          onClick={onExport}
-          disabled={users.length === 0 || loading}
+          onClick={handleExport}
+          disabled={users.length === 0 || userLoading}
         >
           Export
         </Button>
       </Box>
-      <Backdrop open={loading} invisible sx={{ position: 'absolute', zIndex: 1 }}>
+      <Backdrop open={userLoading} invisible sx={{ position: 'absolute', zIndex: 1 }}>
         <CircularProgress />
       </Backdrop>
       <Box position="relative">
@@ -206,7 +219,7 @@ const UserListTable: FC<UserListTableProps> = (props) => {
           rowsPerPageOptions={[5, 10, 25]}
         />
         {pageKey && Object.keys(pageKey).length > 0 && (
-          <Button className="absolute bottom-2 left-2" onClick={onLoadMore}>
+          <Button className="absolute bottom-2 left-2" onClick={handleLoadMore}>
             more...
           </Button>
         )}

@@ -1,6 +1,8 @@
 import {
   Avatar,
+  Backdrop,
   Box,
+  BoxProps,
   CircularProgress,
   IconButton,
   InputAdornment,
@@ -19,23 +21,17 @@ import Assignment from '@material-ui/icons/Assignment';
 import BackspaceIcon from '@material-ui/icons/Backspace';
 import MonetizationOn from '@material-ui/icons/MonetizationOn';
 import { startCase, upperFirst } from 'lodash';
-import type { ChangeEvent, FC, MouseEvent } from 'react';
-import { useState, useEffect } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
-import { getFullName } from '../../lib/userHelpers';
+import { ChangeEvent, FC, MouseEvent, useCallback, useEffect, useMemo, useState } from 'react';
+import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import ArrowRightIcon from '../../icons/ArrowRight';
 import PencilAltIcon from '../../icons/PencilAlt';
 import SearchIcon from '../../icons/Search';
+import { getFullName } from '../../lib/userHelpers';
+import { getUsers } from '../../slices/user';
+import { useDispatch, useSelector } from '../../store';
 import { User } from '../../types/users';
 import getInitials from '../../utils/getInitials';
 import Scrollbar from '../Scrollbar';
-
-interface UserListProps {
-  users: User[];
-  loading: boolean;
-  initialQuery: string;
-  onFilter: (query: string) => void;
-}
 
 type Sort = 'createdAt|desc' | 'createdAt|asc';
 
@@ -97,30 +93,53 @@ const applySort = (users: User[], sort: Sort): User[] => {
   return stabilizedThis.map((el) => el[0]);
 };
 
-const UserList: FC<UserListProps> = (props) => {
-  const { loading, users, onFilter, initialQuery, ...other } = props;
+const UserList: FC<BoxProps> = (props) => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const userSelector = useSelector((state) => state.user);
+  const userLoading = useMemo(() => userSelector.status === 'loading', [userSelector]);
+  const userFilter = useMemo(() => searchParams.get('filter') || '', [searchParams]);
+
+  const [filter, setFilter] = useState<string>(userFilter);
+  const [limit, setLimit] = useState<number>(10);
   const [page, setPage] = useState<number>(0);
-  const [limit, setLimit] = useState<number>(5);
-  const [query, setQuery] = useState<string>(initialQuery);
   const [sort, setSort] = useState<Sort>(sortOptions[0].value);
+  const dispatch = useDispatch();
 
-  const handleQueryChange = (event: ChangeEvent<HTMLInputElement>): void => {
-    setQuery(event.target.value);
-  };
-
-  const handleClearFilter = () => {
-    setQuery('');
-    onFilter(null);
-  };
+  const users = useMemo(() => {
+    const {
+      users: { allIds, byId },
+    } = userSelector;
+    return allIds.map((id) => byId[id]);
+  }, [userSelector]);
 
   useEffect(() => {
-    const handler = setTimeout(() => {
-      onFilter(query);
-    }, 1000);
-    return () => {
-      clearTimeout(handler);
-    };
-  }, [onFilter, query]);
+    setFilter(userFilter);
+    dispatch(getUsers(userFilter));
+  }, [dispatch, userFilter]);
+
+  const handleFilterChange = useCallback(
+    (event: ChangeEvent<HTMLInputElement>) => {
+      const { value } = event.target;
+      setFilter(value);
+      const handler = setTimeout(() => {
+        if (value) {
+          searchParams.set('filter', value);
+          setSearchParams(searchParams);
+        } else {
+          searchParams.delete('filter');
+          setSearchParams(searchParams);
+        }
+      }, 1000);
+
+      return () => clearTimeout(handler);
+    },
+    [searchParams, setSearchParams],
+  );
+
+  const handleClearFilter = () => {
+    searchParams.delete('filter');
+    setSearchParams(searchParams);
+  };
 
   const handleSortChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSort(event.target.value as Sort);
@@ -138,138 +157,123 @@ const UserList: FC<UserListProps> = (props) => {
   const paginatedUsers = applyPagination(sortedUser, page, limit);
 
   return (
-    <Box {...other}>
-      <Box
-        sx={{
-          alignItems: 'center',
-          display: 'flex',
-          flexWrap: 'wrap',
-          m: -1,
-          p: 2,
-        }}
-      >
-        <Box sx={{ m: 1, maxWidth: '100%', width: 500 }}>
-          <TextField
-            fullWidth
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <SearchIcon fontSize="small" />
-                </InputAdornment>
-              ),
-              endAdornment: (
-                <IconButton onClick={handleClearFilter} disabled={!initialQuery || !query}>
-                  <BackspaceIcon fontSize="small" />
-                </IconButton>
-              ),
-            }}
-            onChange={handleQueryChange}
-            placeholder="Search users"
-            value={query}
-            variant="outlined"
-          />
-        </Box>
-        <Box sx={{ m: 1, width: 240 }}>
-          <TextField
-            label="Sort By"
-            name="sort"
-            onChange={handleSortChange}
-            select
-            SelectProps={{ native: true }}
-            value={sort}
-            variant="outlined"
-          >
-            {sortOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </TextField>
-        </Box>
+    <Box {...props}>
+      <Box display="flex" alignItems="center" flexWrap="wrap" gap={2} p={2}>
+        <TextField
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon fontSize="small" />
+              </InputAdornment>
+            ),
+            endAdornment: (
+              <IconButton onClick={handleClearFilter} disabled={!filter}>
+                <BackspaceIcon fontSize="small" />
+              </IconButton>
+            ),
+          }}
+          onChange={handleFilterChange}
+          placeholder="Search users"
+          value={filter}
+          variant="outlined"
+        />
+        <Box flexGrow={1} />
+        <TextField
+          label="Sort By"
+          name="sort"
+          onChange={handleSortChange}
+          select
+          SelectProps={{ native: true }}
+          value={sort}
+          variant="outlined"
+        >
+          {sortOptions.map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </TextField>
       </Box>
-      {loading ? (
-        <Box display="flex" alignItems="center" justifyContent="center" width="100%" height="400px">
-          <CircularProgress />
-        </Box>
-      ) : (
-        <Box position="relative">
-          <Scrollbar>
-            <Box sx={{ minWidth: 700 }}>
-              <Table>
-                <TableHead>
-                  <TableRow>
-                    <TableCell>Name</TableCell>
-                    <TableCell>Mobile</TableCell>
-                    <TableCell>Available Balance</TableCell>
-                    <TableCell>Status</TableCell>
-                    <TableCell align="right">Actions</TableCell>
-                  </TableRow>
-                </TableHead>
-                <TableBody>
-                  {paginatedUsers.map((user) => (
-                    <TableRow hover key={user.id}>
-                      <TableCell>
+      <Backdrop open={userLoading} invisible sx={{ position: 'absolute', zIndex: 1 }}>
+        <CircularProgress />
+      </Backdrop>
+      <Box position="relative">
+        <Scrollbar>
+          <Box sx={{ minWidth: 700 }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Mobile</TableCell>
+                  <TableCell>Available Balance</TableCell>
+                  <TableCell>Status</TableCell>
+                  <TableCell align="right">Actions</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {paginatedUsers.map((user) => (
+                  <TableRow hover key={user.id}>
+                    <TableCell>
+                      <Box sx={{ alignItems: 'center', display: 'flex' }}>
                         <Box sx={{ alignItems: 'center', display: 'flex' }}>
-                          <Box sx={{ alignItems: 'center', display: 'flex' }}>
-                            <Avatar sx={{ height: 42, width: 42 }}>{getInitials(getFullName(user))}</Avatar>
-                            <Box sx={{ ml: 1 }}>
-                              <Link
-                                color="inherit"
-                                component={RouterLink}
-                                to={`/management/users/${user.id}/details`}
-                                variant="subtitle2"
-                              >
-                                {getFullName(user)}
-                              </Link>
-                              <Typography color="textSecondary" variant="body2">
-                                {user.email}
-                              </Typography>
-                            </Box>
+                          <Avatar sx={{ height: 42, width: 42 }}>{getInitials(getFullName(user))}</Avatar>
+                          <Box sx={{ ml: 1 }}>
+                            <Link
+                              color="inherit"
+                              component={RouterLink}
+                              to={`/management/users/${user.id}/details`}
+                              variant="subtitle2"
+                            >
+                              {getFullName(user)}
+                            </Link>
+                            <Typography color="textSecondary" variant="body2">
+                              {user.email}
+                            </Typography>
                           </Box>
                         </Box>
-                      </TableCell>
-                      <TableCell>{user.mobileNumber}</TableCell>
-                      <TableCell>{user.balanceLimit - user.balanceCurrent}</TableCell>
-                      <TableCell>{upperFirst(startCase(user?.status).toLowerCase())}</TableCell>
-                      <TableCell align="right">
-                        <Tooltip title="Transaction">
-                          <IconButton component={RouterLink} to={`/transactions/?userId=${user.id}`}>
-                            <MonetizationOn fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Onboarding">
-                          <IconButton component={RouterLink} to={`user-onboarding/create?userId=${user.id}`}>
-                            <Assignment fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Edit">
-                          <IconButton component={RouterLink} to={`/management/users/${user.id}/edit`}>
-                            <PencilAltIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                        <Tooltip title="Show">
-                          <IconButton component={RouterLink} to={`/management/users/${user.id}/details`}>
-                            <ArrowRightIcon fontSize="small" />
-                          </IconButton>
-                        </Tooltip>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Scrollbar>
-          <TablePagination
-            component="div"
-            count={users.length}
-            onPageChange={handlePageChange}
-            onRowsPerPageChange={handleLimitChange}
-            page={page}
-            rowsPerPage={limit}
-            rowsPerPageOptions={[5, 10, 25]}
-          />
-        </Box>
-      )}
+                      </Box>
+                    </TableCell>
+                    <TableCell>{user.mobileNumber}</TableCell>
+                    <TableCell>{user.balanceLimit - user.balanceCurrent}</TableCell>
+                    <TableCell>{upperFirst(startCase(user?.status).toLowerCase())}</TableCell>
+                    <TableCell align="right">
+                      <Tooltip title="Transaction">
+                        <IconButton component={RouterLink} to={`/transactions/?userId=${user.id}`}>
+                          <MonetizationOn fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Onboarding">
+                        <IconButton component={RouterLink} to={`user-onboarding/create?userId=${user.id}`}>
+                          <Assignment fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Edit">
+                        <IconButton component={RouterLink} to={`/management/users/${user.id}/edit`}>
+                          <PencilAltIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                      <Tooltip title="Show">
+                        <IconButton component={RouterLink} to={`/management/users/${user.id}/details`}>
+                          <ArrowRightIcon fontSize="small" />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </Box>
+        </Scrollbar>
+        <TablePagination
+          component="div"
+          count={users.length}
+          onPageChange={handlePageChange}
+          onRowsPerPageChange={handleLimitChange}
+          page={page}
+          rowsPerPage={limit}
+          rowsPerPageOptions={[5, 10, 25]}
+        />
+      </Box>
     </Box>
   );
 };
