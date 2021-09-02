@@ -1,15 +1,12 @@
 import { Box, Breadcrumbs, Card, Container, Divider, Grid, Link, Tab, Tabs, Typography } from '@material-ui/core';
 import type { ChangeEvent, FC } from 'react';
-import { useEffect, useMemo, useState, useCallback } from 'react';
+import { useEffect, useMemo } from 'react';
 import { Helmet } from 'react-helmet-async';
-import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Link as RouterLink, useSearchParams } from 'react-router-dom';
 import { UserList as UserListComponent, UserListInArrears } from '../../components/users';
 import useSettings from '../../hooks/useSettings';
-import useQuery from '../../hooks/useQuery';
 import ChevronRightIcon from '../../icons/ChevronRight';
 import gtm from '../../lib/gtm';
-import { exportUserCSV, filterMoreUsers, getUsersInArrears, getUsersWithFilter, getAllUsers } from '../../slices/user';
-import { useDispatch, useSelector } from '../../store';
 
 const tabs = [
   {
@@ -18,85 +15,26 @@ const tabs = [
   },
   {
     label: 'In arrears',
-    value: 'inArrears',
+    value: 'in-arrears',
   },
 ];
 
 const UserList: FC = () => {
-  const dispatch = useDispatch();
-  const query = useQuery();
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
   const { settings } = useSettings();
-  const userSelector = useSelector((state) => state.user);
-  const [currentTab, setCurrentTab] = useState<string>(tabs[0].value);
-  const [frequencyCount, setFrequencyCount] = useState(1);
-  const queryToSearch = query.get('query');
+
   useEffect(() => {
     gtm.push({ event: 'page_view' });
-    dispatch(getAllUsers());
-  }, [dispatch]);
-
-  const users = useMemo(() => {
-    const {
-      users: { allIds, byId },
-    } = userSelector;
-    return allIds.map((id) => byId[id]);
-  }, [userSelector]);
-
-  useEffect(() => {
-    if (queryToSearch && userSelector.allUsers.allIds.length) {
-      dispatch(getUsersWithFilter(queryToSearch));
-    }
-    if (!queryToSearch && userSelector.allUsers.allIds.length) {
-      dispatch(getAllUsers());
-    }
-  }, [dispatch, queryToSearch, userSelector.allUsers.allIds.length]);
-
-  useEffect(() => {
-    if (currentTab === 'inArrears') {
-      dispatch(getUsersInArrears(frequencyCount));
-    }
-  }, [currentTab, dispatch, frequencyCount]);
-
-  const loadingState = useMemo(() => userSelector.status === 'loading', [userSelector]);
-  const pageKey = useMemo(() => userSelector.pageKey, [userSelector]);
-
-  const handleFilterUserInArrears = useCallback((newFrequencyCount) => {
-    setFrequencyCount(newFrequencyCount);
   }, []);
 
-  const handleLoadMore = useCallback(() => {
-    dispatch(filterMoreUsers(frequencyCount));
-  }, [dispatch, frequencyCount]);
+  const view = useMemo(() => searchParams.get('view') || 'all', [searchParams]);
 
   const handleTabsChange = (event: ChangeEvent<{}>, value: string): void => {
-    setCurrentTab(value);
-    if (value === 'inArrears') {
-      dispatch(getUsersInArrears(frequencyCount));
-    }
-    if (value === 'all') {
-      if (!queryToSearch) {
-        dispatch(getAllUsers());
-      } else {
-        dispatch(getUsersWithFilter(queryToSearch));
-      }
+    if (view !== value) {
+      searchParams.set('view', value);
+      setSearchParams(searchParams);
     }
   };
-
-  const handleFilter = useCallback(
-    (newQuery: string) => {
-      if (newQuery) {
-        navigate(`/management/users?query=${encodeURIComponent(newQuery)}`);
-      } else {
-        navigate(`/management/users`);
-      }
-    },
-    [navigate],
-  );
-
-  const handleExport = useCallback(() => {
-    dispatch(exportUserCSV());
-  }, [dispatch]);
 
   return (
     <>
@@ -133,7 +71,7 @@ const UserList: FC = () => {
                 onChange={handleTabsChange}
                 scrollButtons="auto"
                 textColor="primary"
-                value={currentTab}
+                value={view}
                 variant="scrollable"
               >
                 {tabs.map((tab) => (
@@ -141,25 +79,8 @@ const UserList: FC = () => {
                 ))}
               </Tabs>
               <Divider />
-              {currentTab === tabs[0].value && (
-                <UserListComponent
-                  initialQuery={queryToSearch}
-                  loading={loadingState}
-                  users={users}
-                  onFilter={handleFilter}
-                />
-              )}
-              {currentTab === tabs[1].value && (
-                <UserListInArrears
-                  loading={loadingState}
-                  users={users}
-                  onFilterUserInArrears={handleFilterUserInArrears}
-                  initialFrequencyCount={frequencyCount}
-                  pageKey={pageKey}
-                  onLoadMore={handleLoadMore}
-                  onExport={handleExport}
-                />
-              )}
+              {view === 'all' && <UserListComponent />}
+              {view === 'in-arrears' && <UserListInArrears />}
             </Card>
           </Box>
         </Container>
