@@ -51,17 +51,21 @@ class UserApi {
   }
 
   async getUsersInArrears(
+    comparer: string,
     frequencyCount: number,
     pageKey?: Record<string, unknown>,
   ): Promise<{ user: User[]; meta: { pageKey: Record<string, unknown> } }> {
     const pageKeyQuery = pageKey ? `&pageKey=${encodeURIComponent(JSON.stringify(pageKey))}` : '';
     try {
-      const res = await fetch(`${apiRoot}/users/balance-overdue?frequencyCount=${frequencyCount}${pageKeyQuery}`, {
-        method: 'GET',
-        headers: {
-          Authorization: await getAuthToken(),
+      const res = await fetch(
+        `${apiRoot}/users/balance-overdue?comparer=${comparer}&frequencyCount=${frequencyCount}${pageKeyQuery}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: await getAuthToken(),
+          },
         },
-      });
+      );
       const jsonResponse = (await res.json()) as {
         data: { attributes: User; id: string; type: string }[];
         meta: { pageKey: Record<string, unknown> };
