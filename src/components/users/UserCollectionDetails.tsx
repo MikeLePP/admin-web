@@ -30,8 +30,8 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
   const { dataLastAt, reportUrl, setDataLastAt } = useBankData(props.user?.id);
   const [showBankStatements, setShowBankStatements] = useState(false);
   const arrearsSince = user.balanceOverdueAt ? moment(user.balanceOverdueAt).format('DD/MM/YYYY') : '--';
-  const collectionEmailPausedUntil = user.collectionEmailPausedUntil
-    ? moment(user.collectionEmailPausedUntil).format('DD/MM/YYYY')
+  const collectionReminderPausedUntil = user.collectionReminderPausedUntil
+    ? moment(user.collectionReminderPausedUntil).format('DD/MM/YYYY')
     : '--';
 
   return (
@@ -92,12 +92,12 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
             <TableRow>
               <TableCell>
                 <Typography color="textPrimary" variant="subtitle2">
-                  Collection email paused until
+                  Collection reminder paused until
                 </Typography>
               </TableCell>
               <TableCell>
                 <Typography color="textSecondary" variant="body2">
-                  {collectionEmailPausedUntil}
+                  {collectionReminderPausedUntil}
                 </Typography>
               </TableCell>
             </TableRow>

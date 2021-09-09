@@ -1,6 +1,6 @@
-import classNames from 'classnames';
 import { Box, Breadcrumbs, Button, Container, Divider, Grid, Link, Tab, Tabs, Typography } from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
+import classNames from 'classnames';
 import type { ChangeEvent, FC } from 'react';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
@@ -10,7 +10,7 @@ import NotFound from '../../components/commons/NotFound';
 import {
   UserBankDetails,
   UserCollectionDetails,
-  UserCollectionEmail,
+  UserCollectionReminder,
   UserDelete,
   UserDetails as UserDetailsComponent,
   UserSplitPayment,
@@ -32,7 +32,7 @@ import {
   splitPayment,
   swapMobileNumber,
   updateBalanceLimit,
-  updateCollectionEmailPausedUntil,
+  updateCollectionReminderPausedUntil,
   updateUserStatus,
 } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
@@ -115,12 +115,12 @@ const UserDetails: FC = () => {
     [dispatch, id, user?.mobileNumber],
   );
 
-  const handleUpdateCollectionEmailPausedUntil = useCallback(
-    (collectionEmailPausedUntil) => {
+  const handleUpdateCollectionReminderPausedUntil = useCallback(
+    (collectionReminderPausedUntil) => {
       dispatch(
-        updateCollectionEmailPausedUntil({
+        updateCollectionReminderPausedUntil({
           userId: id,
-          collectionEmailPausedUntil,
+          collectionReminderPausedUntil,
         }),
       );
     },
@@ -274,9 +274,9 @@ const UserDetails: FC = () => {
                 <Box className={classNames('items-start', 'gap-4', 'grid', 'grid-cols-1', 'lg:grid-cols-2')}>
                   <Box className={classNames('gap-4', 'flex', 'flex-col')}>
                     <UserCollectionDetails user={user} />
-                    <UserCollectionEmail
+                    <UserCollectionReminder
                       user={user}
-                      onUpdateCollectionEmailPausedUntil={handleUpdateCollectionEmailPausedUntil}
+                      onUpdateCollectionReminderPausedUntil={handleUpdateCollectionReminderPausedUntil}
                     />
                     <UserSplitPayment user={user} onSplitPayment={handleSplitPayment} />
                   </Box>

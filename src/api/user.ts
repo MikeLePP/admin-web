@@ -262,9 +262,9 @@ class UserApi {
     };
   }
 
-  async updateCollectionEmailPausedUntil(
+  async updateCollectionReminderPausedUntil(
     userId: string,
-    collectionEmailPausedUntil: string,
+    collectionReminderPausedUntil: string,
   ): Promise<{ success: boolean }> {
     try {
       const res = await fetch(`${apiRoot}/users/${userId}`, {
@@ -274,22 +274,24 @@ class UserApi {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          collectionEmailPausedUntil: collectionEmailPausedUntil
-            ? moment.utc(collectionEmailPausedUntil).toISOString()
+          collectionReminderPausedUntil: collectionReminderPausedUntil
+            ? moment.utc(collectionReminderPausedUntil).toISOString()
             : null,
         }),
       });
       if (res.status !== 200) {
-        toast.error("Updating user's collection email paused until failed");
+        toast.error("Updating user's collection reminder failed");
         return {
           success: false,
         };
       }
       toast.success(
-        collectionEmailPausedUntil ? "User's collection email has been paused" : "User's collection email has resumed",
+        collectionReminderPausedUntil
+          ? "User's collection reminders have paused"
+          : "User's collection reminders have resumed",
       );
     } catch (err) {
-      toast.error(get(err, 'body.errors[0].title', "Cannot update user's collection pause date"));
+      toast.error(get(err, 'body.errors[0].title', "Cannot update user's collection reminder pause date"));
       return {
         success: false,
       };
@@ -305,7 +307,7 @@ class UserApi {
       count: string;
       amount: string;
       fee: string;
-      pauseCollectionEmail: boolean;
+      pauseCollectionReminder: boolean;
       cancelAllPendingTransactions: boolean;
     },
   ): Promise<{ success: boolean }> {

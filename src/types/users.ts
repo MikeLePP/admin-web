@@ -40,7 +40,7 @@ export interface User {
   balanceCurrent: number;
   balanceLimit: number;
   balanceBook: number;
-  collectionEmailPausedUntil: string;
+  collectionReminderPausedUntil: string;
   balanceOverdueAt: string;
   riskAssessmentId?: string;
   status: typeof UserStatus[number];

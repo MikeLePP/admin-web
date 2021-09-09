@@ -118,12 +118,12 @@ const slice = createSlice({
         };
       }
     },
-    updateCollectionEmailPausedUntil(
+    updateCollectionReminderPausedUntil(
       state: UserState,
-      action: PayloadAction<{ userId: string; collectionEmailPausedUntil: string }>,
+      action: PayloadAction<{ userId: string; collectionReminderPausedUntil: string }>,
     ): void {
-      const { userId, collectionEmailPausedUntil } = action.payload;
-      state.users.byId[userId].collectionEmailPausedUntil = collectionEmailPausedUntil;
+      const { userId, collectionReminderPausedUntil } = action.payload;
+      state.users.byId[userId].collectionReminderPausedUntil = collectionReminderPausedUntil;
     },
     updateFilter(state: UserState, action: PayloadAction<Record<string, string>>): void {
       const filter = action.payload;
@@ -265,12 +265,12 @@ export const updateUserStatus =
     }
   };
 
-export const updateCollectionEmailPausedUntil =
-  ({ userId, collectionEmailPausedUntil }): AppThunk =>
+export const updateCollectionReminderPausedUntil =
+  ({ userId, collectionReminderPausedUntil }): AppThunk =>
   async (dispatch): Promise<void> => {
-    const { success } = await userApi.updateCollectionEmailPausedUntil(userId, collectionEmailPausedUntil);
+    const { success } = await userApi.updateCollectionReminderPausedUntil(userId, collectionReminderPausedUntil);
     if (success) {
-      dispatch(slice.actions.updateCollectionEmailPausedUntil({ userId, collectionEmailPausedUntil }));
+      dispatch(slice.actions.updateCollectionReminderPausedUntil({ userId, collectionReminderPausedUntil }));
     }
   };
 
@@ -285,7 +285,7 @@ export const splitPayment =
       count: string;
       amount: string;
       fee: string;
-      pauseCollectionEmail: boolean;
+      pauseCollectionReminder: boolean;
       cancelAllPendingTransactions: boolean;
     };
     callback: (status: boolean) => void;
@@ -307,15 +307,23 @@ export const exportUserCSV =
       const user = users.byId[userId];
       return pick(user, [
         'id',
-        'lastName',
-        'status',
-        'balanceLimit',
-        'createdAt',
-        'balanceCurrent',
         'email',
         'mobileNumber',
         'firstName',
         'middleName',
+        'lastName',
+        'balanceBook',
+        'balanceCurrent',
+        'balanceLimit',
+        'balanceOverdue',
+        'balanceOverdueAt',
+        'collectionReminderPausedUntil',
+        'incomeFrequency',
+        'incomeNextDate',
+        'status',
+        'statusReason',
+        'transactionLastAt',
+        'transactionLastId',
       ]);
     });
     jsonexport(userMappingToCSV, (err, csv) => {

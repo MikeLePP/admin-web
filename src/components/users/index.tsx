@@ -8,7 +8,7 @@ export { default as UserList } from './UserList';
 export { default as UserListInArrears } from './UserListInArrears';
 // collection
 export { default as UserCollectionDetails } from './UserCollectionDetails';
-export { default as UserCollectionEmail } from './UserCollectionEmail';
+export { default as UserCollectionReminder } from './UserCollectionReminder';
 export { default as UserSplitPayment } from './UserSplitPayment';
 export { default as UserTransactions } from './UserTransactions';
 
