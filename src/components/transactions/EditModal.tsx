@@ -70,7 +70,7 @@ export default function EditTransaction({
               ...transaction,
               ...values,
               sourceId: values.paymentType === 'debit' ? values.sourceId : transaction?.sourceId,
-              submitAt: moment.utc(values.submitAt).startOf('minute').toISOString(),
+              submitAt: moment(values.submitAt).startOf('minute').toISOString(),
             } as ITransactionAttributes;
             setSubmitting(true);
             onUpdateTransaction(payload, (success) => {
