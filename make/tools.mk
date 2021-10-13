@@ -15,15 +15,15 @@ dump: ## Dump all make variables
 encrypt:
 	aws kms encrypt \
 		--key-id "$(AWS_KMS_KEY_ID)" \
-		--plaintext "`echo $(PLAINTEXT)`" \
+		--plaintext fileb://<(echo '$(PLAINTEXT)') \
 		--query CiphertextBlob \
 		--output text \
-		--profile $(ENV)
+		--profile ${ENV}
 
 decrypt:
 	aws kms decrypt \
-		--ciphertext-blob fileb://<(echo '$(CIPHERTEXT)' | openssl enc -base64 -d -A) \
+		--ciphertext-blob fileb://<(echo '$(CIPHERTEXT)' | base64 -d) \
 		--query Plaintext \
 		--output text \
-		--profile $(ENV) \
-		| openssl enc -base64 -d -A
+		--profile ${ENV} \
+		| base64 -d

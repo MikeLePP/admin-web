@@ -1,6 +1,7 @@
 .eslintrc.js
 build/
 cdk.out/
+coverage/
 craco.config.js
 jest.config.js
 output/
