@@ -113,25 +113,26 @@ const UserList: FC<BoxProps> = (props) => {
   }, [userSelector]);
 
   useEffect(() => {
-    setFilter(userFilter);
-    dispatch(getUsers(userFilter));
-  }, [dispatch, userFilter]);
+    const handler = setTimeout(() => {
+      setFilter(userFilter);
+      dispatch(getUsers(userFilter));
+    }, 1000);
+    return () => {
+      clearTimeout(handler);
+    };
+  }, [userFilter, dispatch]);
 
   const handleFilterChange = useCallback(
     (event: ChangeEvent<HTMLInputElement>) => {
       const { value } = event.target;
       setFilter(value);
-      const handler = setTimeout(() => {
-        if (value) {
-          searchParams.set('filter', value);
-          setSearchParams(searchParams);
-        } else {
-          searchParams.delete('filter');
-          setSearchParams(searchParams);
-        }
-      }, 1000);
-
-      return () => clearTimeout(handler);
+      if (value) {
+        searchParams.set('filter', value);
+        setSearchParams(searchParams);
+      } else {
+        searchParams.delete('filter');
+        setSearchParams(searchParams);
+      }
     },
     [searchParams, setSearchParams],
   );
