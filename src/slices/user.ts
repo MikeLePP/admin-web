@@ -9,6 +9,7 @@ import objFromArray from '../utils/objFromArray';
 import { getTransactionsByUserId } from './transaction';
 import jsonexport from 'jsonexport';
 import fileDownload from 'js-file-download';
+import { TransactionsAccount } from '../types/transactionsAccount';
 
 interface UserState {
   users: {
@@ -23,6 +24,7 @@ interface UserState {
   targetUserId: string;
   filter: Record<string, string>;
   pageKey?: Record<string, unknown>;
+  transactionAccountList?: TransactionsAccount[];
 }
 
 const initialState: UserState = {
@@ -37,6 +39,7 @@ const initialState: UserState = {
   filter: {},
   status: 'idle',
   targetUserId: '',
+  transactionAccountList: [],
 };
 
 const slice = createSlice({
@@ -128,6 +131,13 @@ const slice = createSlice({
     updateFilter(state: UserState, action: PayloadAction<Record<string, string>>): void {
       const filter = action.payload;
       state.filter = filter;
+    },
+    getUserBankAccounts(
+      state: UserState,
+      action: PayloadAction<{ transactionAccountList: TransactionsAccount[] }>,
+    ): void {
+      const { transactionAccountList } = action.payload;
+      state.transactionAccountList = transactionAccountList;
     },
   },
 });
@@ -334,4 +344,16 @@ export const exportUserCSV =
       };
     });
   };
+
+export const getUserBankAccounts =
+  (userId: string): AppThunk =>
+  async (dispatch): Promise<void> => {
+    const { success, transactionAccountList } = await userApi.getUserBankAccounts(userId);
+    if (success) {
+      dispatch(
+        slice.actions.getUserBankAccounts({ transactionAccountList: transactionAccountList as TransactionsAccount[] }),
+      );
+    }
+  };
+
 export default slice;

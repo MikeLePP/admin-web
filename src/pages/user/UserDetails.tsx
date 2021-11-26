@@ -37,10 +37,12 @@ import {
 } from '../../slices/user';
 import { useDispatch, useSelector } from '../../store';
 import { UserStatus } from '../../types/users';
+import TransactionAccount from '../../components/users/TransactionsAccount';
 
 const tabs = [
   { label: 'Details', value: 'details' },
   { label: 'Collections', value: 'collections' },
+  { label: 'Onboarding', value: 'onboarding' },
 ];
 
 const UserDetails: FC = () => {
@@ -288,6 +290,7 @@ const UserDetails: FC = () => {
                   />
                 </Box>
               )}
+              {currentTab === 'onboarding' && <TransactionAccount user={user} />}
             </Box>
           </Container>
         </Box>

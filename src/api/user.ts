@@ -1,10 +1,11 @@
-import { get } from 'lodash';
+import { get, map } from 'lodash';
 import moment from 'moment';
 import toast from 'react-hot-toast';
 import { getAuthToken } from '../helpers/auth';
 import { flatObject } from '../lib/apiHelpers';
 import type { BankAccount } from '../types/bankAccount';
 import type { User, UserStatus } from '../types/users';
+import { TransactionsAccount, UserIdentity } from '../types/transactionsAccount';
 
 const apiRoot = process.env.REACT_APP_API_URL;
 
@@ -337,6 +338,95 @@ class UserApi {
     return {
       success: true,
     };
+  }
+
+  async getUserBankAccounts(userId: string) {
+    try {
+      const res = await fetch(`${apiRoot}/users/${userId}/bank-data/accounts`, {
+        method: 'GET',
+        headers: {
+          Authorization: await getAuthToken(),
+          'Content-Type': 'application/json',
+        },
+      });
+      if (res.status !== 200) {
+        return {
+          success: false,
+          error: res.json(),
+        };
+      }
+      const resJson = await res.json();
+      return {
+        success: true,
+        transactionAccountList: resJson.data,
+      };
+    } catch (err) {
+      return {
+        success: false,
+        error: err,
+        errorMessage: get(err, 'data.errors[0].title', 'Cannot user bankaccounts'),
+      };
+    }
+  }
+
+  async createSelectedBankAccountsAndOnboardUser(
+    selectedBankAccounts: TransactionsAccount[],
+    userId: string,
+    identity?: UserIdentity,
+    notifyUser = false,
+  ) {
+    try {
+      // call bank to create selected bank accounts
+      const createBankAccountsRes = await fetch(`${apiRoot}/users/${userId}/bank-accounts`, {
+        method: 'PUT',
+        headers: {
+          Authorization: await getAuthToken(),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          data: map(selectedBankAccounts, (account) => ({
+            attributes: {
+              accountBsb: account.attributes.accountBsb,
+              accountName: account.attributes.accountName,
+              accountNumber: account.attributes.accountNumber,
+              accountType: account.attributes.accountType,
+              bankDataAccountId: account.id,
+              bankName: account.attributes.institutionName,
+              createdBy: identity?.id,
+            },
+          })),
+        }),
+      });
+
+      // call onboarding api to complete this step
+      const onboardingRes = await fetch(`${apiRoot}/onboarding/${userId}`, {
+        method: 'POST',
+        headers: {
+          Authorization: await getAuthToken(),
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          step: 'bank-account',
+          notifyUser,
+          updatedBy: identity?.id,
+        }),
+      });
+      if ((await createBankAccountsRes.json()).status !== 200 || (await onboardingRes.json()).status !== 200) {
+        return {
+          success: false,
+          errorMessage: 'API respond unsuccess',
+        };
+      }
+      return {
+        success: true,
+      };
+    } catch (err) {
+      return {
+        error: err,
+        errorMessage: get(err, 'data.errors[0].title', 'Cannot onboard user'),
+        success: false,
+      };
+    }
   }
 }
 
