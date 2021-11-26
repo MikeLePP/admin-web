@@ -1,24 +1,12 @@
 import type { Theme } from '@material-ui/core';
 import { Avatar, Box, Button, Divider, Drawer, Typography } from '@material-ui/core';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import ReceiptIcon from '@material-ui/icons/Receipt';
+import AssessmentIcon from '@material-ui/icons/Assessment';
 import PropTypes from 'prop-types';
 import type { FC } from 'react';
 import { useEffect } from 'react';
 import { Link as RouterLink, useLocation } from 'react-router-dom';
 import useAuth from '../../hooks/useAuth';
-import BriefcaseIcon from '../../icons/Briefcase';
-import CalendarIcon from '../../icons/Calendar';
-import ChartPieIcon from '../../icons/ChartPie';
-import ChartSquareBarIcon from '../../icons/ChartSquareBar';
-import ChatAltIcon from '../../icons/ChatAlt';
-import ClipboardListIcon from '../../icons/ClipboardList';
-import FolderOpenIcon from '../../icons/FolderOpen';
-import MailIcon from '../../icons/Mail';
-import ShareIcon from '../../icons/Share';
-import ShoppingBagIcon from '../../icons/ShoppingBag';
-import ShoppingCartIcon from '../../icons/ShoppingCart';
-import UserIcon from '../../icons/User';
 import UsersIcon from '../../icons/Users';
 import Logo from '../Logo';
 import NavSection from '../NavSection';
@@ -29,167 +17,6 @@ interface DashboardSidebarProps {
   openMobile: boolean;
 }
 
-export const demoSections = [
-  {
-    title: 'General',
-    items: [
-      {
-        title: 'Overview',
-        path: '/dashboard',
-        icon: <ChartSquareBarIcon fontSize="small" />,
-      },
-      {
-        title: 'Analytics',
-        path: '/dashboard/analytics',
-        icon: <ChartPieIcon fontSize="small" />,
-      },
-      {
-        title: 'Finance',
-        path: '/dashboard/finance',
-        icon: <ShoppingBagIcon fontSize="small" />,
-      },
-      {
-        title: 'Account',
-        path: '/dashboard/account',
-        icon: <UserIcon fontSize="small" />,
-      },
-    ],
-  },
-  {
-    title: 'Management',
-    items: [
-      {
-        title: 'Customers',
-        path: '/dashboard/customers',
-        icon: <UsersIcon fontSize="small" />,
-        children: [
-          {
-            title: 'List',
-            path: '/dashboard/customers',
-          },
-          {
-            title: 'Details',
-            path: '/dashboard/customers/1',
-          },
-          {
-            title: 'Edit',
-            path: '/dashboard/customers/1/edit',
-          },
-        ],
-      },
-      {
-        title: 'Products',
-        path: '/dashboard/products',
-        icon: <ShoppingCartIcon fontSize="small" />,
-        children: [
-          {
-            title: 'List',
-            path: '/dashboard/products',
-          },
-          {
-            title: 'Create',
-            path: '/dashboard/products/new',
-          },
-        ],
-      },
-      {
-        title: 'Orders',
-        icon: <FolderOpenIcon fontSize="small" />,
-        path: '/dashboard/orders',
-        children: [
-          {
-            title: 'List',
-            path: '/dashboard/orders',
-          },
-          {
-            title: 'Details',
-            path: '/dashboard/orders/1',
-          },
-        ],
-      },
-      {
-        title: 'Invoices',
-        path: '/dashboard/invoices',
-        icon: <ReceiptIcon fontSize="small" />,
-        children: [
-          {
-            title: 'List',
-            path: '/dashboard/invoices',
-          },
-          {
-            title: 'Details',
-            path: '/dashboard/invoices/1',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    title: 'Platforms',
-    items: [
-      {
-        title: 'Projects',
-        path: '/dashboard/projects',
-        icon: <BriefcaseIcon fontSize="small" />,
-        children: [
-          {
-            title: 'Browse',
-            path: '/dashboard/projects/browse',
-          },
-          {
-            title: 'Details',
-            path: '/dashboard/projects/1',
-          },
-          {
-            title: 'Create',
-            path: '/dashboard/projects/new',
-          },
-        ],
-      },
-      {
-        title: 'Social',
-        path: '/dashboard/social',
-        icon: <ShareIcon fontSize="small" />,
-        children: [
-          {
-            title: 'Profile',
-            path: '/dashboard/social/profile',
-          },
-          {
-            title: 'Feed',
-            path: '/dashboard/social/feed',
-          },
-        ],
-      },
-    ],
-  },
-  {
-    title: 'Apps',
-    items: [
-      {
-        title: 'Kanban',
-        path: '/dashboard/kanban',
-        icon: <ClipboardListIcon fontSize="small" />,
-      },
-      {
-        title: 'Mail',
-        path: '/dashboard/mail',
-        icon: <MailIcon fontSize="small" />,
-      },
-      {
-        title: 'Chat',
-        path: '/dashboard/chat',
-        icon: <ChatAltIcon fontSize="small" />,
-      },
-      {
-        title: 'Calendar',
-        path: '/dashboard/calendar',
-        icon: <CalendarIcon fontSize="small" />,
-      },
-    ],
-  },
-];
-
 const sections = [
   {
     title: 'Management',
@@ -198,6 +25,16 @@ const sections = [
         title: 'User',
         path: '/management/users',
         icon: <UsersIcon fontSize="small" />,
+      },
+    ],
+  },
+  {
+    title: 'Reporting',
+    items: [
+      {
+        title: 'Static Loss',
+        path: '/reporting/static-loss',
+        icon: <AssessmentIcon fontSize="small" />,
       },
     ],
   },
