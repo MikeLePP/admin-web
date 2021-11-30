@@ -1,7 +1,9 @@
-import { get } from 'lodash';
+/* eslint-disable @typescript-eslint/restrict-template-expressions, no-await-in-loop */
+import { get, isEmpty } from 'lodash';
+import moment from 'moment';
 import toast from 'react-hot-toast';
-import { flatObject } from '../lib/apiHelpers';
 import { getAuthToken } from '../helpers/auth';
+import { flatObject } from '../lib/apiHelpers';
 import type { ITransactionAttributes, TransactionStatus } from '../types/transaction';
 
 type ITransactionStatus = typeof TransactionStatus[number];
@@ -25,6 +27,42 @@ class TransactionApi {
       toast.error(get(err, 'body.errors[0].title', 'Cannot get transactions'));
     }
     return [];
+  }
+
+  async getTransactionsByPaymentType(
+    paymentType: string,
+    status: string,
+    startDate: string,
+    endDate: string,
+  ): Promise<ITransactionAttributes[]> {
+    let pageKey: unknown | undefined;
+    const transactions: ITransactionAttributes[] = [];
+    do {
+      const query = new URLSearchParams({
+        paymentType,
+        status,
+        startDate: moment(startDate).toISOString(),
+        endDate: moment(endDate).toISOString(),
+      });
+      if (!isEmpty(pageKey)) {
+        query.append('pageKey', JSON.stringify(pageKey));
+      }
+
+      const res = await fetch(`${apiRoot}/transactions/by-payment-type?${query}`, {
+        method: 'GET',
+        headers: {
+          Authorization: await getAuthToken(),
+        },
+      });
+      const body = (await res.json()) as {
+        data: { attributes: ITransactionAttributes; id: string; type: string }[];
+        meta: { pageKey: unknown };
+      };
+      transactions.push(...body.data?.map(({ id, attributes }) => ({ ...attributes, id })));
+      pageKey = body.meta?.pageKey;
+    } while (!isEmpty(pageKey));
+
+    return transactions;
   }
 
   async reconcileTransaction({

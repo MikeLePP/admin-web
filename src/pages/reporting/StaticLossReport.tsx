@@ -1,13 +1,16 @@
-import { Box, Breadcrumbs, Card, Container, Divider, Grid, Link, Tab, Tabs, Typography } from '@material-ui/core';
+import { Box, Breadcrumbs, Container, Divider, Grid, Link, Tab, Tabs, Typography } from '@material-ui/core';
 import type { ChangeEvent, FC } from 'react';
 import { useEffect, useState } from 'react';
 import { Helmet } from 'react-helmet-async';
 import { Link as RouterLink, useNavigate, useParams } from 'react-router-dom';
-import { ZeptoStaticLossReport } from '../../components/reporting';
+import { DefaultStaticLossReport, ZeptoStaticLossReport } from '../../components/reporting';
 import useSettings from '../../hooks/useSettings';
 import ChevronRightIcon from '../../icons/ChevronRight';
 
-const tabs = [{ label: 'Zepto Static Loss', value: 'zepto' }];
+const tabs = [
+  { label: 'Static Loss', value: 'default' },
+  { label: 'Zepto Static Loss', value: 'zepto' },
+];
 
 const StaticLossReport: FC = () => {
   const { settings } = useSettings();
@@ -52,22 +55,21 @@ const StaticLossReport: FC = () => {
             </Grid>
           </Grid>
           <Box sx={{ mt: 3 }}>
-            <Card>
-              <Tabs
-                indicatorColor="primary"
-                onChange={handleTabsChange}
-                scrollButtons="auto"
-                textColor="primary"
-                value={currentTab}
-                variant="scrollable"
-              >
-                {tabs.map((tab) => (
-                  <Tab key={tab.value} label={tab.label} value={tab.value} />
-                ))}
-              </Tabs>
-              <Divider />
-              {currentTab === 'zepto' && <ZeptoStaticLossReport />}
-            </Card>
+            <Tabs
+              indicatorColor="primary"
+              onChange={handleTabsChange}
+              scrollButtons="auto"
+              textColor="primary"
+              value={currentTab}
+              variant="scrollable"
+            >
+              {tabs.map((tab) => (
+                <Tab key={tab.value} label={tab.label} value={tab.value} />
+              ))}
+            </Tabs>
+            <Divider />
+            {currentTab === 'default' && <DefaultStaticLossReport />}
+            {currentTab === 'zepto' && <ZeptoStaticLossReport />}
           </Box>
         </Container>
       </Box>
