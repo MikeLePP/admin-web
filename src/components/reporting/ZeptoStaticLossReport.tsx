@@ -2,6 +2,8 @@ import {
   Box,
   Button,
   Card,
+  CardActions,
+  CardContent,
   CardHeader,
   Divider,
   FormControl,
@@ -12,6 +14,7 @@ import {
   TableRow,
   Typography,
 } from '@material-ui/core';
+import { pickBy } from 'lodash';
 import { FC, useState } from 'react';
 import CSVReader, { IFileInfo } from 'react-csv-reader';
 import { v4 } from 'uuid';
@@ -116,6 +119,7 @@ const ZeptoStaticLossReport: FC = (props) => {
     const arrearsPercent = withdrawValue ? (arrearsValue / withdrawValue) * 100 : 0;
 
     setSummary({ ...summary, arrearsPercent, arrearsValue, users, repaymentCount, repaymentValue });
+    console.log({ arrears: pickBy(users, (balance) => balance > 0) });
   };
 
   const handleReset = () => {
@@ -125,104 +129,106 @@ const ZeptoStaticLossReport: FC = (props) => {
 
   return (
     <Box {...props}>
-      <Box display="flex" alignItems="center" flexWrap="wrap" gap={2} p={2}>
-        <FormControl component="fieldset">
-          <FormLabel component="legend">Payment CSV</FormLabel>
-          <CSVReader key={inputKeys[0]} onFileLoaded={handlePaymentsLoaded} parserOptions={papaParseOptions} />
-        </FormControl>
-      </Box>
-      <Box display="flex" alignItems="center" flexWrap="wrap" gap={2} p={2}>
-        <FormControl component="fieldset">
-          <FormLabel component="legend">Payment Request CSV</FormLabel>
-          <CSVReader key={inputKeys[1]} onFileLoaded={handlePaymentRequestLoaded} parserOptions={papaParseOptions} />
-        </FormControl>
-      </Box>
-
-      <Box display="flex" alignItems="center" flexWrap="wrap" gap={2} p={2}>
-        <Button color="primary" variant="contained" onClick={handleReset}>
-          Reset
-        </Button>
-      </Box>
-
-      <Card>
+      <Card sx={{ mt: 3 }}>
+        <CardHeader title="Data" />
+        <Divider />
+        <CardContent>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Payment CSV</FormLabel>
+            <CSVReader key={inputKeys[0]} onFileLoaded={handlePaymentsLoaded} parserOptions={papaParseOptions} />
+          </FormControl>
+          <FormControl component="fieldset">
+            <FormLabel component="legend">Payment Request CSV</FormLabel>
+            <CSVReader key={inputKeys[1]} onFileLoaded={handlePaymentRequestLoaded} parserOptions={papaParseOptions} />
+          </FormControl>
+        </CardContent>
+        <CardActions>
+          <Button color="primary" variant="contained" onClick={handleReset}>
+            Reset
+          </Button>
+        </CardActions>
+      </Card>
+      <Card sx={{ mt: 3 }}>
         <CardHeader title="Summary" />
         <Divider />
-        <Table>
-          <TableBody>
-            <TableRow>
-              <TableCell>
-                <Typography color="textPrimary" variant="subtitle2">
-                  Withdraw count
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
-                  {summary.withdrawCount}
-                </Typography>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Typography color="textPrimary" variant="subtitle2">
-                  Withdraw Value ($)
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
-                  ${summary.withdrawValue.toFixed(2)}
-                </Typography>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Typography color="textPrimary" variant="subtitle2">
-                  Repayment count
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
-                  {summary.repaymentCount}
-                </Typography>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Typography color="textPrimary" variant="subtitle2">
-                  Repayment Value ($)
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
-                  ${summary.repaymentValue.toFixed(2)}
-                </Typography>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Typography color="textPrimary" variant="subtitle2">
-                  Arrears Value ($)
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
-                  ${summary.arrearsValue.toFixed(2)}
-                </Typography>
-              </TableCell>
-            </TableRow>
-            <TableRow>
-              <TableCell>
-                <Typography color="textPrimary" variant="subtitle2">
-                  Arrears Percentage
-                </Typography>
-              </TableCell>
-              <TableCell>
-                <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
-                  {summary.arrearsPercent.toFixed(2)}
-                </Typography>
-              </TableCell>
-            </TableRow>
-          </TableBody>
-        </Table>
+        <CardContent>
+          <Table>
+            <TableBody>
+              <TableRow>
+                <TableCell>
+                  <Typography color="textPrimary" variant="subtitle2">
+                    Withdraw count
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
+                    {summary.withdrawCount}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <Typography color="textPrimary" variant="subtitle2">
+                    Withdraw Value ($)
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
+                    ${summary.withdrawValue.toFixed(2)}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <Typography color="textPrimary" variant="subtitle2">
+                    Repayment count
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
+                    {summary.repaymentCount}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <Typography color="textPrimary" variant="subtitle2">
+                    Repayment Value ($)
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
+                    ${summary.repaymentValue.toFixed(2)}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <Typography color="textPrimary" variant="subtitle2">
+                    Arrears Value ($)
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
+                    ${summary.arrearsValue.toFixed(2)}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+              <TableRow>
+                <TableCell>
+                  <Typography color="textPrimary" variant="subtitle2">
+                    Arrears Percentage
+                  </Typography>
+                </TableCell>
+                <TableCell>
+                  <Typography color="textSecondary" variant="body2" className="flex justify-between items-center">
+                    {summary.arrearsPercent.toFixed(2)}
+                  </Typography>
+                </TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
+        </CardContent>
       </Card>
     </Box>
   );
