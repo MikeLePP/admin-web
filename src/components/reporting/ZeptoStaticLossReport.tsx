@@ -119,7 +119,7 @@ const ZeptoStaticLossReport: FC = (props) => {
     const arrearsPercent = withdrawValue ? (arrearsValue / withdrawValue) * 100 : 0;
 
     setSummary({ ...summary, arrearsPercent, arrearsValue, users, repaymentCount, repaymentValue });
-    console.log({ arrears: pickBy(users, (balance) => balance > 0) });
+    console.log({ users });
   };
 
   const handleReset = () => {

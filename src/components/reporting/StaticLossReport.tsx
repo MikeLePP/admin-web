@@ -137,7 +137,7 @@ const StaticLossReport: FC = (props) => {
         withdrawValue,
       );
       setSummary({ arrearsPercent, arrearsValue, repaymentCount, repaymentValue, users, withdrawCount, withdrawValue });
-      console.log({ credits, debits, arrears: pickBy(users, (balance) => balance > 0) });
+      console.log({ credits, debits, users });
     } catch (err) {
       toast.error(get(err, 'body.errors[0].title', 'Cannot get transactions'));
     }
