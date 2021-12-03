@@ -14,7 +14,7 @@ import {
   TableRow,
   Typography,
 } from '@material-ui/core';
-import { pickBy } from 'lodash';
+import moment from 'moment';
 import { FC, useState } from 'react';
 import CSVReader, { IFileInfo } from 'react-csv-reader';
 import { v4 } from 'uuid';
@@ -42,7 +42,7 @@ interface ReportSummary {
   arrearsValue: number;
   repaymentCount: number;
   repaymentValue: number;
-  users: Record<string, number>;
+  users: Record<string, { balance: number; date: string }>;
   withdrawCount: number;
   withdrawValue: number;
 }
@@ -80,10 +80,20 @@ const ZeptoStaticLossReport: FC = (props) => {
 
     for (const record of data) {
       const amount = Number.parseFloat(record.amount.replace(/(\s|\(|\))/g, ''));
+      const matureDate = moment(record.maturation_date, 'YYYY-MM-DD HH:mm:ss Z');
       const userName = record.counter_party.trim();
-      const userBalance = users[userName] || 0;
 
-      users[userName] = userBalance + amount;
+      let userData = users[userName];
+      if (!userData) {
+        userData = { balance: 0, date: matureDate.toISOString() };
+        users[userName] = userData;
+      }
+
+      userData.balance += amount;
+      if (matureDate.isBefore(userData.date)) {
+        userData.date = matureDate.toISOString();
+      }
+
       withdrawCount += 1;
       withdrawValue += amount;
     }
@@ -105,15 +115,18 @@ const ZeptoStaticLossReport: FC = (props) => {
       // Discount 5% fee from amount
       const amount = (Number.parseFloat(record.amount.replace(/(\s|\(|\))/g, '')) * 100) / 105;
       const userName = record.counter_party.trim();
-      const userBalance = users[userName] || 0;
-      users[userName] = userBalance - amount;
-      repaymentCount += 1;
-      repaymentValue += amount;
+      const userData = users[userName];
+
+      if (userData && moment(record.maturation_date, 'YYYY-MM-DD HH:mm:ss Z').isAfter(userData.date)) {
+        userData.balance -= amount;
+        repaymentCount += 1;
+        repaymentValue += amount;
+      }
     }
 
     // Arrears is the total of all positive balance (i.e. withdraw but did not pay back)
     const arrearsValue = Object.entries(users).reduce(
-      (total, [user, balance]) => (balance > 0 ? total + balance : total),
+      (total, [userName, userData]) => (userData.balance > 0 ? total + userData.balance : total),
       0,
     );
     const arrearsPercent = withdrawValue ? (arrearsValue / withdrawValue) * 100 : 0;

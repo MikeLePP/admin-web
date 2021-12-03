@@ -30,12 +30,17 @@ interface ReportInput {
   debitEndDate: string;
 }
 
+interface UserData {
+  balance: number;
+  date: string;
+}
+
 interface ReportSummary {
   arrearsPercent: number;
   arrearsValue: number;
   repaymentCount: number;
   repaymentValue: number;
-  users: Record<string, number>;
+  users: Record<string, UserData>;
   withdrawCount: number;
   withdrawValue: number;
 }
@@ -54,39 +59,50 @@ const StaticLossReport: FC = (props) => {
   const [summary, setSummary] = useState<ReportSummary>(emptySummary());
 
   /**
-   * Calculate the withdraws using Zepto payment transaction data
+   * Calculate the withdraws using credit transaction data
    * @param data The CSV data as an array
    * @param fileInfo The CSV file meta
    */
   const calculateCredits = (
     data: ITransactionAttributes[],
   ): {
-    users: Record<string, number>;
+    users: Record<string, UserData>;
     withdrawCount: number;
     withdrawValue: number;
   } => {
     let withdrawCount = 0;
     let withdrawValue = 0;
-    const users: Record<string, number> = {};
+    const users: Record<string, UserData> = {};
 
     for (const record of data) {
-      const balance = users[record.userId] || 0;
-      users[record.userId] = balance + record.amount;
+      const { amount, submitAt, userId } = record;
+      let userData = users[userId];
+
+      if (!userData) {
+        userData = { balance: 0, date: submitAt };
+        users[userId] = userData;
+      }
+
+      userData.balance += amount;
+      if (submitAt < userData.date) {
+        userData.date = submitAt;
+      }
+
       withdrawCount += 1;
-      withdrawValue += record.amount;
+      withdrawValue += amount;
     }
 
     return { users, withdrawCount, withdrawValue };
   };
 
   /**
-   * Calculate the repayments using Zepto payment request transaction data
+   * Calculate the repayments using debit transaction data
    * @param data The CSV data as an array
    * @param fileInfo The CSV file meta
    */
   const calculateDebits = (
     data: ITransactionAttributes[],
-    users: Record<string, number>,
+    users: Record<string, UserData>,
     withdrawValue: number,
   ): {
     arrearsPercent: number;
@@ -98,16 +114,19 @@ const StaticLossReport: FC = (props) => {
     let repaymentValue = 0;
 
     for (const record of data) {
-      // Discount 5% fee from amount
-      const balance = users[record.userId] || 0;
-      users[record.userId] = balance - record.amount;
-      repaymentCount += 1;
-      repaymentValue += record.amount;
+      const { amount, submitAt, userId } = record;
+      const userData = users[userId];
+
+      if (userData && submitAt > userData.date) {
+        userData.balance -= amount;
+        repaymentCount += 1;
+        repaymentValue += amount;
+      }
     }
 
     // Arrears is the total of all positive balance (i.e. withdraw but did not pay back)
     const arrearsValue = Object.entries(users).reduce(
-      (total, [user, balance]) => (balance > 0 ? total + balance : total),
+      (total, [userId, userData]) => (userData.balance > 0 ? total + userData.balance : total),
       0,
     );
     const arrearsPercent = withdrawValue ? (arrearsValue / withdrawValue) * 100 : 0;
