@@ -10,6 +10,7 @@ export interface User {
   dob: string;
   incomeFrequency: string;
   incomeNextDate?: string;
+  debitNextDate?: string | null;
   createdAt?: string;
   bankAccount: {
     id: string;
