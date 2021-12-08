@@ -73,10 +73,11 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
         dob: Yup.date().required(),
         incomeFrequency: Yup.string(),
         incomeNextDate: Yup.date().min(new Date(), 'Please select a future date').required(),
-        debitNextDate: Yup.date().min(new Date(), 'Please select a future date'),
+        debitNextDate: Yup.date().min(new Date(), 'Please select a future date').nullable(true),
         bankAccountId: Yup.string(),
       })}
       onSubmit={(values, { setStatus, setSubmitting }): void => {
+        console.log(values);
         dispatch(
           updateUser({
             userId,
@@ -96,7 +97,16 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
         );
       }}
     >
-      {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }): JSX.Element => (
+      {({
+        errors,
+        handleBlur,
+        handleChange,
+        handleSubmit,
+        isSubmitting,
+        touched,
+        values,
+        setFieldValue,
+      }): JSX.Element => (
         <form onSubmit={handleSubmit} {...other}>
           <Card>
             <CardHeader title={getFullName(user)} subheader={user.mobileNumber} />
@@ -216,7 +226,7 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
                     variant="outlined"
                   />
                 </Grid>
-                <Grid item md={6} xs={12}>
+                <Grid item md={6} xs={12} display="flex">
                   <TextField
                     type="date"
                     error={Boolean(touched.debitNextDate && errors.debitNextDate)}
@@ -230,6 +240,16 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
                     variant="outlined"
                     InputLabelProps={{ shrink: true }}
                   />
+                  <Button
+                    color="secondary"
+                    disabled={isSubmitting}
+                    onClick={() => {
+                      setFieldValue('debitNextDate', null);
+                    }}
+                    variant="contained"
+                  >
+                    Clear
+                  </Button>
                 </Grid>
                 <Grid item md={6}></Grid>
                 {bankAccounts.length > 0 && (
