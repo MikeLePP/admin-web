@@ -73,7 +73,7 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
         dob: Yup.date().required(),
         incomeFrequency: Yup.string(),
         incomeNextDate: Yup.date().min(new Date(), 'Please select a future date').required(),
-        debitNextDate: Yup.date().min(new Date(), 'Please select a future date').required(),
+        debitNextDate: Yup.date().min(new Date(), 'Please select a future date'),
         bankAccountId: Yup.string(),
       })}
       onSubmit={(values, { setStatus, setSubmitting }): void => {
