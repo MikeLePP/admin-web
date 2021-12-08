@@ -50,6 +50,7 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
 
   return (
     <Formik
+      enableReinitialize={true}
       initialValues={{
         firstName: user.firstName,
         middleName: user.middleName,
@@ -60,7 +61,7 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
         incomeFrequency: user.incomeFrequency,
         incomeNextDate: moment(user.incomeNextDate).format('YYYY-MM-DD'),
         bankAccountId: user.bankAccountId,
-        ...(user.debitNextDate && { debitNextDate: moment(user.debitNextDate).format('YYYY-MM-DD') }),
+        debitNextDate: user.debitNextDate ? moment(user.debitNextDate).format('YYYY-MM-DD') : '',
       }}
       validationSchema={Yup.object().shape({
         firstName: Yup.string().max(255).required('First name is required'),
@@ -77,7 +78,6 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
         bankAccountId: Yup.string(),
       })}
       onSubmit={(values, { setStatus, setSubmitting }): void => {
-        console.log(values);
         dispatch(
           updateUser({
             userId,
@@ -244,7 +244,7 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
                     color="secondary"
                     disabled={isSubmitting}
                     onClick={() => {
-                      setFieldValue('debitNextDate', null);
+                      setFieldValue('debitNextDate', '');
                     }}
                     variant="contained"
                   >
