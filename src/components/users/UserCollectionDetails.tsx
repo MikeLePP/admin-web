@@ -80,6 +80,18 @@ const CollectionDetails: FC<CollectionDetailsProps> = (props) => {
             <TableRow>
               <TableCell>
                 <Typography color="textPrimary" variant="subtitle2">
+                  Debit next date
+                </Typography>
+              </TableCell>
+              <TableCell>
+                <Typography color="textSecondary" variant="body2">
+                  {user.debitNextDate ? moment(user.debitNextDate).format('DD/MM/yyyy') : '--'}
+                </Typography>
+              </TableCell>
+            </TableRow>
+            <TableRow>
+              <TableCell>
+                <Typography color="textPrimary" variant="subtitle2">
                   Income frequency
                 </Typography>
               </TableCell>
