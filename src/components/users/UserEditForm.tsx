@@ -1,4 +1,5 @@
 import {
+  Box,
   Button,
   Card,
   CardActions,
@@ -61,7 +62,7 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
         incomeFrequency: user.incomeFrequency,
         incomeNextDate: moment(user.incomeNextDate).format('YYYY-MM-DD'),
         bankAccountId: user.bankAccountId,
-        debitNextDate: user.debitNextDate ? moment(user.debitNextDate).format('YYYY-MM-DD') : '',
+        debitNextDate: user.debitNextDate ? moment(user.debitNextDate).format('YYYY-MM-DD') : null,
       }}
       validationSchema={Yup.object().shape({
         firstName: Yup.string().max(255).required('First name is required'),
@@ -239,17 +240,22 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
                     value={values.debitNextDate}
                     variant="outlined"
                     InputLabelProps={{ shrink: true }}
+                    style={{ marginRight: '5px' }}
                   />
-                  <Button
-                    color="secondary"
-                    disabled={isSubmitting}
-                    onClick={() => {
-                      setFieldValue('debitNextDate', '');
-                    }}
-                    variant="contained"
-                  >
-                    Clear
-                  </Button>
+                  <Box display="flex" alignItems="center">
+                    <Button
+                      color="secondary"
+                      disabled={isSubmitting}
+                      onClick={() => {
+                        setTimeout(() => setFieldValue('debitNextDate', null));
+                        setFieldValue('debitNextDate', '');
+                      }}
+                      variant="contained"
+                      style={{ height: '36.5px' }}
+                    >
+                      Clear
+                    </Button>
+                  </Box>
                 </Grid>
                 <Grid item md={6}></Grid>
                 {bankAccounts.length > 0 && (
