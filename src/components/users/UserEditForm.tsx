@@ -30,7 +30,6 @@ import { getFullName } from '../../lib/userHelpers';
 import { updateUser } from '../../slices/user';
 import { useDispatch } from '../../store';
 import type { User } from '../../types/users';
-import { log } from 'util';
 
 interface UserEditFormProps {
   user: User;
@@ -61,7 +60,7 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
         incomeFrequency: user.incomeFrequency,
         incomeNextDate: moment(user.incomeNextDate).format('YYYY-MM-DD'),
         bankAccountId: user.bankAccountId,
-        debitNextDate: moment(user.debitNextDate || user.incomeNextDate).format('YYYY-MM-DD'),
+        ...(user.debitNextDate && { debitNextDate: moment(user.debitNextDate).format('YYYY-MM-DD') }),
       }}
       validationSchema={Yup.object().shape({
         firstName: Yup.string().max(255).required('First name is required'),
@@ -229,6 +228,7 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
                     onChange={handleChange}
                     value={values.debitNextDate}
                     variant="outlined"
+                    InputLabelProps={{ shrink: true }}
                   />
                 </Grid>
                 <Grid item md={6}></Grid>
