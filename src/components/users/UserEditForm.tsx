@@ -18,7 +18,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { Formik } from 'formik';
-import { startCase } from 'lodash';
+import { startCase, update } from 'lodash';
 import moment from 'moment';
 import type { FC } from 'react';
 import toast from 'react-hot-toast';
@@ -82,6 +82,7 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
         bankAccountId: Yup.string(),
       })}
       onSubmit={(values, { setStatus, setSubmitting }): void => {
+        update(values, 'debitNextDate', (debitNextDate) => (debitNextDate === '' ? null : debitNextDate));
         dispatch(
           updateUser({
             userId,
@@ -250,7 +251,6 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
                       color="secondary"
                       disabled={isSubmitting}
                       onClick={() => {
-                        setTimeout(() => setFieldValue('debitNextDate', null));
                         setFieldValue('debitNextDate', '');
                       }}
                       variant="text"
