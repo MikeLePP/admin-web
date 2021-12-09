@@ -72,7 +72,10 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
         mobileNumber: Yup.string()
           .matches(/^\+61[0-9]{9}$/, 'Please enter a valid phone number')
           .required(),
-        dob: Yup.date().required(),
+        dob: Yup.date()
+          .max(new Date(), 'Please select a past date')
+          .required()
+          .test('Date of Birth', 'Should be greater than 18', (value) => moment().diff(value, 'year') >= 18),
         incomeFrequency: Yup.string(),
         incomeNextDate: Yup.date().min(new Date(), 'Please select a future date').required(),
         debitNextDate: Yup.date().min(new Date(), 'Please select a future date').nullable(true),
@@ -250,7 +253,7 @@ const UserEditForm: FC<UserEditFormProps> = (props) => {
                         setTimeout(() => setFieldValue('debitNextDate', null));
                         setFieldValue('debitNextDate', '');
                       }}
-                      variant="contained"
+                      variant="text"
                       style={{ height: '36.5px' }}
                     >
                       Clear
